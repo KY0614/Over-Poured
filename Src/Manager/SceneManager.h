@@ -19,7 +19,11 @@ public:
 	{
 		NONE,
 		TITLE,
-		GAME
+		MOVIE,
+		SELECT,
+		TUTORIAL,
+		GAME,
+		RESULT
 	};
 	
 	// インスタンスの生成

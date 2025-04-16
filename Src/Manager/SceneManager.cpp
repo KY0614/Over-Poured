@@ -3,7 +3,12 @@
 #include <EffekseerForDXLib.h>
 #include "../Common/Fader.h"
 #include "../Scene/TitleScene.h"
+#include "../Scene/MovieScene.h"
+#include "../Scene/SelectScene.h"
+#include "../Scene/SelectScene.h"
+#include "../Scene/TutorialScene.h"
 #include "../Scene/GameScene.h"
+#include "../Scene/ResultScene.h"
 #include "Camera.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
@@ -27,7 +32,7 @@ SceneManager& SceneManager::GetInstance(void)
 void SceneManager::Init(void)
 {
 
-	sceneId_ = SCENE_ID::TITLE;
+	sceneId_ = SCENE_ID::GAME;
 	waitSceneId_ = SCENE_ID::NONE;
 
 	fader_ = std::make_unique<Fader>();
@@ -46,7 +51,7 @@ void SceneManager::Init(void)
 	Init3D();
 
 	// èâä˙ÉVÅ[ÉìÇÃê›íË
-	DoChangeScene(SCENE_ID::TITLE);
+	DoChangeScene(SCENE_ID::GAME);
 
 }
 
@@ -213,11 +218,27 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 
 	switch (sceneId_)
 	{
-	case SCENE_ID::TITLE:
+	case SceneManager::SCENE_ID::NONE:
+		break;
+	case SceneManager::SCENE_ID::TITLE:
 		scene_ = std::make_unique<TitleScene>();
 		break;
-	case SCENE_ID::GAME:
+	case SceneManager::SCENE_ID::MOVIE:
+		scene_ = std::make_unique<MovieScene>();
+		break;
+	case SceneManager::SCENE_ID::SELECT:
+		scene_ = std::make_unique<SelectScene>();
+		break;
+	case SceneManager::SCENE_ID::TUTORIAL:
+		scene_ = std::make_unique<TutorialScene>();
+		break;
+	case SceneManager::SCENE_ID::GAME:
 		scene_ = std::make_unique<GameScene>();
+		break;
+	case SceneManager::SCENE_ID::RESULT:
+		scene_ = std::make_unique<ResultScene>();
+		break;
+	default:
 		break;
 	}
 

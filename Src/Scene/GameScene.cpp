@@ -41,7 +41,7 @@ void GameScene::Init(void)
 	skyDome_->Init();
 
 	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
+	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	player_->SetTime(5.0f);
 }
@@ -53,7 +53,7 @@ void GameScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 	}
 
 	skyDome_->Update();
