@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include "Libs/ImGuiWrapper.h"
 #include <EffekseerForDXLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/ResourceManager.h"
@@ -44,6 +45,8 @@ void Application::Init(void)
 		return;
 	}
 
+	ImGuiWrapper::CreateInstance();
+
 	// Effekseerの初期化
 	InitEffekseer();
 
@@ -64,15 +67,20 @@ void Application::Run(void)
 
 	auto& inputManager = InputManager::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
+	auto& imGuiWrapper = ImGuiWrapper::GetInstance();
 
 	// ゲームループ
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 
 		inputManager.Update();
+		imGuiWrapper.Update();
 		sceneManager.Update();
 
 		sceneManager.Draw();
+
+		RenderVertex();
+		imGuiWrapper.Draw();
 
 		ScreenFlip();
 
@@ -86,6 +94,7 @@ void Application::Destroy(void)
 	InputManager::GetInstance().Destroy();
 	ResourceManager::GetInstance().Destroy();
 	SceneManager::GetInstance().Destroy();
+	ImGuiWrapper::GetInstance().Destroy();
 
 	// Effekseerを終了する。
 	Effkseer_End();

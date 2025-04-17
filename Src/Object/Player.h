@@ -68,6 +68,8 @@ public:
 
 	void SetTime(float time);
 
+	void UpdateDebugImGui(void);
+
 private:
 	Transform spereTran_;
 
