@@ -51,7 +51,7 @@ void GameScene::Update(void)
 
 	// ƒV[ƒ“‘JˆÚ
 	InputManager& ins = InputManager::GetInstance();
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 	}

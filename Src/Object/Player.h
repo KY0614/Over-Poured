@@ -23,12 +23,6 @@ public:
 	// 回転完了までの時間
 	static constexpr float TIME_ROT = 1.0f;
 
-	// ジャンプ力
-	static constexpr float POW_JUMP = 35.0f;
-
-	// ジャンプ受付時間
-	static constexpr float TIME_JUMP_IN = 0.5f;
-
 	// 煙エフェクト発生間隔
 	static constexpr float TERM_FOOT_SMOKE = 0.3f;
 
@@ -74,9 +68,8 @@ public:
 
 	void SetTime(float time);
 
-	void IsDead(void);
-
 private:
+	Transform spereTran_;
 
 	// アニメーション
 	std::unique_ptr<AnimationController> animationController_;
@@ -104,9 +97,6 @@ private:
 	Quaternion playerRotY_;
 	Quaternion goalQuaRot_;
 	float stepRotTime_;
-
-	// ジャンプ量
-	VECTOR jumpPow_;
 	
 	// 衝突判定に用いられるコライダ
 	std::vector<std::weak_ptr<Collider>> colliders_;
@@ -114,12 +104,6 @@ private:
 	// 衝突チェック
 	VECTOR gravHitPosDown_;
 	VECTOR gravHitPosUp_;
-
-	// ジャンプ判定
-	bool isJump_;
-	
-	// ジャンプの入力受付時間
-	float stepJump_;
 	
 	// 丸影
 	int imgShadow_;
@@ -138,30 +122,9 @@ private:
 	int handfrmNoL;
 	int handfrmNoR;
 	float stepHandSmoke_;
-	// 死亡エフェクト
-	int effectDeadResId_;
-	int effectDeadPlayId_;
-	float stepDeadSmoke_;
-	int chestfrmNo_;
 
 	// フレームごとの移動値
 	VECTOR moveDiff_;
-
-	// ワープ準備時間
-	float timeWarp_;
-	
-	// ワープ準備経過時間
-	float stepWarp_;
-	
-	// ワープ準備完了時の回転
-	Quaternion warpQua_;
-	
-	// ワープ準備完了時の座標
-	VECTOR warpReservePos_;
-	
-	// ワープ準備開始時のプレイヤー情報
-	Quaternion reserveStartQua_;
-	VECTOR reserveStartPos_;
 	
 	// 傾斜角
 	float slopeAngleDeg_;
@@ -178,9 +141,6 @@ private:
 	bool isMessage_;
 	const TCHAR* message_;
 	float viewTime_;
-
-	bool isDead_;
-	float stepDeath_;
 	
 	void InitAnimation(void);
 
@@ -207,8 +167,6 @@ private:
 
 	// 衝突判定
 	void Collision(void);
-
-	void ProcessJump(void);
 	
 	// 着地モーション終了
 	bool IsEndLanding(void);
@@ -217,7 +175,4 @@ private:
 
 	// 足煙エフェクト
 	void EffectFootSmoke(void);
-
-	// ワープ前の惑星名
-	Stage::NAME preWarpName_;
 };

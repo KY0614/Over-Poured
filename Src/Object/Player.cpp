@@ -23,22 +23,9 @@ Player::Player(void)
 	stateChanges_.emplace(STATE::NONE, std::bind(&Player::ChangeStateNone, this));
 	stateChanges_.emplace(STATE::PLAY, std::bind(&Player::ChangeStatePlay, this));
 
-
-	jumpPow_ = AsoUtility::VECTOR_ZERO;
-
 	// 衝突チェック
 	gravHitPosDown_ = AsoUtility::VECTOR_ZERO;
 	gravHitPosUp_ = AsoUtility::VECTOR_ZERO;
-
-	isJump_ = false;
-	imgShadow_ = -1;
-	stepJump_ = 0.0f;
-
-	reserveStartPos_ = AsoUtility::VECTOR_ZERO;
-	stepWarp_ = 0.0f;
-	timeWarp_ = 0.0f;
-	warpReservePos_ = AsoUtility::VECTOR_ZERO;
-	preWarpName_ = Stage::NAME::MAIN_PLANET;
 
 	slopeAngleDeg_ = 0.0f;
 	slopePow_ = AsoUtility::VECTOR_ZERO;
@@ -50,12 +37,6 @@ Player::Player(void)
 	message_ = "";
 	isMessage_ = false;
 	viewTime_ = 0.0f;
-	isDead_ = false;
-
-	effectDeadResId_ = 0;
-	effectDeadPlayId_ = 0;
-	stepDeadSmoke_ = 0.0f;
-	stepDeath_ = 0.0f;
 }
 
 Player::~Player(void)
@@ -92,13 +73,9 @@ void Player::Init(void)
 	// 手エフェクト
 	effectHandResId_ = resMng_.Load(
 		ResourceManager::SRC::WARP_ORBIT).handleId_;
-	// 死亡エフェクト
-	effectDeadResId_ = resMng_.Load(
-		ResourceManager::SRC::BLACK_HOLE).handleId_;
 
 	handfrmNoL = MV1SearchFrame(transform_.modelId, "mixamorig:LeftHand");
 	handfrmNoR = MV1SearchFrame(transform_.modelId, "mixamorig:RightHand");
-	chestfrmNo_ = MV1SearchFrame(transform_.modelId, "mixamorig:Spine1");
 
 	// アニメーションの設定
 	InitAnimation();
@@ -126,6 +103,7 @@ void Player::Draw(void)
 {
 	// モデルの描画
 	MV1DrawModel(transform_.modelId);
+	//DrawSphere3D()
 
 	// 丸影描画
 	DrawShadow();
@@ -175,11 +153,6 @@ void Player::SetTime(float time)
 	viewTime_ = time;
 }
 
-void Player::IsDead(void)
-{
-	isDead_ = true;
-}
-
 void Player::InitAnimation(void)
 {
 
@@ -222,12 +195,6 @@ void Player::UpdateNone(void)
 
 void Player::UpdatePlay(void)
 {
-	if (isDead_)
-	{
-		//ChangeState(STATE::DEAD);
-		return;
-	}
-
 	// 移動処理
 	ProcessMove();
 
@@ -237,12 +204,12 @@ void Player::UpdatePlay(void)
 	// 衝突判定
 	Collision();
 
-	// ジャンプ処理
-	ProcessJump();
-
 	// 歩きエフェクト
 	EffectFootSmoke();
 
+	// 重力方向に沿って回転させる
+	transform_.quaRot = Quaternion::Quaternion();
+	transform_.quaRot = transform_.quaRot.Mult(playerRotY_);
 }
 
 void Player::DrawDebug(void)
@@ -402,9 +369,9 @@ void Player::ProcessMove(void)
 	if (ins.IsNew(KEY_INPUT_S)) { dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
 	if (ins.IsNew(KEY_INPUT_D)) { dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f); }
 
-	if (!AsoUtility::EqualsVZero(dir) && (isJump_ || IsEndLanding()))
-	{
 
+	if (!AsoUtility::EqualsVZero(dir))
+	{
 		// 移動スピード
 		speed_ = SPEED_MOVE;
 		if (ins.IsNew(KEY_INPUT_RSHIFT))
@@ -418,7 +385,7 @@ void Player::ProcessMove(void)
 		// 回転処理
 		SetGoalRotate(rotRad);
 
-		if (!isJump_ && IsEndLanding())
+		if (IsEndLanding())
 		{
 			// アニメーション
 			if (ins.IsNew(KEY_INPUT_RSHIFT))
@@ -435,7 +402,7 @@ void Player::ProcessMove(void)
 	}
 	else
 	{
-		if (!isJump_ && IsEndLanding())
+		if (IsEndLanding())
 		{
 			animationController_->Play((int)ANIM_TYPE::IDLE);
 		}
@@ -481,45 +448,6 @@ void Player::Collision(void)
 	// 移動
 	moveDiff_ = VSub(movedPos_, transform_.pos);
 	transform_.pos = movedPos_;
-}
-
-void Player::ProcessJump(void)
-{
-	bool isHit = CheckHitKey(KEY_INPUT_BACKSLASH);
-	
-	// ジャンプ
-	if (isHit && (isJump_ || IsEndLanding()))
-	{
-		if (!isJump_)
-		{
-			// 制御無しジャンプ
-			//animationController_->Play((int)ANIM_TYPE::JUMP);
-			// この後、いくつかのジャンプパターンを試します
-
-			// ループしないジャンプ
-			//animationController_->Play((int)ANIM_TYPE::JUMP, false);
-			
-			//切り取りアニメーション
-			animationController_->Play(
-				(int)ANIM_TYPE::JUMP, false, 13.0f, 24.0f);
-		}
-
-		isJump_ = true;
-
-		//// ジャンプの入力受付時間を減らす
-		//stepJump_ += scnMng_.GetDeltaTime();
-		//if (stepJump_ < TIME_JUMP_IN)
-		//{
-		//	jumpPow_ = VScale(grvMng_.GetDirUpGravity(), POW_JUMP);
-		//}
-	}
-
-	// ボタンを離したらジャンプ力に加算しない
-	if (!isHit)
-	{
-		stepJump_ = TIME_JUMP_IN;
-	}
-
 }
 
 bool Player::IsEndLanding(void)
@@ -594,7 +522,6 @@ void Player::EffectFootSmoke(void)
 	float len = AsoUtility::MagnitudeF(moveDiff_);
 
 	if (len >= 1.0f &&
-		!isJump_ &&
 		stepFootSmoke_ < 0.0f)
 	{
 		stepFootSmoke_ = TERM_FOOT_SMOKE;
