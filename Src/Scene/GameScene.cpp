@@ -9,6 +9,7 @@
 #include "../Object/Stage.h"
 #include "../Object/Player.h"
 #include "../Object/Planet.h"
+#include "../Object/Score.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -44,13 +45,27 @@ void GameScene::Init(void)
 	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	player_->SetTime(5.0f);
+	timer_ = 10.0f;
 }
 
 void GameScene::Update(void)
 {
+	InputManager& ins = InputManager::GetInstance();
+	Score& scr = Score::GetInstance();
+
+	timer_ -= SceneManager::GetInstance().GetDeltaTime();
+
+	if (timer_ < 0.0f)
+	{
+		scr.SaveScore(score_);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+	}
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	{
+		score_++;
+	}
 
 	// ƒV[ƒ“‘JˆÚ
-	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
@@ -100,4 +115,7 @@ void GameScene::DebugDraw(void)
 	sPos = { 0.0f,  -HLEN, 0.0f };
 	ePos = { 0.0f, HLEN, 0.0f };
 	DrawLine3D(sPos, ePos, 0x00FF00);
+
+	DrawFormatString(0, 0, 0xff0000, "tiem : %2.f", timer_);
+	DrawFormatString(0, 20, 0xff0000, "score : %d", score_);
 }

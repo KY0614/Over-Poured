@@ -100,7 +100,7 @@ void Player::Update(void)
 	animationController_->Update();
 
 	// ImGui‚Ì‘€ì‚ğs‚¤
-	UpdateDebugImGui();
+	//UpdateDebugImGui();
 }
 
 void Player::Draw(void)

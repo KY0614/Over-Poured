@@ -33,4 +33,6 @@ private:
 
 	void DebugDraw(void);
 
+	float timer_;
+	int score_;
 };
