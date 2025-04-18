@@ -43,48 +43,33 @@ void Score::Destroy(void)
 	delete instance_;
 }
 
+void Score::GetScore(void)
+{
+	err = fopen_s(&file, "Data/score.txt", "r");
+	if (err != 0) { //エラー発生
+		return;
+	}
+}
+
 void Score::SaveScore(int score)
 {
-	score_ = score;
-	addScore_ += score;
-	//ファイルを開く
-	//FILE* fp = fopen("score.dat", "wb");
-	std::ofstream file("score.dat", std::ios::app);
-
-	//開けなかったら終了
-	//if (fp == NULL) return;
-	if (file.is_open()) {
-		file << score_ << std::endl;
-		file.close();
+	err = fopen_s(&file, "Data/score.txt", "w");
+	if (err != 0) { //エラー発生
+		return;
 	}
 
-	//ファイルにスコアの書き出し
-	//fwrite(&score_, sizeof(int), 1, fp);
-
-	// ファイルを閉じる
-//	fclose(fp);
+	fprintf(file, "今回のゲームのスコア ： %d\n", score);
+	fclose(file);
 }
 
-std::vector<int> Score::LoadScore(void)
+void Score::GetAggregateScore(void)
 {
-	std::ifstream file("score.dat");
-	if (file.is_open()) {
-		int score;
-		while (file >> score) {
-			scores.push_back(score);
-		}
-		file.close();
-	}
-	return scores;
 }
 
-std::vector<int> Score::GetTopScores(const std::vector<int>& score)
+void Score::GetRankingScore(void)
 {
-	size_t topN = 5;
-	std::vector<int> sortedScores = score;
-	std::sort(sortedScores.begin(), sortedScores.end(), std::greater<int>());
-	if (sortedScores.size() > topN) {
-		sortedScores.resize(topN); // 上位N件に制限
-	}
-	return sortedScores;
+}
+
+void Score::ScoreSort(void)
+{
 }

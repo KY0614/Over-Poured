@@ -46,7 +46,6 @@
     <ClCompile Include="Src\Object\Common\Capsule.cpp" />
     <ClCompile Include="Src\Object\Common\Collider.cpp" />
     <ClCompile Include="Src\Object\Common\Transform.cpp" />
-    <ClCompile Include="Src\Object\Planet.cpp" />
     <ClCompile Include="Src\Object\Player.cpp" />
     <ClCompile Include="Src\Object\SkyDome.cpp" />
     <ClCompile Include="Src\Object\Stage.cpp" />
@@ -85,7 +84,6 @@
     <ClInclude Include="Src\Object\Common\Capsule.h" />
     <ClInclude Include="Src\Object\Common\Collider.h" />
     <ClInclude Include="Src\Object\Common\Transform.h" />
-    <ClInclude Include="Src\Object\Planet.h" />
     <ClInclude Include="Src\Object\Player.h" />
     <ClInclude Include="Src\Object\SkyDome.h" />
     <ClInclude Include="Src\Object\Stage.h" />
