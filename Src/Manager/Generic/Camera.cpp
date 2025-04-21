@@ -1,10 +1,9 @@
 #include <math.h>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
-#include "../Utility/AsoUtility.h"
-#include "../Manager/InputManager.h"
-#include "../Object/Common/Transform.h"
-#include "../Object/Planet.h"
+#include "../../Utility/AsoUtility.h"
+#include "../Generic/InputManager.h"
+#include "../../Object/Common/Transform.h"
 #include "Camera.h"
 
 Camera::Camera(void)
@@ -34,7 +33,7 @@ void Camera::Update(void)
 void Camera::SetBeforeDraw(void)
 {
 
-	// クリップ距離を設定する(SetDrawScreenでリセットされる)
+	//クリップ距離を設定する(SetDrawScreenでリセットされる)
 	SetCameraNearFar(CAMERA_NEAR, CAMERA_FAR);
 
 	switch (mode_)
@@ -47,14 +46,14 @@ void Camera::SetBeforeDraw(void)
 		break;
 	}
 
-	// カメラの設定(位置と注視点による制御)
+	//カメラの設定(位置と注視点による制御)
 	SetCameraPositionAndTargetAndUpVec(
 		pos_, 
 		targetPos_, 
 		cameraUp_
 	);
 
-	// DXライブラリのカメラとEffekseerのカメラを同期する。
+	//DXライブラリのカメラとEffekseerのカメラを同期する。
 	Effekseer_Sync3DSetting();
 
 }
@@ -101,13 +100,13 @@ VECTOR Camera::GetForward(void) const
 void Camera::ChangeMode(MODE mode)
 {
 
-	// カメラの初期設定
+	//カメラの初期設定
 	SetDefault();
 
-	// カメラモードの変更
+	//カメラモードの変更
 	mode_ = mode;
 
-	// 変更時の初期化処理
+	//変更時の初期化処理
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
@@ -121,13 +120,13 @@ void Camera::ChangeMode(MODE mode)
 void Camera::SetDefault(void)
 {
 
-	// カメラの初期設定
+	//カメラの初期設定
 	pos_ = DEFAULT_CAMERA_POS;
 
-	// 注視点
+	//注視点
 	targetPos_ = AsoUtility::VECTOR_ZERO;
 
-	// カメラの上方向
+	//カメラの上方向
 	cameraUp_ = AsoUtility::DIR_U;
 
 	angles_.x = AsoUtility::Deg2RadF(30.0f);
@@ -140,31 +139,31 @@ void Camera::SetDefault(void)
 
 void Camera::SyncFollow(void)
 {
-	// 同期先の位置
+	//同期先の位置
 	VECTOR pos = followTransform_->pos;
 
 	VECTOR localPos;
 
-	// 注視点(通常重力でいうところのY値を追従対象と同じにする)
+	//注視点(通常重力でいうところのY値を追従対象と同じにする)
 	localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
 	targetPos_ = VAdd(pos, localPos);
 
-	// カメラ位置
+	//カメラ位置
 	localPos = rot_.PosAxis(LOCAL_F2C_POS);
 	pos_ = VAdd(pos, localPos);
 
-	// 重力の方向制御に従う
+	//重力の方向制御に従う
 	Quaternion followRot = followTransform_->quaRot;
 
-	// 正面から設定されたY軸分、回転させる
+	//正面から設定されたY軸分、回転させる
 	rotOutX_ = followRot.Mult(Quaternion::AngleAxis(angles_.y, AsoUtility::AXIS_Y));
 
-	// 正面から設定されたX軸分、回転させる
+	//正面から設定されたX軸分、回転させる
 	rot_ = rotOutX_.Mult(Quaternion::AngleAxis(angles_.x, AsoUtility::AXIS_X));
 
 	rot_ = Quaternion::Slerp(rot_, rot_, 0.1f);
 
-	// カメラの上方向
+	//カメラの上方向
 	cameraUp_ = followRot.GetUp();
 }
 
@@ -172,10 +171,10 @@ void Camera::ProcessRot(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	// 回転軸と量を決める
+	//回転軸と量を決める
 	//VECTOR axisDeg = AsoUtility::VECTOR_ZERO;
 	float rotPow = 1.0f * DX_PI_F / 180.0f;
-	// 回転処理
+	//回転処理
 	if (ins.IsNew(KEY_INPUT_UP)) { angles_.x += rotPow; }
 	if (ins.IsNew(KEY_INPUT_DOWN)) { angles_.x -= rotPow; }
 	if (ins.IsNew(KEY_INPUT_LEFT)) { angles_.y -= rotPow; }
@@ -201,10 +200,10 @@ void Camera::SetBeforeDrawFixedPoint(void)
 void Camera::SetBeforeDrawFollow(void)
 {
 
-	// カメラ操作
+	//カメラ操作
 	ProcessRot();
 
-	// 追従対象との相対位置を同期
+	//追従対象との相対位置を同期
 	SyncFollow();
 
 }

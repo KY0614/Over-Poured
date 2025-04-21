@@ -1,14 +1,13 @@
 #include <DxLib.h>
 #include "../Utility/AsoUtility.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/Camera.h"
-#include "../Manager/InputManager.h"
+#include "../Manager/Generic/SceneManager.h"
+#include "../Manager/Generic/Camera.h"
+#include "../Manager/Generic/InputManager.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/SkyDome.h"
 #include "../Object/Stage.h"
 #include "../Object/Player.h"
-#include "../Object/Planet.h"
 #include "../Object/Score.h"
 #include "GameScene.h"
 
@@ -26,18 +25,18 @@ GameScene::~GameScene(void)
 void GameScene::Init(void)
 {
 
-	// プレイヤー
+	//プレイヤー
 	player_ = std::make_shared<Player>();
 	player_->Init();
 
-	// ステージ
+	//ステージ
 	stage_ = std::make_unique<Stage>(*player_);
 	stage_->Init();
 
-	// ステージの初期設定
+	//ステージの初期設定
 	stage_->ChangeStage(Stage::NAME::MAIN_PLANET);
 
-	// スカイドーム
+	//スカイドーム
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
 	skyDome_->Init();
 
@@ -65,7 +64,7 @@ void GameScene::Update(void)
 		score_++;
 	}
 
-	// シーン遷移
+	//シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
@@ -81,7 +80,7 @@ void GameScene::Update(void)
 void GameScene::Draw(void)
 {
 	DebugDraw();
-	// 背景
+	//背景
 	//skyDome_->Draw();
 	stage_->Draw();
 	

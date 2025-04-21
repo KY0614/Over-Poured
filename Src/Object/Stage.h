@@ -12,31 +12,31 @@ class Stage
 
 public:
 
-	// ステージ名
+	//ステージ名
 	enum class NAME
 	{
 		MAIN_PLANET
 	};
 
-	// コンストラクタ
+	//コンストラクタ
 	Stage(Player& player);
 
-	// デストラクタ
+	//デストラクタ
 	~Stage(void);
 
 	void Init(void);
 	void Update(void);
 	void Draw(void);
 
-	// ステージ変更
+	//ステージ変更
 	void ChangeStage(NAME type);
 
-	// 対象ステージを取得
+	//対象ステージを取得
 	std::weak_ptr<Planet> GetPlanet(NAME type);
 
 private:
 
-	// シングルトン参照
+	//シングルトン参照
 	ResourceManager& resMng_;
 
 	Player& player_;

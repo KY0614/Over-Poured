@@ -69,13 +69,13 @@
     <ClCompile Include="Src\Common\Quaternion.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\Resource.cpp">
+    <ClCompile Include="Src\Manager\Generic\Resource.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\ResourceManager.cpp">
+    <ClCompile Include="Src\Manager\Generic\ResourceManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\SceneManager.cpp">
+    <ClCompile Include="Src\Manager\Generic\SceneManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Player.cpp">
@@ -99,7 +99,7 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp">
       <Filter>ソース ファイル\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\Camera.cpp">
+    <ClCompile Include="Src\Manager\Generic\Camera.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Common\AnimationController.cpp">
@@ -114,7 +114,7 @@
     <ClCompile Include="Src\Object\Common\Transform.cpp">
       <Filter>ソース ファイル\Object\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\InputManager.cpp">
+    <ClCompile Include="Src\Manager\Generic\InputManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Src\Common\Vector2.cpp">
@@ -162,6 +162,12 @@
     <ClCompile Include="Src\Object\Score.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Manager\GameSystem\OrderManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Order.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Common\Fader.h">
@@ -170,13 +176,13 @@
     <ClInclude Include="Src\Common\Quaternion.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\Resource.h">
+    <ClInclude Include="Src\Manager\Generic\Resource.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\ResourceManager.h">
+    <ClInclude Include="Src\Manager\Generic\ResourceManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\SceneManager.h">
+    <ClInclude Include="Src\Manager\Generic\SceneManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Player.h">
@@ -200,7 +206,7 @@
     <ClInclude Include="Src\Utility\AsoUtility.h">
       <Filter>ヘッダー ファイル\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\Camera.h">
+    <ClInclude Include="Src\Manager\Generic\Camera.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Common\AnimationController.h">
@@ -215,7 +221,7 @@
     <ClInclude Include="Src\Object\Common\Transform.h">
       <Filter>ヘッダー ファイル\Object\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\InputManager.h">
+    <ClInclude Include="Src\Manager\Generic\InputManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Src\Common\Vector2.h">
@@ -270,6 +276,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Score.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Manager\GameSystem\OrderManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Order.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

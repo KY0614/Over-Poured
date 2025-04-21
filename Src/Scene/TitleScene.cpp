@@ -2,10 +2,10 @@
 #include <DxLib.h>
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/ResourceManager.h"
-#include "../Manager/InputManager.h"
-#include "../Manager/Camera.h"
+#include "../Manager/Generic/SceneManager.h"
+#include "../Manager/Generic/ResourceManager.h"
+#include "../Manager/Generic/InputManager.h"
+#include "../Manager/Generic/Camera.h"
 #include "../Object/Common/AnimationController.h"
 #include "../Object/SkyDome.h"
 #include "TitleScene.h"
@@ -26,24 +26,24 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 
-	// 画像読み込み
+	//画像読み込み
 	imgTitle_ = resMng_.Load(ResourceManager::SRC::TITLE).handleId_;
 	imgPush_ = resMng_.Load(ResourceManager::SRC::PUSH_SPACE).handleId_;
 
-	// 背景
+	//背景
 	spaceDomeTran_.pos = AsoUtility::VECTOR_ZERO;
 	skyDome_ = std::make_unique<SkyDome>(spaceDomeTran_);
 	skyDome_->Init();
 
 	float size;
 
-	// メイン惑星
+	//メイン惑星
 	planet_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::FALL_PLANET));
 	planet_.pos = AsoUtility::VECTOR_ZERO;
 	planet_.scl = AsoUtility::VECTOR_ONE;
 	planet_.Update();
 
-	// キャラ
+	//キャラ
 	charactor_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
 	charactor_.pos = { -250.0f, -32.0f, -105.0f };
 	size = 0.4f;
@@ -52,13 +52,13 @@ void TitleScene::Init(void)
 		0.0f, AsoUtility::Deg2RadF(90.0f), 0.0f);
 	charactor_.Update();
 
-	// アニメーションの設定
+	//アニメーションの設定
 	std::string path = Application::PATH_MODEL + "Player/";
 	animationController_ = std::make_unique<AnimationController>(charactor_.modelId);
 	animationController_->Add(0, path + "Run.mv1", 20.0f);
 	animationController_->Play(0);
 
-	// 定点カメラ
+	//定点カメラ
 	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
 
 }
@@ -66,14 +66,14 @@ void TitleScene::Init(void)
 void TitleScene::Update(void)
 {
 
-	// シーン遷移
+	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
 	}
 
-	// キャラアニメーション
+	//キャラアニメーション
 	animationController_->Update();
 
 	skyDome_->Update();

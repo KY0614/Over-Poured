@@ -1,5 +1,5 @@
-#include "../Manager/ResourceManager.h"
-#include "../Manager/SceneManager.h"
+#include "../Manager/Generic/ResourceManager.h"
+#include "../Manager/Generic/SceneManager.h"
 #include "ActorBase.h"
 
 ActorBase::ActorBase(void)

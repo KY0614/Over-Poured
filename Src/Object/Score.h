@@ -7,17 +7,17 @@ public:
 
 	static constexpr int RANKING_NUM = 5;
 
-	// インスタンスの生成
+	//インスタンスの生成
 	static void CreateInstance(void);
 
-	// インスタンスの取得
+	//インスタンスの取得
 	static Score& GetInstance(void);
 
 	void Init(void);
 	void Update(void);
 	void Draw(void);
 
-	// リソースの破棄
+	//リソースの破棄
 	void Destroy(void);
 
 	//
@@ -35,7 +35,7 @@ public:
 	void ScoreSort(void);
 
 private:
-	// シングルトン用インスタンス
+	//シングルトン用インスタンス
 	static Score* instance_;
 
 	//スコア用の外部ファイル関連

@@ -1,5 +1,5 @@
 #include <DxLib.h>
-#include "../Application.h"
+#include "../../Application.h"
 #include "Resource.h"
 #include "ResourceManager.h"
 
@@ -22,7 +22,7 @@ ResourceManager& ResourceManager::GetInstance(void)
 void ResourceManager::Init(void)
 {
 
-	// 推奨しませんが、どうしても使いたい方は
+	//推奨しませんが、どうしても使いたい方は
 	using RES = Resource;
 	using RES_T = RES::TYPE;
 	static std::string PATH_IMG = Application::PATH_IMAGE;
@@ -31,35 +31,35 @@ void ResourceManager::Init(void)
 
 	std::unique_ptr<Resource> res;
 
-	// タイトル画像
+	//タイトル画像
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Title.png");
 	resourcesMap_.emplace(SRC::TITLE, std::move(res));
 
-	// PushSpace
+	//PushSpace
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "PushSpace.png");
 	resourcesMap_.emplace(SRC::PUSH_SPACE, std::move(res));
 	
-	// プレイヤー
+	//プレイヤー
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Player/Player.mv1");
 	resourcesMap_.emplace(SRC::PLAYER, std::move(res));
 
-	// プレイヤー影
+	//プレイヤー影
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Shadow.png");
 	resourcesMap_.emplace(SRC::PLAYER_SHADOW, std::move(res));
 
-	// スカイドーム
+	//スカイドーム
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "SkyDome/SkyDome.mv1");
 	resourcesMap_.emplace(SRC::SKY_DOME, std::move(res));
 
-	// 足煙
+	//足煙
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Smoke/Smoke.efkefc");
 	resourcesMap_.emplace(SRC::FOOT_SMOKE, std::move(res));
 
-	// ワープスターモデル
+	//ワープスターモデル
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Star/star.mv1");
 	resourcesMap_.emplace(SRC::WARP_STAR, std::move(res));
 
-	// ワープスター用回転エフェクト
+	//ワープスター用回転エフェクト
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "StarDust/StarDust.efkefc");
 	resourcesMap_.emplace(SRC::WARP_STAR_ROT_EFF, std::move(res));
 
@@ -113,25 +113,25 @@ ResourceManager::ResourceManager(void)
 Resource& ResourceManager::_Load(SRC src)
 {
 
-	// ロード済みチェック
+	//ロード済みチェック
 	const auto& lPair = loadedMap_.find(src);
 	if (lPair != loadedMap_.end())
 	{
 		return lPair->second;
 	}
 
-	// リソース登録チェック
+	//リソース登録チェック
 	const auto& rPair = resourcesMap_.find(src);
 	if (rPair == resourcesMap_.end())
 	{
-		// 登録されていない
+		//登録されていない
 		return dummy_;
 	}
 
-	// ロード処理
+	//ロード処理
 	rPair->second->Load();
 
-	// 念のためコピーコンストラクタ
+	//念のためコピーコンストラクタ
 	loadedMap_.emplace(src, *rPair->second);
 
 	return *rPair->second;

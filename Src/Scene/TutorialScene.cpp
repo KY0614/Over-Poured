@@ -1,5 +1,5 @@
-#include "../Manager/SceneManager.h"
-#include "../Manager/InputManager.h"
+#include "../Manager/Generic/SceneManager.h"
+#include "../Manager/Generic/InputManager.h"
 #include "TutorialScene.h"
 
 TutorialScene::TutorialScene(void)
@@ -16,7 +16,7 @@ void TutorialScene::Init(void)
 
 void TutorialScene::Update(void)
 {
-	// シーン遷移
+	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{

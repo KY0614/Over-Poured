@@ -10,10 +10,10 @@ class GameScene : public SceneBase
 
 public:
 	
-	// コンストラクタ
+	//コンストラクタ
 	GameScene(void);
 
-	// デストラクタ
+	//デストラクタ
 	~GameScene(void);
 
 	void Init(void) override;
@@ -22,13 +22,13 @@ public:
 
 private:
 
-	// ステージ
+	//ステージ
 	std::unique_ptr<Stage> stage_;
 
-	// スカイドーム
+	//スカイドーム
 	std::unique_ptr<SkyDome> skyDome_;
 
-	// プレイヤー
+	//プレイヤー
 	std::shared_ptr<Player> player_;
 
 	void DebugDraw(void);
