@@ -1,5 +1,5 @@
-#include "../Manager/SceneManager.h"
-#include "../Manager/InputManager.h"
+#include "../Manager/Generic/SceneManager.h"
+#include "../Manager/Generic/InputManager.h"
 #include "MovieScene.h"
 
 MovieScene::MovieScene(void)

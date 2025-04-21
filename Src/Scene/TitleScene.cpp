@@ -27,8 +27,8 @@ void TitleScene::Init(void)
 {
 
 	//âÊëúì«Ç›çûÇ›
-	imgTitle_ = resMng_.Load(ResourceManager::SRC::TITLE).handleId_;
-	imgPush_ = resMng_.Load(ResourceManager::SRC::PUSH_SPACE).handleId_;
+	imgTitle_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE).handleId_;
+	imgPush_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::PUSH_SPACE).handleId_;
 
 	//îwåi
 	spaceDomeTran_.pos = AsoUtility::VECTOR_ZERO;
@@ -38,13 +38,13 @@ void TitleScene::Init(void)
 	float size;
 
 	//ÉÅÉCÉìòfêØ
-	planet_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::FALL_PLANET));
+	planet_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::FALL_PLANET));
 	planet_.pos = AsoUtility::VECTOR_ZERO;
 	planet_.scl = AsoUtility::VECTOR_ONE;
 	planet_.Update();
 
 	//ÉLÉÉÉâ
-	charactor_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
+	charactor_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::PLAYER));
 	charactor_.pos = { -250.0f, -32.0f, -105.0f };
 	size = 0.4f;
 	charactor_.scl = { size, size, size };

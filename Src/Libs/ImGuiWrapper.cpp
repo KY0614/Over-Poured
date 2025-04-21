@@ -1,5 +1,5 @@
 #include <DxLib.h>
-#include "../Manager/InputManager.h"
+#include "../Manager/Generic/InputManager.h"
 #include "ImGui/backends/imgui_impl_dx11.h"
 #include "ImGui/backends/imgui_impl_win32.h"
 #include "ImGuiWrapper.h"

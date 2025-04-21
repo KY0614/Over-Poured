@@ -25,7 +25,7 @@ void SkyDome::Init(void)
 
 	//ƒ‚ƒfƒ‹§Œä‚ÌŠî–{î•ñ
 	transform_.SetModel(
-		resMng_.LoadModelDuplicate(
+		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::SKY_DOME));
 	transform_.scl = SCALES;
 	transform_.pos = AsoUtility::VECTOR_ZERO;

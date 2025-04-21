@@ -4,14 +4,13 @@
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
 #include "../Libs/ImGui/imgui.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/ResourceManager.h"
-#include "../Manager/InputManager.h"
-#include "../Manager/Camera.h"
+#include "../Manager/Generic/SceneManager.h"
+#include "../Manager/Generic/ResourceManager.h"
+#include "../Manager/Generic/InputManager.h"
+#include "../Manager/Generic/Camera.h"
 #include "Common/AnimationController.h"
 #include "Common/Capsule.h"
 #include "Common/Collider.h"
-#include "Planet.h"
 #include "Player.h"
 
 Player::Player(void)
@@ -46,10 +45,10 @@ Player::~Player(void)
 
 void Player::Init(void)
 {
-	imgMessage_ = resMng_.Load(ResourceManager::SRC::SPEECH_BALLOON).handleId_;
+	imgMessage_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::SPEECH_BALLOON).handleId_;
 
 	//モデルの基本設定
-	transform_.SetModel(resMng_.LoadModelDuplicate(
+	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::PLAYER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
 	transform_.pos = { 0.0f, -30.0f, 0.0f };
@@ -59,7 +58,7 @@ void Player::Init(void)
 	transform_.Update();
 
 	//丸影画像
-	imgShadow_ = resMng_.Load(
+	imgShadow_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::PLAYER_SHADOW).handleId_;
 
 	//カプセルコライダ
@@ -69,10 +68,10 @@ void Player::Init(void)
 	capsule_->SetRadius(20.0f);
 
 	//足煙エフェクト
-	effectSmokeResId_ = resMng_.Load(
+	effectSmokeResId_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::FOOT_SMOKE).handleId_;	
 	//手エフェクト
-	effectHandResId_ = resMng_.Load(
+	effectHandResId_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::WARP_ORBIT).handleId_;
 
 	handfrmNoL = MV1SearchFrame(transform_.modelId, "mixamorig:LeftHand");

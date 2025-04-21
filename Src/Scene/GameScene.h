@@ -1,9 +1,11 @@
 #pragma once
 #include <memory>
 #include "SceneBase.h"
+
 class Stage;
 class SkyDome;
 class Player;
+class Order;
 
 class GameScene : public SceneBase
 {
@@ -31,8 +33,13 @@ private:
 	//ÉvÉåÉCÉÑÅ[
 	std::shared_ptr<Player> player_;
 
-	void DebugDraw(void);
+	//íçï∂
+	std::unique_ptr<Order> order_;
 
 	float timer_;
 	int score_;
+
+	int num;
+
+	void DebugDraw(void);
 };

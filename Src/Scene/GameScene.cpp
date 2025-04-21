@@ -1,14 +1,18 @@
 #include <DxLib.h>
+#include <math.h>
+#include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/InputManager.h"
+#include "../Manager/GameSystem/OrderManager.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/SkyDome.h"
 #include "../Object/Stage.h"
 #include "../Object/Player.h"
 #include "../Object/Score.h"
+#include "../Object/Order.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -40,11 +44,20 @@ void GameScene::Init(void)
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
 	skyDome_->Init();
 
+	//スカイドーム
+	order_ = std::make_unique<Order>();
+	order_->Init();
+
+	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
 	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
 
+	//初期の注文を生成
+	OrderManager::GetInstance().CreateOrder();
+	order_->SetTimer(OrderManager::GetInstance().GetOrderTime());
+
 	player_->SetTime(5.0f);
-	timer_ = 10.0f;
+	timer_ = 20.0f;
 }
 
 void GameScene::Update(void)
@@ -52,17 +65,30 @@ void GameScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	Score& scr = Score::GetInstance();
 
+#ifdef _DEBUG
+
 	timer_ -= SceneManager::GetInstance().GetDeltaTime();
 
-	if (timer_ < 0.0f)
+	//注文の制限時間がなくなったら新しく注文を生成し、
+	//生成した注文に制限時間を設定
+	if (order_->GetTimer() < 0.1f)
 	{
-		scr.SaveScore(score_);
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		OrderManager::GetInstance().CreateOrder();
+		order_->SetTimer(OrderManager::GetInstance().GetOrderTime());
 	}
+
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		score_++;
 	}
+
+	//if (timer_ < 0.0f)
+	//{
+	//	scr.SaveScore(score_);
+	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+	//}
+
+#endif // _DEBUG
 
 	//シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_N))
@@ -75,21 +101,30 @@ void GameScene::Update(void)
 	stage_->Update();
 
 	player_->Update();
+
+	order_->Update();
 }
 
 void GameScene::Draw(void)
 {
+#ifdef _DEBUG
+
 	DebugDraw();
+
+#endif // _DEBUG
+
 	//背景
 	//skyDome_->Draw();
 	stage_->Draw();
 	
 	player_->Draw();
 
+	order_->Draw();
 }
 
 void GameScene::DebugDraw(void)
 {
+	//グリッド線描画
 	VECTOR sPos;
 	VECTOR ePos;
 	float LEN = 1200.0f;
@@ -114,7 +149,22 @@ void GameScene::DebugDraw(void)
 	sPos = { 0.0f,  -HLEN, 0.0f };
 	ePos = { 0.0f, HLEN, 0.0f };
 	DrawLine3D(sPos, ePos, 0x00FF00);
+	
+	int line = 0;
+	OrderManager::Order order = OrderManager::GetInstance().GetOrder();
+	//左上から
+	DebugDrawFormat::FormatString("tiem : %2.f", timer_, line++);
+	SetFontSize(24);
+	DebugDrawFormat::FormatString("注文数 : %d", OrderManager::GetInstance().GetOrderNum(), line++,30);
+	DebugDrawFormat::FormatString("注文 : %d,%d", order.drink_, order.sweets_, line++, 30);
+	DebugDrawFormat::FormatString("注文制限時間 : %2.f", order_->GetTimer(), line++, 30);
+	SetFontSize(16);
 
-	DrawFormatString(0, 0, 0xff0000, "tiem : %2.f", timer_);
-	DrawFormatString(0, 20, 0xff0000, "score : %d", score_);
+	//DrawFormatString(0, 0, 0xff0000, "tiem : %2.f", timer_);
+	//SetFontSize(24);
+	//DrawFormatString(0, 40, 0xff0000, "注文数 : %d", OrderManager::GetInstance().GetOrderNum());
+	//DrawFormatString(0, 70, 0xff0000, "注文 : %d,%d", order.drink_,order.sweets_);
+	//DrawFormatString(0, 100, 0xff0000, "注文制限時間 : %2.f", order_->GetTimer());
+	//SetFontSize(16);
+
 }

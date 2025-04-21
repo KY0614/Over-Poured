@@ -23,7 +23,4 @@ public:
 
 protected:
 
-	// ƒŠƒ\[ƒXŠÇ—
-	ResourceManager& resMng_;
-
 };

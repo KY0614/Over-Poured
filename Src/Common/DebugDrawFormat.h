@@ -1,0 +1,53 @@
+//#pragma once
+#include <DxLib.h>
+#include <string>
+
+class DebugDrawFormat
+{
+public:
+    //コンストラクタ
+    DebugDrawFormat(void);
+
+    // コンストラクタ
+    DebugDrawFormat(int startX = 0, int startY = 0, int textColor = GetColor(255, 255, 255), int lineHeight = 20)
+        : x(startX), y(startY), color(textColor), lineHeight(lineHeight) {}
+
+    // デバッグ用に文字列を出力するメソッド
+    void String(const std::string& str) {
+        DrawString(x, y, str.c_str(), color);
+        y += lineHeight; // 次の行に移動
+    }
+
+    //値が１つまでのDrawFormat
+    template <typename Value>
+    static void FormatString(const char* format, const Value val, const int line, const int lineH = 20)
+    {
+        DrawFormatString(0, line * lineH,0xffffff, format, val);
+    }
+
+    template <typename Value>
+    static int GetFormatSize(const char* format, const Value val, const int line)
+    {
+        return GetDrawFormatStringWidth(format, val);
+    }
+
+    //値が２つまでのDrawFormat
+    template <typename ValA,typename ValB>
+    static void FormatString(const char* format, const ValA valA, const ValB valB , const int line, const int lineH = 20)
+    {
+        DrawFormatString(0, line * lineH, 0xffffff, format, valA, valB);
+    }
+
+    template <typename ValA, typename ValB>
+    static int GetFormatSize(const char* format, const ValA valA, const ValB valB)
+    {
+        return GetDrawFormatStringWidth(format, valA, valB);
+    }
+
+private:
+
+    int x;          // X座標
+    int y;          // Y座標
+    int color;      // 色
+    int lineHeight; // 行の高さ
+};
