@@ -8,27 +8,26 @@ class CustomerBase;
 class CustomerManager
 {
 public:
-	//インスタンスの生成
-	static void CreateInstance(void);
+	static constexpr int MAX_CUSTOMER_SIZE = 6;
 
-	//インスタンスの取得
-	static CustomerManager& GetInstance(void);
+
+	CustomerManager(void);
+	~CustomerManager(void);
 
 	void Init(void);
 	void Update(void);
 	void Draw(void);
 
-	//リソースの破棄
-	void Destroy(void);
-
 	void CreateCustomer(OrderManager& order);
 
 	void AddCustomers(void);
+
+	void CollisionCounter(void);
 
 private:
 	// 静的インスタンス
 	static CustomerManager* instance_;
 	
-	std::vector<std::shared_ptr<CustomerBase>> customers_;
+	std::shared_ptr<CustomerBase> customers_[MAX_CUSTOMER_SIZE];
 };
 

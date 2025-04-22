@@ -47,7 +47,7 @@ public:
 		NONE,
 		FIXED_POINT,
 		FOLLOW,
-		SELF_SHOT
+		FREE
 	};
 
 	Camera(void);
@@ -119,7 +119,7 @@ private:
 	//モード別更新ステップ
 	void SetBeforeDrawFixedPoint(void);
 	void SetBeforeDrawFollow(void);
-	void SetBeforeDrawSelfShot(void);
+	void SetBeforeDrawFree(void);
 
 };
 

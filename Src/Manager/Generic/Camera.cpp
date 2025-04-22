@@ -41,8 +41,15 @@ void Camera::SetBeforeDraw(void)
 	case Camera::MODE::FIXED_POINT:
 		SetBeforeDrawFixedPoint();
 		break;
+
 	case Camera::MODE::FOLLOW:
 		SetBeforeDrawFollow();
+
+	case Camera::MODE::FREE:
+		SetBeforeDrawFree();
+		break;
+
+	default:
 		break;
 	}
 
@@ -206,6 +213,8 @@ void Camera::SetBeforeDrawFollow(void)
 
 }
 
-void Camera::SetBeforeDrawSelfShot(void)
+void Camera::SetBeforeDrawFree(void)
 {
+	//ÉJÉÅÉâëÄçÏ
+	ProcessRot();
 }

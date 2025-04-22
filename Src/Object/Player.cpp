@@ -50,6 +50,13 @@ void Player::Init(void)
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
 	transform_.Update();
+	sphereTran_.Update();
+
+	sphereTran_.scl = AsoUtility::VECTOR_ONE;
+	sphereTran_.pos = { 221.0f, 64.0f, 271.0f };
+	sphereTran_.quaRot = Quaternion();
+	sphereTran_.quaRotLocal =
+		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
 
 	//丸影画像
 	imgShadow_ = ResourceManager::GetInstance().Load(
@@ -80,16 +87,19 @@ void Player::Update(void)
 	stateUpdate_();
 
 	transform_.Update();
+	sphereTran_.Update();
 	
 	//アニメーション再生
 	animationController_->Update();
 
 	//ImGuiの操作を行う
-	//UpdateDebugImGui();
+	UpdateDebugImGui();
 }
 
 void Player::Draw(void)
 {
+	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
+
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
 
@@ -134,28 +144,31 @@ VECTOR Player::GetHitNormal(void)
 void Player::UpdateDebugImGui(void)
 {
 	//ウィンドウタイトル&開始処理
-	ImGui::Begin("Player");
+	ImGui::Begin("Player:Circle");
 	//大きさ
 	ImGui::Text("scale");
-	ImGui::InputFloat("SclX", &transform_.scl.x);
-	ImGui::InputFloat("SclY", &transform_.scl.y);
-	ImGui::InputFloat("SclZ", &transform_.scl.z);
+	ImGui::InputFloat("SclX", &sphereTran_.scl.x);
+	ImGui::InputFloat("SclY", &sphereTran_.scl.y);
+	ImGui::InputFloat("SclZ", &sphereTran_.scl.z);
 	//角度
 	VECTOR rotDeg = VECTOR();
-	rotDeg.x = AsoUtility::Rad2DegF(transform_.rot.x);
-	rotDeg.y = AsoUtility::Rad2DegF(transform_.rot.y);
-	rotDeg.z = AsoUtility::Rad2DegF(transform_.rot.z);
+	rotDeg.x = AsoUtility::Rad2DegF(sphereTran_.rot.x);
+	rotDeg.y = AsoUtility::Rad2DegF(sphereTran_.rot.y);
+	rotDeg.z = AsoUtility::Rad2DegF(sphereTran_.rot.z);
 	ImGui::Text("angle(deg)");
 	ImGui::SliderFloat("RotX", &rotDeg.x, 0.0f, 360.0f);
 	ImGui::SliderFloat("RotY", &rotDeg.y, 0.0f, 360.0f);
 	ImGui::SliderFloat("RotZ", &rotDeg.z, 0.0f, 360.0f);
-	transform_.rot.x = AsoUtility::Deg2RadF(rotDeg.x);
-	transform_.rot.y = AsoUtility::Deg2RadF(rotDeg.y);
-	transform_.rot.z = AsoUtility::Deg2RadF(rotDeg.z);
+	sphereTran_.rot.x = AsoUtility::Deg2RadF(rotDeg.x);
+	sphereTran_.rot.y = AsoUtility::Deg2RadF(rotDeg.y);
+	sphereTran_.rot.z = AsoUtility::Deg2RadF(rotDeg.z);
 	//位置
 	ImGui::Text("position");
 	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &transform_.pos.x);
+	ImGui::InputFloat3("Pos", &sphereTran_.pos.x);
+	ImGui::SliderFloat("PosX", &sphereTran_.pos.x, 0.0f, 360.0f);
+	ImGui::SliderFloat("PosY", &sphereTran_.pos.y, 0.0f, 360.0f);
+	ImGui::SliderFloat("PosZ", &sphereTran_.pos.z, 0.0f, 1000.0f);
 	//終了処理
 	ImGui::End();
 }

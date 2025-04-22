@@ -46,7 +46,7 @@ void GameScene::Init(void)
 
 	//ƒJƒƒ‰
 	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
+	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
 
 	//‰Šú‚Ì’•¶‚ğ¶¬
 	OrderManager::GetInstance().CreateOrder();

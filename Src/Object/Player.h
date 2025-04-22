@@ -69,7 +69,7 @@ public:
 	void UpdateDebugImGui(void);
 
 private:
-	Transform spereTran_;
+	Transform sphereTran_;
 
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;

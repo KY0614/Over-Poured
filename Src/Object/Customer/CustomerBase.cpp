@@ -7,10 +7,6 @@ CustomerBase::CustomerBase(void)
 	type_ = TYPE::NONE;
 }
 
-void CustomerBase::Destroy(void)
-{
-}
-
 void CustomerBase::Init(void)
 {
 	SetParam();
