@@ -1,9 +1,10 @@
-//#pragma once
+#pragma once
 #include "../ActorBase.h"
 
 class CustomerBase : public ActorBase
 {
 public:
+
 	enum class TYPE
 	{
 		NONE,
@@ -26,9 +27,9 @@ public:
 	//デストラクタ
 	~CustomerBase(void) = default;
 
-	void Init(void) override;
-	void Update(void) override;
-	void Draw(void) override;
+	virtual void Init(void)override = 0;
+	virtual void Update(void)override = 0;
+	virtual void Draw(void)override = 0;
 
 	/// <summary>
 	/// 客の種類を設定する
@@ -39,12 +40,13 @@ public:
 	//一定間隔だけ進む
 	void Move(void);
 
+	virtual void SetParam(void) = 0;
 
 protected:
 
 	TYPE type_;
 
-	virtual void SetParam(void) = 0;
+	STATE state_;
 
 private:
 

@@ -22,6 +22,7 @@ public:
 		WARP_STAR_ROT_EFF,
 
 		STAGE,
+		CUSTOMER,
 	};
 
 	// 明示的にインステンスを生成する

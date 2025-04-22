@@ -50,6 +50,8 @@ void Player::Init(void)
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
 	transform_.Update();
+
+	//“–‚½‚è”»’è—p‚Ì‹…‘Ì
 	sphereTran_.Update();
 
 	sphereTran_.scl = AsoUtility::VECTOR_ONE;
@@ -93,7 +95,7 @@ void Player::Update(void)
 	animationController_->Update();
 
 	//ImGui‚Ì‘€ì‚ğs‚¤
-	UpdateDebugImGui();
+	//UpdateDebugImGui();
 }
 
 void Player::Draw(void)

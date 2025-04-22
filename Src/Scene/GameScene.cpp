@@ -5,7 +5,7 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/InputManager.h"
-#include "../Manager/GameSystem/OrderManager.h"
+#include"../Manager/GameSystem/OrderManager.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/SkyDome.h"
@@ -13,6 +13,9 @@
 #include "../Object/Player.h"
 #include "../Object/Score.h"
 #include "../Object/Order.h"
+#include "../Object/Customer/CustomerManager.h"
+#include "../Object/Customer/HotCustomer.h"
+#include "../Object/Customer/IceCustomer.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -44,13 +47,25 @@ void GameScene::Init(void)
 	order_ = std::make_unique<Order>();
 	order_->Init();
 
-	//カメラ
-	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
-
 	//初期の注文を生成
 	OrderManager::GetInstance().CreateOrder();
 	order_->SetTimer(OrderManager::GetInstance().GetOrderTime());
+
+	customer_ = std::make_shared<CustomerManager>();
+	if (OrderManager::GetInstance().GetOrder().drink_ == OrderManager::DRINK::HOT)
+	{
+		customer_->CreateCustomer(std::make_shared<HotCustomer>());
+		customer_->Init();
+	}
+	else
+	{
+		customer_->CreateCustomer(std::make_shared<IceCustomer>());
+		customer_->Init();
+	}
+
+	//カメラ
+	mainCamera->SetFollow(&player_->GetTransform());
+	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
 
 	timer_ = 20.0f;
 }
@@ -70,6 +85,20 @@ void GameScene::Update(void)
 	{
 		OrderManager::GetInstance().CreateOrder();
 		order_->SetTimer(OrderManager::GetInstance().GetOrderTime());
+
+		//テストで注文が変わったら表示している客を一旦消して、
+		//注文に合わせた客を再生成する
+		customer_->ClearCustomers();
+		if (OrderManager::GetInstance().GetOrder().drink_ == OrderManager::DRINK::HOT)
+		{
+			customer_->CreateCustomer(std::make_shared<HotCustomer>());
+			customer_->Init();
+		}
+		else
+		{
+			customer_->CreateCustomer(std::make_shared<IceCustomer>());
+			customer_->Init();
+		}
 	}
 
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -98,6 +127,8 @@ void GameScene::Update(void)
 	player_->Update();
 
 	order_->Update();
+
+	customer_->Update();
 }
 
 void GameScene::Draw(void)
@@ -115,6 +146,8 @@ void GameScene::Draw(void)
 	player_->Draw();
 
 	order_->Draw();
+
+	customer_->Draw();
 }
 
 void GameScene::DebugDraw(void)

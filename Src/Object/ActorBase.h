@@ -14,9 +14,12 @@ public:
 	//デストラクタ
 	virtual ~ActorBase(void);
 
-	virtual void Init(void) = 0;
-	virtual void Update(void) = 0;
-	virtual void Draw(void) = 0;
+	//解放
+	virtual void Destroy(void);
+
+	virtual void Init(void);
+	virtual void Update(void);
+	virtual void Draw(void);
 
 	const Transform& GetTransform(void) const;
 

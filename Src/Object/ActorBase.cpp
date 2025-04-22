@@ -11,6 +11,22 @@ ActorBase::~ActorBase(void)
 {
 }
 
+void ActorBase::Destroy(void)
+{
+}
+
+void ActorBase::Init(void)
+{
+}
+
+void ActorBase::Update(void)
+{
+}
+
+void ActorBase::Draw(void)
+{
+}
+
 const Transform& ActorBase::GetTransform(void) const
 {
 	return transform_;

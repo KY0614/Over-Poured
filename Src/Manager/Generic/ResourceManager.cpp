@@ -66,7 +66,11 @@ void ResourceManager::Init(void)
 
 	//仮ステージ
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/kari_stage.mv1");
-	resourcesMap_.emplace(SRC::STAGE , std::move(res));
+	resourcesMap_.emplace(SRC::STAGE , std::move(res));	
+	
+	//仮客
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/Model.mv1");
+	resourcesMap_.emplace(SRC::CUSTOMER , std::move(res));
 
 }
 
