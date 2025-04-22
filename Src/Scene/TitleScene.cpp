@@ -37,12 +37,6 @@ void TitleScene::Init(void)
 
 	float size;
 
-	//ƒƒCƒ“˜f¯
-	planet_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::FALL_PLANET));
-	planet_.pos = AsoUtility::VECTOR_ZERO;
-	planet_.scl = AsoUtility::VECTOR_ONE;
-	planet_.Update();
-
 	//ƒLƒƒƒ‰
 	charactor_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::PLAYER));
 	charactor_.pos = { -250.0f, -32.0f, -105.0f };

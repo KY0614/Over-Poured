@@ -32,6 +32,7 @@ void OrderManager::Update(void)
 
 void OrderManager::Destroy(void)
 {
+	delete instance_;
 }
 
 OrderManager::Order OrderManager::CreateOrder(void)

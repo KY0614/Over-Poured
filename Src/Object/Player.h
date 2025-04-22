@@ -66,8 +66,6 @@ public:
 	VECTOR GetHitPos(void);
 	VECTOR GetHitNormal(void);
 
-	void SetTime(float time);
-
 	void UpdateDebugImGui(void);
 
 private:
@@ -117,13 +115,6 @@ private:
 	int effectSmokeResId_;
 	int effectSmokePlayId_;
 	float stepFootSmoke_;	
-	//手のエフェクト
-	int effectHandResId_;
-	int effectHandLPlayId_;
-	int effectHandRPlayId_;
-	int handfrmNoL;
-	int handfrmNoR;
-	float stepHandSmoke_;
 
 	//フレームごとの移動値
 	VECTOR moveDiff_;
@@ -138,11 +129,6 @@ private:
 	VECTOR hitNormal_;
 	//衝突している地面との座標
 	VECTOR hitPos_;
-
-	int imgMessage_;
-	bool isMessage_;
-	const TCHAR* message_;
-	float viewTime_;
 	
 	void InitAnimation(void);
 
@@ -158,7 +144,6 @@ private:
 	//描画系
 	void DrawDebug(void);
 	void DrawShadow(void);
-	void DrawMessage(void);
 
 	//操作 
 	void ProcessMove(void);

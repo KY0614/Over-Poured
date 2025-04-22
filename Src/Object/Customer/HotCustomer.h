@@ -1,21 +1,22 @@
 //#pragma once
-#include "../ActorBase.h"
 #include "../Customer/CustomerBase.h"
 
-class Customer : public CustomerBase 
+class HotCustomer : public CustomerBase 
 {
 public:
+
 	//コンストラクタ
-	Customer(void);
+	HotCustomer(void);
 
 	//デストラクタ
-	~Customer(void);
+	~HotCustomer(void) = default;
 
 	void Init(void)override;
 	void Update(void) override;
 	void Draw(void) override;
 
 private:
+
 	void SetParam(void) override;
 
 };

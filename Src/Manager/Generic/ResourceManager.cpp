@@ -63,6 +63,11 @@ void ResourceManager::Init(void)
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "StarDust/StarDust.efkefc");
 	resourcesMap_.emplace(SRC::WARP_STAR_ROT_EFF, std::move(res));
 
+
+	//仮ステージ
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/kari_stage.mv1");
+	resourcesMap_.emplace(SRC::STAGE , std::move(res));
+
 }
 
 void ResourceManager::Release(void)

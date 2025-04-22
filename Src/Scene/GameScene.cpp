@@ -28,7 +28,6 @@ GameScene::~GameScene(void)
 
 void GameScene::Init(void)
 {
-
 	//プレイヤー
 	player_ = std::make_shared<Player>();
 	player_->Init();
@@ -37,14 +36,11 @@ void GameScene::Init(void)
 	stage_ = std::make_unique<Stage>(*player_);
 	stage_->Init();
 
-	//ステージの初期設定
-	stage_->ChangeStage(Stage::NAME::MAIN_PLANET);
-
 	//スカイドーム
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
 	skyDome_->Init();
 
-	//スカイドーム
+	//注文
 	order_ = std::make_unique<Order>();
 	order_->Init();
 
@@ -56,7 +52,6 @@ void GameScene::Init(void)
 	OrderManager::GetInstance().CreateOrder();
 	order_->SetTimer(OrderManager::GetInstance().GetOrderTime());
 
-	player_->SetTime(5.0f);
 	timer_ = 20.0f;
 }
 
@@ -71,7 +66,7 @@ void GameScene::Update(void)
 
 	//注文の制限時間がなくなったら新しく注文を生成し、
 	//生成した注文に制限時間を設定
-	if (order_->GetTimer() < 0.1f)
+	if (order_->GetTimer() < 0.01f)
 	{
 		OrderManager::GetInstance().CreateOrder();
 		order_->SetTimer(OrderManager::GetInstance().GetOrderTime());

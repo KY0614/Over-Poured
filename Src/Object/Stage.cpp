@@ -22,19 +22,28 @@ Stage::~Stage(void)
 
 void Stage::Init(void)
 {
-
+	//ƒ‚ƒfƒ‹§Œä‚ÌŠî–{î•ñ
+	transform_.SetModel(
+		ResourceManager::GetInstance().LoadModelDuplicate(
+			ResourceManager::SRC::STAGE));
+	transform_.scl = AsoUtility::VECTOR_ONE;
+	transform_.pos = AsoUtility::VECTOR_ZERO;
+	transform_.quaRot = Quaternion::Euler(
+		0.0f,
+		AsoUtility::Deg2RadF(0.0f),
+		0.0f
+	);
+	transform_.quaRotLocal = Quaternion();
+	transform_.Update();
 }
 
 void Stage::Update(void)
 {
-
+	transform_.Update();
 }
 
 void Stage::Draw(void)
 {
-
-}
-
-void Stage::ChangeStage(NAME type)
-{
+	//ƒ‚ƒfƒ‹‚Ì•`‰æ
+	MV1DrawModel(transform_.modelId);
 }

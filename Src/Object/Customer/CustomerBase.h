@@ -3,8 +3,10 @@
 
 class CustomerBase : public ActorBase
 {
+public:
 	enum class TYPE
 	{
+		NONE,
 		HOT,
 		ICE
 	};
@@ -13,13 +15,21 @@ class CustomerBase : public ActorBase
 	CustomerBase(void);
 
 	//デストラクタ
-	~CustomerBase(void);
+	~CustomerBase(void) = default;
+
+	//解放
+	virtual void Destroy(void);
 
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 
+	void SetType(TYPE type) { type_ = type; }
+
+	void Move(void);
+
 protected:
+
 	TYPE type_;
 
 	virtual void SetParam(void) = 0;

@@ -139,21 +139,19 @@ void Camera::SetDefault(void)
 
 void Camera::SyncFollow(void)
 {
-	//同期先の位置
+	//追従先の位置
 	VECTOR pos = followTransform_->pos;
 
-	VECTOR localPos;
+	//追従先の向き
+	Quaternion followRot = Quaternion::Quaternion();
 
 	//注視点(通常重力でいうところのY値を追従対象と同じにする)
-	localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
+	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
 	targetPos_ = VAdd(pos, localPos);
 
 	//カメラ位置
 	localPos = rot_.PosAxis(LOCAL_F2C_POS);
 	pos_ = VAdd(pos, localPos);
-
-	//重力の方向制御に従う
-	Quaternion followRot = followTransform_->quaRot;
 
 	//正面から設定されたY軸分、回転させる
 	rotOutX_ = followRot.Mult(Quaternion::AngleAxis(angles_.y, AsoUtility::AXIS_Y));

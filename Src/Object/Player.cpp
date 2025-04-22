@@ -32,11 +32,6 @@ Player::Player(void)
 	slopeDir_ = AsoUtility::VECTOR_ZERO;
 	hitNormal_ = AsoUtility::VECTOR_ZERO;
 	hitPos_ = AsoUtility::VECTOR_ZERO;
-
-	imgMessage_ = -1;
-	message_ = "";
-	isMessage_ = false;
-	viewTime_ = 0.0f;
 }
 
 Player::~Player(void)
@@ -45,13 +40,12 @@ Player::~Player(void)
 
 void Player::Init(void)
 {
-	imgMessage_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::SPEECH_BALLOON).handleId_;
 
 	//モデルの基本設定
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::PLAYER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = { 0.0f, -30.0f, 0.0f };
+	transform_.pos = { 0.0f, 0.0f, 0.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
@@ -70,12 +64,6 @@ void Player::Init(void)
 	//足煙エフェクト
 	effectSmokeResId_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::FOOT_SMOKE).handleId_;	
-	//手エフェクト
-	effectHandResId_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::WARP_ORBIT).handleId_;
-
-	handfrmNoL = MV1SearchFrame(transform_.modelId, "mixamorig:LeftHand");
-	handfrmNoR = MV1SearchFrame(transform_.modelId, "mixamorig:RightHand");
 
 	//アニメーションの設定
 	InitAnimation();
@@ -84,8 +72,6 @@ void Player::Init(void)
 	ChangeState(STATE::PLAY);
 
 	stepFootSmoke_ = TERM_FOOT_SMOKE;
-	isMessage_ = true;
-	viewTime_ = 5.0f;
 }
 
 void Player::Update(void)
@@ -106,15 +92,9 @@ void Player::Draw(void)
 {
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
-	//DrawSphere3D()
 
 	//丸影描画
 	DrawShadow();
-
-	if (isMessage_) 
-	{
-		DrawMessage();
-	}
 
 	//デバッグ用描画
 	//DrawDebug();
@@ -149,11 +129,6 @@ VECTOR Player::GetHitPos(void)
 VECTOR Player::GetHitNormal(void)
 {
 	return hitNormal_;
-}
-
-void Player::SetTime(float time)
-{
-	viewTime_ = time;
 }
 
 void Player::UpdateDebugImGui(void)
@@ -359,31 +334,6 @@ void Player::DrawShadow(void)
 
 	//Ｚバッファを無効にする
 	SetUseZBuffer3D(FALSE);
-}
-
-void Player::DrawMessage(void)
-{
-	//同期先の位置
-	VECTOR followPos = transform_.pos;
-
-	//追従対象の向き
-	Quaternion followRot = transform_.rot;
-
-	VECTOR localPos = { 0.0f,180.f,0.0f };
-
-	//追従対象から文字までの相対座標
-	VECTOR relativePos = followRot.PosAxis(localPos);
-	VECTOR pos;
-	pos = VAdd(followPos, relativePos);
-	//オイラー角に変換
-	VECTOR angle = transform_.quaRot.ToEuler();
-
-	VECTOR pos2D = ConvWorldPosToScreenPos(pos);
-	pos2D.x = pos2D.x - 50.0f;
-	pos2D.y = pos2D.y - 20.0f;
-
-	DrawBillboard3D(pos, 0.5f, 0.5f,130.0f, 0.0f, imgMessage_, true);
-	DrawString(pos2D.x, pos2D.y, message_, 0x000000);
 }
 
 void Player::ProcessMove(void)
