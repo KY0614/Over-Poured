@@ -25,18 +25,21 @@ void Order::Update(void)
 	//制限時間から経過時間を引いていく
 	timer_ -= SceneManager::GetInstance().GetDeltaTime();
 
+#ifdef _DEBUG
+
 	//ImGuiの操作を行う
 	//UpdateDebugImGui();
+
+#endif // _DEBUG
+
 }
 
 void Order::Draw(void)
 {
 #ifdef _DEBUG
-	//注文内容取得用
-	OrderManager::Order order = OrderManager::GetInstance().GetOrder();
 
 	//注文に合わせて四角の色を変える
-	int startX = DebugDrawFormat::GetFormatSize("注文 : %d,%d", order.drink_, order.sweets_);
+	int startX = DebugDrawFormat::GetFormatSize("注文 : %d,%d", orderData_.drink_, orderData_.sweets_);
 	startX = startX * 1.5;//フォントサイズが1.5倍なので
 	int scale = 25;
 	int endX = startX + scale;
@@ -44,7 +47,7 @@ void Order::Draw(void)
 	int endY = startY + scale;
 	int drinkCol = GetColor(0,0,0);
 
-	if (order.drink_ == OrderManager::DRINK::HOT)
+	if (orderData_.drink_ == DRINK::HOT)
 	{
 		drinkCol = GetColor(255, 0, 0);
 	}
@@ -56,17 +59,17 @@ void Order::Draw(void)
 	DrawBox(startX, startY, endX, endY, drinkCol, true);
 
 	int foodCol = GetColor(0, 0, 0);
-	switch (order.sweets_)
+	switch (orderData_.sweets_)
 	{
-	case OrderManager::SWEETS::NONE:
+	case SWEETS::NONE:
 		foodCol = GetColor(0, 0, 0);
 		break;
 
-	case OrderManager::SWEETS::CHOCO:
+	case SWEETS::CHOCO:
 		foodCol = GetColor(132, 98, 68);
 		break;
 
-	case OrderManager::SWEETS::STRAWBERRY:
+	case SWEETS::STRAWBERRY:
 		foodCol = GetColor(255, 198, 244);
 		break;
 	default:
@@ -75,6 +78,56 @@ void Order::Draw(void)
 	//食べ物用
 	DrawBox(endX + scale, startY, endX + (scale * 2), endY, foodCol, true);
 #endif // _DEBUG
+}
+
+void Order::CreateOrder(void)
+{
+	int drinkType = 0;
+	int sweetsType = 0;
+
+	//注文数を決める
+	do
+	{
+		orderNum_ = GetRand(ORDER_MAX_NUM);
+	} while (orderNum_ == 0);	//0だったら乱数取得しなおす
+
+	//注文内容を決める
+	switch (orderNum_)
+	{
+	case 1:
+		do
+		{
+			drinkType = GetRand(DRINK_MAX_NUM);
+		} while (drinkType == 0);	//0だったら乱数取得しなおす
+
+		sweetsType = 0;		//注文数が１の時はスイーツは頼まないようにする
+		SetDrink(static_cast<DRINK>(drinkType));	//飲み物の種類を設定
+		SetSweets(static_cast<SWEETS>(sweetsType));	//食べ物の種類を設定
+
+		SetOrderTime(ONE_ORDER_TIME);				//制限時間を設定
+		break;
+
+	case 2:
+
+		do
+		{
+			drinkType = GetRand(DRINK_MAX_NUM);
+		} while (drinkType == 0);	//0だったら乱数取得しなおす
+
+		do
+		{
+			sweetsType = GetRand(FOOD_MAX_NUM);
+		} while (sweetsType == 0);	//0だったら乱数取得しなおす
+
+		SetDrink(static_cast<DRINK>(drinkType));	//飲み物の種類を設定
+		SetSweets(static_cast<SWEETS>(sweetsType));	//食べ物の種類を設定
+
+		SetOrderTime(TWO_ORDER_TIME);				//制限時間を設定
+		break;
+
+	default:
+		break;
+	}
 }
 
 //void Order::UpdateImgGUI(void)
