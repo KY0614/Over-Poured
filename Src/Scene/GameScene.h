@@ -5,7 +5,7 @@
 class Stage;
 class SkyDome;
 class Player;
-class Order;
+class OrderManager;
 class CustomerManager;
 
 class GameScene : public SceneBase
@@ -33,9 +33,6 @@ private:
 
 	//ƒvƒŒƒCƒ„[
 	std::shared_ptr<Player> player_;
-
-	//’•¶
-	std::unique_ptr<Order> order_;
 
 	//‹q
 	std::shared_ptr<CustomerManager> customer_;

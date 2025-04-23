@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\GameSystem\OrderCustomerManager.cpp" />
     <ClCompile Include="Src\Object\Customer\CustomerManager.cpp" />
     <ClCompile Include="Src\Object\Customer\IceCustomer.cpp" />
     <ClCompile Include="Src\Object\Customer\CustomerBase.cpp" />
@@ -63,6 +64,7 @@
     <ClCompile Include="Src\Scene\TutorialScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\GameSystem\OrderCustomerManager.h" />
     <ClInclude Include="Src\Object\Customer\CustomerManager.h" />
     <ClInclude Include="Src\Object\Customer\IceCustomer.h" />
     <ClInclude Include="Src\Object\Customer\CustomerBase.h" />

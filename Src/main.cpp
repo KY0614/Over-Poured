@@ -18,14 +18,6 @@ int WINAPI WinMain(
 	// メモリリーク検出
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	// ②生ポインタの作成
-	int* test2 = new int(0);
-	delete test2;
-
-	// ③ユニークポインタ
-	std::unique_ptr<int> testI = std::make_unique<int>();
-	std::unique_ptr<std::string> testS = std::make_unique<std::string>();
-
 	// インスタンスの生成
 	Application::CreateInstance();
 

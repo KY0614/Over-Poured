@@ -1,6 +1,7 @@
-//#pragma once
+#pragma once
 #include<vector>
 #include<memory>
+#include"../../Object/Order.h"
 
 class Order;
 
@@ -17,25 +18,42 @@ public:
 	//インスタンスの取得
 	static OrderManager& GetInstance(void);
 
-	void Init(void);
-	void Update(void);
-
 	//リソースの破棄
 	void Destroy(void);
 
+	void Init(void);
+	void OrderUpdate(void);
+	void Draw(void);
+
 	//注文を生成
-	void InitCreateOrder(void);		//最初に５つ生成する用
-	void CreateOrder(void);			//注文が１つ減った時に要素の最後に１つ生成する用
+	void InitOrder(void);			//最初に５つ生成する用
 
-	void AddOrder(std::unique_ptr<Order> order);
+	void CreateSingleOrder(void);	//問答無用で一つだけ生成する用
 
+	void AddOrder(void);			//注文が１つ減ったら１つ追加生成する用
+
+	//注文を削除
 	void ClearOrder(void);
+
+	//最初の注文内容を取得
+	Order::OrderData GetFirstOrder(void) { return orders_.front()->GetOrder(); }
+
+	Order::DRINK GetDrink(void) { for (auto& o : orders_) { return o->GetOrder().drink_; } }
+
+	int GetCount(void) { return count_; }
 
 private:
 	//シングルトン用インスタンス
 	static OrderManager* instance_;
 
+	//注文管理用
 	std::vector<std::unique_ptr<Order>> orders_;
+
+#ifdef _DEBUG
+
+	int count_;
+
+#endif // _DEBUG
 
 };
 

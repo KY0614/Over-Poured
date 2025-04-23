@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 
 class Order
 {
@@ -33,6 +33,7 @@ public:
 	//注文の内容
 	struct OrderData
 	{
+		int num_;			//注文数
 		DRINK drink_;		//飲み物
 		SWEETS sweets_;		//スイーツ
 		float orderTime_;	//注文の制限時間
@@ -54,13 +55,19 @@ public:
 	//設定する関数-------------------------------------------------
 
 	/// <summary>
-	/// 飲み物の内容を設定する
+	/// 注文数を設定する
+	/// </summary>
+	/// <param name="num"></param>
+	void SetOrderNum(int num) { orderData_.num_ = num; }
+
+	/// <summary>
+	/// 注文内容の飲み物を設定する
 	/// </summary>
 	/// <param name="type">設定するもの</param>
 	void SetDrink(DRINK type) { orderData_.drink_ = type; }
 
 	/// <summary>
-	/// 食べ物の内容を設定する
+	/// 注文内容の食べ物を設定する
 	/// </summary>
 	/// <param name="type">設定するもの</param>
 	void SetSweets(SWEETS type) { orderData_.sweets_ = type; };

@@ -2,6 +2,8 @@
 #include <vector>
 #include <memory>
 #include "./CustomerBase.h"
+#include "../Order.h"
+#include "../../Manager/GameSystem/OrderManager.h"
 
 
 class CustomerManager
@@ -21,11 +23,15 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void CreateCustomer(std::shared_ptr<CustomerBase> customer);
+	//お客生成
+	void InitCustomer(void);		//初期化用
+	void CreateCustomer(Order::DRINK order);	//一人ずつ生成
 
 	void ClearCustomers(void);
 
 	void CollisionCounter(void);
+
+	int GetCustomerNum(void) { return customers_.size(); }
 
 private:
 	// 静的インスタンス
@@ -33,5 +39,7 @@ private:
 	
 	//とりあえず一人
 	std::vector<std::shared_ptr<CustomerBase>> customers_;
+
+	Order::DRINK customerType_[MAX_CREATE_SIZE];
 };
 
