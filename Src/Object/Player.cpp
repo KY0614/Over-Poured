@@ -43,7 +43,7 @@ void Player::Init(void)
 
 	//ƒ‚ƒfƒ‹‚ÌŠî–{İ’è
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
-		ResourceManager::SRC::PLAYER));
+		ResourceManager::SRC::CUSTOMER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
 	transform_.pos = { 0.0f, 0.0f, 0.0f };
 	transform_.quaRot = Quaternion();

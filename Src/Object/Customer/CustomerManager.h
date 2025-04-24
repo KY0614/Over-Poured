@@ -24,7 +24,13 @@ public:
 	void Draw(void);
 
 	//‚¨‹q¶¬
+	
+	/// <summary>
+	/// customers_‚ª‹ó‚¾‚Á‚½‚ç‚T‚Â‚Ü‚Å¶¬‚·‚é
+	/// </summary>
+	/// <param name=""></param>
 	void InitCustomer(void);		//‰Šú‰»—p
+
 	void CreateCustomer(Order::DRINK order);	//ˆêl‚¸‚Â¶¬
 
 	void ClearCustomers(void);

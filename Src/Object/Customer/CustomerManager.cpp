@@ -64,8 +64,6 @@ void CustomerManager::Draw(void)
 
 void CustomerManager::InitCustomer(void)
 {
-	//std::unique_ptr<CustomerBase> hot = std::make_unique<HotCustomer>();
-	//std::unique_ptr<CustomerBase> ice = std::make_unique<IceCustomer>();
 	if (customers_.empty())
 	{
 		//5êlÇ‹Ç≈ê∂ê¨Ç∑ÇÈ

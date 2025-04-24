@@ -34,6 +34,6 @@ protected:
 	Transform transform_;
 
 	//アニメーション
-	std::unique_ptr<AnimationController> animationController_;
+	//std::unique_ptr<AnimationController> animationController_;
 
 };
