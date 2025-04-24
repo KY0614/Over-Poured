@@ -27,7 +27,7 @@ public:
 	//デストラクタ
 	~CustomerBase(void) = default;
 
-	virtual void Init(void)override = 0;
+	virtual void Init(void)override;
 	virtual void Update(void)override = 0;
 	virtual void Draw(void)override = 0;
 
@@ -44,7 +44,7 @@ public:
 	/// 位置を設定
 	/// </summary>
 	/// <param name="pos">位置</param>
-	void SetPos(VECTOR pos) { transform_.pos = pos; }
+	void SetPos(float pos) { transform_.pos.x = pos; }
 
 	VECTOR GetPos(void) { return transform_.pos; }
 

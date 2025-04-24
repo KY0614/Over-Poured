@@ -32,6 +32,7 @@ public:
 	void CollisionCounter(void);
 
 	int GetCustomerNum(void) { return customers_.size(); }
+	VECTOR GetPos(void) { return customers_[1]->GetPos(); }
 
 private:
 	// 静的インスタンス

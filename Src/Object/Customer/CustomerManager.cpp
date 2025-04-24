@@ -44,12 +44,13 @@ void CustomerManager::Update(void)
 		c->Update();
 	}
 
-	//5人まで生成する
+	//とりあえず全員の位置をx軸だけずらす
 	for (int i = 0; i < MAX_CREATE_SIZE; i++)
 	{
 		VECTOR pos = AsoUtility::VECTOR_ZERO;
-		pos.x += (i * 40.0f);
-		customers_[i]->SetPos(pos);
+		pos.x += -100.0f + (i * 80.0f);
+		customers_[i]->GetPos();
+		customers_[i]->SetPos(pos.x);
 	}
 }
 
@@ -63,8 +64,8 @@ void CustomerManager::Draw(void)
 
 void CustomerManager::InitCustomer(void)
 {
-	std::unique_ptr<CustomerBase> hot = std::make_unique<HotCustomer>();
-	std::unique_ptr<CustomerBase> ice = std::make_unique<IceCustomer>();
+	//std::unique_ptr<CustomerBase> hot = std::make_unique<HotCustomer>();
+	//std::unique_ptr<CustomerBase> ice = std::make_unique<IceCustomer>();
 	if (customers_.empty())
 	{
 		//5人まで生成する

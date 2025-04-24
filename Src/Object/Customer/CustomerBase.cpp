@@ -7,6 +7,11 @@ CustomerBase::CustomerBase(void)
 	type_ = TYPE::NONE;
 }
 
+void CustomerBase::Init(void)
+{
+	SetParam();
+}
+
 void CustomerBase::Update(void)
 {
 	transform_.Update();

@@ -185,6 +185,8 @@ void GameScene::DebugDraw(void)
 	DebugDrawFormat::FormatString("%dêl", customer_->GetCustomerNum(), line++, lineHeight);
 	SetFontSize(16);
 
+	DebugDrawFormat::FormatString("pos : %2.f,%2.f,%2.f", customer_->GetPos() , line++,lineHeight);
+
 	//DrawFormatString(0, 0, 0xff0000, "tiem : %2.f", timer_);
 	//SetFontSize(24);
 	//DrawFormatString(0, 40, 0xff0000, "íçï∂êî : %d", OrderManager::GetInstance().GetOrderNum());
