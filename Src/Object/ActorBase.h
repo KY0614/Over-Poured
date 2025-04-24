@@ -16,9 +16,6 @@ public:
 	//デストラクタ
 	virtual ~ActorBase(void);
 
-	//解放
-	virtual void Destroy(void);
-
 	virtual void Init(void);
 	virtual void Update(void);
 	virtual void Draw(void);

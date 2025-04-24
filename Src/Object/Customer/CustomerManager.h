@@ -1,9 +1,8 @@
-//#pragma once
+#pragma once
 #include <vector>
 #include <memory>
 #include "./CustomerBase.h"
 #include "../Order.h"
-#include "../../Manager/GameSystem/OrderManager.h"
 
 
 class CustomerManager
@@ -47,6 +46,5 @@ private:
 	//Ç∆ÇËÇ†Ç¶Ç∏àÍêl
 	std::vector<std::shared_ptr<CustomerBase>> customers_;
 
-	Order::DRINK customerType_[MAX_CREATE_SIZE];
 };
 

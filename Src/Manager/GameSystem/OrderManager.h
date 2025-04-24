@@ -12,17 +12,11 @@ public:
 	//注文関連
 	static constexpr int MAX_CREATE_NUM = 5;	//最大注文生成数
 
-	//インスタンスの生成
-	static void CreateInstance(void);
-
-	//インスタンスの取得
-	static OrderManager& GetInstance(void);
-
-	//リソースの破棄
-	void Destroy(void);
+	OrderManager(void);
+	~OrderManager(void);
 
 	void Init(void);
-	void OrderUpdate(void);
+	void Update(void);
 	void Draw(void);
 
 	//注文を生成

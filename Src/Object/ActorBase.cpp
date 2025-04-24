@@ -11,10 +11,6 @@ ActorBase::~ActorBase(void)
 {
 }
 
-void ActorBase::Destroy(void)
-{
-}
-
 void ActorBase::Init(void)
 {
 }

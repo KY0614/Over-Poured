@@ -3,30 +3,12 @@
 #include "../../Object/Order.h"
 #include "OrderManager.h"
 
-OrderManager* OrderManager::instance_ = nullptr;
-
-void OrderManager::CreateInstance(void)
+OrderManager::OrderManager(void)
 {
-	if (instance_ == nullptr)
-	{
-		instance_ = new OrderManager();
-	}
-	instance_->Init();
 }
 
-OrderManager& OrderManager::GetInstance(void)
+OrderManager::~OrderManager(void)
 {
-	if (instance_ == nullptr)
-	{
-		OrderManager::CreateInstance();
-	}
-	return *instance_;
-}
-
-void OrderManager::Destroy(void)
-{
-	orders_.clear();
-	delete instance_;
 }
 
 void OrderManager::Init(void)
@@ -35,7 +17,7 @@ void OrderManager::Init(void)
 	count_ = 1;
 }
 
-void OrderManager::OrderUpdate(void)
+void OrderManager::Update(void)
 {
 	// æ“ª‚Ì’•¶‚Ì§ŒÀŠÔ‚¾‚¯‚ğŒ¸‚ç‚·
 	if (!orders_.empty()) {

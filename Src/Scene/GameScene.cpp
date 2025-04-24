@@ -5,7 +5,7 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/InputManager.h"
-#include"../Manager/GameSystem/OrderManager.h"
+#include"../Manager/GameSystem/OrderCustomerManager.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/SkyDome.h"
@@ -40,11 +40,14 @@ void GameScene::Init(void)
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
 	skyDome_->Init();
 
-	//íçï∂
-	OrderManager::GetInstance().InitOrder();
-
-	customer_ = std::make_shared<CustomerManager>();
+	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
+
+	//íçï∂
+
+
+	//customer_ = std::make_shared<CustomerManager>();
+	//customer_->Init();
 	//if (OrderManager::GetInstance().GetFirstOrder().drink_ == Order::DRINK::HOT)
 	//{
 	//	customer_->CreateCustomer(std::make_shared<HotCustomer>());
@@ -67,9 +70,6 @@ void GameScene::Update(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 	Score& scr = Score::GetInstance();
-	OrderManager& order = OrderManager::GetInstance();
-
-	OrderManager::GetInstance().OrderUpdate();
 
 #ifdef _DEBUG
 
@@ -122,7 +122,7 @@ void GameScene::Update(void)
 
 	player_->Update();
 
-	customer_->Update();
+	//customer_->Update();
 }
 
 void GameScene::Draw(void)
@@ -133,15 +133,13 @@ void GameScene::Draw(void)
 
 #endif // _DEBUG
 
-	OrderManager::GetInstance().Draw();
-
 	//îwåi
 	//skyDome_->Draw();
 	stage_->Draw();
 	
 	player_->Draw();
 
-	customer_->Draw();
+	//customer_->Draw();
 }
 
 void GameScene::DebugDraw(void)
@@ -174,18 +172,17 @@ void GameScene::DebugDraw(void)
 	
 	int line = 0;	//çs
 	int lineHeight = 30;	//çs
-	auto order = OrderManager::GetInstance().GetFirstOrder();
 	//ç∂è„Ç©ÇÁ
 	DebugDrawFormat::FormatString("tiem : %2.f", timer_, line++);
 	SetFontSize(24);
-	DebugDrawFormat::FormatString("íçï∂êî : %d", order.num_, line++, lineHeight);
-	DebugDrawFormat::FormatString("íçï∂ : %d,%d", order.drink_, order.sweets_, line++, lineHeight);
-	DebugDrawFormat::FormatString("íçï∂êßå¿éûä‘ : %2.f", order.orderTime_, line++, lineHeight);
-	DebugDrawFormat::FormatString("%då¬ñ⁄", OrderManager::GetInstance().GetCount(), line++, lineHeight);
-	DebugDrawFormat::FormatString("%dêl", customer_->GetCustomerNum(), line++, lineHeight);
+	//DebugDrawFormat::FormatString("íçï∂êî : %d", order.num_, line++, lineHeight);
+	//DebugDrawFormat::FormatString("íçï∂ : %d,%d", order.drink_, order.sweets_, line++, lineHeight);
+	//DebugDrawFormat::FormatString("íçï∂êßå¿éûä‘ : %2.f", order.orderTime_, line++, lineHeight);
+	//DebugDrawFormat::FormatString("%då¬ñ⁄", OrderManager::GetInstance().GetCount(), line++, lineHeight);
+	//DebugDrawFormat::FormatString("%dêl", customer_->GetCustomerNum(), line++, lineHeight);
 	SetFontSize(16);
 
-	DebugDrawFormat::FormatString("pos : %2.f,%2.f,%2.f", customer_->GetPos() , line++,lineHeight);
+	//DebugDrawFormat::FormatString("pos : %2.f,%2.f,%2.f", customer_->GetPos() , line++,lineHeight);
 
 	//DrawFormatString(0, 0, 0xff0000, "tiem : %2.f", timer_);
 	//SetFontSize(24);

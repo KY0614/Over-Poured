@@ -13,19 +13,6 @@ CustomerManager::~CustomerManager(void)
 	customers_.clear();
 }
 
-//void CustomerManager::CreateInstance(void)
-//{
-//}
-//
-//CustomerManager& CustomerManager::GetInstance(void)
-//{
-//	// TODO: return ステートメントをここに挿入します
-//}
-//
-//void CustomerManager::Destroy(void)
-//{
-//}
-
 void CustomerManager::Init(void)
 {
 	customers_.clear();
