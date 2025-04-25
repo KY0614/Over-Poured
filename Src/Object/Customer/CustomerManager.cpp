@@ -15,8 +15,7 @@ CustomerManager::~CustomerManager(void)
 
 void CustomerManager::Init(void)
 {
-	customers_.clear();
-	InitCustomer();
+	//customers_.clear();
 
 	for (auto& c : customers_)
 	{
@@ -34,8 +33,8 @@ void CustomerManager::Update(void)
 	//とりあえず全員の位置をx軸だけずらす
 	for (int i = 0; i < MAX_CREATE_SIZE; i++)
 	{
-		VECTOR pos = AsoUtility::VECTOR_ZERO;
-		pos.x += -100.0f + (i * 80.0f);
+		VECTOR pos = customers_.front()->GetPos();
+		pos.x -= (i * 80.0f);
 		customers_[i]->GetPos();
 		customers_[i]->SetPos(pos.x);
 	}
@@ -49,27 +48,24 @@ void CustomerManager::Draw(void)
 	}
 }
 
-void CustomerManager::InitCustomer(void)
+void CustomerManager::InitFiveCustomer(Order::DRINK drink)
 {
-	if (customers_.empty())
-	{
-		//5人まで生成する
-		for (int i = 0; i < MAX_CREATE_SIZE; i++)
-		{
-			CreateCustomer(Order::DRINK::HOT);
-		}
-	}
+	//if (customers_.empty())
+	//{
+		////5人まで生成する
+		//for (int i = 0; i < MAX_CREATE_SIZE; i++)
+		//{
+			CreateCustomer(drink);
+		//}
+	//}
 }
 
-void CustomerManager::CreateCustomer(Order::DRINK order)
+void CustomerManager::CreateCustomer(Order::DRINK drink)
 {
 	//最大注文生成数を超えそうだったらreturn
 	if (customers_.size() >= MAX_CREATE_SIZE) return;
-
-	//std::unique_ptr<CustomerBase> hot = ;
-	std::unique_ptr<CustomerBase> ice = std::make_unique<IceCustomer>();
 	
-	switch (order)
+	switch (drink)
 	{
 	case Order::DRINK::NONE:
 		break;
@@ -79,7 +75,7 @@ void CustomerManager::CreateCustomer(Order::DRINK order)
 		break;
 
 	case Order::DRINK::ICE:
-		customers_.push_back(std::move(ice));
+		customers_.push_back(std::move(std::make_unique<IceCustomer>()));
 		break;
 
 	default:
@@ -87,7 +83,7 @@ void CustomerManager::CreateCustomer(Order::DRINK order)
 	}
 }
 
-void CustomerManager::ClearCustomers(void)
+void CustomerManager::ClearFirstCustomers(void)
 {
 	//先頭の要素を削除
 	customers_.erase(customers_.begin());
@@ -95,4 +91,15 @@ void CustomerManager::ClearCustomers(void)
 
 void CustomerManager::CollisionCounter(void)
 {
+}
+
+void CustomerManager::Move2PrePos(void)
+{
+	//とりあえず全員の位置をx軸だけずらす
+	for (int i = 1; i < MAX_CREATE_SIZE; i++)
+	{
+		float preposX = customers_[i - 1]->GetPos().x;
+		preposX -= (i * 80.0f);
+		customers_[i]->SetPos(preposX);
+	}
 }

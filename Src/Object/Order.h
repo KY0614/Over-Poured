@@ -36,7 +36,7 @@ public:
 		int num_;			//注文数
 		DRINK drink_;		//飲み物
 		SWEETS sweets_;		//スイーツ
-		float orderTime_;	//注文の制限時間
+		float time_;		//注文の制限時間
 	};
 
 	//コンストラクタ
@@ -76,13 +76,7 @@ public:
 	/// 注文の制限時間を設定する
 	/// </summary>
 	/// <param name="time">設定する時間</param>
-	void SetOrderTime(float time) { orderData_.orderTime_ = time; }
-
-	/// <summary>
-	/// 注文に対して制限時間を設定する
-	/// </summary>
-	/// <param name="time">設定する制限時間</param>
-	void SetTimer(float time) { timer_ = time; }
+	void SetOrderTime(float time) { orderData_.time_ = time; }
 
 	//--------------------------------------------------------------
 
@@ -92,16 +86,11 @@ public:
 
 	OrderData GetOrder(void) { return orderData_; }			//注文内容を取得する
 
-	float GetOrderTime(void) { return orderData_.orderTime_; }	//注文の制限時間を取得する
-
-	float GetTimer(void) { return timer_; }		//制限時間を取得する
+	float GetOrderTime(void) { return orderData_.time_; }	//注文の制限時間を取得する
 
 private:
 	//注文内容
 	OrderData orderData_;
-
-	//制限時間
-	float timer_;
 
 	//注文数
 	int orderNum_;

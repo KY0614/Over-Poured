@@ -16,7 +16,7 @@ public:
 	~OrderManager(void);
 
 	void Init(void);
-	void Update(void);
+	void FirstOrderUpdate(void);
 	void Draw(void);
 
 	//注文を生成
@@ -26,20 +26,20 @@ public:
 
 	void AddOrder(void);			//注文が１つ減ったら１つ追加生成する用
 
+	bool IsOrderTimeOut(void);
+
 	//注文を削除
-	void ClearOrder(void);
+	void ClearFirstOrder(void);
 
 	//最初の注文内容を取得
 	Order::OrderData GetFirstOrder(void) { return orders_.front()->GetOrder(); }
 
-	Order::DRINK GetDrink(void) { for (auto& o : orders_) { return o->GetOrder().drink_; } }
+	std::vector<Order::DRINK> GetAllOrderDrink(void) const;
+	Order::DRINK GetLastOrderDrink(void) const;
 
 	int GetCount(void) { return count_; }
 
 private:
-	//シングルトン用インスタンス
-	static OrderManager* instance_;
-
 	//注文管理用
 	std::vector<std::unique_ptr<Order>> orders_;
 

@@ -11,7 +11,7 @@ public:
 	//デストラクタ
 	~HotCustomer(void) = default;
 
-	void Init(void)override;
+	//void Init(void)override;
 	void Update(void) override;
 	void Draw(void) override;
 

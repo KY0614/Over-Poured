@@ -5,6 +5,7 @@
 
 OrderManager::OrderManager(void)
 {
+	count_ = 0;
 }
 
 OrderManager::~OrderManager(void)
@@ -14,21 +15,17 @@ OrderManager::~OrderManager(void)
 void OrderManager::Init(void)
 {
 	orders_.clear();
+	InitOrder();
 	count_ = 1;
 }
 
-void OrderManager::Update(void)
+void OrderManager::FirstOrderUpdate(void)
 {
-	// 先頭の注文の制限時間だけを減らす
-	if (!orders_.empty()) {
-		orders_.front()->Update();
-		// 制限時間が切れた注文を削除
-		if (orders_.front()->GetOrderTime() < 0.1f) {
-			orders_.erase(orders_.begin());
-			AddOrder();	//削除したら一番最後に新しく追加
-			count_++;
-		}
-	}
+	//ordersの中身が空だったらしない
+	if (orders_.empty()) return;
+
+	//先頭の注文を表示し、制限時間だけを減らす
+	orders_.front()->Update();
 }
 
 void OrderManager::Draw(void)
@@ -114,8 +111,35 @@ void OrderManager::AddOrder(void)
 	}
 }
 
-void OrderManager::ClearOrder(void)
+bool OrderManager::IsOrderTimeOut(void)
+{
+	// 制限時間が切れた注文を削除
+	if (orders_.front()->GetOrderTime() < 0.1f) {
+		return true;
+		AddOrder();	//削除したら一番最後に新しく追加
+	}
+	return false;
+}
+
+void OrderManager::ClearFirstOrder(void)
 {
 	//先頭の要素を削除
 	orders_.erase(orders_.begin());
+	count_++;
+}
+
+std::vector<Order::DRINK> OrderManager::GetAllOrderDrink(void) const
+{
+	std::vector<Order::DRINK> drink;
+	for (auto& order : orders_)
+	{
+		drink.push_back(order->GetOrder().drink_);
+	}
+
+	return drink;
+}
+
+Order::DRINK OrderManager::GetLastOrderDrink(void) const
+{
+	return orders_.back()->GetOrder().drink_;
 }

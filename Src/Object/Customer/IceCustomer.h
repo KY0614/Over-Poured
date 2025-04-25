@@ -8,7 +8,7 @@ public:
 	IceCustomer(void);
 	~IceCustomer(void) = default;
 
-	void Init(void)override;
+	//void Init(void)override;
 	void Update(void) override;
 	void Draw(void) override;
 

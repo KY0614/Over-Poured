@@ -28,13 +28,15 @@ public:
 	/// customers_が空だったら５つまで生成する
 	/// </summary>
 	/// <param name=""></param>
-	void InitCustomer(void);		//初期化用
+	void InitFiveCustomer(Order::DRINK drink);		//初期化して5人生成する用
 
 	void CreateCustomer(Order::DRINK order);	//一人ずつ生成
 
-	void ClearCustomers(void);
+	void ClearFirstCustomers(void);
 
 	void CollisionCounter(void);
+
+	void Move2PrePos(void);
 
 	int GetCustomerNum(void) { return customers_.size(); }
 	VECTOR GetPos(void) { return customers_[1]->GetPos(); }

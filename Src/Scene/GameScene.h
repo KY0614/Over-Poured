@@ -5,6 +5,7 @@
 class Stage;
 class SkyDome;
 class Player;
+class OrderManager;
 class OrderCustomerManager;
 
 class GameScene : public SceneBase
@@ -34,6 +35,7 @@ private:
 	std::shared_ptr<Player> player_;
 
 	//‹q
+	std::unique_ptr<OrderManager> order_;
 	std::unique_ptr<OrderCustomerManager> customer_;
 
 	float timer_;

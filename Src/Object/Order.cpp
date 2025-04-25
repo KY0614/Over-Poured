@@ -8,7 +8,7 @@
 
 Order::Order(void)
 {
-	timer_ = -1.0f;
+
 }
 
 Order::~Order(void)
@@ -17,13 +17,13 @@ Order::~Order(void)
 
 void Order::Init(void)
 {
-	timer_ = 0.0f;
+
 }
 
 void Order::Update(void)
 {
 	//§ŒÀŠÔ‚©‚çŒo‰ßŠÔ‚ğˆø‚¢‚Ä‚¢‚­
-	orderData_.orderTime_ -= SceneManager::GetInstance().GetDeltaTime();
+	orderData_.time_ -= SceneManager::GetInstance().GetDeltaTime();
 
 #ifdef _DEBUG
 
