@@ -38,8 +38,11 @@ public:
 
 	void Move2PrePos(void);
 
+	void SetFirstPos(VECTOR pos) { prePos_ = pos; }
+
 	int GetCustomerNum(void) { return customers_.size(); }
-	VECTOR GetPos(void) { return customers_[1]->GetPos(); }
+	VECTOR GetFirstPos(void) { return customers_.front()->GetPos(); }
+	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
 
 private:
 	// 静的インスタンス
@@ -48,5 +51,6 @@ private:
 	//とりあえず一人
 	std::vector<std::shared_ptr<CustomerBase>> customers_;
 
+	VECTOR prePos_;
 };
 

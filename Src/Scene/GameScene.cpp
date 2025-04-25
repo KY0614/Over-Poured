@@ -40,11 +40,7 @@ void GameScene::Init(void)
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
 	skyDome_->Init();
 
-	//íçï∂
-	order_ = std::make_unique<OrderManager>();
-	order_->Init();
-
-	customer_ = std::make_unique<OrderCustomerManager>(*order_);
+	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
 
 	//customer_ = std::make_shared<CustomerManager>();
@@ -117,25 +113,13 @@ void GameScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 	}
 
-	if (order_->IsOrderTimeOut())
-	{
-		order_->ClearFirstOrder();
-		
-		customer_->ClearFirstCustomer();
-		order_->AddOrder();
-		customer_->AddCustomerByOrder();
-	}
-
 	skyDome_->Update();
 
 	stage_->Update();
 
 	player_->Update();
 
-	order_->FirstOrderUpdate();
-
 	customer_->Update();
-
 
 }
 
@@ -152,8 +136,6 @@ void GameScene::Draw(void)
 	stage_->Draw();
 	
 	player_->Draw();
-
-	order_->Draw();
 
 	customer_->Draw();
 }
@@ -190,12 +172,5 @@ void GameScene::DebugDraw(void)
 	int lineHeight = 30;	//çs
 	//ç∂è„Ç©ÇÁ
 	DebugDrawFormat::FormatString("tiem : %2.f", timer_, line++);
-	SetFontSize(24);
-	DebugDrawFormat::FormatString("íçï∂êî : %d", order_->GetFirstOrder().num_, line++, lineHeight);
-	DebugDrawFormat::FormatString("íçï∂ : %d,%d", order_->GetFirstOrder().drink_, order_->GetFirstOrder().sweets_, line++, lineHeight);
-	DebugDrawFormat::FormatString("íçï∂êßå¿éûä‘ : %2.f", order_->GetFirstOrder().time_, line++, lineHeight);
-	DebugDrawFormat::FormatString("%då¬ñ⁄", order_->GetCount(), line++, lineHeight);
-	DebugDrawFormat::FormatString("%dêl", customer_->GetCustomerNum(), line++, lineHeight);
-	SetFontSize(16);
 
 }

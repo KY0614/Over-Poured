@@ -9,7 +9,7 @@ class OrderCustomerManager
 public:
 
 	//コンストラクタ
-	OrderCustomerManager(OrderManager& orderMng);
+	OrderCustomerManager(void);
 
 	//デストラクタ
 	~OrderCustomerManager(void);
@@ -23,15 +23,15 @@ public:
 	/// 生成された注文の内容に合わせてお客を生成する
 	/// </summary>
 	/// <param name=""></param>
-	void CreateCustomerByOrder(void);
+	void CreateCustomersByOrders(void);
+
+	void AddOrdersAndCustomers(void);
 
 	/// <summary>
 	/// 追加で生成された注文の内容に合わせてお客を生成する
 	/// </summary>
 	/// <param name=""></param>
-	void AddCustomerByOrder(void);
-
-	void ClearFirstCustomer(void);
+	void AddCustomerByOrder(void); 
 
 	/// <summary>
 	/// 生成しているお客の数
@@ -42,11 +42,12 @@ public:
 
 private:
 
-	//参照
-	OrderManager& orderMng_;
+	//OrderManagerのポインタ
+	std::unique_ptr<OrderManager> orderMng_;
 
 	//CustomerMangerのポインタ
 	std::unique_ptr<CustomerManager> customerMng_;
 
+	void DebugDraw(void);
 };
 

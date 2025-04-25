@@ -26,7 +26,11 @@ public:
 
 	void AddOrder(void);			//’•¶‚ª‚P‚ÂŒ¸‚Á‚½‚ç‚P‚Â’Ç‰Á¶¬‚·‚é—p
 
-	bool IsOrderTimeOut(void);
+	/// <summary>
+	/// Å‰‚Ì’•¶‚Ì§ŒÀŠÔ‚ª‰ß‚¬‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
+	/// </summary>
+	/// <returns>true:‰ß‚¬‚½@false:‰ß‚¬‚Ä‚È‚¢ </returns>
+	bool IsFirstOrderTimeOut(void);
 
 	//’•¶‚ğíœ
 	void ClearFirstOrder(void);

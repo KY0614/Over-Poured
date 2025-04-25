@@ -111,12 +111,12 @@ void OrderManager::AddOrder(void)
 	}
 }
 
-bool OrderManager::IsOrderTimeOut(void)
+bool OrderManager::IsFirstOrderTimeOut(void)
 {
 	// §ŒÀŽžŠÔ‚ªØ‚ê‚½’•¶‚ðíœ
-	if (orders_.front()->GetOrderTime() < 0.1f) {
+	if (orders_.front()->GetOrderTime() < 0.1f) 
+	{
 		return true;
-		AddOrder();	//íœ‚µ‚½‚çˆê”ÔÅŒã‚ÉV‚µ‚­’Ç‰Á
 	}
 	return false;
 }

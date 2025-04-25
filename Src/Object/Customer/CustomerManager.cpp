@@ -98,7 +98,7 @@ void CustomerManager::Move2PrePos(void)
 	//‚Æ‚è‚ ‚¦‚¸‘Sˆõ‚ÌˆÊ’u‚ðxŽ²‚¾‚¯‚¸‚ç‚·
 	for (int i = 1; i < MAX_CREATE_SIZE; i++)
 	{
-		float preposX = customers_[i - 1]->GetPos().x;
+		float preposX = prePos_.x;
 		preposX -= (i * 80.0f);
 		customers_[i]->SetPos(preposX);
 	}
