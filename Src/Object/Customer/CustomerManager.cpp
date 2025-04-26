@@ -21,14 +21,6 @@ void CustomerManager::Init(void)
 	{
 		c->Init();
 	}
-}
-
-void CustomerManager::Update(void)
-{
-	for (auto& c : customers_)
-	{
-		c->Update();
-	}
 
 	//とりあえず全員の位置をx軸だけずらす
 	for (int i = 0; i < MAX_CREATE_SIZE; i++)
@@ -37,6 +29,14 @@ void CustomerManager::Update(void)
 		pos.x -= (i * 80.0f);
 		customers_[i]->GetPos();
 		customers_[i]->SetPos(pos.x);
+	}
+}
+
+void CustomerManager::Update(void)
+{
+	for (auto& c : customers_)
+	{
+		c->Update();
 	}
 }
 
@@ -72,10 +72,12 @@ void CustomerManager::CreateCustomer(Order::DRINK drink)
 
 	case Order::DRINK::HOT:
 		customers_.push_back(std::make_unique<HotCustomer>());
+		customers_.back()->Init();
 		break;
 
 	case Order::DRINK::ICE:
 		customers_.push_back(std::move(std::make_unique<IceCustomer>()));
+		customers_.back()->Init();
 		break;
 
 	default:
@@ -96,10 +98,10 @@ void CustomerManager::CollisionCounter(void)
 void CustomerManager::Move2PrePos(void)
 {
 	//とりあえず全員の位置をx軸だけずらす
-	for (int i = 1; i < MAX_CREATE_SIZE; i++)
+	for (int i = 0; i < MAX_CREATE_SIZE; i++)
 	{
-		float preposX = prePos_.x;
-		preposX -= (i * 80.0f);
-		customers_[i]->SetPos(preposX);
+		customers_[i]->SetPos(prePos_.x);
+		prePos_.x -= (i * 80.0f);
+		
 	}
 }
