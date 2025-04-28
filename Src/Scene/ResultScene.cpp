@@ -30,10 +30,10 @@ void ResultScene::Update(void)
 
 void ResultScene::Draw(void)
 {
-	DrawString(0, 0, "リザルト", 0xFFFFFF);
+	DrawString(0, 0, L"リザルト", 0xFFFFFF);
 
 	//スコアを読み込む
 
-	DrawFormatString(0, 20, 0xff0000,"スコア", 0xFFFFFF);
+	DrawFormatString(0, 20, 0xff0000,L"スコア", 0xFFFFFF);
 
 }

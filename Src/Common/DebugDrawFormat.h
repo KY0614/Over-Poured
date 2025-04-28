@@ -1,6 +1,7 @@
 //#pragma once
 #include <DxLib.h>
 #include <string>
+#include"../Utility/StringUtility.h"
 
 class DebugDrawFormat
 {
@@ -14,32 +15,32 @@ public:
 
     // デバッグ用に文字列を出力するメソッド
     void String(const std::string& str) {
-        DrawString(x, y, str.c_str(), color);
+        DrawString(x, y, StringUtility::StringToWstring(str).c_str(), color);
         y += lineHeight; // 次の行に移動
     }
 
     //値が１つまでのDrawFormat
     template <typename Value>
-    static void FormatString(const char* format, const Value val, const int line, const int lineH = 20)
+    static void FormatString(const TCHAR* format, const Value val, const int line, const int lineH = 20)
     {
         DrawFormatString(0, line * lineH,0xffffff, format, val);
     }
 
     template <typename Value>
-    static int GetFormatSize(const char* format, const Value val, const int line)
+    static int GetFormatSize(const TCHAR* format, const Value val, const int line)
     {
         return GetDrawFormatStringWidth(format, val);
     }
 
     //値が２つまでのDrawFormat
     template <typename ValA,typename ValB>
-    static void FormatString(const char* format, const ValA valA, const ValB valB , const int line, const int lineH = 20)
+    static void FormatString(const TCHAR* format, const ValA valA, const ValB valB , const int line, const int lineH = 20)
     {
         DrawFormatString(0, line * lineH, 0xffffff, format, valA, valB);
     }
 
     template <typename ValA, typename ValB>
-    static int GetFormatSize(const char* format, const ValA valA, const ValB valB)
+    static int GetFormatSize(const TCHAR* format, const ValA valA, const ValB valB)
     {
         return GetDrawFormatStringWidth(format, valA, valB);
     }

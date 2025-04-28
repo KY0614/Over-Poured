@@ -51,15 +51,6 @@ void Player::Init(void)
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
 	transform_.Update();
 
-	//当たり判定用の球体
-	sphereTran_.Update();
-
-	sphereTran_.scl = AsoUtility::VECTOR_ONE;
-	sphereTran_.pos = { 221.0f, 64.0f, 271.0f };
-	sphereTran_.quaRot = Quaternion();
-	sphereTran_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
-
 	//丸影画像
 	imgShadow_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::PLAYER_SHADOW).handleId_;
@@ -81,6 +72,20 @@ void Player::Init(void)
 	ChangeState(STATE::PLAY);
 
 	stepFootSmoke_ = TERM_FOOT_SMOKE;
+
+#ifdef _DEBUG
+
+	//カウンター前の当たり判定用の球体
+	sphereTran_.Update();
+
+	sphereTran_.scl = AsoUtility::VECTOR_ONE;
+	sphereTran_.pos = { 221.0f, 0.0f, 271.0f };
+	sphereTran_.quaRot = Quaternion();
+	sphereTran_.quaRotLocal =
+		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
+
+#endif // _DEBUG
+
 }
 
 void Player::Update(void)
@@ -187,7 +192,6 @@ void Player::InitAnimation(void)
 	animationController_->Add((int)ANIM_TYPE::FALLING, path + "Falling.mv1", 80.0f);
 
 	animationController_->Play((int)ANIM_TYPE::IDLE);
-
 }
 
 void Player::ChangeState(STATE state)
@@ -251,11 +255,11 @@ void Player::DrawDebug(void)
 	//-------------------------------------------------------
 	//キャラ座標
 	v = transform_.pos;
-	DrawFormatString(20, 60, black, "キャラ座標 ： (%0.2f, %0.2f, %0.2f)",
+	DrawFormatString(20, 60, black, L"キャラ座標 ： (%0.2f, %0.2f, %0.2f)",
 		v.x, v.y, v.z
 	);	
 	VECTOR n = GetHitNormal();
-	DrawFormatString(20, 80, black, "hitnormal ： (%0.2f, %0.2f, %0.2f)",
+	DrawFormatString(20, 80, black, L"hitnormal ： (%0.2f, %0.2f, %0.2f)",
 		n.x, n.y, n.z
 	);
 	//-------------------------------------------------------

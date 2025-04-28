@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
+#include "../../Utility/StringUtility.h"
 #include "Resource.h"
 
 Resource::Resource(void)
@@ -54,14 +55,14 @@ void Resource::Load(void)
 	{
 	case Resource::TYPE::IMG:
 		// âÊëú
-		handleId_ = LoadGraph(path_.c_str());
+		handleId_ = LoadGraph(StringUtility::StringToWstring(path_).c_str());
 		break;
 
 	case Resource::TYPE::IMGS:
 		// ï°êîâÊëú
 		handleIds_ = new int[numX_ * numY_];
 		LoadDivGraph(
-			path_.c_str(),
+			StringUtility::StringToWstring(path_).c_str(),
 			numX_ * numY_,
 			numX_, numY_,
 			sizeX_, sizeY_,
@@ -70,7 +71,7 @@ void Resource::Load(void)
 
 	case Resource::TYPE::MODEL:
 		// ÉÇÉfÉã
-		handleId_ = MV1LoadModel(path_.c_str());
+		handleId_ = MV1LoadModel(StringUtility::StringToWstring(path_).c_str());
 		break;
 
 	case Resource::TYPE::EFFEKSEER:

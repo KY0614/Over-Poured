@@ -30,7 +30,7 @@ void Application::Init(void)
 {
 
 	//アプリケーションの初期設定
-	SetWindowText("2316032_善原敬子");
+	SetWindowText(L"2316032_善原敬子");
 
 	//ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);

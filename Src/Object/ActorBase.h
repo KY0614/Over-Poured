@@ -1,9 +1,7 @@
 #pragma once
 #include "Common/Transform.h"
 
-class ResourceManager;
 class SceneManager;
-class AnimationController;
 
 class ActorBase
 {
@@ -22,6 +20,7 @@ public:
 
 	const Transform& GetTransform(void) const;
 
+
 protected:
 
 	//シングルトン参照
@@ -29,8 +28,4 @@ protected:
 
 	//モデル制御の基本情報
 	Transform transform_;
-
-	//アニメーション
-	//std::unique_ptr<AnimationController> animationController_;
-
 };

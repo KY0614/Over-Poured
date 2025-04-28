@@ -90,6 +90,9 @@ public:
 	static double Distance(const Vector2& v1, const Vector2& v2);
 	static double Distance(const VECTOR& v1, const VECTOR& v2);
 
+	//‹…‘Ì‚Æ“_‚Ì”»’è
+	static bool IsHitSpherePoint(const VECTOR& sphere, float radius, const VECTOR& point);
+
 	//‹…‘Ì“¯m‚ÌÕ“Ë”»’è
 	static bool IsHitSpheres(
 		const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2);

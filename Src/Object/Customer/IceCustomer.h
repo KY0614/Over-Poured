@@ -1,6 +1,7 @@
 #pragma once
 #include "../Customer/CustomerBase.h"
 
+
 class IceCustomer : public CustomerBase
 {
 public:
@@ -8,16 +9,13 @@ public:
 	IceCustomer(void);
 	~IceCustomer(void) = default;
 
-	//void Init(void)override;
-	void Update(void) override;
 	void Draw(void) override;
 
+	
+protected:
 	void SetParam(void) override;
 
-
-protected:
-
-
+	virtual void InitAnimation(void) override;
 private:
 
 };

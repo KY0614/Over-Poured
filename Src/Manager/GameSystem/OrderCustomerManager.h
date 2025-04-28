@@ -8,6 +8,8 @@ class OrderCustomerManager
 {
 public:
 
+	static constexpr float ORDER_INTERVAL_MAX = 3.5f;
+
 	//コンストラクタ
 	OrderCustomerManager(void);
 
@@ -25,13 +27,20 @@ public:
 	/// <param name=""></param>
 	void CreateCustomersByOrders(void);
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name=""></param>
 	void AddOrdersAndCustomers(void);
+	
+	void ClearOrderAndCustomer(void);
 
 	/// <summary>
 	/// 追加で生成された注文の内容に合わせてお客を生成する
 	/// </summary>
-	/// <param name=""></param>
 	void AddCustomerByOrder(void); 
+
+	void SetAddedCustoerPos(VECTOR pos);
 
 	/// <summary>
 	/// 生成しているお客の数
@@ -47,6 +56,8 @@ private:
 
 	//CustomerMangerのポインタ
 	std::unique_ptr<CustomerManager> customerMng_;
+
+	bool isCounter_;
 
 	void DebugDraw(void);
 };

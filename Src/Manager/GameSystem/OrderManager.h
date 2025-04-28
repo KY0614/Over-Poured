@@ -10,7 +10,7 @@ class OrderManager
 public:
 
 	//’•¶ŠÖ˜A
-	static constexpr int MAX_CREATE_NUM = 5;	//Å‘å’•¶¶¬”
+	static constexpr int MAX_CREATE_NUM = 6;	//Å‘å’•¶¶¬”
 
 	OrderManager(void);
 	~OrderManager(void);

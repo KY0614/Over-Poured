@@ -6,6 +6,7 @@
 
 CustomerManager::CustomerManager(void)
 {
+	prePos_ = AsoUtility::VECTOR_ZERO;
 }
 
 CustomerManager::~CustomerManager(void)
@@ -15,20 +16,9 @@ CustomerManager::~CustomerManager(void)
 
 void CustomerManager::Init(void)
 {
-	//customers_.clear();
-
 	for (auto& c : customers_)
 	{
 		c->Init();
-	}
-
-	//とりあえず全員の位置をx軸だけずらす
-	for (int i = 0; i < MAX_CREATE_SIZE; i++)
-	{
-		VECTOR pos = customers_.front()->GetPos();
-		pos.x -= (i * 80.0f);
-		customers_[i]->GetPos();
-		customers_[i]->SetPos(pos.x);
 	}
 }
 
@@ -48,19 +38,18 @@ void CustomerManager::Draw(void)
 	}
 }
 
-void CustomerManager::InitFiveCustomer(Order::DRINK drink)
+void CustomerManager::InitCustomersPos(void)
 {
-	//if (customers_.empty())
-	//{
-		////5人まで生成する
-		//for (int i = 0; i < MAX_CREATE_SIZE; i++)
-		//{
-			CreateCustomer(drink);
-		//}
-	//}
+	//とりあえず全員の位置をx軸だけずらす
+	for (int i = 1; i < MAX_CREATE_SIZE; i++)
+	{
+		VECTOR pos = customers_.front()->GetPos();
+		pos.x -= (i * CUSTOMERS_SPACE);
+		customers_[i]->SetPosX(pos.x);
+	}
 }
 
-void CustomerManager::CreateCustomer(Order::DRINK drink)
+void CustomerManager::CreateSingleCustomer(Order::DRINK drink)
 {
 	//最大注文生成数を超えそうだったらreturn
 	if (customers_.size() >= MAX_CREATE_SIZE) return;
@@ -85,23 +74,37 @@ void CustomerManager::CreateCustomer(Order::DRINK drink)
 	}
 }
 
+void CustomerManager::MoveCustomerPos(void)
+{
+	//customers_.front()->SetPosX(CustomerBase::COUNTER_FRONT_POS_X);
+
+	//全員の位置をx軸だけずらす
+	//for (int i = 1; i < MAX_CREATE_SIZE; i++)
+	//{
+	//	VECTOR pos = customers_.front()->GetPos();
+	//	pos.x -= (i * CUSTOMERS_SPACE);
+	//	customers_[i]->SetPosX(pos.x);
+	//}
+
+	for (auto& c : customers_)
+	{
+		c->Move();
+	}
+}
+
 void CustomerManager::ClearFirstCustomers(void)
 {
 	//先頭の要素を削除
 	customers_.erase(customers_.begin());
 }
 
-void CustomerManager::CollisionCounter(void)
+void CustomerManager::SetLastCustomerPos(void)
 {
-}
-
-void CustomerManager::Move2PrePos(void)
-{
-	//とりあえず全員の位置をx軸だけずらす
-	for (int i = 0; i < MAX_CREATE_SIZE; i++)
+	//全員の位置をx軸だけずらす
+	for (int i = 1; i < MAX_CREATE_SIZE; i++)
 	{
-		customers_[i]->SetPos(prePos_.x);
-		prePos_.x -= (i * 80.0f);
-		
+		VECTOR pos = customers_.front()->GetPos();
+		pos.x -= (i * CUSTOMERS_SPACE);
+		customers_[i]->SetPosX(pos.x);
 	}
 }

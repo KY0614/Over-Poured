@@ -26,5 +26,5 @@ void TutorialScene::Update(void)
 
 void TutorialScene::Draw(void)
 {
-	DrawString(0, 0, "チュートリアル", 0xFFFFFF);
+	DrawString(0, 0, L"チュートリアル", 0xFFFFFF);
 }

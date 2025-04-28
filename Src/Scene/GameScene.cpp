@@ -171,6 +171,6 @@ void GameScene::DebugDraw(void)
 	int line = 0;	//çs
 	int lineHeight = 30;	//çs
 	//ç∂è„Ç©ÇÁ
-	DebugDrawFormat::FormatString("tiem : %2.f", timer_, line++);
+	DebugDrawFormat::FormatString(L"tiem : %2.f", timer_, line++);
 
 }

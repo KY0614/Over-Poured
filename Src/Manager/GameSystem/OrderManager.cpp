@@ -35,7 +35,7 @@ void OrderManager::Draw(void)
 	auto orders = orders_.front()->GetOrder();
 
 	//注文に合わせて四角の色を変える
-	int startX = DebugDrawFormat::GetFormatSize("注文 : %d,%d", orders.drink_, orders.sweets_);
+	int startX = DebugDrawFormat::GetFormatSize(L"注文 : %d,%d", orders.drink_, orders.sweets_);
 	startX = startX * 1.5;//フォントサイズが1.5倍なので
 	int scale = 25;
 	int endX = startX + scale;
@@ -81,7 +81,7 @@ void OrderManager::InitOrder(void)
 {
 	if (orders_.empty())
 	{
-		//5つまで生成する
+		//6つまで生成する
 		for (int i = 0; i < MAX_CREATE_NUM; i++)
 		{
 			CreateSingleOrder();
@@ -113,7 +113,7 @@ void OrderManager::AddOrder(void)
 
 bool OrderManager::IsFirstOrderTimeOut(void)
 {
-	// 制限時間が切れた注文を削除
+	// 制限時間が切れたらtrueを返す
 	if (orders_.front()->GetOrderTime() < 0.1f) 
 	{
 		return true;

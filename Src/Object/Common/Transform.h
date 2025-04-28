@@ -32,6 +32,7 @@ public:
 	// ˆÊ’u
 	VECTOR pos;
 	VECTOR localPos;
+	VECTOR targetPos;
 
 	MATRIX matScl;
 	MATRIX matRot;

@@ -1,5 +1,6 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
+#include"../Utility/StringUtility.h"
 #include "SelectScene.h"
 
 SelectScene::SelectScene(void)
@@ -26,5 +27,5 @@ void SelectScene::Update(void)
 
 void SelectScene::Draw(void)
 {
-	DrawString(0, 0, "難易度選択", 0xFFFFFF);
+	DrawString(0, 0, L"難易度選択", 0xFFFFFF);
 }

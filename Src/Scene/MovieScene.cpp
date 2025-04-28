@@ -27,5 +27,5 @@ void MovieScene::Update(void)
 
 void MovieScene::Draw(void)
 {
-	DrawString(0, 0, "オープニング", 0xFFFFFF);
+	DrawString(0, 0, L"オープニング", 0xFFFFFF);
 }
