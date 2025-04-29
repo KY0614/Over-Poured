@@ -36,10 +36,10 @@ void OrderCustomerManager::Update(void)
 {
 	customerMng_->Update();
 
-	if (!customerMng_->CollisionCounter() && !isCounter_)
+	if (!customerMng_->CheckFirstCustomerCol() && !isCounter_)
 	{
 		customerMng_->MoveCustomerPos();
-		if (customerMng_->CollisionCounter())isCounter_ = true;
+		if (customerMng_->CheckFirstCustomerCol())isCounter_ = true;
 	}
 	
 
@@ -59,7 +59,7 @@ void OrderCustomerManager::Update(void)
 			AddOrdersAndCustomers();
 		}
 	}
-	else if(customerMng_->CollisionCounter())
+	else if(customerMng_->CheckFirstCustomerCol())
 	{
 		//制限時間を過ぎてなかったら先頭のオーダーだけ更新
 		orderMng_->FirstOrderUpdate();

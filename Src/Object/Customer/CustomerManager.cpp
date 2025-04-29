@@ -108,3 +108,13 @@ void CustomerManager::SetLastCustomerPos(void)
 		customers_[i]->SetPosX(pos.x);
 	}
 }
+
+bool CustomerManager::CheckFirstCustomerCol(void)
+{
+	bool ret = false;
+	if (customers_.front()->CollisionCounter())
+	{
+		ret = true;
+	}
+	return ret;
+}

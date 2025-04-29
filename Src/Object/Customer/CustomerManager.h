@@ -62,6 +62,8 @@ public:
 
 	bool GetCustomerMove(void) { return customers_.front()->GetIsMove(); }
 
+	bool CheckFirstCustomerCol(void);
+
 private:
 	// 静的インスタンス
 	static CustomerManager* instance_;
