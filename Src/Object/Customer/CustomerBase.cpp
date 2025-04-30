@@ -11,7 +11,6 @@ CustomerBase::CustomerBase(void)
 	state_ = STATE::IDLE;
 
 	isMove_ = false;
-	isMovedCounter_ = false;
 }
 
 void CustomerBase::Init(void)
@@ -27,7 +26,7 @@ void CustomerBase::Init(void)
 
 	SetParam();
 	InitAnimation();
-	isMovedCounter_ = false;
+	isMove_ = false;
 }
 
 void CustomerBase::Update(void)

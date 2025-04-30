@@ -28,6 +28,14 @@ void CustomerManager::Update(void)
 	{
 		c->Update();
 	}
+
+	if (customers_.front()->GetIsMove() && !(customers_.front()->CollisionCounter()))
+	{
+		for (auto& c : customers_)
+		{
+			c->Move();
+		}
+	}
 }
 
 void CustomerManager::Draw(void)

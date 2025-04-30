@@ -67,6 +67,9 @@ public:
 
 	void SetRotY(float rotY) { transform_.rot.y = rotY; }
 
+	void SetIsMove(bool isMove) { isMove_ = isMove; }
+	void IsMove(void) { isMove_ = true; }
+
 	VECTOR GetPos(void) { return transform_.pos; }
 	bool GetIsMove(void) { return isMove_; }
 
@@ -95,6 +98,5 @@ private:
 	float stepRotTime_;
 
 	bool isMove_;
-	bool isMovedCounter_;
 };
 

@@ -36,25 +36,29 @@ void OrderCustomerManager::Update(void)
 {
 	customerMng_->Update();
 
+	//“üŒû‚©‚çƒJƒEƒ“ƒ^[‚Ü‚Å“®‚©‚·—p
 	if (!customerMng_->CheckFirstCustomerCol() && !isCounter_)
 	{
 		customerMng_->MoveCustomerPos();
 		if (customerMng_->CheckFirstCustomerCol())isCounter_ = true;
 	}
 	
-
 	//’•¶‚Ì§ŒÀŠÔ‚ª‰ß‚¬‚½‚ç’Ç‰Á¶¬‚ğs‚¤
 	if (orderMng_->IsFirstOrderTimeOut())
 	{
-		//‚¨‹q‚ğˆê’èŠÔŠu‚¾‚¯ˆÚ“®‚³‚¹‚é
-		customerMng_->MoveCustomerPos();
+		//æ“ª‚Ì‚¨‹q‚Æ’•¶‚ğíœ
+		ClearOrderAndCustomer();
+
+		customerMng_->IsMoveFirstCustomer();
+
+		////‚¨‹q‚ğˆê’èŠÔŠu‚¾‚¯ˆÚ“®‚³‚¹‚é
+		//customerMng_->MoveCustomerPos();
 
 		//‚¨‹q‚ÌˆÚ“®‚ªI‚í‚Á‚½‚çíœ‚Æ¶¬‚ğs‚¤
-		if (!(customerMng_->GetCustomerMove()))
+		//if (!(customerMng_->GetCustomerMove()))
+		if (customerMng_->CheckFirstCustomerCol())
 		{
-			//æ“ª‚Ì‚¨‹q‚Æ’•¶‚ğíœ
-			ClearOrderAndCustomer();
-
+			customerMng_->SetIsMoveFCustomer(false);
 			//’•¶‚Æ‚¨‹q‚ğ’Ç‰Á¶¬
 			AddOrdersAndCustomers();
 		}

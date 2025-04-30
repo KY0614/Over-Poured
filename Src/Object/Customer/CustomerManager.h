@@ -56,6 +56,11 @@ public:
 
 	void SetLastCustomerPos(void);
 
+	void IsMoveFirstCustomer(void) { customers_.front()->IsMove(); }
+	void SetIsMoveFCustomer(bool isMove) { customers_.front()->SetIsMove(isMove); }
+
+	bool GetIsMoving(void) { customers_.front()->IsMove(); }
+
 	int GetCustomerNum(void) { return customers_.size(); }
 	VECTOR GetFirstPos(void) { return customers_.front()->GetPos(); }
 	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
