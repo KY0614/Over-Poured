@@ -10,6 +10,7 @@ OrderManager::OrderManager(void)
 
 OrderManager::~OrderManager(void)
 {
+	orders_.clear();
 }
 
 void OrderManager::Init(void)

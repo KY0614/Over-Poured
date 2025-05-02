@@ -37,20 +37,22 @@ public:
 	//デストラクタ
 	~CustomerBase(void) = default;
 
-	virtual void Init(void)override;
+	virtual void Init(VECTOR pos);
 	virtual void Update(void)override;
 	virtual void Draw(void)override = 0;
 
 	//一定間隔だけ進む
 	void Move(void);
 
-	void Move2Counter(void);
+	void RotateY(void);
 
 	/// <summary>
 	/// カウンター前の球体との当たり判定
 	/// </summary>
 	/// <returns>true:当たっている , false:当たっていない</returns>
 	bool CollisionCounter(void);
+
+	bool CheckCounterToCustomer(void);
 
 	/// <summary>
 	/// 客の種類を設定する
@@ -93,7 +95,7 @@ protected:
 private:
 
 	//回転
-	Quaternion playerRotY_;
+	Quaternion customerRotY_;
 	Quaternion goalQuaRot_;
 	float stepRotTime_;
 

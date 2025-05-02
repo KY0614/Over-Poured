@@ -28,4 +28,6 @@ protected:
 
 	//ƒ‚ƒfƒ‹§Œä‚ÌŠî–{î•ñ
 	Transform transform_;
+
+	Transform sphereTran_;
 };

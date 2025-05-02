@@ -69,7 +69,6 @@ public:
 	void UpdateDebugImGui(void);
 
 private:
-	Transform sphereTran_;
 
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
@@ -147,6 +146,8 @@ private:
 
 	//操作 
 	void ProcessMove(void);
+
+	void ProcessSelect(void);
 
 	//回転
 	void SetGoalRotate(double rotRad);

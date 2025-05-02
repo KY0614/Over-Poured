@@ -11,13 +11,14 @@ CustomerBase::CustomerBase(void)
 	state_ = STATE::IDLE;
 
 	isMove_ = false;
+	stepRotTime_ = 0.0f;
 }
 
-void CustomerBase::Init(void)
+void CustomerBase::Init(VECTOR pos)
 {
 	transform_.scl = AsoUtility::VECTOR_ONE;
 	transform_.pos = CUSTOMER_POS;
-	transform_.targetPos.x = transform_.pos.x + 90.0f;
+	transform_.pos = pos;
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(-90.0f), 0.0f });
@@ -33,6 +34,11 @@ void CustomerBase::Update(void)
 {
 	transform_.Update();
 	animationController_->Update();
+	RotateY();
+
+	//d—Í•ûŒü‚É‰ˆ‚Á‚Ä‰ñ“]‚³‚¹‚é
+	transform_.quaRot = Quaternion::Quaternion();
+	transform_.quaRot = transform_.quaRot.Mult(customerRotY_);
 }
 
 void CustomerBase::Move(void)
@@ -45,11 +51,16 @@ void CustomerBase::Move(void)
 	//else {
 	//	isMove_ = false;
 	//}
-	transform_.pos.x++;
+	transform_.pos.x += 2.0f;
 }
 
-void CustomerBase::Move2Counter(void)
+void CustomerBase::RotateY(void)
 {
+	stepRotTime_ -= SceneManager::GetInstance().GetDeltaTime();
+
+	//‰ñ“]‚Ì‹…–Ê•âŠÔ
+	customerRotY_ = Quaternion::Slerp(
+		customerRotY_, goalQuaRot_, (TIME_ROT - stepRotTime_) / TIME_ROT);
 }
 
 bool CustomerBase::CollisionCounter(void)
@@ -64,8 +75,18 @@ bool CustomerBase::CollisionCounter(void)
 	return false;
 }
 
-void CustomerBase::SetGoalRotate(double rotRad)
+bool CustomerBase::CheckCounterToCustomer(void)
 {
+	VECTOR spherePos = { 221.0f, 0.0f, 271.0f };
+	if (GetTransform().pos.x < spherePos.x)
+	{
+		return true;
+	}
+	return false;
+}
+
+void CustomerBase::SetGoalRotate(double rotRad)
+{ 
 	Quaternion axis =
 		Quaternion::AngleAxis(
 			rotRad, AsoUtility::AXIS_Y);
@@ -84,8 +105,4 @@ void CustomerBase::SetGoalRotate(double rotRad)
 void CustomerBase::Rotate(void)
 {
 	stepRotTime_ -= SceneManager::GetInstance().GetDeltaTime();
-
-	//‰ñ“]‚Ì‹…–Ê•âŠÔ
-	playerRotY_ = Quaternion::Slerp(
-		playerRotY_, goalQuaRot_, (TIME_ROT - stepRotTime_) / TIME_ROT);
 }

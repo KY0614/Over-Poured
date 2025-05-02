@@ -35,13 +35,9 @@ private:
 	std::shared_ptr<Player> player_;
 
 	//‹q
-	std::unique_ptr<OrderManager> order_;
 	std::unique_ptr<OrderCustomerManager> customer_;
 
 	float timer_;
-	int score_;
-
-	int num;
 
 	void DebugDraw(void);
 };

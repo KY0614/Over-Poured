@@ -9,6 +9,8 @@
 OrderCustomerManager::OrderCustomerManager(void)
 {
 	isCounter_ = false;
+	orderMng_ = nullptr;
+	customerMng_ = nullptr;
 }
 
 OrderCustomerManager::~OrderCustomerManager(void)
@@ -23,11 +25,11 @@ void OrderCustomerManager::Init(void)
 
 	//‹q
 	customerMng_ = std::make_unique<CustomerManager>();
-	customerMng_->Init();
 
 	//¶¬‚³‚ê‚Ä‚¢‚é’•¶“à—e‚ðŽQÆ‚µ‚ÄŽí—Þ‚ðŒˆ‚ß‚Ä¶¬
 	CreateCustomersByOrders();
-	customerMng_->InitCustomersPos();
+	customerMng_->Init();
+	//customerMng_->InitCustomersPos();
 
 	isCounter_ = false;
 }
@@ -48,7 +50,8 @@ void OrderCustomerManager::Update(void)
 	{
 		//æ“ª‚Ì‚¨‹q‚Æ’•¶‚ðíœ
 		ClearOrderAndCustomer();
-
+		//’Ç‰Á¶¬
+		AddOrdersAndCustomers();
 		customerMng_->IsMoveFirstCustomer();
 
 		////‚¨‹q‚ðˆê’èŠÔŠu‚¾‚¯ˆÚ“®‚³‚¹‚é
@@ -58,9 +61,9 @@ void OrderCustomerManager::Update(void)
 		//if (!(customerMng_->GetCustomerMove()))
 		if (customerMng_->CheckFirstCustomerCol())
 		{
-			customerMng_->SetIsMoveFCustomer(false);
+			//customerMng_->SetIsMoveFCustomer(false);
 			//’•¶‚Æ‚¨‹q‚ð’Ç‰Á¶¬
-			AddOrdersAndCustomers();
+			
 		}
 	}
 	else if(customerMng_->CheckFirstCustomerCol())
@@ -96,7 +99,7 @@ void OrderCustomerManager::CreateCustomersByOrders(void)
 void OrderCustomerManager::AddOrdersAndCustomers(void)
 {
 	//’•¶‚Æ‚¨‹q‚ð’Ç‰Á¶¬AˆÊ’u’²®
-	customerMng_->SetFirstCustomerPos(customerMng_->GetFirstPos());
+	//customerMng_->SetFirstCustomerPos(customerMng_->GetFirstPos());
 	orderMng_->AddOrder();
 	AddCustomerByOrder();
 }
@@ -114,8 +117,31 @@ void OrderCustomerManager::AddCustomerByOrder(void)
 	customerMng_->SetLastCustomerPos();
 }
 
-void OrderCustomerManager::SetAddedCustoerPos(VECTOR pos)
+int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 {
+	Order::DRINK serveDrink = serve.drink_;
+	Order::SWEETS serveSweets = serve.sweets_;
+	int score = 0;
+	if (serveDrink == orderMng_->GetFirstOrder().drink_)
+	{
+		score += 30;
+	}
+
+	if (serveSweets == orderMng_->GetFirstOrder().sweets_)
+	{
+		score += 30;
+	}
+
+	if (orderMng_->GetFirstOrder().time_ > 2.0f)
+	{
+		score += 40;
+	}
+	else if (orderMng_->GetFirstOrder().time_ > 1.0f)
+	{
+		score += 20;
+	}
+
+	return score;
 }
 
 int OrderCustomerManager::GetCustomerNum(void) const
@@ -134,6 +160,7 @@ void OrderCustomerManager::DebugDraw(void)
 	DebugDrawFormat::FormatString(L"%dŒÂ–Ú", orderMng_->GetCount(), line++, lineHeight);
 	DebugDrawFormat::FormatString(L"%dl", customerMng_->GetCustomerNum(), line++, lineHeight);
 	DebugDrawFormat::FormatString(L"pos : %2.f,%2.f", customerMng_->GetFirstPos().x,customerMng_->GetFirstPos().z, line++, lineHeight);
-	DebugDrawFormat::FormatString(L"pos : %2.f,%2.f", customerMng_->GetLastPos().x,customerMng_->GetLastPos().z, line++, lineHeight);
+	DebugDrawFormat::FormatString(L"pos : %2.f,%2.f", customerMng_->GetSecondPos().x,customerMng_->GetSecondPos().z, line++, lineHeight);
+	DebugDrawFormat::FormatString(L"pos : %2.f,%2.f", customerMng_->GetSecondPos().x - customerMng_->GetFirstPos().x,customerMng_->GetLastPos().z, line++, lineHeight);
 	SetFontSize(16);
 }

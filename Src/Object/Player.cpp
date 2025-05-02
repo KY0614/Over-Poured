@@ -11,6 +11,7 @@
 #include "Common/AnimationController.h"
 #include "Common/Capsule.h"
 #include "Common/Collider.h"
+#include "Order.h"
 #include "Player.h"
 
 Player::Player(void)
@@ -79,7 +80,7 @@ void Player::Init(void)
 	sphereTran_.Update();
 
 	sphereTran_.scl = AsoUtility::VECTOR_ONE;
-	sphereTran_.pos = { 221.0f, 0.0f, 271.0f };
+	sphereTran_.pos = { 221.0f, 0.0f, 139.0f };
 	sphereTran_.quaRot = Quaternion();
 	sphereTran_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
@@ -105,7 +106,7 @@ void Player::Update(void)
 
 void Player::Draw(void)
 {
-	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
+	DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
 
 	//ÉÇÉfÉãÇÃï`âÊ
 	MV1DrawModel(transform_.modelId);
@@ -146,6 +147,47 @@ VECTOR Player::GetHitPos(void)
 VECTOR Player::GetHitNormal(void)
 {
 	return hitNormal_;
+}
+
+void Player::ProcessSelect(void)
+{
+	InputManager& ins = InputManager::GetInstance();
+	Order::OrderData data;
+	data.sweets_ = Order::SWEETS::NONE;
+	if (ins.IsTrgDown(KEY_INPUT_Q))
+	{
+		data.drink_ = Order::DRINK::HOT;
+	}
+	if (ins.IsTrgDown(KEY_INPUT_E))
+	{
+		data.drink_ = Order::DRINK::ICE;
+	}
+
+	switch (data.sweets_)
+	{
+	case Order::SWEETS::NONE:
+		if (ins.IsTrgDown(KEY_INPUT_M))
+		{
+			data.sweets_ = Order::SWEETS::CHOCO;
+		}
+		break;
+
+	case Order::SWEETS::CHOCO:
+		if (ins.IsTrgDown(KEY_INPUT_M))
+		{
+			data.sweets_ = Order::SWEETS::STRAWBERRY;
+		}
+		break;
+
+	case Order::SWEETS::STRAWBERRY:
+		if (ins.IsTrgDown(KEY_INPUT_M))
+		{
+			data.sweets_ = Order::SWEETS::NONE;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void Player::UpdateDebugImGui(void)
@@ -224,6 +266,8 @@ void Player::UpdatePlay(void)
 	//à⁄ìÆèàóù
 	ProcessMove();
 
+	ProcessSelect();
+
 	//à⁄ìÆï˚å¸Ç…âûÇ∂ÇΩâÒì]
 	Rotate();
 
@@ -236,6 +280,7 @@ void Player::UpdatePlay(void)
 	//èdóÕï˚å¸Ç…âàÇ¡ÇƒâÒì]Ç≥ÇπÇÈ
 	transform_.quaRot = Quaternion::Quaternion();
 	transform_.quaRot = transform_.quaRot.Mult(playerRotY_);
+
 }
 
 void Player::DrawDebug(void)

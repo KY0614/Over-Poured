@@ -9,7 +9,7 @@ public:
 	HotCustomer(void);
 
 	//デストラクタ
-	~HotCustomer(void) = default;
+	~HotCustomer(void);
 
 	void Draw(void) override;
 

@@ -9,6 +9,10 @@ HotCustomer::HotCustomer(void)
 {
 }
 
+HotCustomer::~HotCustomer(void)
+{
+}
+
 void HotCustomer::Draw(void)
 {
 	MV1DrawModel(transform_.modelId);
@@ -22,8 +26,6 @@ void HotCustomer::SetParam(void)
 
 	transform_.Update();
 
-	//type_ = TYPE::HOT;
-
 	SetType(TYPE::HOT);
 
 	//テストでモデルの色を赤にする
@@ -34,7 +36,7 @@ void HotCustomer::InitAnimation(void)
 {
 	std::string path = Application::PATH_MODEL + "Customer/";
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
-	animationController_->Add((int)STATE::IDLE, path + "Idle.mv1", 20.0f);
+	animationController_->Add((int)STATE::IDLE, path + "Idle2.mv1", 20.0f);
 
 	animationController_->Play((int)STATE::IDLE);
 }

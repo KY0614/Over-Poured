@@ -54,15 +54,16 @@ public:
 	/// <param name="pos"></param>
 	void SetFirstCustomerPos(VECTOR pos) { prePos_ = pos; }
 
-	void SetLastCustomerPos(void);
+	VECTOR SetLastCustomerPos(void);
 
 	void IsMoveFirstCustomer(void) { customers_.front()->IsMove(); }
 	void SetIsMoveFCustomer(bool isMove) { customers_.front()->SetIsMove(isMove); }
 
-	bool GetIsMoving(void) { customers_.front()->IsMove(); }
+	bool GetIsMoving(void) { return customers_.front()->GetIsMove(); }
 
 	int GetCustomerNum(void) { return customers_.size(); }
 	VECTOR GetFirstPos(void) { return customers_.front()->GetPos(); }
+	VECTOR GetSecondPos(void) { return customers_[1]->GetPos(); }
 	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
 
 	bool GetCustomerMove(void) { return customers_.front()->GetIsMove(); }

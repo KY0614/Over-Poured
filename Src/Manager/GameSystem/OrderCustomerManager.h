@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 #include <memory>
 
 class OrderManager;
@@ -28,11 +28,13 @@ public:
 	void CreateCustomersByOrders(void);
 
 	/// <summary>
-	/// 
+	/// ‚¨‹q‚Æ’•¶‚ğ’Ç‰Á‚Å¶¬
 	/// </summary>
-	/// <param name=""></param>
 	void AddOrdersAndCustomers(void);
 	
+	/// <summary>
+	/// æ“ª‚Ì‚¨‹q‚Æ’•¶‚ğíœ‚·‚é
+	/// </summary>
 	void ClearOrderAndCustomer(void);
 
 	/// <summary>
@@ -40,7 +42,7 @@ public:
 	/// </summary>
 	void AddCustomerByOrder(void); 
 
-	void SetAddedCustoerPos(VECTOR pos);
+	int CheckServeAndOrder(Order::OrderData serve);
 
 	/// <summary>
 	/// ¶¬‚µ‚Ä‚¢‚é‚¨‹q‚Ì”

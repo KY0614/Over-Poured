@@ -20,6 +20,7 @@ GameScene::GameScene(void)
 	player_ = nullptr;
 	skyDome_ = nullptr;
 	stage_ = nullptr;
+	customer_ = nullptr;
 }
 
 GameScene::~GameScene(void)
@@ -43,19 +44,6 @@ void GameScene::Init(void)
 	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
 
-	//customer_ = std::make_shared<CustomerManager>();
-	//customer_->Init();
-	//if (OrderManager::GetInstance().GetFirstOrder().drink_ == Order::DRINK::HOT)
-	//{
-	//	customer_->CreateCustomer(std::make_shared<HotCustomer>());
-	//	customer_->Init();
-	//}
-	//else
-	//{
-	//	customer_->CreateCustomer(std::make_shared<IceCustomer>());
-	//	customer_->Init();
-	//}
-
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
 	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
@@ -72,32 +60,12 @@ void GameScene::Update(void)
 
 	timer_ -= SceneManager::GetInstance().GetDeltaTime();
 
-	//注文の制限時間がなくなったら新しく注文を生成し、
-	//生成した注文に制限時間を設定
-	//if (order.GetFirstOrder().orderTime_ < 0.01f)
+	
+
+	//if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	//{
-	//	OrderManager::GetInstance().AddOrder()
-	//	order_->SetTimer(OrderManager::GetInstance().GetOrderTime());
-
-	//	//テストで注文が変わったら表示している客を一旦消して、
-	//	//注文に合わせた客を再生成する
-	//	customer_->ClearCustomers();
-	//	if (OrderManager::GetInstance().GetOrder().drink_ == OrderManager::DRINK::HOT)
-	//	{
-	//		customer_->CreateCustomer(std::make_shared<HotCustomer>());
-	//		customer_->Init();
-	//	}
-	//	else
-	//	{
-	//		customer_->CreateCustomer(std::make_shared<IceCustomer>());
-	//		customer_->Init();
-	//	}
+	//	score_++;
 	//}
-
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
-	{
-		score_++;
-	}
 
 	//if (timer_ < 0.0f)
 	//{

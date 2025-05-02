@@ -16,10 +16,20 @@ CustomerManager::~CustomerManager(void)
 
 void CustomerManager::Init(void)
 {
-	for (auto& c : customers_)
+	//とりあえず全員の位置をx軸だけずらす
+	for (int i = 0; i < MAX_CREATE_SIZE; i++)
 	{
-		c->Init();
+		VECTOR pos = CustomerBase::CUSTOMER_POS;
+		pos.x -= (i * CUSTOMERS_SPACE);
+
+		customers_[i]->Init(pos);
+
 	}
+	
+	//for (auto& c : customers_)
+	//{
+	//	c->Init();
+	//}
 }
 
 void CustomerManager::Update(void)
@@ -35,6 +45,19 @@ void CustomerManager::Update(void)
 		{
 			c->Move();
 		}
+	}
+	
+	if (customers_.front()->CollisionCounter())
+	{
+		if (customers_.front()->CheckCounterToCustomer())
+		{
+			customers_.front()->SetGoalRotate(AsoUtility::Deg2RadF(90.0f));
+			for (auto& c : customers_)
+			{
+				c->Move();
+			}
+		}
+		
 	}
 }
 
@@ -69,17 +92,18 @@ void CustomerManager::CreateSingleCustomer(Order::DRINK drink)
 
 	case Order::DRINK::HOT:
 		customers_.push_back(std::make_unique<HotCustomer>());
-		customers_.back()->Init();
+		customers_.back()->Init(SetLastCustomerPos());
 		break;
 
 	case Order::DRINK::ICE:
 		customers_.push_back(std::move(std::make_unique<IceCustomer>()));
-		customers_.back()->Init();
+		customers_.back()->Init(SetLastCustomerPos());
 		break;
 
 	default:
 		break;
 	}
+
 }
 
 void CustomerManager::MoveCustomerPos(void)
@@ -106,15 +130,14 @@ void CustomerManager::ClearFirstCustomers(void)
 	customers_.erase(customers_.begin());
 }
 
-void CustomerManager::SetLastCustomerPos(void)
+VECTOR CustomerManager::SetLastCustomerPos(void)
 {
-	//全員の位置をx軸だけずらす
-	for (int i = 1; i < MAX_CREATE_SIZE; i++)
-	{
-		VECTOR pos = customers_.front()->GetPos();
-		pos.x -= (i * CUSTOMERS_SPACE);
-		customers_[i]->SetPosX(pos.x);
-	}
+	//座標を返す
+	VECTOR ret;
+
+	ret = customers_.front()->GetPos();
+	ret.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+	return ret;
 }
 
 bool CustomerManager::CheckFirstCustomerCol(void)
