@@ -50,10 +50,12 @@ void OrderCustomerManager::Update(void)
 	{
 		//æ“ª‚Ì‚¨‹q‚Æ’•¶‚ðíœ
 		ClearOrderAndCustomer();
-		//’Ç‰Á¶¬
-		AddOrdersAndCustomers();
+
 		customerMng_->IsMoveFirstCustomer();
 
+		//’Ç‰Á¶¬
+		AddOrdersAndCustomers();
+		
 		////‚¨‹q‚ðˆê’èŠÔŠu‚¾‚¯ˆÚ“®‚³‚¹‚é
 		//customerMng_->MoveCustomerPos();
 
