@@ -66,7 +66,13 @@ public:
 	/// <returns>isMoveの値を返す</returns>
 	bool GetIsMove(void) { return isMove_; }
 
+	/// <summary>
+	/// スコアによるお客の反応の設定
+	/// </summary>
+	/// <param name="score">スコア</param>
 	void SetCustomerReacton(int score);
+
+	CustomerBase::STATE GetFrontState(void) { return customers_.front()->GetState(); }
 
 	VECTOR SetLastCustomerPos(void);
 

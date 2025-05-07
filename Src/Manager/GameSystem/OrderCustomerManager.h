@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include"../../Object/Customer/CustomerBase.h"
 
 class OrderManager;
 class CustomerManager;
@@ -51,6 +52,8 @@ public:
 
 	void IsServe(void) { isServe_ = true; }
 
+	bool GetIsMoving(void);
+
 	/// <summary>
 	/// ¶¬‚µ‚Ä‚¢‚é‚¨‹q‚Ì”
 	/// </summary>
@@ -64,10 +67,9 @@ private:
 	std::unique_ptr<OrderManager> orderMng_;
 
 	//CustomerManger‚Ìƒ|ƒCƒ“ƒ^
-	std::unique_ptr<CustomerManager> customerMng_;
+	std::shared_ptr<CustomerManager> customerMng_;
 
 	bool isServe_;
 
 	void DebugDraw(void);
 };
-

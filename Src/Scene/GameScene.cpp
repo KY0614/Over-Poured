@@ -7,6 +7,7 @@
 #include "../Manager/Generic/InputManager.h"
 #include"../Manager/GameSystem/OrderManager.h"
 #include"../Manager/GameSystem/OrderCustomerManager.h"
+#include"../Object/Customer/CustomerBase.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/SkyDome.h"
@@ -62,7 +63,8 @@ void GameScene::Update(void)
 
 	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
 	int r = 30;
-	if (AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
+	if (!customer_->GetIsMoving()&&
+		AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
 	{
 		if (ins.IsTrgDown(KEY_INPUT_SPACE))
 		{

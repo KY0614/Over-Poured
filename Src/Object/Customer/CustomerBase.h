@@ -79,6 +79,8 @@ public:
 	void SetState(STATE state) { state_ = state; }
 	void SetReaction(REACTION reaction) { reaction_ = reaction; }
 
+	STATE GetState(void) { return state_; }
+
 	VECTOR GetPos(void) { return transform_.pos; }
 
 	//‰ñ“]

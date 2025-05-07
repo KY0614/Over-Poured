@@ -24,7 +24,7 @@ void OrderCustomerManager::Init(void)
 	orderMng_->Init();
 
 	//‹q
-	customerMng_ = std::make_unique<CustomerManager>();
+	customerMng_ = std::make_shared<CustomerManager>();
 
 	//¶¬‚³‚ê‚Ä‚¢‚é’•¶“à—e‚ðŽQÆ‚µ‚ÄŽí—Þ‚ðŒˆ‚ß‚Ä¶¬
 	CreateCustomersByOrders();
@@ -47,17 +47,8 @@ void OrderCustomerManager::Update(void)
 	//’•¶‚Ì§ŒÀŽžŠÔ‚ª‰ß‚¬‚½‚ç’Ç‰Á¶¬‚ðs‚¤
 	if (orderMng_->IsFirstOrderTimeOut() || isServe_)
 	{
-		//customerMng_->IsMoveFirstCustomer();
+		//‚¨‹q‚ðˆÚ“®‚³‚¹‚é
 		customerMng_->IsMove();
-
-		////æ“ª‚Ì‚¨‹q‚Æ’•¶‚ðíœ
-		//ClearOrderAndCustomer();
-
-		////’Ç‰Á¶¬
-		//AddOrdersAndCustomers();
-		
-		////‚¨‹q‚ðˆê’èŠÔŠu‚¾‚¯ˆÚ“®‚³‚¹‚é
-		//customerMng_->MoveCustomerPos();
 
 		//‚¨‹q‚ÌˆÚ“®‚ªI‚í‚Á‚½‚çíœ‚Æ¶¬‚ðs‚¤
 		//if (!(customerMng_->GetCustomerMove()))
@@ -172,6 +163,11 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 	}
 	
 	return score;
+}
+
+bool OrderCustomerManager::GetIsMoving(void)
+{
+	return customerMng_->GetIsMove();
 }
 
 int OrderCustomerManager::GetCustomerNum(void) const
