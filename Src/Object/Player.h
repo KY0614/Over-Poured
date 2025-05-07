@@ -5,6 +5,7 @@
 #include <functional>
 #include <DxLib.h>
 #include "Stage.h"
+#include "Order.h"
 #include "ActorBase.h"
 
 class AnimationController;
@@ -66,6 +67,8 @@ public:
 	VECTOR GetHitPos(void);
 	VECTOR GetHitNormal(void);
 
+	Order::OrderData GetPlayerItem(void) { return data_; }
+
 	void UpdateDebugImGui(void);
 
 private:
@@ -75,8 +78,10 @@ private:
 
 	//状態管理
 	STATE state_;
+
 	//状態管理(状態遷移時初期処理)
 	std::map<STATE, std::function<void(void)>> stateChanges_;
+
 	//状態管理(更新ステップ)
 	std::function<void(void)> stateUpdate_;
 
@@ -129,6 +134,8 @@ private:
 	//衝突している地面との座標
 	VECTOR hitPos_;
 	
+	Order::OrderData data_;
+
 	void InitAnimation(void);
 
 	//状態遷移

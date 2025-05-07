@@ -9,8 +9,8 @@ CustomerBase::CustomerBase(void)
 	animationController_ = nullptr;
 	type_ = TYPE::NONE;
 	state_ = STATE::IDLE;
+	reaction_ = REACTION::NONE;
 
-	isMove_ = false;
 	stepRotTime_ = 0.0f;
 }
 
@@ -27,13 +27,13 @@ void CustomerBase::Init(VECTOR pos)
 
 	SetParam();
 	InitAnimation();
-	isMove_ = false;
 }
 
 void CustomerBase::Update(void)
 {
 	transform_.Update();
 	animationController_->Update();
+
 	RotateY();
 
 	//d—Í•ûŒü‚É‰ˆ‚Á‚Ä‰ñ“]‚³‚¹‚é
@@ -51,7 +51,7 @@ void CustomerBase::Move(void)
 	//else {
 	//	isMove_ = false;
 	//}
-	transform_.pos.x += 2.0f;
+	transform_.pos.x += 1.5f;
 }
 
 void CustomerBase::RotateY(void)
@@ -78,7 +78,7 @@ bool CustomerBase::CollisionCounter(void)
 bool CustomerBase::CheckCounterToCustomer(void)
 {
 	VECTOR spherePos = { 221.0f, 0.0f, 271.0f };
-	if (GetTransform().pos.x < spherePos.x)
+	if (GetTransform().pos.x > spherePos.x)
 	{
 		return true;
 	}

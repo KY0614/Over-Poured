@@ -7,6 +7,7 @@
 
 HotCustomer::HotCustomer(void)
 {
+	color_ = GetColorF(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 HotCustomer::~HotCustomer(void)
@@ -15,6 +16,7 @@ HotCustomer::~HotCustomer(void)
 
 void HotCustomer::Draw(void)
 {
+	UpdateCol();
 	MV1DrawModel(transform_.modelId);
 }
 
@@ -28,8 +30,11 @@ void HotCustomer::SetParam(void)
 
 	SetType(TYPE::HOT);
 
+	color_ = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);
+
 	//テストでモデルの色を赤にする
-	MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+	MV1SetMaterialDifColor(transform_.modelId, 0, color_);
+
 }
 
 void HotCustomer::InitAnimation(void)
@@ -39,4 +44,25 @@ void HotCustomer::InitAnimation(void)
 	animationController_->Add((int)STATE::IDLE, path + "Idle2.mv1", 20.0f);
 
 	animationController_->Play((int)STATE::IDLE);
+}
+
+void HotCustomer::UpdateCol(void)
+{
+	switch (reaction_)
+	{
+	case CustomerBase::REACTION::GOOD:
+		color_ = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+		MV1SetMaterialDifColor(transform_.modelId, 0, color_);
+		break;
+	case CustomerBase::REACTION::SOSO:
+		color_ = GetColorF(0.5f, 0.5f, 0.5f, 1.0f);
+		MV1SetMaterialDifColor(transform_.modelId, 0, color_);
+		break;
+	case CustomerBase::REACTION::BAD:
+		color_ = GetColorF(0.0f, 0.0f, 0.0f, 1.0f);
+		MV1SetMaterialDifColor(transform_.modelId, 0, color_);
+		break;
+	default:
+		break;
+	}
 }

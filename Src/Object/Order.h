@@ -7,8 +7,8 @@ public:
 	//注文関連
 	static constexpr int ORDER_MAX_NUM = 2;			//最大注文内容数
 
-	static constexpr float ONE_ORDER_TIME = 3.5f;	//注文の制限時間(1つ)
-	static constexpr float TWO_ORDER_TIME = 5.5f;	//注文の制限時間(２つ)
+	static constexpr float ONE_ORDER_TIME = 5.5f;	//注文の制限時間(1つ)
+	static constexpr float TWO_ORDER_TIME = 10.5f;	//注文の制限時間(２つ)
 
 	//商品関連
 	static constexpr int DRINK_MAX_NUM = 2;			//飲み物類の最大数

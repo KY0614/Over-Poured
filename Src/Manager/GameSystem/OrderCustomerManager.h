@@ -42,7 +42,14 @@ public:
 	/// </summary>
 	void AddCustomerByOrder(void); 
 
+	/// <summary>
+	/// 提供されたものと注文を比較してスコアを返す
+	/// </summary>
+	/// <param name="serve">提供されたもの</param>
+	/// <returns>スコア</returns>
 	int CheckServeAndOrder(Order::OrderData serve);
+
+	void IsServe(void) { isServe_ = true; }
 
 	/// <summary>
 	/// 生成しているお客の数
@@ -59,7 +66,7 @@ private:
 	//CustomerMangerのポインタ
 	std::unique_ptr<CustomerManager> customerMng_;
 
-	bool isCounter_;
+	bool isServe_;
 
 	void DebugDraw(void);
 };

@@ -49,26 +49,35 @@ public:
 	void ClearFirstCustomers(void);
 
 	/// <summary>
-	/// 先頭のお客の位置を取得
+	/// 客を動かす
 	/// </summary>
-	/// <param name="pos"></param>
-	void SetFirstCustomerPos(VECTOR pos) { prePos_ = pos; }
+	void IsMove(void) { isMove_ = true; }
+
+	/// <summary>
+	/// 客を止める
+	/// </summary>
+	/// <param name=""></param>
+	void IsNotMove(void) { isMove_ = false; }
+
+	/// <summary>
+	/// 客が動いているか取得する
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>isMoveの値を返す</returns>
+	bool GetIsMove(void) { return isMove_; }
+
+	void SetCustomerReacton(int score);
 
 	VECTOR SetLastCustomerPos(void);
-
-	void IsMoveFirstCustomer(void) { customers_.front()->IsMove(); }
-	void SetIsMoveFCustomer(bool isMove) { customers_.front()->SetIsMove(isMove); }
-
-	bool GetIsMoving(void) { return customers_.front()->GetIsMove(); }
 
 	int GetCustomerNum(void) { return customers_.size(); }
 	VECTOR GetFirstPos(void) { return customers_.front()->GetPos(); }
 	VECTOR GetSecondPos(void) { return customers_[1]->GetPos(); }
 	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
 
-	bool GetCustomerMove(void) { return customers_.front()->GetIsMove(); }
 
 	bool CheckFirstCustomerCol(void);
+	bool CheckSecondCustomerCol(void);
 
 private:
 	// 静的インスタンス
@@ -77,6 +86,6 @@ private:
 	//とりあえず一人
 	std::vector<std::shared_ptr<CustomerBase>> customers_;
 
-	VECTOR prePos_;
+	bool isMove_;
 };
 

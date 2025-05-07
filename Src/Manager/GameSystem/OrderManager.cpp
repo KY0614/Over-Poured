@@ -40,7 +40,7 @@ void OrderManager::Draw(void)
 	startX = startX * 1.5;//フォントサイズが1.5倍なので
 	int scale = 25;
 	int endX = startX + scale;
-	int startY = 60;
+	int startY = 30;
 	int endY = startY + scale;
 	int drinkCol = GetColor(0, 0, 0);
 

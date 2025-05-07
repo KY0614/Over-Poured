@@ -60,7 +60,16 @@ void GameScene::Update(void)
 
 	timer_ -= SceneManager::GetInstance().GetDeltaTime();
 
-	
+	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
+	int r = 30;
+	if (AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
+	{
+		if (ins.IsTrgDown(KEY_INPUT_SPACE))
+		{
+	 		score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
+			customer_->IsServe();
+		}
+	}
 
 	//if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	//{
@@ -139,6 +148,8 @@ void GameScene::DebugDraw(void)
 	int line = 0;	//çs
 	int lineHeight = 30;	//çs
 	//ç∂è„Ç©ÇÁ
-	DebugDrawFormat::FormatString(L"tiem : %2.f", timer_, line++);
+	DebugDrawFormat::FormatString(L"tiem : %2.f", timer_, line);
+	DebugDrawFormat::FormatString(L"", timer_, line);
+	DebugDrawFormat::FormatStringRight(L"score : %d", score_, line);
 
 }

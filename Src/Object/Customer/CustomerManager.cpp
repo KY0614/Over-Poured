@@ -6,7 +6,7 @@
 
 CustomerManager::CustomerManager(void)
 {
-	prePos_ = AsoUtility::VECTOR_ZERO;
+	isMove_ = false;
 }
 
 CustomerManager::~CustomerManager(void)
@@ -23,8 +23,9 @@ void CustomerManager::Init(void)
 		pos.x -= (i * CUSTOMERS_SPACE);
 
 		customers_[i]->Init(pos);
-
 	}
+
+	isMove_ = true;
 	
 	//for (auto& c : customers_)
 	//{
@@ -39,25 +40,35 @@ void CustomerManager::Update(void)
 		c->Update();
 	}
 
-	if (customers_.front()->GetIsMove() && !(customers_.front()->CollisionCounter()))
+	//if (customers_.front()->GetIsMove() && !(customers_.front()->CollisionCounter()))
+	//{
+	//	for (auto& c : customers_)
+	//	{
+	//		c->Move();
+	//	}
+	//}
+
+	if (isMove_)
 	{
 		for (auto& c : customers_)
 		{
+			c->SetState(CustomerBase::STATE::WALK);
 			c->Move();
 		}
 	}
 	
+	//カウンター前の当たり判定の位置まで動かし、回転させる
 	if (customers_.front()->CollisionCounter())
 	{
 		if (customers_.front()->CheckCounterToCustomer())
 		{
 			customers_.front()->SetGoalRotate(AsoUtility::Deg2RadF(90.0f));
+			isMove_ = false;
 			for (auto& c : customers_)
 			{
-				c->Move();
+				c->SetState(CustomerBase::STATE::WAIT);
 			}
 		}
-		
 	}
 }
 
@@ -108,16 +119,6 @@ void CustomerManager::CreateSingleCustomer(Order::DRINK drink)
 
 void CustomerManager::MoveCustomerPos(void)
 {
-	//customers_.front()->SetPosX(CustomerBase::COUNTER_FRONT_POS_X);
-
-	//全員の位置をx軸だけずらす
-	//for (int i = 1; i < MAX_CREATE_SIZE; i++)
-	//{
-	//	VECTOR pos = customers_.front()->GetPos();
-	//	pos.x -= (i * CUSTOMERS_SPACE);
-	//	customers_[i]->SetPosX(pos.x);
-	//}
-
 	for (auto& c : customers_)
 	{
 		c->Move();
@@ -128,6 +129,22 @@ void CustomerManager::ClearFirstCustomers(void)
 {
 	//先頭の要素を削除
 	customers_.erase(customers_.begin());
+}
+
+void CustomerManager::SetCustomerReacton(int score)
+{
+	if (score >= 80)
+	{
+		customers_.front()->SetReaction(CustomerBase::REACTION::GOOD);
+	}
+	else if (score > 50)
+	{
+		customers_.front()->SetReaction(CustomerBase::REACTION::SOSO);
+	}
+	else
+	{
+		customers_.front()->SetReaction(CustomerBase::REACTION::BAD);
+	}
 }
 
 VECTOR CustomerManager::SetLastCustomerPos(void)
@@ -144,6 +161,16 @@ bool CustomerManager::CheckFirstCustomerCol(void)
 {
 	bool ret = false;
 	if (customers_.front()->CollisionCounter())
+	{
+		ret = true;
+	}
+	return ret;
+}
+
+bool CustomerManager::CheckSecondCustomerCol(void)
+{
+	bool ret = false;
+	if (customers_[1]->CollisionCounter())
 	{
 		ret = true;
 	}

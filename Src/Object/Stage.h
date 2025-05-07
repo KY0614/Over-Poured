@@ -24,9 +24,7 @@ public:
 
 private:
 
-	//シングルトン参照
-	ResourceManager& resMng_;
-
 	Player& player_;
 
+	void UpdateDebugImGui(void);
 };

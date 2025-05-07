@@ -4,6 +4,7 @@
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
 #include "../Libs/ImGui/imgui.h"
+#include "../Common/DebugDrawFormat.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/ResourceManager.h"
 #include "../Manager/Generic/InputManager.h"
@@ -87,6 +88,9 @@ void Player::Init(void)
 
 #endif // _DEBUG
 
+	data_.drink_ = Order::DRINK::NONE;
+	data_.sweets_ = Order::SWEETS::NONE;
+
 }
 
 void Player::Update(void)
@@ -115,7 +119,7 @@ void Player::Draw(void)
 	DrawShadow();
 
 	//デバッグ用描画
-	//DrawDebug();
+	DrawDebug();
 
 }
 
@@ -152,37 +156,36 @@ VECTOR Player::GetHitNormal(void)
 void Player::ProcessSelect(void)
 {
 	InputManager& ins = InputManager::GetInstance();
-	Order::OrderData data;
-	data.sweets_ = Order::SWEETS::NONE;
+
 	if (ins.IsTrgDown(KEY_INPUT_Q))
 	{
-		data.drink_ = Order::DRINK::HOT;
+		data_.drink_ = Order::DRINK::HOT;
 	}
 	if (ins.IsTrgDown(KEY_INPUT_E))
 	{
-		data.drink_ = Order::DRINK::ICE;
+		data_.drink_ = Order::DRINK::ICE;
 	}
 
-	switch (data.sweets_)
+	switch (data_.sweets_)
 	{
 	case Order::SWEETS::NONE:
 		if (ins.IsTrgDown(KEY_INPUT_M))
 		{
-			data.sweets_ = Order::SWEETS::CHOCO;
+			data_.sweets_ = Order::SWEETS::CHOCO;
 		}
 		break;
 
 	case Order::SWEETS::CHOCO:
 		if (ins.IsTrgDown(KEY_INPUT_M))
 		{
-			data.sweets_ = Order::SWEETS::STRAWBERRY;
+			data_.sweets_ = Order::SWEETS::STRAWBERRY;
 		}
 		break;
 
 	case Order::SWEETS::STRAWBERRY:
 		if (ins.IsTrgDown(KEY_INPUT_M))
 		{
-			data.sweets_ = Order::SWEETS::NONE;
+			data_.sweets_ = Order::SWEETS::NONE;
 		}
 		break;
 	default:
@@ -286,28 +289,61 @@ void Player::UpdatePlay(void)
 void Player::DrawDebug(void)
 {
 
-	int white = 0xffffff;
-	int black = 0x000000;
-	int red = 0xff0000;
-	int green = 0x00ff00;
-	int blue = 0x0000ff;
-	int yellow = 0xffff00;
-	int purpl = 0x800080;
+	//int white = 0xffffff;
+	//int black = 0x000000;
+	//int red = 0xff0000;
+	//int green = 0x00ff00;
+	//int blue = 0x0000ff;
+	//int yellow = 0xffff00;
+	//int purpl = 0x800080;
 
-	VECTOR v;
+	SetFontSize(24);
+	int line = 0;
+	DebugDrawFormat::FormatStringRight(L"提供品 : %d, %d", data_.drink_, data_.sweets_,line);
+	SetFontSize(16);
 
-	//キャラ基本情報
-	//-------------------------------------------------------
-	//キャラ座標
-	v = transform_.pos;
-	DrawFormatString(20, 60, black, L"キャラ座標 ： (%0.2f, %0.2f, %0.2f)",
-		v.x, v.y, v.z
-	);	
-	VECTOR n = GetHitNormal();
-	DrawFormatString(20, 80, black, L"hitnormal ： (%0.2f, %0.2f, %0.2f)",
-		n.x, n.y, n.z
-	);
-	//-------------------------------------------------------
+	auto orders = data_;
+
+	//注文に合わせて四角の色を変える
+	int startX = Application::SCREEN_SIZE_X - (DebugDrawFormat::GetFormatSize(L"提供品 : %d, %d", data_.drink_, data_.sweets_) * 1.5);
+	//startX = startX * 1.5;//フォントサイズが1.5倍なので
+	int scale = 25;
+	int endX = startX + scale;
+	int startY = 30;
+	int endY = startY + scale;
+	int drinkCol = GetColor(0, 0, 0);
+
+	if (orders.drink_ == Order::DRINK::HOT)
+	{
+		drinkCol = GetColor(255, 0, 0);
+	}
+	else
+	{
+		drinkCol = GetColor(0, 255, 255);
+	}
+	//飲み物用
+	DrawBox(startX, startY, endX, endY, drinkCol, true);
+
+	int foodCol = GetColor(0, 0, 0);
+	switch (orders.sweets_)
+	{
+	case Order::SWEETS::NONE:
+		foodCol = GetColor(0, 0, 0);
+		break;
+
+	case Order::SWEETS::CHOCO:
+		foodCol = GetColor(132, 98, 68);
+		break;
+
+	case Order::SWEETS::STRAWBERRY:
+		foodCol = GetColor(255, 198, 244);
+		break;
+	default:
+		break;
+	}
+
+	//食べ物用
+	DrawBox(endX + scale, startY, endX + (scale * 2), endY, foodCol, true);
 }
 
 void Player::DrawShadow(void)
@@ -414,7 +450,6 @@ void Player::ProcessMove(void)
 	if (ins.IsNew(KEY_INPUT_A)) { dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); }
 	if (ins.IsNew(KEY_INPUT_S)) { dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
 	if (ins.IsNew(KEY_INPUT_D)) { dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f); }
-
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{

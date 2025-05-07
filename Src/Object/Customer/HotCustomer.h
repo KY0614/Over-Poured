@@ -17,7 +17,9 @@ protected:
 
 	void SetParam(void) override;
 
-	virtual void InitAnimation(void) override;
+	void InitAnimation(void) override;
+
+	void UpdateCol(void)override;
 
 private:
 

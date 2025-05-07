@@ -27,7 +27,13 @@ public:
 		IDLE,
 		WALK,
 		WAIT,
+	};
+
+	enum class REACTION
+	{
+		NONE,
 		GOOD,
+		SOSO,
 		BAD,
 	};
 
@@ -38,6 +44,7 @@ public:
 	~CustomerBase(void) = default;
 
 	virtual void Init(VECTOR pos);
+	//virtual void Init(void)override = 0;
 	virtual void Update(void)override;
 	virtual void Draw(void)override = 0;
 
@@ -69,11 +76,10 @@ public:
 
 	void SetRotY(float rotY) { transform_.rot.y = rotY; }
 
-	void SetIsMove(bool isMove) { isMove_ = isMove; }
-	void IsMove(void) { isMove_ = true; }
+	void SetState(STATE state) { state_ = state; }
+	void SetReaction(REACTION reaction) { reaction_ = reaction; }
 
 	VECTOR GetPos(void) { return transform_.pos; }
-	bool GetIsMove(void) { return isMove_; }
 
 	//‰ñ“]
 	void SetGoalRotate(double rotRad);
@@ -87,18 +93,20 @@ protected:
 	TYPE type_;
 
 	STATE state_;
+	REACTION reaction_;
+
+	COLOR_F color_;
 
 	virtual void SetParam(void) = 0;
 
 	virtual void InitAnimation(void) = 0;
 
+	virtual void UpdateCol(void) = 0;
 private:
 
 	//‰ñ“]
 	Quaternion customerRotY_;
 	Quaternion goalQuaRot_;
 	float stepRotTime_;
-
-	bool isMove_;
 };
 
