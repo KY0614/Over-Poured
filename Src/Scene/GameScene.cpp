@@ -89,6 +89,7 @@ void GameScene::Update(void)
 	//ƒV[ƒ“‘JˆÚ
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
+		scr.SaveScore(score_);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 	}
 

@@ -45,7 +45,7 @@ void Score::Destroy(void)
 
 void Score::GetScore(void)
 {
-	err = fopen_s(&file, "Data/score.txt", "r");
+	err = fopen_s(&file, "Data/Score/score.txt", "r");
 	if (err != 0) { //エラー発生
 		return;
 	}
@@ -53,7 +53,7 @@ void Score::GetScore(void)
 
 void Score::SaveScore(int score)
 {
-	err = fopen_s(&file, "Data/score.txt", "w");
+	err = fopen_s(&file, "Data/Score/score.txt", "w");
 	if (err != 0) { //エラー発生
 		return;
 	}
