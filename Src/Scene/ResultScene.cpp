@@ -25,7 +25,7 @@ void ResultScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
-	Score::GetInstance().GetScore();
+	
 }
 
 void ResultScene::Draw(void)
@@ -35,5 +35,5 @@ void ResultScene::Draw(void)
 	//スコアを読み込む
 
 	DrawFormatString(0, 20, 0xff0000,L"スコア", 0xFFFFFF);
-
+	Score::GetInstance().LoadScore();
 }

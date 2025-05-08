@@ -90,7 +90,7 @@ private:
 	static CustomerManager* instance_;
 	
 	//‚Æ‚è‚ ‚¦‚¸ˆêl
-	std::vector<std::shared_ptr<CustomerBase>> customers_;
+	std::vector<std::unique_ptr<CustomerBase>> customers_;
 
 	bool isMove_;
 };

@@ -21,7 +21,7 @@ public:
 	void Destroy(void);
 
 	//
-	void GetScore(void);
+	void LoadScore(void);
 
 	//ゲーム終了時のスコア保存用
 	void SaveScore(int score);
@@ -34,7 +34,10 @@ public:
 
 	void ScoreSort(void);
 
+	void AddScore(int score) { addScore_ += score; }
+
 private:
+
 	//シングルトン用インスタンス
 	static Score* instance_;
 
@@ -42,9 +45,10 @@ private:
 	FILE* file;		//ファイル構造体
 	errno_t err;	//エラー用
 
-	int score_;
-	int addScore_;
-	int scoreRank_[5];
-	int scoreSort_[5];
+	//スコア	
+	int score_;		//今回のスコア
+	int addScore_;	//全てのスコアを加算したスコア
+	int scoreRank_[6];	//ランキング形式のスコア
+	int scoreSort_[6];	//ソート用のスコア
 };
 
