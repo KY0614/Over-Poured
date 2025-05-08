@@ -89,8 +89,9 @@ private:
 	// 静的インスタンス
 	static CustomerManager* instance_;
 	
-	//とりあえず一人
+	//お客生成用
 	std::vector<std::unique_ptr<CustomerBase>> customers_;
+	//std::unique_ptr<CustomerBase> customers_[MAX_CREATE_SIZE];
 
 	bool isMove_;
 };

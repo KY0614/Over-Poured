@@ -55,9 +55,6 @@ void ResourceManager::Init(void)
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Smoke/Smoke.efkefc");
 	resourcesMap_.emplace(SRC::FOOT_SMOKE, std::move(res));
 
-	//ワープスターモデル
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Star/star.mv1");
-	resourcesMap_.emplace(SRC::WARP_STAR, std::move(res));
 
 	//ワープスター用回転エフェクト
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "StarDust/StarDust.efkefc");
