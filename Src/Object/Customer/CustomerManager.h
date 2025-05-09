@@ -72,12 +72,13 @@ public:
 	/// <param name="score">スコア</param>
 	void SetCustomerReacton(int score);
 
-	CustomerBase::STATE GetFrontState(void) { return customers_.front()->GetState(); }
+	//CustomerBase::STATE GetFrontState(void) { return customers_.front()->GetState(); }
+	CustomerBase::STATE GetFrontState(void) { return customers_[cnt_]->GetState(); }
 
 	VECTOR SetLastCustomerPos(void);
 
 	int GetCustomerNum(void) { return customers_.size(); }
-	VECTOR GetFirstPos(void) { return customers_.front()->GetPos(); }
+	VECTOR GetFirstPos(void) { return customers_[cnt_]->GetPos(); }
 	VECTOR GetSecondPos(void) { return customers_[1]->GetPos(); }
 	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
 
@@ -91,8 +92,8 @@ private:
 	
 	//お客生成用
 	std::vector<std::unique_ptr<CustomerBase>> customers_;
-	//std::unique_ptr<CustomerBase> customers_[MAX_CREATE_SIZE];
 
 	bool isMove_;
+	int cnt_;
 };
 

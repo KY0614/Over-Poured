@@ -79,6 +79,9 @@ public:
 	void SetState(STATE state) { state_ = state; }
 	void SetReaction(REACTION reaction) { reaction_ = reaction; }
 
+	void IsVisible(void) { isVisible_ = false; }
+	bool GetIsVisible(void) { return isVisible_; }
+
 	STATE GetState(void) { return state_; }
 
 	VECTOR GetPos(void) { return transform_.pos; }
@@ -98,6 +101,8 @@ protected:
 	REACTION reaction_;
 
 	COLOR_F color_;
+
+	bool isVisible_;
 
 	virtual void SetParam(void) = 0;
 

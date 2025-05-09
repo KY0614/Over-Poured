@@ -11,6 +11,8 @@ CustomerBase::CustomerBase(void)
 	state_ = STATE::IDLE;
 	reaction_ = REACTION::NONE;
 
+	isVisible_ = false;
+
 	stepRotTime_ = 0.0f;
 }
 
@@ -67,7 +69,7 @@ bool CustomerBase::CollisionCounter(void)
 {
 	VECTOR spherePos = { 221.0f, 0.0f, 271.0f };
 
-	if (AsoUtility::IsHitSpherePoint(spherePos, 30, GetTransform().pos))
+	if (AsoUtility::IsHitSpherePoint(spherePos, 30, GetTransform().pos) && isVisible_)
 	{
 		//“–‚½‚Á‚Ä‚¢‚½‚çtrue‚ð•Ô‚·
 		return true;

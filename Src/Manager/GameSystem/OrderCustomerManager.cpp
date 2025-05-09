@@ -95,7 +95,6 @@ void OrderCustomerManager::CreateCustomersByOrders(void)
 void OrderCustomerManager::AddOrdersAndCustomers(void)
 {
 	//’•¶‚Æ‚¨‹q‚ð’Ç‰Á¶¬AˆÊ’u’²®
-	//customerMng_->SetFirstCustomerPos(customerMng_->GetFirstPos());
 	orderMng_->AddOrder();
 	AddCustomerByOrder();
 }

@@ -16,6 +16,7 @@ HotCustomer::~HotCustomer(void)
 
 void HotCustomer::Draw(void)
 {
+	if (!isVisible_) return;
 	UpdateCol();
 	MV1DrawModel(transform_.modelId);
 }
@@ -35,6 +36,7 @@ void HotCustomer::SetParam(void)
 	//テストでモデルの色を赤にする
 	MV1SetMaterialDifColor(transform_.modelId, 0, color_);
 
+	isVisible_ = true;
 }
 
 void HotCustomer::InitAnimation(void)

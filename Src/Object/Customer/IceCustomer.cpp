@@ -12,6 +12,7 @@ IceCustomer::IceCustomer(void)
 
 void IceCustomer::Draw(void)
 {
+	if (!isVisible_) return;
 	UpdateCol();
 	MV1DrawModel(transform_.modelId);
 }
@@ -30,6 +31,8 @@ void IceCustomer::SetParam(void)
 
 	//テストでモデルの色を青にする
 	MV1SetMaterialDifColor(transform_.modelId, 0, color_);
+
+	isVisible_ = true;
 }
 
 void IceCustomer::InitAnimation(void)
