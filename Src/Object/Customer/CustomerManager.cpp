@@ -37,7 +37,7 @@ void CustomerManager::Init(void)
 
 void CustomerManager::Update(void)
 {
-	if (cnt_ < customers_.size())return;
+	//if (cnt_ < customers_.size())return;
 	for (auto& c : customers_)
 	{
 		c->Update();
