@@ -1,1 +1,16 @@
-{"ScoreData":{"AggregateScore":[120],"CurrentScore":[120]}}
+{
+    "ScoreData": {
+        "AggregateScore": [
+            120
+        ],
+        "CurrentScore": [
+            120
+        ]
+    },
+    "Scores": [
+        300,
+        0,
+        400,
+        100
+    ]
+}
