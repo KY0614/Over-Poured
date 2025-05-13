@@ -33,11 +33,9 @@ public:
 	int GetAggregateScore(void)const;
 
 	//ランキング順のスコアを取得
-	//const std::vector<int>& GetRankingScore(void)const { return rankingScores_; }
+	int GetRankingScore(int element)const { return scoreRank_[element]; }
 
 	void SetCurrentScore(int score) { currentScore_ = score; }
-
-	void AddScore(int score) { addScore_ += score; }
 
 private:
 
@@ -47,9 +45,7 @@ private:
 	//スコア	
 	std::vector<int> scores_;
 	int currentScore_;		//今回のスコア
-	int addScore_;	//全てのスコアを加算したスコア
 	int scoreRank_[6];	//ランキング形式のスコア
-	int scoreSort_[6];	//ソート用のスコア
 
 	void UpdateRanking(void);
 };

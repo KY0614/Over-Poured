@@ -42,5 +42,8 @@ void ResultScene::Draw(void)
 	DebugDrawFormat::FormatString(L"今回のスコア : %d", scr.GetCurrentScore(),line,lineHeight);
 	DebugDrawFormat::FormatString(L"全プレイヤーの総スコア : %d", scr.GetAggregateScore(),line,lineHeight);
 	//DebugDrawFormat::FormatString(L"ランキング", scr.GetCurrentScore(),line,lineHeight);
+	for (int i = 0; i < Score::RANKING_NUM; ++i) {
+		DebugDrawFormat::FormatString(L"%d 位 : %d", i + 1, scr.GetRankingScore(i), line, lineHeight);
+	}
 	SetFontSize(16);
 }

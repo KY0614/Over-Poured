@@ -140,4 +140,14 @@ void Score::UpdateRanking(void)
 	//for (int i = 0; i < /*std::min((int)*/scoreList.size(), RANKING_NUM; ++i) {
 	//	rankingScores_.push_back(scoreList[i]);
 	//}
+
+	std::vector<int> scoreList = scores_;
+	std::sort(scoreList.begin(), scoreList.end(), std::greater<int>());
+
+	for (int i = 0; i < RANKING_NUM && i < scoreList.size(); ++i) {
+		scoreRank_[i] = scoreList[i];
+	}
+	for (int i = scoreList.size(); i < RANKING_NUM; ++i) {
+		scoreRank_[i] = 0;
+	}
 }
