@@ -2,14 +2,13 @@
 #include <map>
 #include <DxLib.h>
 #include "../Utility/AsoUtility.h"
-
 #include "../Libs/ImGui/imgui.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/ResourceManager.h"
 #include "../Manager/Generic/Camera.h"
-#include "Player.h"
-#include "Common/Collider.h"
-#include "Common/Transform.h"
+#include "../Player.h"
+#include "../Common/Collider.h"
+#include "../Common/Transform.h"
 #include "Stage.h"
 
 Stage::Stage(Player& player) 

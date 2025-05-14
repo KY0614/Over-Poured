@@ -11,7 +11,7 @@
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/SkyDome.h"
-#include "../Object/Stage.h"
+#include "../Object/Stage/Stage.h"
 #include "../Object/Player.h"
 #include "../Object/Score.h"
 #include "GameScene.h"
