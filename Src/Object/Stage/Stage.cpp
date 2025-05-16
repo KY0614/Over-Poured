@@ -56,8 +56,13 @@ void Stage::Update(void)
 	transform_.Update();
 	sphereTran_.Update();
 
+#ifdef _DEBUG
+
 	//ImGui‚Ì‘€ì‚ğs‚¤
 	//UpdateDebugImGui();
+
+#endif // _DEBUG
+
 }
 
 void Stage::Draw(void)

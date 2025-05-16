@@ -1,0 +1,32 @@
+{
+    "id": "coffee_machine",
+    "type": "machine",
+    "name": "コーヒーマシン",
+    "model": "models/coffee_machine.mv1",
+    "interactable": true,
+    "produces": "coffee_hot"
+  },
+  {
+    "id": "table",
+    "type": "surface",
+    "name": "テーブル",
+    "model": "models/table.mv1",
+    "interactable": false,
+    "placeable": true
+  },
+  {
+    "id": "sweets_choco",
+    "type": "sweets",
+    "name": "チョコ",
+    "model": "models/choco.mv1",
+    "interactable": true,
+    "placeable": false
+  },
+  {
+    "id": "sweets_strawberry",
+    "type": "sweets",
+    "name": "ストロベリー",
+    "model": "models/strawberry.mv1",
+    "interactable": true,
+    "placeable": false
+  }

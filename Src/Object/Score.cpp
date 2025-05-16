@@ -1,8 +1,5 @@
 #include <DxLib.h>
-#include <algorithm>
-#include <iostream>
 #include <fstream>
-#include <stdio.h>
 #include"../Libs/nlohmann/json.hpp"
 #include"../Application.h"
 #include "Score.h"
@@ -126,24 +123,11 @@ int Score::GetAggregateScore(void) const
 
 void Score::UpdateRanking(void)
 {
-	//// スコアをvectorにコピー
-	//std::vector<int> scoreList;
-	//for (const auto& s : scores_) {
-	//	scoreList.push_back(s["score"].get<int>());
-	//}
-
-	//// ソート
-	//std::sort(scoreList.begin(), scoreList.end(), std::greater<int>());
-
-	//// ランキングを更新
-	//rankingScores_.clear();
-	//for (int i = 0; i < /*std::min((int)*/scoreList.size(), RANKING_NUM; ++i) {
-	//	rankingScores_.push_back(scoreList[i]);
-	//}
-
+	//スコアをソートする
 	std::vector<int> scoreList = scores_;
 	std::sort(scoreList.begin(), scoreList.end(), std::greater<int>());
 
+	//５位までのスコアを降順で入れる(スコアが５つ以上ない場合は０を入れる)
 	for (int i = 0; i < RANKING_NUM && i < scoreList.size(); ++i) {
 		scoreRank_[i] = scoreList[i];
 	}

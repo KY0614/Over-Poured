@@ -1,12 +1,4 @@
 {
-    "ScoreData": {
-        "AggregateScore": [
-            120
-        ],
-        "CurrentScore": [
-            120
-        ]
-    },
     "Scores": [
         0,
         0,
@@ -14,6 +6,8 @@
         0,
         0,
         0,
-        0
+        0,
+        560,
+        1000
     ]
 }
