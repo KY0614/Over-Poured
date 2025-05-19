@@ -1,27 +1,26 @@
-#include <vector>
-#include <map>
 #include <DxLib.h>
+#include <fstream>
+#include"../Libs/nlohmann/json.hpp"
 #include "../Utility/AsoUtility.h"
 #include "../Libs/ImGui/imgui.h"
-#include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/ResourceManager.h"
-#include "../Manager/Generic/Camera.h"
 #include "../Player.h"
-#include "../Common/Collider.h"
 #include "../Common/Transform.h"
-#include "Stage.h"
+#include "StageObjectLibrary.h"
+#include "StageObject.h"
+#include "StageManager.h"
 
-Stage::Stage(Player& player) 
-	:player_(player)
+StageManager::StageManager(Vector2 mapSize)
 {
-
+	size_.height_ = mapSize.y;
+	size_.width_ = mapSize.x;
 }
 
-Stage::~Stage(void)
+StageManager::~StageManager(void)
 {
 }
 
-void Stage::Init(void)
+void StageManager::Init(void)
 {
 	//モデル制御の基本情報
 	transform_.SetModel(
@@ -37,6 +36,10 @@ void Stage::Init(void)
 	transform_.quaRotLocal = Quaternion();
 	transform_.Update();
 
+	machine_ = std::make_unique<StageObject>("coffee_machine");
+	machine_->Init();
+	machine_->SetPos(AsoUtility::VECTOR_ZERO);
+
 #ifdef _DEBUG
 
 	//カウンター前の当たり判定用の球体
@@ -51,10 +54,20 @@ void Stage::Init(void)
 #endif // _DEBUG
 }
 
-void Stage::Update(void)
+void StageManager::Update(void)
 {
 	transform_.Update();
 	sphereTran_.Update();
+
+	machine_->Update();
+
+	//for (int y = 0; y < size_.height_; ++y) {
+	//	for (int x = 0; x < size_.width_; ++x) {
+	//		if (grid_[y][x]) {
+	//			grid_[y][x]->Update();
+	//		}
+	//	}
+	//}
 
 #ifdef _DEBUG
 
@@ -65,14 +78,68 @@ void Stage::Update(void)
 
 }
 
-void Stage::Draw(void)
+void StageManager::Draw(void)
 {
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
+
+	//for (int y = 0; y < size_.height_; ++y) {
+	//	for (int x = 0; x < size_.width_; ++x) {
+	//		if (grid_[y][x]) {
+	//			grid_[y][x]->Draw();
+	//		}
+	//	}
+	//}
+	machine_->Draw();
 }
 
-void Stage::UpdateDebugImGui(void)
+void StageManager::LoadStage(const std::vector<std::vector<std::string>>& grid)
+{
+	//objects_.clear();
+	//const float gridSize = 50.0f;
+
+	//for (int z = 0; z < grid.size(); ++z) {
+	//	for (int x = 0; x < grid[z].size(); ++x) {
+	//		std::string id = grid[z][x];
+	//		const StageObjectLibrary::ObjectParams* param = StageObjectLibrary::Get(id);
+	//		if (param) {
+	//			VECTOR pos = VGet(x * gridSize, 0.0f, z * gridSize);
+	//			objects_.emplace_back(std::make_unique<StageObject>(*param, pos));
+	//		}
+	//	}
+	//}
+}
+
+bool StageManager::PlaceObject(int x, int y, const std::string& objectId)
+{
+	return false;
+}
+
+StageObject* StageManager::GetStageObject(int x, int y)
+{
+	if (!IsInBounds(x, y)) {
+		return nullptr;
+	}
+
+	return grid_[y][x].get(); // nullptr もあり得る
+}
+
+//StageObject* StageManager::GetObjectAt(Vector2 mapSize)
+//{
+//	return nullptr;
+//}
+//
+//void StageManager::SetObjectAt(Vector2 mapSize, std::unique_ptr<StageObject> obj)
+//{
+//}
+
+bool StageManager::IsInBounds(int x, int y) const
+{
+	return (x >= 0 && x < size_.width_ && y >= 0 && y < size_.height_);
+}
+
+void StageManager::UpdateDebugImGui(void)
 {
 	//ウィンドウタイトル&開始処理
 	ImGui::Begin("Player:Circle");

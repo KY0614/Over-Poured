@@ -84,7 +84,7 @@
     <ClCompile Include="Src\Object\SkyDome.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Stage\Stage.cpp">
+    <ClCompile Include="Src\Object\Stage\StageManager.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="Src\Scene\GameScene.cpp">
@@ -218,7 +218,7 @@
     <ClInclude Include="Src\Object\SkyDome.h">
       <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Stage\Stage.h">
+    <ClInclude Include="Src\Object\Stage\StageManager.h">
       <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="Src\Scene\GameScene.h">

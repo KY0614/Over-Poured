@@ -4,7 +4,7 @@
 #include <map>
 #include <functional>
 #include <DxLib.h>
-#include "Stage/Stage.h"
+#include "Stage/StageManager.h"
 #include "Order.h"
 #include "ActorBase.h"
 

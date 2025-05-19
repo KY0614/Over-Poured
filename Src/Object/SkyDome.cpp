@@ -42,7 +42,7 @@ void SkyDome::Init(void)
 	MV1SetWriteZBuffer(transform_.modelId, false);
 
 	//ó‘Ô‘JˆÚ
-	auto sceneId = scnMng_.GetSceneID();
+	auto sceneId = SceneManager::GetInstance().GetSceneID();
 	if(sceneId == SceneManager::SCENE_ID::TITLE)
 	{
 		ChangeState(STATE::STAY);

@@ -2,7 +2,7 @@
 #include <memory>
 #include "SceneBase.h"
 
-class Stage;
+class StageManager;
 class SkyDome;
 class Player;
 class OrderManager;
@@ -26,7 +26,7 @@ public:
 private:
 
 	//ステージ
-	std::unique_ptr<Stage> stage_;
+	std::unique_ptr<StageManager> stage_;
 
 	//スカイドーム
 	std::unique_ptr<SkyDome> skyDome_;

@@ -11,7 +11,8 @@
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/SkyDome.h"
-#include "../Object/Stage/Stage.h"
+#include "../Object/Stage/StageObjectLibrary.h"
+#include "../Object/Stage/StageManager.h"
 #include "../Object/Player.h"
 #include "../Object/Score.h"
 #include "GameScene.h"
@@ -34,8 +35,10 @@ void GameScene::Init(void)
 	player_ = std::make_shared<Player>();
 	player_->Init();
 
+	Vector2 size = { 1000,1000 };
+	StageObjectLibrary::LoadData("coffee_machine");
 	//ステージ
-	stage_ = std::make_unique<Stage>(*player_);
+	stage_ = std::make_unique<StageManager>(size);
 	stage_->Init();
 
 	//スカイドーム

@@ -5,7 +5,6 @@
 #include "ActorBase.h"
 
 ActorBase::ActorBase(void)
-	: scnMng_(SceneManager::GetInstance())
 {
 }
 

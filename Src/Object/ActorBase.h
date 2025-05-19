@@ -23,9 +23,6 @@ public:
 
 protected:
 
-	//シングルトン参照
-	SceneManager& scnMng_;
-
 	//モデル制御の基本情報
 	Transform transform_;
 

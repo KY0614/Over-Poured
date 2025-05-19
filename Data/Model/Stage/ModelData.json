@@ -1,32 +1,46 @@
 {
+    "coffee_machine": {
     "id": "coffee_machine",
     "type": "machine",
-    "name": "コーヒーマシン",
+    "name": "Coffee_Machine",
     "model": "models/coffee_machine.mv1",
     "interactable": true,
-    "produces": "coffee_hot"
-  },
-  {
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":["cup","cupwihtice"],
+    "produces": ["hot_coffee","ice_coffee"]
+    },
+  "table": {
     "id": "table",
     "type": "surface",
-    "name": "テーブル",
+    "name": "Table",
     "model": "models/table.mv1",
-    "interactable": false,
+    "interactable": true,
+    "placeable": true,
+    "carryable": false,
+    "acceptedItems":[],
     "placeable": true
-  },
-  {
+    },
+  "sweets_choco": {
     "id": "sweets_choco",
     "type": "sweets",
-    "name": "チョコ",
+    "name": "Choco_Sweets",
     "model": "models/choco.mv1",
     "interactable": true,
+    "placeable": true,
+    "carryable": false,
+    "acceptedItems":[],
     "placeable": false
-  },
-  {
+    },
+  "sweets_strawberry": {
     "id": "sweets_strawberry",
     "type": "sweets",
-    "name": "ストロベリー",
+    "name": "Strawberry_Sweets",
     "model": "models/strawberry.mv1",
     "interactable": true,
+    "placeable": true,
+    "carryable": false,
+    "acceptedItems":[],
     "placeable": false
-  }
+    }
+}

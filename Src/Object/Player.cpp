@@ -511,7 +511,7 @@ void Player::SetGoalRotate(double rotRad)
 
 void Player::Rotate(void)
 {
-	stepRotTime_ -= scnMng_.GetDeltaTime();
+	stepRotTime_ -= SceneManager::GetInstance().GetDeltaTime();
 	
 	//‰ñ“]‚Ì‹…–Ê•âŠÔ
 	playerRotY_ = Quaternion::Slerp(

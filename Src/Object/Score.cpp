@@ -47,7 +47,7 @@ void Score::LoadScore(void)
 
 	//jsonオブジェクトから、scoreオブジェクトを取得
 	const auto& scoreDatas = scoreData["Scores"];
-	// enemyオブジェクトは複数あるはずなので、繰り返し処理
+	// scoreオブジェクトは複数あるはずなので、繰り返し処理
 	for (const json& s : scoreDatas)
 	{
 		// 管理配列に追加
@@ -63,36 +63,6 @@ void Score::LoadScore(void)
 
 void Score::SaveScore(int score)
 {
-	////外部ファイルの読み込み(書込み用)
-	//std::ofstream ofs;
-	//ofs.open(Application::PATH_SCORE + "score.json");
-
-	//scores_.push_back(score);
-	//int aggScore = 0;
-	//aggScore = GetAggregateScore() + score;
-
-	////jsonオブジェクト
-	//json scoreData;
-	////スコア
-	//scoreData["CurrentScore"].push_back(score);
-	//scoreData["AggregateScore"].push_back(aggScore);
-
-	////jsonオブジェクト(全体)
-	//json saveData;
-	//saveData["ScoreData"] = scoreData;
-	//
-	////jsonオブジェクトをstringに変換
-	//auto dmp = saveData.dump();
-	//
-	////外部ファイルに書込み
-	//ofs.write(dmp.c_str(), dmp.size());
-	//
-	////変換と書込みを以下のリダイレクトで省略可
-	////ofs << saveData << std::endl;
-	//// スコープが切れる際に 自動的にファイルクローズして貰えますが、
-	//// お行儀良く、明示的にファイルストリームを閉じる
-	//ofs.close();
-
 	std::ifstream ifs(Application::PATH_SCORE + "score.json");
 	json scoreData;
 	if (ifs)
