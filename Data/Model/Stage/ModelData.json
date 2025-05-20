@@ -1,5 +1,5 @@
 {
-    "coffee_machine": {
+    "Coffee_Machine": {
     "id": "coffee_machine",
     "type": "machine",
     "name": "Coffee_Machine",
@@ -7,10 +7,21 @@
     "interactable": true,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":["cup","cupwihtice"],
+    "acceptedItems":["cup_hot","cup_with_ice"],
     "produces": ["hot_coffee","ice_coffee"]
     },
-  "table": {
+    "Ice_Dispenser": {
+    "id": "ice_dispenser",
+    "type": "machine",
+    "name": "Ice_Dispenser",
+    "model": "models/ice_dispenser.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":["cup_ice"],
+    "produces": ["cup_with_ice"]
+    },
+  "Table": {
     "id": "table",
     "type": "surface",
     "name": "Table",
@@ -21,7 +32,7 @@
     "acceptedItems":[],
     "placeable": true
     },
-  "sweets_choco": {
+  "Sweets_Choco": {
     "id": "sweets_choco",
     "type": "sweets",
     "name": "Choco_Sweets",
@@ -32,7 +43,7 @@
     "acceptedItems":[],
     "placeable": false
     },
-  "sweets_strawberry": {
+  "Sweets_Strawberry": {
     "id": "sweets_strawberry",
     "type": "sweets",
     "name": "Strawberry_Sweets",
@@ -42,5 +53,60 @@
     "carryable": false,
     "acceptedItems":[],
     "placeable": false
-    }
+    },
+    "Cup_Hot": {
+    "id": "cup_hot",
+    "type": "item",
+    "name": "HotCup",
+    "model": "models/cup_hot.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": true,
+    "acceptedItems":[],
+    "produces": []
+    },
+    "Cup_Ice": {
+    "id": "cup_ice",
+    "type": "item",
+    "name": "IceCup",
+    "model": "models/cup_ice.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": true,
+    "acceptedItems":[],
+    "produces": []
+    },
+    "Cup_With_Ice": {
+    "id": "cup_with_ice",
+    "type": "item",
+    "name": "CupWithIce",
+    "model": "models/cup_with_ice.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": true,
+    "acceptedItems":[],
+    "produces": []
+    },
+    "Lids": {
+    "id": "lids",
+    "type": "item",
+    "name": "Lids",
+    "model": "models/lids.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": true,
+    "acceptedItems":["hot_coffee","ice_coffee"],
+    "produces": ["hot_coffee_with_lid","ice_coffee_with_lid"]
+    },
+    "Dust_Box": {
+    "id": "dust_box",
+    "type": "item",
+    "name": "DustBox",
+    "model": "models/lids.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": true,
+    "acceptedItems":["hot_coffee","ice_coffee"],
+    "produces": ["hot_coffee_with_lid","ice_coffee_with_lid"]
+    },
 }

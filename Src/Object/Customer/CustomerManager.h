@@ -72,9 +72,6 @@ public:
 	/// <param name="score">スコア</param>
 	void SetCustomerReacton(int score);
 
-	//CustomerBase::STATE GetFrontState(void) { return customers_.front()->GetState(); }
-	CustomerBase::STATE GetFrontState(void) { return customers_[cnt_]->GetState(); }
-
 	VECTOR SetLastCustomerPos(void);
 
 	int GetCustomerNum(void) { return customers_.size(); }
@@ -82,8 +79,18 @@ public:
 	VECTOR GetSecondPos(void) { return customers_[1]->GetPos(); }
 	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
 
-
+	/// <summary>
+	/// 先頭のお客がカウンター前にいるかどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:いる　false:いない</returns>
 	bool CheckFirstCustomerCol(void);
+
+	/// <summary>
+	/// 2人目のお客がカウンター前にいるかどうか
+	/// </summary>
+	/// <param name="">先頭のお客の注文提供後に確認する用</param>
+	/// <returns>true:いる　false:いない</returns>
 	bool CheckSecondCustomerCol(void);
 
 private:

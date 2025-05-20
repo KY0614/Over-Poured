@@ -51,7 +51,6 @@ void OrderCustomerManager::Update(void)
 		customerMng_->IsMove();
 
 		//‚¨‹q‚ÌˆÚ“®‚ªI‚í‚Á‚½‚çíœ‚Æ¶¬‚ğs‚¤
-		//if (!(customerMng_->GetCustomerMove()))
 		if (customerMng_->CheckSecondCustomerCol())
 		{
 			//’•¶‚Æ‚¨‹q‚ğ’Ç‰Á¶¬

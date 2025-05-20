@@ -203,7 +203,7 @@ VECTOR CustomerManager::SetLastCustomerPos(void)
 bool CustomerManager::CheckFirstCustomerCol(void)
 {
 	bool ret = false;
-	//if (customers_.front()->CollisionCounter())
+	//先頭のお客がカウンター前にいるかどうか
 	if (customers_[cnt_]->CollisionCounter())
 	{
 		ret = true;

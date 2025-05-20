@@ -96,19 +96,7 @@ void StageManager::Draw(void)
 
 void StageManager::LoadStage(const std::vector<std::vector<std::string>>& grid)
 {
-	//objects_.clear();
-	//const float gridSize = 50.0f;
 
-	//for (int z = 0; z < grid.size(); ++z) {
-	//	for (int x = 0; x < grid[z].size(); ++x) {
-	//		std::string id = grid[z][x];
-	//		const StageObjectLibrary::ObjectParams* param = StageObjectLibrary::Get(id);
-	//		if (param) {
-	//			VECTOR pos = VGet(x * gridSize, 0.0f, z * gridSize);
-	//			objects_.emplace_back(std::make_unique<StageObject>(*param, pos));
-	//		}
-	//	}
-	//}
 }
 
 bool StageManager::PlaceObject(int x, int y, const std::string& objectId)
