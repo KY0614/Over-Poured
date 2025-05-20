@@ -36,7 +36,7 @@ void StageManager::Init(void)
 	transform_.quaRotLocal = Quaternion();
 	transform_.Update();
 
-	machine_ = std::make_unique<StageObject>("coffee_machine");
+	machine_ = std::make_unique<StageObject>("table");
 	machine_->Init();
 	machine_->SetPos(AsoUtility::VECTOR_ZERO);
 

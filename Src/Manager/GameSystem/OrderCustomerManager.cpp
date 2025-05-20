@@ -176,6 +176,8 @@ int OrderCustomerManager::GetCustomerNum(void) const
 
 void OrderCustomerManager::DebugDraw(void)
 {
+#ifdef _DEBUG
+
 	int line = 1;	//s
 	int lineHeight = 30;	//s
 	SetFontSize(24);
@@ -183,8 +185,7 @@ void OrderCustomerManager::DebugDraw(void)
 	DebugDrawFormat::FormatString(L"’•¶§ŒÀŽžŠÔ : %2.f", orderMng_->GetFirstOrder().time_, line, lineHeight);
 	DebugDrawFormat::FormatString(L"%dŒÂ–Ú", orderMng_->GetCount(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"%dl", customerMng_->GetCustomerNum(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"pos : %2.f,%2.f", customerMng_->GetFirstPos().x,customerMng_->GetFirstPos().z, line, lineHeight);
-	DebugDrawFormat::FormatString(L"pos : %2.f,%2.f", customerMng_->GetSecondPos().x,customerMng_->GetSecondPos().z, line, lineHeight);
-	DebugDrawFormat::FormatString(L"pos : %2.f,%2.f", customerMng_->GetSecondPos().x - customerMng_->GetFirstPos().x,customerMng_->GetLastPos().z, line, lineHeight);
 	SetFontSize(16);
+
+#endif // _DEBUG
 }

@@ -6,17 +6,19 @@ std::wstring StringUtility::StringToWstring(const std::string& str)
 {
     std::wstring ret;
     //一度目の呼び出しは文字列数を知るため
-    auto result = MultiByteToWideChar(CP_UTF8,
-        0,
-        str.c_str(),//入力文字列
+    auto result = MultiByteToWideChar(CP_ACP,
+        MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+        str.c_str(),
         str.length(),
         nullptr,
         0);
+
     assert(result >= 0);
+
     ret.resize(result);//確保する
     //二度目の呼び出しは変換
-    result = MultiByteToWideChar(CP_UTF8,
-        0,
+    result = MultiByteToWideChar(CP_ACP,
+        MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
         str.c_str(),//入力文字列
         str.length(),
         ret.data(),

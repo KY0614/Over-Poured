@@ -12,9 +12,9 @@ public:
         std::string id_ = "";               //識別子
         std::string name_ = "";             //名前
         std::string modelFile_ = "";        //モデルファイル名
-        bool placeable_ = false;       //上に物を置けるか（例：机）
-        bool carryable_ = false;       //持ち運びできるか（例：カップ）
-        bool interactable_ = false;    //プレイヤーがアクション可能か
+        bool placeable_ = false;            //上に物を置けるか（例：机）
+        bool carryable_ = false;            //持ち運びできるか（例：カップ）
+        bool interactable_ = false;         //プレイヤーがアクション可能か
 
         std::string interactType_;     //"place", "machine", "serve", "charge", など動作タイプ（任意）
         float interactTime = 0.0f;    //インタラクトにかかる時間（例：注ぐ時間）
