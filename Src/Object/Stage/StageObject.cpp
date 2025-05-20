@@ -1,3 +1,4 @@
+#include "../Libs/ImGui/imgui.h"
 #include "../../Common/DebugDrawFormat.h"
 #include "../../Utility/StringUtility.h"
 #include "StageObjectLibrary.h"
@@ -16,15 +17,30 @@ void StageObject::Init(void)
 	object_ = StageObjectLibrary::LoadData(objId_);
 
 	param_ = object_.second;
+	transform_.Update();
 }
 
 void StageObject::Update(void)
 {
+	transform_.Update();
+
+	UpdateDebugImGui();
 }
 
 void StageObject::Draw(void)
 {
-	DrawSphere3D(transform_.pos, 30.0f, 8, 0xffffff, 0xffffff, true);
+	int col = 0x000000;
+	if (objId_ == "Coffee_Machine")col = 0x3f312b;
+	else if (objId_ == "Ice_Dispenser")col = 0x4682b4;
+	else if (objId_ == "Table")col = 0xd2b48c;
+	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
+	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
+	else if (objId_ == "Cup_Hot")col = 0xcd5c5c;
+	else if (objId_ == "Cup_Ice")col = 0x87ceeb;
+	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
+	else if (objId_ == "Lids")col = 0xa9a9a9;
+	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
+	DrawSphere3D(transform_.pos, 30.0f, 8, col, 0xffffff, true);
 	VECTOR screenPos = ConvWorldPosToScreenPos(transform_.pos);
 	// 変換成功
 	DrawString(static_cast<int>(screenPos.x), static_cast<int>(screenPos.y) - 50,
@@ -58,4 +74,20 @@ void StageObject::Draw(void)
 bool StageObject::Interact(Player& player)
 {
 	return false;
+}
+
+void StageObject::UpdateDebugImGui(void)
+{
+	//ウィンドウタイトル&開始処理
+	ImGui::Begin("object");
+
+	//位置
+	ImGui::Text("position");
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Pos", &transform_.pos.x);
+	ImGui::SliderFloat("PosX", &transform_.pos.x, 0.0f, 360.0f);
+	ImGui::SliderFloat("PosY", &transform_.pos.y, 0.0f, 360.0f);
+	ImGui::SliderFloat("PosZ", &transform_.pos.z, 0.0f, 1000.0f);
+	//終了処理
+	ImGui::End();
 }

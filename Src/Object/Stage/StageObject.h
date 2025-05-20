@@ -30,5 +30,7 @@ private:
 	//std::unique_ptr<StageObject> placedObject_;
 
 	float fillProgress_ = 0.0f;
+
+	void UpdateDebugImGui(void);
 };
 

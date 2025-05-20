@@ -36,7 +36,7 @@ void StageManager::Init(void)
 	transform_.quaRotLocal = Quaternion();
 	transform_.Update();
 
-	machine_ = std::make_unique<StageObject>("table");
+	machine_ = std::make_unique<StageObject>("Coffee_Machine");
 	machine_->Init();
 	machine_->SetPos(AsoUtility::VECTOR_ZERO);
 
@@ -61,14 +61,6 @@ void StageManager::Update(void)
 
 	machine_->Update();
 
-	//for (int y = 0; y < size_.height_; ++y) {
-	//	for (int x = 0; x < size_.width_; ++x) {
-	//		if (grid_[y][x]) {
-	//			grid_[y][x]->Update();
-	//		}
-	//	}
-	//}
-
 #ifdef _DEBUG
 
 	//ImGui‚Ì‘€ì‚ðs‚¤
@@ -81,17 +73,9 @@ void StageManager::Update(void)
 void StageManager::Draw(void)
 {
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
+	machine_->Draw();
 	MV1DrawModel(transform_.modelId);
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
-
-	//for (int y = 0; y < size_.height_; ++y) {
-	//	for (int x = 0; x < size_.width_; ++x) {
-	//		if (grid_[y][x]) {
-	//			grid_[y][x]->Draw();
-	//		}
-	//	}
-	//}
-	machine_->Draw();
 }
 
 void StageManager::LoadStage(const std::vector<std::vector<std::string>>& grid)
