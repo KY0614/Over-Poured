@@ -47,6 +47,7 @@ void OrderCustomerManager::Update(void)
 	//’•¶‚Ì§ŒÀŽžŠÔ‚ª‰ß‚¬‚½‚ç’Ç‰Á¶¬‚ðs‚¤
 	if (orderMng_->IsFirstOrderTimeOut() || isServe_)
 	{
+		if(!isServe_)customerMng_->SetCustomerReacton(0);
 		//‚¨‹q‚ðˆÚ“®‚³‚¹‚é
 		customerMng_->IsMove();
 
@@ -141,7 +142,6 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 		{
 			score += 10;
 		}	
-		customerMng_->SetCustomerReacton(score);
 	}
 	else
 	{
@@ -163,9 +163,8 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 		{
 			score += 20;
 		}		
-		customerMng_->SetCustomerReacton(score);
 	}
-	
+	customerMng_->SetCustomerReacton(score);
 	return score;
 }
 
@@ -190,6 +189,7 @@ void OrderCustomerManager::DebugDraw(void)
 	DebugDrawFormat::FormatString(L"’•¶§ŒÀŽžŠÔ : %2.f", orderMng_->GetFirstOrder().time_, line, lineHeight);
 	DebugDrawFormat::FormatString(L"%dŒÂ–Ú", orderMng_->GetCount(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"%dl", customerMng_->GetCustomerNum(), line, lineHeight);
+	DebugDrawFormat::FormatString(L"isServe : %d", isServe_, line, lineHeight);
 	SetFontSize(16);
 
 #endif // _DEBUG

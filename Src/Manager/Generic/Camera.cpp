@@ -120,26 +120,24 @@ void Camera::ChangeMode(MODE mode)
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
+		//カメラの初期設定
+		pos_ = FIXEDCAMERA_DEFAULT_POS;
+		//注視点
+		targetPos_ = FIXEDCAMERA_RELATIVE_POS;
 		break;
 	case Camera::MODE::FOLLOW:
 		break;
 	}
-
 }
 
 void Camera::SetDefault(void)
 {
 
-	////カメラの初期設定
-	//pos_ = DEFAULT_CAMERA_POS;
-
-	////注視点
-	//targetPos_ = AsoUtility::VECTOR_ZERO;
-
 	//カメラの初期設定
-	pos_ = FIXEDCAMERA_DEFAULT_POS;
+	pos_ = DEFAULT_CAMERA_POS;
+
 	//注視点
-	targetPos_ = FIXEDCAMERA_RELATIVE_POS;
+	targetPos_ = AsoUtility::VECTOR_ZERO;
 
 	//カメラの上方向
 	cameraUp_ = AsoUtility::DIR_U;

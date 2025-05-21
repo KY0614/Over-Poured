@@ -12,6 +12,8 @@
 #include "Common/AnimationController.h"
 #include "Common/Capsule.h"
 #include "Common/Collider.h"
+#include "Common/Sphere.h"
+#include "Common/Cube.h"
 #include "Order/Order.h"
 #include "Player.h"
 
@@ -47,7 +49,7 @@ void Player::Init(void)
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::CUSTOMER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = { 0.0f, 0.0f, 0.0f };
+	transform_.pos = { 0.0f, 30.0f, 0.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
@@ -59,9 +61,21 @@ void Player::Init(void)
 
 	//カプセルコライダ
 	capsule_ = std::make_unique<Capsule>(transform_);
-	capsule_->SetLocalPosTop({ 0.0f, 110.0f, 0.0f });
-	capsule_->SetLocalPosDown({ 0.0f, 30.0f, 0.0f });
+	capsule_->SetLocalPosTop({ 0.0f, 20.0f, 0.0f });
+	capsule_->SetLocalPosDown({ 0.0f, -10.0f, 0.0f });
 	capsule_->SetRadius(20.0f);
+	
+	////オブジェクト用コライダ
+	//capsule2_ = std::make_unique<Capsule>(transform_);
+	//capsule2_->SetLocalPosTop({ 0.0f, 80.0f, 50.0f });
+	//capsule2_->SetLocalPosDown({ 0.0f, 0.0f, 50.0f });
+	//capsule2_->SetRadius(30.0f);
+	
+	//オブジェクト用コライダ
+	sphere_ = std::make_unique<Sphere>(transform_);
+	sphere_->SetLocalPos({ 0.0f, 60.0f, 50.0f });
+	sphere_->SetRadius(20.0f);
+	
 
 	//足煙エフェクト
 	effectSmokeResId_ = ResourceManager::GetInstance().Load(
@@ -95,12 +109,13 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
+	transform_.pos.y = 30.0f;
 	//更新ステップ
 	stateUpdate_();
 
 	transform_.Update();
 	sphereTran_.Update();
-	
+
 	//アニメーション再生
 	animationController_->Update();
 
@@ -111,6 +126,11 @@ void Player::Update(void)
 void Player::Draw(void)
 {
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
+
+	capsule_->Draw();
+	//capsule2_->Draw();
+	//cube_->Draw();
+	sphere_->Draw();
 
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
@@ -196,31 +216,20 @@ void Player::ProcessSelect(void)
 void Player::UpdateDebugImGui(void)
 {
 	//ウィンドウタイトル&開始処理
-	ImGui::Begin("Player:Circle");
+	ImGui::Begin("Player");
 	//大きさ
 	ImGui::Text("scale");
-	ImGui::InputFloat("SclX", &sphereTran_.scl.x);
-	ImGui::InputFloat("SclY", &sphereTran_.scl.y);
-	ImGui::InputFloat("SclZ", &sphereTran_.scl.z);
-	//角度
-	VECTOR rotDeg = VECTOR();
-	rotDeg.x = AsoUtility::Rad2DegF(sphereTran_.rot.x);
-	rotDeg.y = AsoUtility::Rad2DegF(sphereTran_.rot.y);
-	rotDeg.z = AsoUtility::Rad2DegF(sphereTran_.rot.z);
-	ImGui::Text("angle(deg)");
-	ImGui::SliderFloat("RotX", &rotDeg.x, 0.0f, 360.0f);
-	ImGui::SliderFloat("RotY", &rotDeg.y, 0.0f, 360.0f);
-	ImGui::SliderFloat("RotZ", &rotDeg.z, 0.0f, 360.0f);
-	sphereTran_.rot.x = AsoUtility::Deg2RadF(rotDeg.x);
-	sphereTran_.rot.y = AsoUtility::Deg2RadF(rotDeg.y);
-	sphereTran_.rot.z = AsoUtility::Deg2RadF(rotDeg.z);
+	ImGui::InputFloat("SclX", &transform_.scl.x);
+	ImGui::InputFloat("SclY", &transform_.scl.y);
+	ImGui::InputFloat("SclZ", &transform_.scl.z);
+
 	//位置
 	ImGui::Text("position");
 	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &sphereTran_.pos.x);
-	ImGui::SliderFloat("PosX", &sphereTran_.pos.x, 0.0f, 360.0f);
-	ImGui::SliderFloat("PosY", &sphereTran_.pos.y, 0.0f, 360.0f);
-	ImGui::SliderFloat("PosZ", &sphereTran_.pos.z, 0.0f, 1000.0f);
+	ImGui::InputFloat3("Pos", &transform_.pos.x);
+	ImGui::SliderFloat("PosX", &transform_.pos.x, -500.0f, 360.0f);
+	ImGui::SliderFloat("PosY", &transform_.pos.y, -500.0f, 360.0f);
+	ImGui::SliderFloat("PosZ", &transform_.pos.z, -500.0f, 1000.0f);
 	//終了処理
 	ImGui::End();
 }
@@ -269,6 +278,7 @@ void Player::UpdatePlay(void)
 	//移動処理
 	ProcessMove();
 
+	//選択処理(仮の機能)
 	ProcessSelect();
 
 	//移動方向に応じた回転
@@ -283,20 +293,10 @@ void Player::UpdatePlay(void)
 	//重力方向に沿って回転させる
 	transform_.quaRot = Quaternion::Quaternion();
 	transform_.quaRot = transform_.quaRot.Mult(playerRotY_);
-
 }
 
 void Player::DrawDebug(void)
 {
-
-	//int white = 0xffffff;
-	//int black = 0x000000;
-	//int red = 0xff0000;
-	//int green = 0x00ff00;
-	//int blue = 0x0000ff;
-	//int yellow = 0xffff00;
-	//int purpl = 0x800080;
-
 	SetFontSize(24);
 	int line = 0;
 	DebugDrawFormat::FormatStringRight(L"提供品 : %d, %d", data_.drink_, data_.sweets_,line);

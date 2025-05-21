@@ -93,6 +93,10 @@ public:
 	//‹…‘Ì‚Æ“_‚Ì”»’è
 	static bool IsHitSpherePoint(const VECTOR& sphere, float radius, const VECTOR& point);
 
+	//‹…‘Ì‚Æ—§•û‘Ì‚Ì”»’è
+	static bool IsHitSphereCube(VECTOR sphereCenter, float sphereRadius, VECTOR boxCenter,
+		float boxWidth, float boxHeight, float boxDepth);
+
 	//‹…‘Ì“¯m‚ÌÕ“Ë”»’è
 	static bool IsHitSpheres(
 		const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2);

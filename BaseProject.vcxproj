@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Common\Cube.cpp" />
+    <ClCompile Include="Src\Object\Common\Sphere.cpp" />
     <ClCompile Include="Src\Manager\GameSystem\OrderCustomerManager.cpp" />
     <ClCompile Include="Src\Object\Customer\CustomerManager.cpp" />
     <ClCompile Include="Src\Object\Customer\IceCustomer.cpp" />
@@ -67,6 +69,8 @@
     <ClCompile Include="Src\Object\Stage\StageObjectLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Common\Cube.h" />
+    <ClInclude Include="Src\Object\Common\Sphere.h" />
     <ClInclude Include="Src\Libs\nlohmann\adl_serializer.hpp" />
     <ClInclude Include="Src\Libs\nlohmann\byte_container_with_subtype.hpp" />
     <ClInclude Include="Src\Libs\nlohmann\detail\abi_macros.hpp" />

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <math.h>
+#include <algorithm>
 #include <DxLib.h>
 #include "AsoUtility.h"
 
@@ -371,6 +372,36 @@ bool AsoUtility::IsHitSpherePoint(const VECTOR& sphere, float radius, const VECT
     }
 
     return ret;
+}
+
+bool AsoUtility::IsHitSphereCube(VECTOR sphereCenter, float sphereRadius, VECTOR boxCenter, float boxWidth, float boxHeight, float boxDepth)
+{
+    float hw = boxWidth / 2.0f;
+    float hh = boxHeight / 2.0f;
+    float hd = boxDepth / 2.0f;
+
+    // AABBの最小・最大座標を計算
+    float minX = boxCenter.x - hw;
+    float maxX = boxCenter.x + hw;
+    float minY = boxCenter.y - hh;
+    float maxY = boxCenter.y + hh;
+    float minZ = boxCenter.z - hd;
+    float maxZ = boxCenter.z + hd;
+
+    // 各軸ごとに最近接点を求める
+    float closestX = std::fmax(minX, std::fmin(sphereCenter.x, maxX));
+    float closestY = std::fmax(minY, std::fmin(sphereCenter.y, maxY));
+    float closestZ = std::fmax(minZ, std::fmin(sphereCenter.z, maxZ));
+
+    // 最近接点と球の中心の距離を計算
+    float dx = closestX - sphereCenter.x;
+    float dy = closestY - sphereCenter.y;
+    float dz = closestZ - sphereCenter.z;
+
+    // 距離の2乗が半径の2乗以下なら当たっている
+    return (dx * dx + dy * dy + dz * dz) <= (sphereRadius * sphereRadius);
+
+    return false;
 }
 
 bool AsoUtility::IsHitSpheres(const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2)

@@ -1,10 +1,14 @@
 #include "../Libs/ImGui/imgui.h"
 #include "../../Common/DebugDrawFormat.h"
+#include "../Common/Cube.h"
 #include "../../Utility/StringUtility.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const std::string objId):objId_(objId),param_(StageObjectLibrary::ObjectParams())
+StageObject::StageObject(const std::string objId, const float width,
+	const float height, const float depth):
+	objId_(objId),param_(StageObjectLibrary::ObjectParams()),width_(width),
+	height_(height),depth_(depth)
 {
 }
 
@@ -17,6 +21,9 @@ void StageObject::Init(void)
 	object_ = StageObjectLibrary::LoadData(objId_);
 
 	param_ = object_.second;
+
+	cube_ = std::make_unique<Cube>(transform_);
+
 	transform_.Update();
 }
 
@@ -29,7 +36,13 @@ void StageObject::Update(void)
 
 void StageObject::Draw(void)
 {
+#ifdef _DEBUG
+
+	//とりあえず仮のモデルとして色違いのCubeを生成する
+
 	int col = 0x000000;
+	COLOR_U8  retCol;
+
 	if (objId_ == "Coffee_Machine")col = 0x3f312b;
 	else if (objId_ == "Ice_Dispenser")col = 0x4682b4;
 	else if (objId_ == "Table")col = 0xd2b48c;
@@ -40,13 +53,22 @@ void StageObject::Draw(void)
 	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
 	else if (objId_ == "Lids")col = 0xa9a9a9;
 	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
-	DrawSphere3D(transform_.pos, 30.0f, 8, col, 0xffffff, true);
+	//int型をCOLOR_U8へ変換
+	retCol.r = (col >> 16) & 0xFF;
+	retCol.g = (col >> 8) & 0xFF;
+	retCol.b = col & 0xFF;
+	retCol.a = 255;
+
+	cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
+
+	//DrawSphere3D(transform_.pos, 30.0f, 8, col, col, false);
+	//cube_->Draw();
+
 	VECTOR screenPos = ConvWorldPosToScreenPos(transform_.pos);
 	// 変換成功
-	DrawString(static_cast<int>(screenPos.x), static_cast<int>(screenPos.y) - 50,
+	DrawString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50,
 		StringUtility::StringToWstring(objId_.c_str()).c_str(), GetColor(255, 255, 255));
 
-#ifdef _DEBUG
 	int line = 3;	//行
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatStringRight(L"param", 0, line,lineHeight);
@@ -69,6 +91,11 @@ void StageObject::Draw(void)
 	}
 #endif // _DEBUG
 
+}
+
+void StageObject::SetPos(VECTOR pos)
+{
+	transform_.pos = pos;
 }
 
 bool StageObject::Interact(Player& player)

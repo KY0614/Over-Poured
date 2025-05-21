@@ -3,13 +3,15 @@
 #include "../ActorBase.h"
 #include "StageObjectLibrary.h"
 
+class Cube;
 class Player;
 
 class StageObject : public ActorBase
 {
 public:
 
-	StageObject(const std::string objId);
+	StageObject(const std::string objId,const float width,
+		const float height, const float depth);
 
 	~StageObject(void);
 
@@ -17,7 +19,7 @@ public:
 	void Update(void)override;
 	void Draw(void)override;
 
-	void SetPos(VECTOR pos) { transform_.pos = pos; };
+	void SetPos(VECTOR pos);
 	VECTOR GetPos(void)const { return transform_.pos; };
 
 	bool Interact(Player& player);
@@ -27,6 +29,10 @@ private:
 	StageObjectLibrary::ObjectParams param_;
 	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
 
+	std::unique_ptr<Cube> cube_;
+	float width_;
+	float height_;
+	float depth_;
 
 	float fillProgress_ = 0.0f;
 
