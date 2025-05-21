@@ -108,5 +108,5 @@
     "carryable": true,
     "acceptedItems":["hot_coffee","ice_coffee"],
     "produces": ["hot_coffee_with_lid","ice_coffee_with_lid"]
-    },
+    }
 }

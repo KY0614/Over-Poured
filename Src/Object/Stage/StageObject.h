@@ -29,5 +29,7 @@ private:
 
 
 	float fillProgress_ = 0.0f;
+
+	void UpdateDebugImGui(void);
 };
 
