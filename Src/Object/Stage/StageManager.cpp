@@ -38,7 +38,11 @@ void StageManager::Init(void)
 
 	machine_ = std::make_unique<StageObject>("Coffee_Machine");
 	machine_->Init();
-	machine_->SetPos(AsoUtility::VECTOR_ZERO);
+	machine_->SetPos(MACHINE_POS);
+
+	table_ = std::make_unique<StageObject>("Table");
+	table_->Init();
+	table_->SetPos(AsoUtility::VECTOR_ZERO);
 
 #ifdef _DEBUG
 
@@ -59,7 +63,8 @@ void StageManager::Update(void)
 	transform_.Update();
 	sphereTran_.Update();
 
-	machine_->Update();
+	//machine_->Update();
+	table_->Update();
 
 #ifdef _DEBUG
 
@@ -73,11 +78,11 @@ void StageManager::Update(void)
 void StageManager::Draw(void)
 {
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
-	machine_->Draw();
+	
 	MV1DrawModel(transform_.modelId);
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
-
-	//		if (grid_[y][x]) {
+	machine_->Draw();
+	table_->Draw();
 }
 
 bool StageManager::IsInBounds(int x, int y) const

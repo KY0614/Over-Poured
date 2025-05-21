@@ -25,8 +25,8 @@
     <ClCompile Include="Src\Object\Customer\CustomerBase.cpp" />
     <ClCompile Include="Src\Object\Customer\HotCustomer.cpp" />
     <ClCompile Include="Src\Common\DebugDrawFormat.cpp" />
-    <ClCompile Include="Src\Object\Order.cpp" />
-    <ClCompile Include="Src\Manager\GameSystem\OrderManager.cpp" />
+    <ClCompile Include="Src\Object\Order\Order.cpp" />
+    <ClCompile Include="Src\Object\Order\OrderManager.cpp" />
     <ClCompile Include="Src\Libs\ImGuiWrapper.cpp" />
     <ClCompile Include="Src\Libs\ImGui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Src\Libs\ImGui\backends\imgui_impl_win32.cpp" />
@@ -119,8 +119,8 @@
     <ClInclude Include="Src\Object\Customer\CustomerBase.h" />
     <ClInclude Include="Src\Object\Customer\HotCustomer.h" />
     <ClInclude Include="Src\Common\DebugDrawFormat.h" />
-    <ClInclude Include="Src\Object\Order.h" />
-    <ClInclude Include="Src\Manager\GameSystem\OrderManager.h" />
+    <ClInclude Include="Src\Object\Order\Order.h" />
+    <ClInclude Include="Src\Object\Order\OrderManager.h" />
     <ClInclude Include="Src\Libs\ImGuiWrapper.h" />
     <ClInclude Include="Src\Libs\ImGui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Src\Libs\ImGui\backends\imgui_impl_win32.h" />

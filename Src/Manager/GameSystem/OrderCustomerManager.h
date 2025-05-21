@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include"../../Object/Customer/CustomerBase.h"
+#include "../../Object/Order/Order.h"
 
 class OrderManager;
 class CustomerManager;

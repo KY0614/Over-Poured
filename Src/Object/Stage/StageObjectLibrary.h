@@ -28,7 +28,6 @@ public:
     };
 
     static std::pair<std::string, ObjectParams> LoadData(const std::string& objName);
-    static const ObjectParams* Get(const std::string& id);
 
 private:
 

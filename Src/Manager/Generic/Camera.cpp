@@ -1,6 +1,7 @@
 #include <math.h>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
+#include "../Libs/ImGui/imgui.h"
 #include "../../Utility/AsoUtility.h"
 #include "../Generic/InputManager.h"
 #include "../../Object/Common/Transform.h"
@@ -44,6 +45,7 @@ void Camera::SetBeforeDraw(void)
 
 	case Camera::MODE::FOLLOW:
 		SetBeforeDrawFollow();
+		break;
 
 	case Camera::MODE::FREE:
 		SetBeforeDrawFree();
@@ -63,6 +65,7 @@ void Camera::SetBeforeDraw(void)
 	//DXライブラリのカメラとEffekseerのカメラを同期する。
 	Effekseer_Sync3DSetting();
 
+	UpdateDebugImGui();
 }
 
 void Camera::Draw(void)
@@ -127,11 +130,16 @@ void Camera::ChangeMode(MODE mode)
 void Camera::SetDefault(void)
 {
 
-	//カメラの初期設定
-	pos_ = DEFAULT_CAMERA_POS;
+	////カメラの初期設定
+	//pos_ = DEFAULT_CAMERA_POS;
 
+	////注視点
+	//targetPos_ = AsoUtility::VECTOR_ZERO;
+
+	//カメラの初期設定
+	pos_ = FIXEDCAMERA_DEFAULT_POS;
 	//注視点
-	targetPos_ = AsoUtility::VECTOR_ZERO;
+	targetPos_ = FIXEDCAMERA_RELATIVE_POS;
 
 	//カメラの上方向
 	cameraUp_ = AsoUtility::DIR_U;
@@ -217,4 +225,37 @@ void Camera::SetBeforeDrawFree(void)
 {
 	//カメラ操作
 	ProcessRot();
+}
+
+void Camera::UpdateDebugImGui(void)
+{
+	//ウィンドウタイトル&開始処理
+	ImGui::Begin("Camera");
+	//角度
+	VECTOR rotDeg = VECTOR();
+	rotDeg.x = AsoUtility::Rad2DegF(angles_.x);
+	rotDeg.y = AsoUtility::Rad2DegF(angles_.y);
+	rotDeg.z = AsoUtility::Rad2DegF(angles_.z);
+	ImGui::Text("angle(deg)");
+	ImGui::SliderFloat("RotX", &rotDeg.x, -300.0f, 360.0f);
+	ImGui::SliderFloat("RotY", &rotDeg.y, -300.0f, 360.0f);
+	ImGui::SliderFloat("RotZ", &rotDeg.z, -300.0f, 360.0f);
+	angles_.x = AsoUtility::Deg2RadF(rotDeg.x);
+	angles_.y = AsoUtility::Deg2RadF(rotDeg.y);
+	angles_.z = AsoUtility::Deg2RadF(rotDeg.z);
+	//位置
+	ImGui::Text("position");
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Pos", &pos_.x);
+	ImGui::SliderFloat("PosX", &pos_.x, -500.0f, 1000.0f);
+	ImGui::SliderFloat("PosY", &pos_.y, -500.0f, 1000.0f);
+	ImGui::SliderFloat("PosZ", &pos_.z, -500.0f, 1000.0f);
+
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("TargetPos", &targetPos_.x);
+	ImGui::SliderFloat("TargetPosX", &targetPos_.x, -500.0f, 360.0f);
+	ImGui::SliderFloat("TargetPosY", &targetPos_.y, -500.0f, 360.0f);
+	ImGui::SliderFloat("TargetPosZ", &targetPos_.z, -500.0f, 1000.0f);
+	//終了処理
+	ImGui::End();
 }

@@ -1,6 +1,6 @@
 #include <DxLib.h>
 #include "../../Common/DebugDrawFormat.h"
-#include "../../Object/Order.h"
+#include "Order.h"
 #include "OrderManager.h"
 
 OrderManager::OrderManager(void)

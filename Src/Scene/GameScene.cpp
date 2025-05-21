@@ -5,16 +5,16 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/InputManager.h"
-#include"../Manager/GameSystem/OrderManager.h"
 #include"../Manager/GameSystem/OrderCustomerManager.h"
 #include"../Object/Customer/CustomerBase.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
-#include "../Object/SkyDome.h"
 #include "../Object/Stage/StageObjectLibrary.h"
 #include "../Object/Stage/StageManager.h"
+#include"../Object/Order/OrderManager.h"
 #include "../Object/Player.h"
 #include "../Object/Score.h"
+#include "../Object/SkyDome.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -50,9 +50,9 @@ void GameScene::Init(void)
 
 	//ƒJƒƒ‰
 	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
+	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
 
-	timer_ = 20.0f;
+	timer_ = MAX_TIME;
 }
 
 void GameScene::Update(void)
@@ -117,6 +117,7 @@ void GameScene::Draw(void)
 
 	//”wŒi
 	//skyDome_->Draw();
+
 	stage_->Draw();
 	
 	player_->Draw();

@@ -2,8 +2,8 @@
 #include "../Libs/ImGui/imgui.h"
 #include "../Common/DebugDrawFormat.h"
 #include "../Manager/Generic/SceneManager.h"
-#include "../Manager/GameSystem/OrderManager.h"
 #include "../Manager/Generic/InputManager.h"
+#include "OrderManager.h"
 #include "Order.h"
 
 Order::Order(void)

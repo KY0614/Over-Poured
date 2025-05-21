@@ -12,7 +12,7 @@
 #include "Common/AnimationController.h"
 #include "Common/Capsule.h"
 #include "Common/Collider.h"
-#include "Order.h"
+#include "Order/Order.h"
 #include "Player.h"
 
 Player::Player(void)

@@ -12,6 +12,8 @@ class GameScene : public SceneBase
 {
 
 public:
+
+	static constexpr float MAX_TIME = 100.0f;
 	
 	//コンストラクタ
 	GameScene(void);

@@ -2,8 +2,8 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Common/DebugDrawFormat.h"
 #include "../../Object/Customer/CustomerManager.h"
+#include "../../Object/Order/OrderManager.h"
 #include "../Generic/SceneManager.h"
-#include "./OrderManager.h"
 #include "OrderCustomerManager.h"
 
 OrderCustomerManager::OrderCustomerManager(void)
@@ -127,11 +127,17 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 		{
 			score -= 100;
 		}
-		if (orderMng_->GetFirstOrder().time_ > 3.0f)
+
+		if (serveSweets != orderMng_->GetFirstOrder().sweets_)
+		{
+			score -= 50;
+		}
+
+		if (orderMng_->GetFirstOrder().time_ > 7.0f)
 		{
 			score += 50;
 		}
-		else if (orderMng_->GetFirstOrder().time_ > 1.0f)
+		else if (orderMng_->GetFirstOrder().time_ > 3.0f)
 		{
 			score += 10;
 		}	
@@ -149,11 +155,11 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 			score += 30;
 		}
 
-		if (orderMng_->GetFirstOrder().time_ > 2.0f)
+		if (orderMng_->GetFirstOrder().time_ > 12.0f)
 		{
 			score += 40;
 		}
-		else if (orderMng_->GetFirstOrder().time_ > 1.0f)
+		else if (orderMng_->GetFirstOrder().time_ > 6.0f)
 		{
 			score += 20;
 		}		

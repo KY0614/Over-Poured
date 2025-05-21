@@ -85,9 +85,9 @@ void StageObject::UpdateDebugImGui(void)
 	ImGui::Text("position");
 	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
 	ImGui::InputFloat3("Pos", &transform_.pos.x);
-	ImGui::SliderFloat("PosX", &transform_.pos.x, 0.0f, 360.0f);
-	ImGui::SliderFloat("PosY", &transform_.pos.y, 0.0f, 360.0f);
-	ImGui::SliderFloat("PosZ", &transform_.pos.z, 0.0f, 1000.0f);
+	ImGui::SliderFloat("PosX", &transform_.pos.x, -300.0f, 500.0f);
+	ImGui::SliderFloat("PosY", &transform_.pos.y, -300.0f, 500.0f);
+	ImGui::SliderFloat("PosZ", &transform_.pos.z, -300.0f, 1000.0f);
 	//終了処理
 	ImGui::End();
 }

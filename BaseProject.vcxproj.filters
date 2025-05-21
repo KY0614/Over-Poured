@@ -162,10 +162,10 @@
     <ClCompile Include="Src\Object\Score.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\GameSystem\OrderManager.cpp">
+    <ClCompile Include="Src\Object\Order\OrderManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Order.cpp">
+    <ClCompile Include="Src\Object\Order\Order.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Common\DebugDrawFormat.cpp">
@@ -305,10 +305,10 @@
     <ClInclude Include="Src\Object\Score.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\GameSystem\OrderManager.h">
+    <ClInclude Include="Src\Object\Order\OrderManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Order.h">
+    <ClInclude Include="Src\Object\Order\Order.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Common\DebugDrawFormat.h">
