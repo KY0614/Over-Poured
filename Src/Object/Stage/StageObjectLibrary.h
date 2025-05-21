@@ -16,11 +16,11 @@ public:
         bool carryable_ = false;            //持ち運びできるか（例：カップ）
         bool interactable_ = false;         //プレイヤーがアクション可能か
 
-        std::string interactType_;     //"place", "machine", "serve", "charge", など動作タイプ（任意）
-        float interactTime = 0.0f;    //インタラクトにかかる時間（例：注ぐ時間）
+        std::string interactType_;          //"place", "machine", "serve", "charge", など動作タイプ（任意）
+        float interactTime = 0.0f;          //インタラクトにかかる時間（例：注ぐ時間）
 
-        std::vector<std::string> acceptedItems_; //インタラクト対象にできるアイテム（例：コップだけなど）
-        std::vector<std::string> produces_;       //対象アイテムを受け取った後、渡すアイテム
+        std::vector<std::string> acceptedItems_;   //インタラクト対象にできるアイテム（例：コップだけなど）
+        std::vector<std::string> produces_;        //対象アイテムを受け取った後、渡すアイテム
 
         // ゲーム的なカテゴリ（分類）例："machine", "item", "counter"
         std::string category_;
@@ -31,8 +31,6 @@ public:
     static const ObjectParams* Get(const std::string& id);
 
 private:
-
-    //static std::unordered_map<std::string, ObjectParams> objectMap_;
 
 };
 

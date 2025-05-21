@@ -27,7 +27,6 @@ private:
 	StageObjectLibrary::ObjectParams param_;
 	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
 
-	//std::unique_ptr<StageObject> placedObject_;
 
 	float fillProgress_ = 0.0f;
 };

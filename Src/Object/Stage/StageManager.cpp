@@ -61,14 +61,6 @@ void StageManager::Update(void)
 
 	machine_->Update();
 
-	//for (int y = 0; y < size_.height_; ++y) {
-	//	for (int x = 0; x < size_.width_; ++x) {
-	//		if (grid_[y][x]) {
-	//			grid_[y][x]->Update();
-	//		}
-	//	}
-	//}
-
 #ifdef _DEBUG
 
 	//ImGui‚Ì‘€ì‚ğs‚¤
@@ -84,43 +76,8 @@ void StageManager::Draw(void)
 	MV1DrawModel(transform_.modelId);
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
 
-	//for (int y = 0; y < size_.height_; ++y) {
-	//	for (int x = 0; x < size_.width_; ++x) {
-	//		if (grid_[y][x]) {
-	//			grid_[y][x]->Draw();
-	//		}
-	//	}
-	//}
 	machine_->Draw();
 }
-
-void StageManager::LoadStage(const std::vector<std::vector<std::string>>& grid)
-{
-
-}
-
-bool StageManager::PlaceObject(int x, int y, const std::string& objectId)
-{
-	return false;
-}
-
-StageObject* StageManager::GetStageObject(int x, int y)
-{
-	if (!IsInBounds(x, y)) {
-		return nullptr;
-	}
-
-	return grid_[y][x].get(); // nullptr ‚à‚ ‚è“¾‚é
-}
-
-//StageObject* StageManager::GetObjectAt(Vector2 mapSize)
-//{
-//	return nullptr;
-//}
-//
-//void StageManager::SetObjectAt(Vector2 mapSize, std::unique_ptr<StageObject> obj)
-//{
-//}
 
 bool StageManager::IsInBounds(int x, int y) const
 {
