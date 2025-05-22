@@ -102,7 +102,8 @@ void StageManager::Update(void)
 
 	if (AsoUtility::IsHitSphereCube(VGet(0.0f, 60.0f, 50.0f), 20.0f, CUPHOT_POS, 40.0f, 30.0f, 40.0f))
 	{
-
+		int a = 0;
+		a++;
 	}
 
 #ifdef _DEBUG
