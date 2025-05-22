@@ -104,6 +104,7 @@ void Cube::MakeBox(VECTOR center, float width, float height, float depth, COLOR_
     //    VGet(center.x - hw, center.y + hh, center.z + hd), // 7: ¶ã‰œ
     //};
 
+    //’ê–Ê’†SÀ•W
     VECTOR p[8] =
     {
         VGet(center.x - hw, center.y,         center.z - hd), // 0: ¶‰ºè‘O
