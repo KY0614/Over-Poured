@@ -1,6 +1,7 @@
 #include "../Libs/ImGui/imgui.h"
 #include "../../Common/DebugDrawFormat.h"
 #include "../Common/Cube.h"
+#include "../../Utility/AsoUtility.h"
 #include "../../Utility/StringUtility.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
@@ -10,6 +11,8 @@ StageObject::StageObject(const std::string objId, const float width,
 	objId_(objId),param_(StageObjectLibrary::ObjectParams()),width_(width),
 	height_(height),depth_(depth)
 {
+	followPos_ = AsoUtility::VECTOR_ZERO;
+	state_ = STATE::NONE;
 }
 
 StageObject::~StageObject(void)
@@ -24,14 +27,43 @@ void StageObject::Init(void)
 
 	cube_ = std::make_unique<Cube>(transform_);
 
+	state_ = STATE::PLACED;
+
 	transform_.Update();
+
+#ifdef _DEBUG
+
+	//ìñÇΩÇËîªíËópÇÃãÖëÃ
+	sphereTran_.Update();
+
+	sphereTran_.scl = AsoUtility::VECTOR_ONE;
+	sphereTran_.pos = { 221.0f, 0.0f, 139.0f };
+	sphereTran_.quaRot = Quaternion();
+	sphereTran_.quaRotLocal =
+		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
+
+#endif // _DEBUG
 }
 
 void StageObject::Update(void)
 {
+	switch (state_)
+	{
+	case StageObject::STATE::NONE:
+		break;
+	case StageObject::STATE::PLACED:
+		UpdatePlaced();
+		break;
+	case StageObject::STATE::HOLD:
+		UpdateHold();
+		break;
+	default:
+		break;
+	}
+
 	transform_.Update();
 
-	UpdateDebugImGui();
+	//UpdateDebugImGui();
 }
 
 void StageObject::Draw(void)
@@ -43,13 +75,16 @@ void StageObject::Draw(void)
 	int col = 0x000000;
 	COLOR_U8  retCol;
 
-	if (objId_ == "Coffee_Machine")col = 0x3f312b;
-	else if (objId_ == "Ice_Dispenser")col = 0x4682b4;
+	float rad = 30.0f;
+	VECTOR pos = transform_.pos;
+
+	if (objId_ == "Coffee_Machine")col = 0x3f312b,rad = 35.0f;
+	else if (objId_ == "Ice_Dispenser")col = 0x4682b4,rad = 35.0f, pos.y -= 10.0f;
 	else if (objId_ == "Table")col = 0xd2b48c;
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
-	else if (objId_ == "Cup_Hot")col = 0xcd5c5c;
-	else if (objId_ == "Cup_Ice")col = 0x87ceeb;
+	else if (objId_ == "Cup_Hot")col = 0xcd5c5c,rad = 20.0f;
+	else if (objId_ == "Cup_Ice")col = 0x87ceeb,rad = 20.0f;
 	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
 	else if (objId_ == "Lids")col = 0xa9a9a9;
 	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
@@ -61,7 +96,7 @@ void StageObject::Draw(void)
 
 	cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
 
-	//DrawSphere3D(transform_.pos, 30.0f, 8, col, col, false);
+	DrawSphere3D(sphereTran_.pos , rad, 8, col, col, false);
 	//cube_->Draw();
 
 	VECTOR screenPos = ConvWorldPosToScreenPos(transform_.pos);
@@ -71,24 +106,24 @@ void StageObject::Draw(void)
 
 	int line = 3;	//çs
 	int lineHeight = 30;	//çs
-	DebugDrawFormat::FormatStringRight(L"param", 0, line,lineHeight);
-	DebugDrawFormat::FormatStringRight(L"id : %ws", StringUtility::StringToWstring(param_.id_).c_str(), line, lineHeight);
-	DebugDrawFormat::FormatStringRight(L"name : %s", StringUtility::StringToWstring(param_.name_).c_str(), line, lineHeight);
-	DebugDrawFormat::FormatStringRight(L"modelFile_ : %s", StringUtility::StringToWstring(param_.modelFile_).c_str(), line, lineHeight);
-	DebugDrawFormat::FormatStringRight(L"placeable_ : %d", param_.placeable_, line, lineHeight);
-	DebugDrawFormat::FormatStringRight(L"carryable_ : %d", param_.carryable_, line, lineHeight);
-	DebugDrawFormat::FormatStringRight(L"interactable_ : %d", param_.interactable_, line, lineHeight);
-	DebugDrawFormat::FormatStringRight(L"interactTime %2.f", param_.interactTime, line, lineHeight);
-	DebugDrawFormat::FormatStringRight(L"type : %s", StringUtility::StringToWstring(param_.category_).c_str(), line, lineHeight);
-	
-	for (auto& item : param_.acceptedItems_)
-	{
-		DebugDrawFormat::FormatStringRight(L"acceptedItem : %s", StringUtility::StringToWstring(item).c_str(), line, lineHeight);
-	}
-	for (auto& produce : param_.produces_)
-	{
-		DebugDrawFormat::FormatStringRight(L"produce : %s", StringUtility::StringToWstring(produce).c_str(), line, lineHeight);
-	}
+	//DebugDrawFormat::FormatStringRight(L"param", 0, line,lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"id : %ws", StringUtility::StringToWstring(param_.id_).c_str(), line, lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"name : %s", StringUtility::StringToWstring(param_.name_).c_str(), line, lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"modelFile_ : %s", StringUtility::StringToWstring(param_.modelFile_).c_str(), line, lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"placeable_ : %d", param_.placeable_, line, lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"carryable_ : %d", param_.carryable_, line, lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"interactable_ : %d", param_.interactable_, line, lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"interactTime %2.f", param_.interactTime, line, lineHeight);
+	//DebugDrawFormat::FormatStringRight(L"type : %s", StringUtility::StringToWstring(param_.category_).c_str(), line, lineHeight);
+	//
+	//for (auto& item : param_.acceptedItems_)
+	//{
+	//	DebugDrawFormat::FormatStringRight(L"acceptedItem : %s", StringUtility::StringToWstring(item).c_str(), line, lineHeight);
+	//}
+	//for (auto& produce : param_.produces_)
+	//{
+	//	DebugDrawFormat::FormatStringRight(L"produce : %s", StringUtility::StringToWstring(produce).c_str(), line, lineHeight);
+	//}
 #endif // _DEBUG
 
 }
@@ -96,11 +131,16 @@ void StageObject::Draw(void)
 void StageObject::SetPos(VECTOR pos)
 {
 	transform_.pos = pos;
+	sphereTran_.pos = pos;
 }
 
-bool StageObject::Interact(Player& player)
+void StageObject::UpdatePlaced(void)
 {
-	return false;
+}
+
+void StageObject::UpdateHold(void)
+{
+	transform_.pos = followPos_;
 }
 
 void StageObject::UpdateDebugImGui(void)

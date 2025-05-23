@@ -63,12 +63,19 @@ public:
 	//衝突用カプセルの取得
 	const Capsule& GetCapsule(void) const;
 
+	const Sphere& GetSphere(void) const { return *sphere_; }
+
 	bool IsPlay(void);
 
-	VECTOR GetHitPos(void);
-	VECTOR GetHitNormal(void);
+	void SetIsHoldiong(bool hold) { isHolding_ = hold; }
 
 	Order::OrderData GetPlayerItem(void) { return data_; }
+
+	bool GetIsHolding(void)const { return isHolding_; }
+	std::string GetHoldItem(void) { return holdItemId_; }
+
+
+	void SetHoldItem(std::string item) { holdItemId_ = item; }
 
 	void UpdateDebugImGui(void);
 
@@ -126,18 +133,11 @@ private:
 	//フレームごとの移動値
 	VECTOR moveDiff_;
 	
-	//傾斜角
-	float slopeAngleDeg_;
-	//傾斜の力
-	VECTOR slopePow_;
-	//傾斜の方向
-	VECTOR slopeDir_;
-	//衝突している地面ポリゴンの法線
-	VECTOR hitNormal_;
-	//衝突している地面との座標
-	VECTOR hitPos_;
-	
+	//プレイヤーが持っている商品情報(仮機能)
 	Order::OrderData data_;
+
+	bool isHolding_;
+	std::string holdItemId_;
 
 	void InitAnimation(void);
 

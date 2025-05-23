@@ -146,9 +146,18 @@ void Cube::MakeBox(VECTOR center, float width, float height, float depth, COLOR_
         verts[vi++] = { p[f.c], f.normal, col, GetColorU8(0,0,0,0), 0,0,0,0 };
         verts[vi++] = { p[f.a], f.normal, col, GetColorU8(0,0,0,0), 0,0,0,0 };
     }
+    //
+    ////Zバッファを有効にする
+    //SetUseZBuffer3D(true);
 
+    ////Zバッファへの書き込みを有効にする
+    //SetWriteZBuffer3D(true);
+    //SetWriteZBufferFlag(true);
+
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
     // 描画（12ポリゴン）
     DrawPolygon3D(verts, 12, DX_NONE_GRAPH, true);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 void Cube::Draw(void)

@@ -35,6 +35,8 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
+	void ResetHotCup(void);
+
 private:
 
 	Size size_;

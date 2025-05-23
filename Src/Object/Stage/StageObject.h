@@ -11,27 +11,51 @@ class StageObject : public ActorBase
 {
 public:
 
+	enum class STATE {
+		NONE,
+		PLACED,
+		HOLD,
+	};
+
 	StageObject(const std::string objId,const float width,
 		const float height, const float depth);
 
 	~StageObject(void);
 
-	void Init(void)override;
-	void Update(void)override;
-	void Draw(void)override;
+	virtual void Init(void)override;
+	virtual void Update(void)override;
+	virtual void Draw(void)override;
 
 	void SetPos(VECTOR pos);
-	VECTOR GetPos(void)const { return transform_.pos; };
 
-	bool Interact(Player& player);
+	void SetFollowPos(VECTOR followPos) { followPos_ = followPos; }
+
+	void ChangeState(STATE state) { state_ = state; }
+
+	VECTOR GetPos(void)const { return transform_.pos; };
+	VECTOR GetSpherePos(void)const { return sphereTran_.pos; };
+
+	/// <summary>
+	/// 持ち運び可能のオブジェクトかどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:持ち運び可能、false:不可能</returns>
+	bool IsCarryable(void)const { return param_.carryable_; }
+
+	std::string GetObjectId(void)const { return objId_; }
+
+	STATE GetState(void)const { return state_; }
+
+	virtual void Interact(Player& player) = 0;
 
 private:
 	std::string objId_;
 	StageObjectLibrary::ObjectParams param_;
 	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
+	
+	STATE state_;
 
-	using ObjectUpdateTable_t = std::function<void(void)>;
-	ObjectUpdateTable_t objectUpdate_;
+	VECTOR followPos_;
 
 	//仮モデルの立方体
 	std::unique_ptr<Cube> cube_;
@@ -40,6 +64,9 @@ private:
 	float depth_;
 
 	float fillProgress_ = 0.0f;
+
+	void UpdatePlaced(void);
+	void UpdateHold(void);
 
 	/// <summary>
 	/// 座標や拡大率を調整する用のGUI

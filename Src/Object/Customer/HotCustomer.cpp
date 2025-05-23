@@ -56,10 +56,12 @@ void HotCustomer::UpdateCol(void)
 		color_ = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
 		MV1SetMaterialDifColor(transform_.modelId, 0, color_);
 		break;
+
 	case CustomerBase::REACTION::SOSO:
-		color_ = GetColorF(0.5f, 0.5f, 0.5f, 1.0f);
+		color_ = GetColorF(0.4f, 0.4f, 0.4f, 1.0f);
 		MV1SetMaterialDifColor(transform_.modelId, 0, color_);
 		break;
+
 	case CustomerBase::REACTION::BAD:
 		color_ = GetColorF(0.0f, 0.0f, 0.0f, 1.0f);
 		MV1SetMaterialDifColor(transform_.modelId, 0, color_);

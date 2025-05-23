@@ -1,13 +1,17 @@
 #include <DxLib.h>
 #include <fstream>
 #include"../Libs/nlohmann/json.hpp"
+#include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Libs/ImGui/imgui.h"
 #include "../Manager/Generic/ResourceManager.h"
+#include "../Manager/Generic/InputManager.h"
 #include "../Player.h"
 #include "../Common/Transform.h"
+#include "../Common/Sphere.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
+#include "CupHot.h"
 #include "StageManager.h"
 
 StageManager::StageManager(Vector2 mapSize, Player& player):player_(player)
@@ -38,40 +42,40 @@ void StageManager::Init(void)
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
-	//コーヒーマシン
-	machine_ = std::make_unique<StageObject>("Coffee_Machine",75.0f,60.0f,60.0f);
-	machine_->Init();
-	machine_->SetPos(MACHINE_POS);
+	////コーヒーマシン
+	//machine_ = std::make_unique<StageObject>("Coffee_Machine",75.0f,60.0f,60.0f);
+	//machine_->Init();
+	//machine_->SetPos(MACHINE_POS);
 
-	//テーブル
-	table_ = std::make_unique<StageObject>("Table", 60.0f, 60.0f, 60.0f);
-	table_->Init();
-	table_->SetPos(AsoUtility::VECTOR_ZERO);
+	////テーブル
+	//table_ = std::make_unique<StageObject>("Table", 60.0f, 60.0f, 60.0f);
+	//table_->Init();
+	//table_->SetPos(AsoUtility::VECTOR_ZERO);
 	
 	//ホット用カップ
-	cupH_ = std::make_unique<StageObject>("Cup_Hot", 40.0f, 30.0f, 40.0f);
+	cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
 	cupH_->Init();
 	cupH_->SetPos(CUPHOT_POS);
 	
-	//アイス用カップ
-	cupI_ = std::make_unique<StageObject>("Cup_Ice", 40.0f, 30.0f, 40.0f);
-	cupI_->Init();
-	cupI_->SetPos(CUPICE_POS);
-		
-	//アイスディスペンサー(氷を入れるやつ）
-	iceDispenser_ = std::make_unique<StageObject>("Ice_Dispenser", 60.0f, 20.0f, 60.0f);
-	iceDispenser_->Init();
-	iceDispenser_->SetPos(ICEDIS_POS);
-		
-	//蓋類
-	libs_ = std::make_unique<StageObject>("Libs", 40.0f, 30.0f, 40.0f);
-	libs_->Init();
-	libs_->SetPos(LIBS_POS);
-			
-	//ゴミ箱
-	dustBox_ = std::make_unique<StageObject>("Dust_Box", 40.0f, 70.0f, 40.0f);
-	dustBox_->Init();
-	dustBox_->SetPos(DUSTBOX_POS);
+	////アイス用カップ
+	//cupI_ = std::make_unique<StageObject>("Cup_Ice", 40.0f, 30.0f, 40.0f);
+	//cupI_->Init();
+	//cupI_->SetPos(CUPICE_POS);
+	//	
+	////アイスディスペンサー(氷を入れるやつ）
+	//iceDispenser_ = std::make_unique<StageObject>("Ice_Dispenser", 60.0f, 20.0f, 60.0f);
+	//iceDispenser_->Init();
+	//iceDispenser_->SetPos(ICEDIS_POS);
+	//	
+	////蓋類
+	//libs_ = std::make_unique<StageObject>("Libs", 40.0f, 30.0f, 40.0f);
+	//libs_->Init();
+	//libs_->SetPos(LIBS_POS);
+	//		
+	////ゴミ箱
+	//dustBox_ = std::make_unique<StageObject>("Dust_Box", 40.0f, 70.0f, 40.0f);
+	//dustBox_->Init();
+	//dustBox_->SetPos(DUSTBOX_POS);
 
 #ifdef _DEBUG
 
@@ -89,22 +93,68 @@ void StageManager::Init(void)
 
 void StageManager::Update(void)
 {
-	transform_.Update();
-	sphereTran_.Update();
+	auto& ins = InputManager::GetInstance();
 
 	//machine_->Update();
 	//table_->Update();
-	//cupH_->Update();
+	cupH_->Update();
 	//cupI_->Update();
 	//iceDispenser_->Update();
 	//libs_->Update();
 	//dustBox_->Update();
 
-	if (AsoUtility::IsHitSphereCube(VGet(0.0f, 60.0f, 50.0f), 20.0f, CUPHOT_POS, 40.0f, 30.0f, 40.0f))
+	auto& pSphere = player_.GetSphere();
+
+	if (player_.GetIsHolding())
 	{
-		int a = 0;
-		a++;
+		cupH_->ChangeState(StageObject::STATE::HOLD);
+		cupH_->SetFollowPos(pSphere.GetPos());
 	}
+
+	//とりあえずホット用のみ
+	//プレイヤーとホット用カップの球体判定
+	if (AsoUtility::IsHitSpheres(pSphere.GetPos(),pSphere.GetRadius(),
+		cupH_->GetSpherePos(), 20.0f))
+	{
+		//↓の中で処理を書いてもいいかも？
+		cupH_->Interact(player_);
+	}
+
+	////マシンとプレイヤーの球体判定
+	//if (AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+	//	machine_->GetSpherePos(), 35.0f))
+	//{
+	//	//スペースキー押下でマシンの場所にカップを置く(とりあえず)
+	//	if (ins.IsTrgDown(KEY_INPUT_SPACE) && 
+	//		player_.GetIsHolding()	&&
+	//		player_.GetHoldItem() == "Cup_Hot")
+	//	{
+	//		player_.SetIsHoldiong(false);
+	//		cupH_->ChangeState(StageObject::STATE::PLACED);
+	//		cupH_->SetPos(MACHINE_POS);
+	//	}
+	//}
+
+	////カップとマシンの球体判定
+	//if (AsoUtility::IsHitSpheres(cupH_->GetSpherePos(), 20.0f,
+	//	machine_->GetSpherePos(), 35.0f))
+	//{
+	//	//カップが設置状態でかつプレイヤーがマシンの前にいるときに
+	//	//Rキー押下でホットコーヒー作成
+	//	if (cupH_->GetState() == StageObject::STATE::PLACED &&
+	//		AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+	//			machine_->GetSpherePos(), 35.0f))
+	//	{
+	//		if (ins.IsTrgDown(KEY_INPUT_R))
+	//		{
+	//			//ホットコーヒー生成
+	//			cupH_ = std::make_unique<CupHot>("Hot_Coffee", 40.0f, 30.0f, 40.0f);
+	//			cupH_->Init();
+	//			cupH_->SetPos(MACHINE_POS);
+	//		}
+	//	}
+	//}
+
 
 #ifdef _DEBUG
 
@@ -113,28 +163,39 @@ void StageManager::Update(void)
 
 #endif // _DEBUG
 
+	transform_.Update();
+	sphereTran_.Update();
+
 }
 
 void StageManager::Draw(void)
 {
 	//モデルの描画
 
-	//Zバッファを有効にする
-	SetUseZBuffer3D(true);
-
-	//Zバッファへの書き込みを有効にする
-	SetWriteZBuffer3D(true);
-	SetWriteZBufferFlag(true);
-
 	MV1DrawModel(transform_.modelId);
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
-	machine_->Draw();
-	table_->Draw();
+
+	//machine_->Draw();
+	//table_->Draw();
 	cupH_->Draw();
-	cupI_->Draw();
-	iceDispenser_->Draw();
-	libs_->Draw();
-	dustBox_->Draw();
+	//cupI_->Draw();
+	//iceDispenser_->Draw();
+	//libs_->Draw();
+	//dustBox_->Draw();
+
+	int line = 8;	//行
+	int lineHeight = 30;	//行
+	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
+}
+
+void StageManager::ResetHotCup(void)
+{
+	player_.SetIsHoldiong(false);
+
+	//ホット用カップ
+	cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
+	cupH_->Init();
+	cupH_->SetPos(CUPHOT_POS);
 }
 
 bool StageManager::IsInBounds(int x, int y) const

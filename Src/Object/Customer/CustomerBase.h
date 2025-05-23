@@ -44,7 +44,6 @@ public:
 	~CustomerBase(void) = default;
 
 	virtual void Init(VECTOR pos);
-	//virtual void Init(void)override = 0;
 	virtual void Update(void)override;
 	virtual void Draw(void)override = 0;
 
@@ -109,6 +108,7 @@ protected:
 	virtual void InitAnimation(void) = 0;
 
 	virtual void UpdateCol(void) = 0;
+
 private:
 
 	//‰ñ“]

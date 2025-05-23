@@ -31,11 +31,7 @@ Player::Player(void)
 	gravHitPosDown_ = AsoUtility::VECTOR_ZERO;
 	gravHitPosUp_ = AsoUtility::VECTOR_ZERO;
 
-	slopeAngleDeg_ = 0.0f;
-	slopePow_ = AsoUtility::VECTOR_ZERO;
-	slopeDir_ = AsoUtility::VECTOR_ZERO;
-	hitNormal_ = AsoUtility::VECTOR_ZERO;
-	hitPos_ = AsoUtility::VECTOR_ZERO;
+	isHolding_ = false;
 }
 
 Player::~Player(void)
@@ -102,14 +98,15 @@ void Player::Init(void)
 
 #endif // _DEBUG
 
-	data_.drink_ = Order::DRINK::NONE;
+	data_.drink_ = Order::DRINK::ICE;
 	data_.sweets_ = Order::SWEETS::NONE;
-
+	isHolding_ = false;
 }
 
 void Player::Update(void)
 {
 	transform_.pos.y = 30.0f;
+
 	//更新ステップ
 	stateUpdate_();
 
@@ -127,7 +124,7 @@ void Player::Draw(void)
 {
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
 
-	capsule_->Draw();
+	//capsule_->Draw();
 	//capsule2_->Draw();
 	//cube_->Draw();
 	sphere_->Draw();
@@ -161,16 +158,6 @@ const Capsule& Player::GetCapsule(void) const
 bool Player::IsPlay(void)
 {
 	return state_ == STATE::PLAY;
-}
-
-VECTOR Player::GetHitPos(void)
-{
-	return hitPos_;
-}
-
-VECTOR Player::GetHitNormal(void)
-{
-	return hitNormal_;
 }
 
 void Player::ProcessSelect(void)
@@ -275,6 +262,10 @@ void Player::UpdateNone(void)
 
 void Player::UpdatePlay(void)
 {
+	if (!isHolding_)holdItemId_ = "";
+
+	if(holdItemId_ == "Hot_Coffee")data_.drink_ = Order::DRINK::HOT;
+
 	//移動処理
 	ProcessMove();
 

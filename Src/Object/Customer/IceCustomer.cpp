@@ -53,7 +53,7 @@ void IceCustomer::UpdateCol(void)
 		MV1SetMaterialDifColor(transform_.modelId, 0, color_);
 		break;
 	case CustomerBase::REACTION::SOSO:
-		color_ = GetColorF(0.5f, 0.5f, 0.5f, 1.0f);
+		color_ = GetColorF(0.4f, 0.4f, 0.4f, 1.0f);
 		MV1SetMaterialDifColor(transform_.modelId, 0, color_);
 		break;
 	case CustomerBase::REACTION::BAD:

@@ -75,6 +75,7 @@ void GameScene::Update(void)
 		{
 	 		score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
 			customer_->IsServe();
+			stage_->ResetHotCup();
 		}
 	}
 
@@ -151,10 +152,10 @@ void GameScene::DebugDraw(void)
 	DrawLine3D(sPos, ePos, 0x00FF00);
 	
 	int line = 0;	//çs
-	int lineHeight = 40;	//çs
+	int lineHeight = 50;	//çs
 	SetFontSize(24);
 	//ç∂è„Ç©ÇÁ
 	DebugDrawFormat::FormatString(L"                                     time : %2.f", timer_, line);
-	DebugDrawFormat::FormatStringRight(L"score : %d", score_, ++line);
+	DebugDrawFormat::FormatStringRight(L"score : %d", score_, line, lineHeight);
 	SetFontSize(16);
 }
