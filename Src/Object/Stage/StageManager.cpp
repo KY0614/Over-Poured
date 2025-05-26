@@ -53,6 +53,11 @@ void StageManager::Init(void)
 	StageObject& cupHotRef = *objects_.back();
 	objects_.back()->Init();
 	objects_.back()->SetPos(CUPHOT_POS);
+	
+	objects_.emplace_back(std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f, player_));
+	StageObject& cupHotRef = *objects_.back();
+	objects_.back()->Init();
+	objects_.back()->SetPos(CUPHOT_POS);
 
 	objects_.emplace_back(std::make_unique<CupIce>("Cup_Ice", 40.0f, 30.0f, 40.0f, player_));
 	StageObject& cupIceRef = *objects_.back(); // V‚µ‚­’Ç‰Á‚³‚ê‚½CupIce‚Ö‚ÌŽQÆ‚ðŽæ“¾
@@ -134,10 +139,13 @@ void StageManager::Update(void)
 		{
 			if (objSp->IsCarryable())
 			{
-				objSp->Interact();
+				objSp->Carry();
 			}
 
-			//if(objSp->)
+			if (objSp->IsInteractable())
+			{
+				objSp->Interact();
+			}
 		}
 	}
 

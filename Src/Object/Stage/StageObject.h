@@ -60,6 +60,8 @@ public:
 
 	ITEM_STATE GetItemState(void)const { return state_; }
 
+	virtual void Carry(void) = 0;
+
 	virtual void Interact(void) = 0;
 
 protected:

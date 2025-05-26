@@ -70,6 +70,7 @@
     <ClCompile Include="Src\Utility\StringUtility.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObjectLibrary.cpp" />
+    <ClCompile Include="Src\Object\Stage\Table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\Stage\CupIce.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Src\Utility\StringUtility.h" />
     <ClInclude Include="Src\Object\Stage\StageObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObjectLibrary.h" />
+    <ClInclude Include="Src\Object\Stage\Table.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

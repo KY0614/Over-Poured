@@ -11,6 +11,8 @@ public:
 
 	~CupIce(void) = default;
 
+	void Carry(void) override;
+
 	void Interact(void) override;
 
 private:

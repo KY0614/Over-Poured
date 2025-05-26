@@ -9,7 +9,7 @@ CupHot::CupHot(const std::string objId, const float width,
 {
 }
 
-void CupHot::Interact(void)
+void CupHot::Carry(void)
 {
     auto& ins = InputManager::GetInstance();
     // ホット用カップ固有のインタラクションロジック
@@ -26,6 +26,10 @@ void CupHot::Interact(void)
         ChangeItemState(ITEM_STATE::PLACED);
         SetPos(StageManager::CUPHOT_POS);
     }
+}
+
+void CupHot::Interact(void)
+{
 }
 
 void CupHot::UpdatePlaced(void)

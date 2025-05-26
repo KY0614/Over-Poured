@@ -10,7 +10,7 @@ CupIce::CupIce(const std::string objId, const float width,
 {
 }
 
-void CupIce::Interact(void)
+void CupIce::Carry(void)
 {
     auto& ins = InputManager::GetInstance();
     // ホット用カップ固有のインタラクションロジック
@@ -27,4 +27,8 @@ void CupIce::Interact(void)
         ChangeItemState(ITEM_STATE::PLACED);
         SetPos(StageManager::CUPHOT_POS);
     }
+}
+
+void CupIce::Interact(void)
+{
 }
