@@ -7,12 +7,13 @@
 #include "StageObject.h"
 
 StageObject::StageObject(const std::string objId, const float width,
-	const float height, const float depth):
-	objId_(objId),param_(StageObjectLibrary::ObjectParams()),width_(width),
-	height_(height),depth_(depth)
+	const float height, const float depth,Player& player):
+	objId_(objId),width_(width),height_(height),
+	depth_(depth),player_(player)
 {
 	followPos_ = AsoUtility::VECTOR_ZERO;
-	state_ = STATE::NONE;
+	state_ = ITEM_STATE::NONE;
+	param_ = StageObjectLibrary::ObjectParams();
 }
 
 StageObject::~StageObject(void)
@@ -27,7 +28,7 @@ void StageObject::Init(void)
 
 	cube_ = std::make_unique<Cube>(transform_);
 
-	state_ = STATE::PLACED;
+	state_ = ITEM_STATE::PLACED;
 
 	transform_.Update();
 
@@ -49,12 +50,12 @@ void StageObject::Update(void)
 {
 	switch (state_)
 	{
-	case StageObject::STATE::NONE:
+	case StageObject::ITEM_STATE::NONE:
 		break;
-	case StageObject::STATE::PLACED:
+	case StageObject::ITEM_STATE::PLACED:
 		UpdatePlaced();
 		break;
-	case StageObject::STATE::HOLD:
+	case StageObject::ITEM_STATE::HOLD:
 		UpdateHold();
 		break;
 	default:
@@ -140,7 +141,6 @@ void StageObject::UpdatePlaced(void)
 
 void StageObject::UpdateHold(void)
 {
-	transform_.pos = followPos_;
 }
 
 void StageObject::UpdateDebugImGui(void)

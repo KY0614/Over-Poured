@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\CupIce.cpp" />
+    <ClCompile Include="Src\Object\Stage\Machine.cpp" />
     <ClCompile Include="Src\Object\Stage\CupHot.cpp" />
     <ClCompile Include="Src\Object\Common\Cube.cpp" />
     <ClCompile Include="Src\Object\Common\Sphere.cpp" />
@@ -70,6 +72,8 @@
     <ClCompile Include="Src\Object\Stage\StageObjectLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\CupIce.h" />
+    <ClInclude Include="Src\Object\Stage\Machine.h" />
     <ClInclude Include="Src\Object\Stage\CupHot.h" />
     <ClInclude Include="Src\Object\Common\Cube.h" />
     <ClInclude Include="Src\Object\Common\Sphere.h" />

@@ -54,6 +54,8 @@ private:
 	std::unique_ptr<StageObject> libs_;
 	std::unique_ptr<StageObject> dustBox_;
 
+	std::vector< std::unique_ptr<StageObject>> objects_;
+
 	std::vector<std::vector<std::unique_ptr<StageObject>>> grid_;
 
 	bool IsInBounds(int x, int y) const;

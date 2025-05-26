@@ -51,13 +51,12 @@ void SceneManager::Init(void)
 	Init3D();
 
 	//‰ŠúƒV[ƒ“‚Ìİ’è
-	DoChangeScene(SCENE_ID::TITLE);
+	DoChangeScene(SCENE_ID::GAME);
 
 }
 
 void SceneManager::Init3D(void)
 {
-
 	//”wŒiFİ’è
 	SetBackgroundColor(0, 139, 139);
 

@@ -5,17 +5,17 @@ class CupHot : public StageObject
 {
 public:
 
-	CupHot(const std::string objId, const float width, const float height, const float depth);
+	CupHot(const std::string objId, const float width,
+		const float height, const float depth, Player& player);
+
 	~CupHot(void) = default;
 
-	//必要であれば、UpdateやDrawもオーバーライド
-	void Init(void) override;
-	void Update(void) override;
-	void Draw(void) override;
-
-	void Interact(Player& player) override;
+	void Interact(void) override;
 
 private:
+
+	void UpdatePlaced(void)override;
+	void UpdateHold(void)override;
 
 };
 

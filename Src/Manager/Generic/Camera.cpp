@@ -69,7 +69,7 @@ void Camera::SetBeforeDraw(void)
 	//DXライブラリのカメラとEffekseerのカメラを同期する。
 	Effekseer_Sync3DSetting();
 
-	//UpdateDebugImGui();
+	UpdateDebugImGui();
 }
 
 void Camera::Draw(void)
@@ -126,6 +126,10 @@ void Camera::ChangeMode(MODE mode)
 	case Camera::MODE::FIXED_POINT:
 		break;
 	case Camera::MODE::TOP_FIXED:
+		//カメラの初期設定
+		pos_ = FIXEDTOP_CAMERA_POS;
+		//注視点
+		targetPos_ = FIXEDTOP_CAMERA_RELATIVE_POS;
 		break;	
 	case Camera::MODE::FOLLOW:
 		break;
@@ -212,15 +216,10 @@ void Camera::SetBeforeDrawFixedPoint(void)
 
 void Camera::SetBeforeDrawTopFixed(void)
 {
-	//カメラの初期設定
-	pos_ = FIXEDCAMERA_DEFAULT_POS;
-	//注視点
-	targetPos_ = FIXEDCAMERA_RELATIVE_POS;
 }
 
 void Camera::SetBeforeDrawFollow(void)
 {
-
 	//カメラ操作
 	ProcessRot();
 

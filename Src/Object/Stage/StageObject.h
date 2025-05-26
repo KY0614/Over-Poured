@@ -11,14 +11,14 @@ class StageObject : public ActorBase
 {
 public:
 
-	enum class STATE {
+	enum class ITEM_STATE {
 		NONE,
 		PLACED,
 		HOLD,
 	};
 
 	StageObject(const std::string objId,const float width,
-		const float height, const float depth);
+		const float height, const float depth,Player& player);
 
 	~StageObject(void);
 
@@ -30,7 +30,7 @@ public:
 
 	void SetFollowPos(VECTOR followPos) { followPos_ = followPos; }
 
-	void ChangeState(STATE state) { state_ = state; }
+	void ChangeItemState(ITEM_STATE state) { state_ = state; }
 
 	VECTOR GetPos(void)const { return transform_.pos; };
 	VECTOR GetSpherePos(void)const { return sphereTran_.pos; };
@@ -44,18 +44,25 @@ public:
 
 	std::string GetObjectId(void)const { return objId_; }
 
-	STATE GetState(void)const { return state_; }
+	ITEM_STATE GetItemState(void)const { return state_; }
 
-	virtual void Interact(Player& player) = 0;
+	virtual void Interact(void) = 0;
+
+protected:
+
+	Player& player_;
+
+	VECTOR followPos_;
+
+	virtual void UpdatePlaced(void);
+	virtual void UpdateHold(void);
 
 private:
 	std::string objId_;
 	StageObjectLibrary::ObjectParams param_;
 	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
-	
-	STATE state_;
 
-	VECTOR followPos_;
+	ITEM_STATE state_;
 
 	//âºÉÇÉfÉãÇÃóßï˚ëÃ
 	std::unique_ptr<Cube> cube_;
@@ -64,9 +71,6 @@ private:
 	float depth_;
 
 	float fillProgress_ = 0.0f;
-
-	void UpdatePlaced(void);
-	void UpdateHold(void);
 
 	/// <summary>
 	/// ç¿ïWÇ‚ägëÂó¶Çí≤êÆÇ∑ÇÈópÇÃGUI

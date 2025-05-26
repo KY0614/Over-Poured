@@ -11,7 +11,9 @@
 #include "../Common/Sphere.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
+#include "Machine.h"
 #include "CupHot.h"
+#include "CupIce.h"
 #include "StageManager.h"
 
 StageManager::StageManager(Vector2 mapSize, Player& player):player_(player)
@@ -42,26 +44,41 @@ void StageManager::Init(void)
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
-	////コーヒーマシン
-	//machine_ = std::make_unique<StageObject>("Coffee_Machine",75.0f,60.0f,60.0f);
-	//machine_->Init();
-	//machine_->SetPos(MACHINE_POS);
-
 	////テーブル
 	//table_ = std::make_unique<StageObject>("Table", 60.0f, 60.0f, 60.0f);
 	//table_->Init();
 	//table_->SetPos(AsoUtility::VECTOR_ZERO);
+
+	objects_.emplace_back(std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f, player_));
+	StageObject& cupHotRef = *objects_.back();
+	objects_.back()->Init();
+	objects_.back()->SetPos(CUPHOT_POS);
+
+	objects_.emplace_back(std::make_unique<CupIce>("Cup_Ice", 40.0f, 30.0f, 40.0f, player_));
+	StageObject& cupIceRef = *objects_.back(); // 新しく追加されたCupIceへの参照を取得
+	objects_.back()->Init();
+	objects_.back()->SetPos(CUPICE_POS);
 	
-	//ホット用カップ
-	cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
-	cupH_->Init();
-	cupH_->SetPos(CUPHOT_POS);
+	objects_.emplace_back(std::make_unique<Machine>("Coffee_Machine", 75.0f, 60.0f, 60.0f,
+		 player_ , cupHotRef, cupIceRef));
+	objects_.back()->Init();
+	objects_.back()->SetPos(MACHINE_POS);
 	
+	////ホット用カップ
+	//cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
+	//cupH_->Init();
+	//cupH_->SetPos(CUPHOT_POS);
+	//
 	////アイス用カップ
-	//cupI_ = std::make_unique<StageObject>("Cup_Ice", 40.0f, 30.0f, 40.0f);
+	//cupI_ = std::make_unique<CupIce>("Cup_Ice", 40.0f, 30.0f, 40.0f);
 	//cupI_->Init();
 	//cupI_->SetPos(CUPICE_POS);
-	//	
+	//
+	////コーヒーマシン
+	//machine_ = std::make_unique<Machine>("Coffee_Machine", 75.0f, 60.0f, 60.0f,*cupH_,*cupI_);
+	//machine_->Init();
+	//machine_->SetPos(MACHINE_POS);
+
 	////アイスディスペンサー(氷を入れるやつ）
 	//iceDispenser_ = std::make_unique<StageObject>("Ice_Dispenser", 60.0f, 20.0f, 60.0f);
 	//iceDispenser_->Init();
@@ -97,7 +114,7 @@ void StageManager::Update(void)
 
 	//machine_->Update();
 	//table_->Update();
-	cupH_->Update();
+	//cupH_->Update();
 	//cupI_->Update();
 	//iceDispenser_->Update();
 	//libs_->Update();
@@ -105,34 +122,38 @@ void StageManager::Update(void)
 
 	auto& pSphere = player_.GetSphere();
 
-	if (player_.GetIsHolding())
+	for (const auto& obj : objects_)
 	{
-		cupH_->ChangeState(StageObject::STATE::HOLD);
-		cupH_->SetFollowPos(pSphere.GetPos());
+		obj->Update();
 	}
 
-	//とりあえずホット用のみ
-	//プレイヤーとホット用カップの球体判定
-	if (AsoUtility::IsHitSpheres(pSphere.GetPos(),pSphere.GetRadius(),
-		cupH_->GetSpherePos(), 20.0f))
+	for (const auto& objSp : objects_)
 	{
-		//↓の中で処理を書いてもいいかも？
-		cupH_->Interact(player_);
+		if (AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+			objSp->GetSpherePos(), 20.0f))
+		{
+			if (objSp->IsCarryable())
+			{
+				objSp->Interact();
+			}
+		}
 	}
+
+	////とりあえずホット用のみ
+	////プレイヤーとホット用カップの球体判定
+	//if (AsoUtility::IsHitSpheres(pSphere.GetPos(),pSphere.GetRadius(),
+	//	cupH_->GetSpherePos(), 20.0f))
+	//{
+	//	if (!cupH_->IsCarryable())return;
+	//	//↓の中で処理を書いてもいいかも？
+	//	cupH_->Interact(player_);
+	//}
 
 	////マシンとプレイヤーの球体判定
 	//if (AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 	//	machine_->GetSpherePos(), 35.0f))
 	//{
-	//	//スペースキー押下でマシンの場所にカップを置く(とりあえず)
-	//	if (ins.IsTrgDown(KEY_INPUT_SPACE) && 
-	//		player_.GetIsHolding()	&&
-	//		player_.GetHoldItem() == "Cup_Hot")
-	//	{
-	//		player_.SetIsHoldiong(false);
-	//		cupH_->ChangeState(StageObject::STATE::PLACED);
-	//		cupH_->SetPos(MACHINE_POS);
-	//	}
+	//	machine_->Interact(player_);
 	//}
 
 	////カップとマシンの球体判定
@@ -177,11 +198,15 @@ void StageManager::Draw(void)
 
 	//machine_->Draw();
 	//table_->Draw();
-	cupH_->Draw();
+	//cupH_->Draw();
 	//cupI_->Draw();
 	//iceDispenser_->Draw();
 	//libs_->Draw();
 	//dustBox_->Draw();
+	for (const auto& obj : objects_)
+	{
+		obj->Draw();
+	}
 
 	int line = 8;	//行
 	int lineHeight = 30;	//行
@@ -192,10 +217,10 @@ void StageManager::ResetHotCup(void)
 {
 	player_.SetIsHoldiong(false);
 
-	//ホット用カップ
-	cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
-	cupH_->Init();
-	cupH_->SetPos(CUPHOT_POS);
+	////ホット用カップ
+	//cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
+	//cupH_->Init();
+	//cupH_->SetPos(CUPHOT_POS);
 }
 
 bool StageManager::IsInBounds(int x, int y) const

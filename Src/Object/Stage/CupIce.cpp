@@ -2,14 +2,15 @@
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "StageManager.h"
-#include "CupHot.h"
+#include "CupIce.h"
 
-CupHot::CupHot(const std::string objId, const float width,
-	const float height, const float depth ,Player& player) : StageObject(objId,width,height,depth,player)
+CupIce::CupIce(const std::string objId, const float width,
+	const float height, const float depth, Player& player) : 
+	StageObject(objId, width, height, depth,player)
 {
 }
 
-void CupHot::Interact(void)
+void CupIce::Interact(void)
 {
     auto& ins = InputManager::GetInstance();
     // ホット用カップ固有のインタラクションロジック
@@ -26,21 +27,4 @@ void CupHot::Interact(void)
         ChangeItemState(ITEM_STATE::PLACED);
         SetPos(StageManager::CUPHOT_POS);
     }
-}
-
-void CupHot::UpdatePlaced(void)
-{
-}
-
-void CupHot::UpdateHold(void)
-{
-    auto& pSphere = player_.GetSphere();
-    //プレイヤー
-    if (player_.GetIsHolding())
-    {
-        SetFollowPos(pSphere.GetPos());
-    }
-
-    transform_.pos = followPos_;
-    transform_.Update();
 }
