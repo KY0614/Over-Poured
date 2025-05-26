@@ -12,14 +12,11 @@ public:
 	// リソース名
 	enum class SRC
 	{
-		TITLE,
 		PUSH_SPACE,
 		PLAYER,
 		PLAYER_SHADOW,
 		SKY_DOME,
 		FOOT_SMOKE,
-		WARP_STAR,
-		WARP_STAR_ROT_EFF,
 
 		STAGE,
 		CUSTOMER,
@@ -45,6 +42,14 @@ public:
 
 	// リソースの複製ロード(モデル用)
 	int LoadModelDuplicate(SRC src);
+
+	//シーンごとにデータを読み込むことにする
+	void InitTitle(void);
+	void InitMovie(void);
+	void InitSelect(void);
+	void InitTutorial(void);
+	void InitGame(void);
+	void InitResult(void);
 
 private:
 

@@ -32,7 +32,7 @@ SceneManager& SceneManager::GetInstance(void)
 void SceneManager::Init(void)
 {
 
-	sceneId_ = SCENE_ID::GAME;
+	sceneId_ = SCENE_ID::NONE;
 	waitSceneId_ = SCENE_ID::NONE;
 
 	fader_ = std::make_unique<Fader>();
@@ -51,7 +51,7 @@ void SceneManager::Init(void)
 	Init3D();
 
 	//初期シーンの設定
-	DoChangeScene(SCENE_ID::GAME);
+	DoChangeScene(SCENE_ID::TITLE);
 
 }
 
@@ -203,9 +203,9 @@ void SceneManager::ResetDeltaTime(void)
 
 void SceneManager::DoChangeScene(SCENE_ID sceneId)
 {
-
+	auto& resM = ResourceManager::GetInstance();
 	//リソースの解放
-	ResourceManager::GetInstance().Release();
+	resM.Release();
 
 	//シーンを変更する
 	sceneId_ = sceneId;
@@ -222,6 +222,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SceneManager::SCENE_ID::TITLE:
 		scene_ = std::make_unique<TitleScene>();
+		resM.InitTitle();
 		break;
 	case SceneManager::SCENE_ID::MOVIE:
 		scene_ = std::make_unique<MovieScene>();
@@ -234,6 +235,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SceneManager::SCENE_ID::GAME:
 		scene_ = std::make_unique<GameScene>();
+		resM.InitGame();
 		break;
 	case SceneManager::SCENE_ID::RESULT:
 		scene_ = std::make_unique<ResultScene>();

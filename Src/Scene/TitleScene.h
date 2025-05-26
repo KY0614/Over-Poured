@@ -24,14 +24,11 @@ public:
 private:
 
 	//画像
-	int imgTitle_;
 	int imgPush_;
 
 	//スカイドーム用
 	Transform spaceDomeTran_;
 
-	////スカイドーム(背景)
-	//SkyDome* skyDome_;
 	//スカイドーム(背景)
 	std::unique_ptr<SkyDome> skyDome_;
 

@@ -43,6 +43,10 @@ void Camera::SetBeforeDraw(void)
 		SetBeforeDrawFixedPoint();
 		break;
 
+	case Camera::MODE::TOP_FIXED:
+		SetBeforeDrawTopFixed();
+		break;
+
 	case Camera::MODE::FOLLOW:
 		SetBeforeDrawFollow();
 		break;
@@ -120,11 +124,9 @@ void Camera::ChangeMode(MODE mode)
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
-		//カメラの初期設定
-		pos_ = FIXEDCAMERA_DEFAULT_POS;
-		//注視点
-		targetPos_ = FIXEDCAMERA_RELATIVE_POS;
 		break;
+	case Camera::MODE::TOP_FIXED:
+		break;	
 	case Camera::MODE::FOLLOW:
 		break;
 	}
@@ -206,6 +208,14 @@ void Camera::ProcessRot(void)
 void Camera::SetBeforeDrawFixedPoint(void)
 {
 	//なにもしない
+}
+
+void Camera::SetBeforeDrawTopFixed(void)
+{
+	//カメラの初期設定
+	pos_ = FIXEDCAMERA_DEFAULT_POS;
+	//注視点
+	targetPos_ = FIXEDCAMERA_RELATIVE_POS;
 }
 
 void Camera::SetBeforeDrawFollow(void)

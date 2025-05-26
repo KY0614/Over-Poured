@@ -1,6 +1,7 @@
 #include <string>
 #include <DxLib.h>
 #include "../Application.h"
+#include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/ResourceManager.h"
@@ -13,7 +14,6 @@
 TitleScene::TitleScene(void)
 {
 	imgPush_ = -1;
-	imgTitle_ = -1;
 	skyDome_ = nullptr;
 	animationController_ = nullptr;
 }
@@ -27,7 +27,6 @@ void TitleScene::Init(void)
 {
 
 	//âÊëúì«Ç›çûÇ›
-	imgTitle_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE).handleId_;
 	imgPush_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::PUSH_SPACE).handleId_;
 
 	//îwåi
@@ -82,7 +81,6 @@ void TitleScene::Draw(void)
 	MV1DrawModel(planet_.modelId);
 	MV1DrawModel(charactor_.modelId);
 
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, 250, 1.0, 0.0, imgTitle_, true);
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, 500, 1.0, 0.0, imgPush_, true);
 
 }

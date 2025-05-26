@@ -48,6 +48,7 @@ public:
 	{
 		NONE,
 		FIXED_POINT,
+		TOP_FIXED,
 		FOLLOW,
 		FREE
 	};
@@ -120,6 +121,7 @@ private:
 
 	//モード別更新ステップ
 	void SetBeforeDrawFixedPoint(void);
+	void SetBeforeDrawTopFixed(void);
 	void SetBeforeDrawFollow(void);
 	void SetBeforeDrawFree(void);
 

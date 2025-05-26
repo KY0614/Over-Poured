@@ -36,24 +36,26 @@ void GameScene::Init(void)
 	player_->Init();
 
 	Vector2 size = { 1000,1000 };
-	StageObjectLibrary::LoadData("coffee_machine");
 	//ステージ
 	stage_ = std::make_unique<StageManager>(size,*player_);
 	stage_->Init();
 
+	//ステージのコライダーを追加
 	player_->AddCollider(stage_->GetTransform().collider);
 
 	//スカイドーム
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
 	skyDome_->Init();
 
+	//客と注文
 	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
 
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
+	mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 
+	//タイマーの設定
 	timer_ = MAX_TIME;
 }
 
@@ -93,6 +95,7 @@ void GameScene::Update(void)
 		scr.SetCurrentScore(score_);
 		scr.SaveScore(score_);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		return;
 	}
 
 	skyDome_->Update();
