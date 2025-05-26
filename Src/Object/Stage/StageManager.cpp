@@ -68,12 +68,12 @@ void StageManager::Init(void)
 	//cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
 	//cupH_->Init();
 	//cupH_->SetPos(CUPHOT_POS);
-	//
+	
 	////アイス用カップ
 	//cupI_ = std::make_unique<CupIce>("Cup_Ice", 40.0f, 30.0f, 40.0f);
 	//cupI_->Init();
 	//cupI_->SetPos(CUPICE_POS);
-	//
+	
 	////コーヒーマシン
 	//machine_ = std::make_unique<Machine>("Coffee_Machine", 75.0f, 60.0f, 60.0f,*cupH_,*cupI_);
 	//machine_->Init();
@@ -136,6 +136,8 @@ void StageManager::Update(void)
 			{
 				objSp->Interact();
 			}
+
+			//if(objSp->)
 		}
 	}
 

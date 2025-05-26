@@ -42,6 +42,20 @@ public:
 	/// <returns>true:持ち運び可能、false:不可能</returns>
 	bool IsCarryable(void)const { return param_.carryable_; }
 
+	/// <summary>
+	/// 設置可能オブジェクトかどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:設置可能、false:不可能</returns>
+	bool IsPlaceable(void)const { return param_.placeable_; }
+
+	/// <summary>
+	/// プレイヤーがアクション可能なオブジェクトかどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:アクション可能、false:不可能</returns>
+	bool IsInteractable(void)const { return param_.interactable_; }
+
 	std::string GetObjectId(void)const { return objId_; }
 
 	ITEM_STATE GetItemState(void)const { return state_; }
