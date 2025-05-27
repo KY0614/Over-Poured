@@ -1,8 +1,7 @@
 #pragma once
 #include "StageObject.h"
 
-class CupIce :
-    public StageObject
+class CupIce : public StageObject
 {
 public:
 
@@ -11,10 +10,13 @@ public:
 
 	~CupIce(void) = default;
 
-	void Carry(void) override;
+	void ItemCarry(void) override;
 
 	void Interact(void) override;
 
 private:
+
+	void UpdatePlaced(void)override;
+	void UpdateHold(void)override;
 };
 

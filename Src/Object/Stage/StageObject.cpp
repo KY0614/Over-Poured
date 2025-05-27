@@ -14,6 +14,7 @@ StageObject::StageObject(const std::string objId, const float width,
 	followPos_ = AsoUtility::VECTOR_ZERO;
 	state_ = ITEM_STATE::NONE;
 	param_ = StageObjectLibrary::ObjectParams();
+	rad_ = 0.0f;
 }
 
 StageObject::~StageObject(void)
@@ -31,6 +32,13 @@ void StageObject::Init(void)
 	state_ = ITEM_STATE::PLACED;
 
 	transform_.Update();
+
+	rad_ = 30.0f;
+
+	if (objId_ == "Coffee_Machine")rad_ = 35.0f;
+	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
+	else if (objId_ == "Cup_Hot")rad_ = 20.0f;
+	else if (objId_ == "Cup_Ice")rad_ = 20.0f;
 
 #ifdef _DEBUG
 
@@ -76,16 +84,15 @@ void StageObject::Draw(void)
 	int col = 0x000000;
 	COLOR_U8  retCol;
 
-	float rad = 30.0f;
 	VECTOR pos = transform_.pos;
 
-	if (objId_ == "Coffee_Machine")col = 0x3f312b,rad = 35.0f;
-	else if (objId_ == "Ice_Dispenser")col = 0x4682b4,rad = 35.0f, pos.y -= 10.0f;
+	if (objId_ == "Coffee_Machine")col = 0x3f312b;
+	else if (objId_ == "Ice_Dispenser")col = 0x4682b4,pos.y -= 10.0f;
 	else if (objId_ == "Table")col = 0xd2b48c;
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
-	else if (objId_ == "Cup_Hot")col = 0xcd5c5c,rad = 20.0f;
-	else if (objId_ == "Cup_Ice")col = 0x87ceeb,rad = 20.0f;
+	else if (objId_ == "Cup_Hot")col = 0xcd5c5c;
+	else if (objId_ == "Cup_Ice")col = 0x87ceeb;
 	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
 	else if (objId_ == "Lids")col = 0xa9a9a9;
 	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
@@ -97,7 +104,7 @@ void StageObject::Draw(void)
 
 	cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
 
-	DrawSphere3D(sphereTran_.pos , rad, 8, col, col, false);
+	DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
 	//cube_->Draw();
 
 	VECTOR screenPos = ConvWorldPosToScreenPos(transform_.pos);
@@ -135,6 +142,25 @@ void StageObject::SetPos(VECTOR pos)
 	sphereTran_.pos = pos;
 }
 
+void StageObject::ItemCarry(void)
+{
+}
+
+void StageObject::ItemPlaced(void)
+{
+}
+
+void StageObject::Interact(void)
+{
+}
+
+VECTOR StageObject::GetTopCenter(void) const
+{
+	VECTOR center = transform_.pos;
+	center.y = height_;
+	return center;
+}
+
 void StageObject::UpdatePlaced(void)
 {
 }
@@ -154,7 +180,13 @@ void StageObject::UpdateDebugImGui(void)
 	ImGui::InputFloat3("Pos", &transform_.pos.x);
 	ImGui::SliderFloat("PosX", &transform_.pos.x, -300.0f, 500.0f);
 	ImGui::SliderFloat("PosY", &transform_.pos.y, -300.0f, 500.0f);
-	ImGui::SliderFloat("PosZ", &transform_.pos.z, -300.0f, 1000.0f);
+	ImGui::SliderFloat("PosZ", &transform_.pos.z, -300.0f, 1000.0f);	
+	
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Scale", &width_);
+	ImGui::SliderFloat("w", &width_, -300.0f, 500.0f);
+	ImGui::SliderFloat("h", &height_, -300.0f, 500.0f);
+	ImGui::SliderFloat("d", &depth_, -300.0f, 1000.0f);
 	//終了処理
 	ImGui::End();
 }

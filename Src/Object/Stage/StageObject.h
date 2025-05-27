@@ -60,31 +60,42 @@ public:
 
 	ITEM_STATE GetItemState(void)const { return state_; }
 
-	virtual void Carry(void) = 0;
+	virtual void ItemCarry(void);
 
-	virtual void Interact(void) = 0;
+	virtual void ItemPlaced(void);
+
+	virtual void Interact(void);
+
+	VECTOR GetTopCenter(void)const;
+
+	float GetSphereRad(void)const { return rad_; }
 
 protected:
+
+	//オブジェクトのパラメータ
+	StageObjectLibrary::ObjectParams param_;
 
 	Player& player_;
 
 	VECTOR followPos_;
-
-	virtual void UpdatePlaced(void);
-	virtual void UpdateHold(void);
-
-private:
-	std::string objId_;
-	StageObjectLibrary::ObjectParams param_;
-	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
-
-	ITEM_STATE state_;
 
 	//仮モデルの立方体
 	std::unique_ptr<Cube> cube_;
 	float width_;
 	float height_;
 	float depth_;
+
+	float rad_;
+
+	virtual void UpdatePlaced(void);
+	virtual void UpdateHold(void);
+
+private:
+	std::string objId_;
+
+	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
+
+	ITEM_STATE state_;
 
 	float fillProgress_ = 0.0f;
 

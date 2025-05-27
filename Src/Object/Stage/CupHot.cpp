@@ -5,27 +5,35 @@
 #include "CupHot.h"
 
 CupHot::CupHot(const std::string objId, const float width,
-	const float height, const float depth ,Player& player) : StageObject(objId,width,height,depth,player)
+	const float height, const float depth ,Player& player,
+    std::vector<std::unique_ptr<StageObject>>& tables) : 
+    StageObject(objId,width,height,depth,player),tables_(tables)
 {
 }
 
-void CupHot::Carry(void)
+void CupHot::ItemCarry(void)
 {
     auto& ins = InputManager::GetInstance();
     // ホット用カップ固有のインタラクションロジック
-    if (ins.IsTrgDown(KEY_INPUT_SPACE) && !player_.GetIsHolding())
+    if (ins.IsTrgDown(KEY_INPUT_SPACE))
     {
         player_.SetIsHoldiong(true);
         player_.SetHoldItem(GetObjectId());
         ChangeItemState(ITEM_STATE::HOLD);
     }
-    else if (ins.IsTrgDown(KEY_INPUT_SPACE) && player_.GetIsHolding() && player_.GetHoldItem() == GetObjectId())
+}
+
+void CupHot::ItemPlaced(void)
+{
+    auto& ins = InputManager::GetInstance();
+    if (ins.IsTrgDown(KEY_INPUT_SPACE))
     {
         player_.SetIsHoldiong(false);
         player_.SetHoldItem("");
         ChangeItemState(ITEM_STATE::PLACED);
         SetPos(StageManager::CUPHOT_POS);
     }
+
 }
 
 void CupHot::Interact(void)

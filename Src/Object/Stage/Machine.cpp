@@ -49,7 +49,3 @@ void Machine::Draw(void)
 {
 	StageObject::Draw();
 }
-
-void Machine::Carry(void)
-{
-}

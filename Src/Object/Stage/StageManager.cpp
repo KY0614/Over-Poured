@@ -11,6 +11,7 @@
 #include "../Common/Sphere.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
+#include "Table.h"
 #include "Machine.h"
 #include "CupHot.h"
 #include "CupIce.h"
@@ -48,13 +49,16 @@ void StageManager::Init(void)
 	//table_ = std::make_unique<StageObject>("Table", 60.0f, 60.0f, 60.0f);
 	//table_->Init();
 	//table_->SetPos(AsoUtility::VECTOR_ZERO);
+	for (int x = 0; x < 4; x++)
+	{
+		VECTOR firstPos = TABLE_POS;
+		firstPos.x += (x * 95.0f);
+		tables_.emplace_back(std::make_unique<Table>("Table", 95.0f, 76.0f, 60.0f, player_,objects_));
+		tables_.back()->Init();
+		tables_.back()->SetPos(firstPos);
+	}
 
-	objects_.emplace_back(std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f, player_));
-	StageObject& cupHotRef = *objects_.back();
-	objects_.back()->Init();
-	objects_.back()->SetPos(CUPHOT_POS);
-	
-	objects_.emplace_back(std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f, player_));
+	objects_.emplace_back(std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f, player_,tables_));
 	StageObject& cupHotRef = *objects_.back();
 	objects_.back()->Init();
 	objects_.back()->SetPos(CUPHOT_POS);
@@ -64,10 +68,12 @@ void StageManager::Init(void)
 	objects_.back()->Init();
 	objects_.back()->SetPos(CUPICE_POS);
 	
-	objects_.emplace_back(std::make_unique<Machine>("Coffee_Machine", 75.0f, 60.0f, 60.0f,
+	objects_.emplace_back(std::make_unique<Machine>("Coffee_Machine", 75.0f, 60.0f, 50.0f,
 		 player_ , cupHotRef, cupIceRef));
 	objects_.back()->Init();
-	objects_.back()->SetPos(MACHINE_POS);
+	VECTOR pos = AsoUtility::VECTOR_ZERO;
+	pos = tables_.front()->GetTopCenter();
+	objects_.back()->SetPos(pos);
 	
 	////ホット用カップ
 	//cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
@@ -132,20 +138,37 @@ void StageManager::Update(void)
 		obj->Update();
 	}
 
-	for (const auto& objSp : objects_)
+	for (const auto& obj : tables_)
+	{
+		obj->Update();
+	}
+
+	for (const auto& table : tables_)
 	{
 		if (AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-			objSp->GetSpherePos(), 20.0f))
+			table->GetSpherePos(), table->GetSphereRad()))
 		{
-			if (objSp->IsCarryable())
+			for (const auto& obj : objects_)
 			{
-				objSp->Carry();
+				if (obj->IsCarryable() && !table->IsPlaceable() 
+					&& !player_.GetIsHolding())
+				{
+					obj->ItemCarry();
+				}
+				else if (player_.GetIsHolding() && table->IsPlaceable())
+				{
+					obj->ItemPlaced();
+				}
 			}
+			//if (objSp->IsCarryable())
+			//{
+			//	objSp->Carry();
+			//}
 
-			if (objSp->IsInteractable())
-			{
-				objSp->Interact();
-			}
+			//if (objSp->IsInteractable())
+			//{
+			//	objSp->Interact();
+			//}
 		}
 	}
 
@@ -213,6 +236,11 @@ void StageManager::Draw(void)
 	//iceDispenser_->Draw();
 	//libs_->Draw();
 	//dustBox_->Draw();
+	for (const auto& table : tables_)
+	{
+		table->Draw();
+	}
+
 	for (const auto& obj : objects_)
 	{
 		obj->Draw();
@@ -221,6 +249,11 @@ void StageManager::Draw(void)
 	int line = 8;	//行
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
+	for (int i = 0; i < tables_.size(); i++)
+	{
+		DebugDrawFormat::FormatString(L"table.placeable : %d",
+			tables_[i]->IsPlaceable(), line, lineHeight);
+	}
 }
 
 void StageManager::ResetHotCup(void)
