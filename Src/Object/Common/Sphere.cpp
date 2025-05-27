@@ -25,6 +25,12 @@ void Sphere::Draw(void)
 	DrawSphere3D(pos, radius_, 5, COLOR, COLOR, false);
 }
 
+void Sphere::Draw(int col)
+{
+	VECTOR pos = GetPos();
+	DrawSphere3D(pos, radius_, 5, col, col, false);
+}
+
 VECTOR Sphere::GetRotPos(const VECTOR& localPos) const
 {
 	VECTOR localRotPos = transformParent_.quaRot.PosAxis(localPos);

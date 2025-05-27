@@ -5,6 +5,7 @@
 #include "StageObjectLibrary.h"
 
 class Cube;
+class Sphere;
 class Player;
 
 class StageObject : public ActorBase
@@ -49,6 +50,9 @@ public:
 	/// <returns>true:設置可能、false:不可能</returns>
 	bool IsPlaceable(void)const { return param_.placeable_; }
 
+	void CanPlaceable(void) { param_.placeable_ = true; }
+	void CanNotPlaceable(void) { param_.placeable_ = false; }
+
 	/// <summary>
 	/// プレイヤーがアクション可能なオブジェクトかどうか
 	/// </summary>
@@ -62,13 +66,15 @@ public:
 
 	virtual void ItemCarry(void);
 
-	virtual void ItemPlaced(void);
+	virtual void ItemPlaced(VECTOR pos);
 
 	virtual void Interact(void);
 
 	VECTOR GetTopCenter(void)const;
 
 	float GetSphereRad(void)const { return rad_; }
+
+	bool IsActioned(void) const;
 
 protected:
 
@@ -85,7 +91,12 @@ protected:
 	float height_;
 	float depth_;
 
+	//当たり判定用球体
+	std::unique_ptr<Sphere> sphere_;
+
 	float rad_;
+
+	bool isActioned_;
 
 	virtual void UpdatePlaced(void);
 	virtual void UpdateHold(void);

@@ -7,7 +7,7 @@ class Sphere
 {
 public:
 	//デバッグ時の簡易カプセル表示の色
-	static constexpr int COLOR = 0xffffff;
+	static constexpr int COLOR = 0x000000;
 
 	//コンストラクタ
 	//球体をつけるオブジェクトを指定する
@@ -19,6 +19,7 @@ public:
 
 	//描画
 	void Draw(void);
+	void Draw(int col);
 
 	//親Transformからの相対位置を取得
 	VECTOR GetLocalPos(void) const { return localPos_; }

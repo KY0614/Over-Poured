@@ -12,6 +12,8 @@ public:
 
 	void ItemCarry(void) override;
 
+	void ItemPlaced(VECTOR pos)override;
+
 	void Interact(void) override;
 
 private:

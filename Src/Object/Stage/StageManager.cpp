@@ -143,34 +143,66 @@ void StageManager::Update(void)
 		obj->Update();
 	}
 
-	for (const auto& table : tables_)
+	//for (const auto& table : tables_)
+	//{
+	//	for (const auto& obj : objects_)
+	//	{
+	//		if (!player_.GetIsHolding() && obj->IsCarryable() &&
+	//			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+	//				obj->GetSpherePos(), obj->GetSphereRad()))
+	//		{
+	//			obj->ItemCarry();
+	//		}
+	//		if (player_.GetIsHolding() && table->IsPlaceable() &&
+	//			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+	//				table->GetSpherePos(), table->GetSphereRad()))
+	//		{
+	//			obj->ItemPlaced(table->GetTopCenter());
+	//		}
+	//	}
+	//}
+
+	for (const auto& obj : objects_)
 	{
-		if (AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-			table->GetSpherePos(), table->GetSphereRad()))
+
+		if (!player_.GetIsHolding() && obj->IsCarryable() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			for (const auto& obj : objects_)
+			obj->ItemCarry();
+			break;
+		}
+
+		if (player_.GetIsHolding())
+		{
+			for (const auto& table : tables_)
 			{
-				if (obj->IsCarryable() && !table->IsPlaceable() 
-					&& !player_.GetIsHolding())
+				if(table->IsPlaceable() &&
+					AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+						table->GetSpherePos(), table->GetSphereRad()
+					))
 				{
-					obj->ItemCarry();
+					obj->ItemPlaced(table->GetTopCenter());
+					//table->CanNotPlaceable();
 				}
-				else if (player_.GetIsHolding() && table->IsPlaceable())
+
+				if (obj->IsActioned())
 				{
-					obj->ItemPlaced();
+					break;
 				}
 			}
-			//if (objSp->IsCarryable())
-			//{
-			//	objSp->Carry();
-			//}
 
-			//if (objSp->IsInteractable())
-			//{
-			//	objSp->Interact();
-			//}
 		}
+
+		if (obj->IsActioned())
+		{
+			break;
+		}
+
 	}
+
+
+
 
 	////とりあえずホット用のみ
 	////プレイヤーとホット用カップの球体判定
@@ -249,6 +281,7 @@ void StageManager::Draw(void)
 	int line = 8;	//行
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
+	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
 	for (int i = 0; i < tables_.size(); i++)
 	{
 		DebugDrawFormat::FormatString(L"table.placeable : %d",

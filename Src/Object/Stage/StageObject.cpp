@@ -1,5 +1,6 @@
 #include "../Libs/ImGui/imgui.h"
 #include "../../Common/DebugDrawFormat.h"
+#include "../Common/Sphere.h"
 #include "../Common/Cube.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/StringUtility.h"
@@ -29,6 +30,10 @@ void StageObject::Init(void)
 
 	cube_ = std::make_unique<Cube>(transform_);
 
+	sphere_ = std::make_unique<Sphere>(transform_);
+	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
+	if(objId_ == "Table")sphere_->SetLocalPos({ 0.0f, height_, 0.0f });
+
 	state_ = ITEM_STATE::PLACED;
 
 	transform_.Update();
@@ -39,6 +44,8 @@ void StageObject::Init(void)
 	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
 	else if (objId_ == "Cup_Hot")rad_ = 20.0f;
 	else if (objId_ == "Cup_Ice")rad_ = 20.0f;
+
+	sphere_->SetRadius(rad_);
 
 #ifdef _DEBUG
 
@@ -56,6 +63,9 @@ void StageObject::Init(void)
 
 void StageObject::Update(void)
 {
+
+	isActioned_ = false;
+
 	switch (state_)
 	{
 	case StageObject::ITEM_STATE::NONE:
@@ -104,8 +114,8 @@ void StageObject::Draw(void)
 
 	cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
 
-	DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
-	//cube_->Draw();
+	//DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
+	sphere_->Draw(col);
 
 	VECTOR screenPos = ConvWorldPosToScreenPos(transform_.pos);
 	// ïœä∑ê¨å˜
@@ -146,7 +156,7 @@ void StageObject::ItemCarry(void)
 {
 }
 
-void StageObject::ItemPlaced(void)
+void StageObject::ItemPlaced(VECTOR pos)
 {
 }
 
@@ -159,6 +169,11 @@ VECTOR StageObject::GetTopCenter(void) const
 	VECTOR center = transform_.pos;
 	center.y = height_;
 	return center;
+}
+
+bool StageObject::IsActioned(void) const
+{
+	return isActioned_;
 }
 
 void StageObject::UpdatePlaced(void)

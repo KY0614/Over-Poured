@@ -15,8 +15,8 @@ public:
 
 	static constexpr VECTOR TABLE_POS = { -140.0f, 0.0f, -175.0f };
 	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };
-	static constexpr VECTOR CUPHOT_POS = { -49.0f, 76.0f, -175.0f };
-	static constexpr VECTOR CUPICE_POS = { 30.0f, 76.0f, -175.0f };
+	static constexpr VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };
+	static constexpr VECTOR CUPICE_POS = { 45.0f, 76.0f, -175.0f };
 	static constexpr VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };
 	static constexpr VECTOR LIBS_POS = { 74.0f, 76.0f, -175.0f };
 	static constexpr VECTOR DUSTBOX_POS = { 227.0f, 0.0f, -175.0f };

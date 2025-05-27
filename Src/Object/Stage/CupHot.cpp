@@ -15,25 +15,26 @@ void CupHot::ItemCarry(void)
 {
     auto& ins = InputManager::GetInstance();
     // ホット用カップ固有のインタラクションロジック
-    if (ins.IsTrgDown(KEY_INPUT_SPACE))
+    if (ins.IsTrgDown(KEY_INPUT_SPACE) && GetItemState() == ITEM_STATE::PLACED)
     {
-        player_.SetIsHoldiong(true);
+       // player_.SetIsHoldiong(true);
         player_.SetHoldItem(GetObjectId());
         ChangeItemState(ITEM_STATE::HOLD);
+        isActioned_ = true;
     }
 }
 
-void CupHot::ItemPlaced(void)
+void CupHot::ItemPlaced(VECTOR pos)
 {
     auto& ins = InputManager::GetInstance();
-    if (ins.IsTrgDown(KEY_INPUT_SPACE))
+    if (ins.IsTrgDown(KEY_INPUT_SPACE) && GetItemState() == ITEM_STATE::HOLD)
     {
-        player_.SetIsHoldiong(false);
+        //player_.SetIsHoldiong(false);
         player_.SetHoldItem("");
         ChangeItemState(ITEM_STATE::PLACED);
-        SetPos(StageManager::CUPHOT_POS);
+        SetPos(pos);
+        isActioned_ = true;
     }
-
 }
 
 void CupHot::Interact(void)
@@ -42,17 +43,17 @@ void CupHot::Interact(void)
 
 void CupHot::UpdatePlaced(void)
 {
+    transform_.Update();
 }
 
 void CupHot::UpdateHold(void)
 {
-    auto& pSphere = player_.GetSphere();
-    //プレイヤー
-    if (player_.GetIsHolding())
-    {
-        SetFollowPos(pSphere.GetPos());
-    }
+    //auto& pSphere = ;
 
-    transform_.pos = followPos_;
+    //SetFollowPos(pSphere.GetPos());
+
+    transform_.pos = player_.GetSphere().GetPos();
+    sphereTran_.pos = followPos_;
+
     transform_.Update();
 }

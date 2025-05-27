@@ -262,7 +262,9 @@ void Player::UpdateNone(void)
 
 void Player::UpdatePlay(void)
 {
-	if (!isHolding_)holdItemId_ = "";
+	//if (!isHolding_)holdItemId_ = "";
+	if (holdItemId_ == "")isHolding_ = false;
+	else isHolding_ = true;
 
 	if(holdItemId_ == "Hot_Coffee")data_.drink_ = Order::DRINK::HOT;
 
