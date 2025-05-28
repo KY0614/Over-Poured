@@ -13,7 +13,8 @@ StageObject::StageObject(const std::string objId, const float width,
 	depth_(depth),player_(player)
 {
 	followPos_ = AsoUtility::VECTOR_ZERO;
-	state_ = ITEM_STATE::NONE;
+	itemState_ = ITEM_STATE::NONE;
+	machineState_ = MACHINE_STATE::NONE;
 	param_ = StageObjectLibrary::ObjectParams();
 	rad_ = 0.0f;
 }
@@ -34,7 +35,8 @@ void StageObject::Init(void)
 	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
 	if(objId_ == "Table")sphere_->SetLocalPos({ 0.0f, height_, 0.0f });
 
-	state_ = ITEM_STATE::PLACED;
+	itemState_ = ITEM_STATE::PLACED;
+	machineState_ = MACHINE_STATE::INACTIVE;
 
 	transform_.Update();
 
@@ -42,8 +44,8 @@ void StageObject::Init(void)
 
 	if (objId_ == "Coffee_Machine")rad_ = 35.0f;
 	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
-	else if (objId_ == "Cup_Hot")rad_ = 20.0f;
-	else if (objId_ == "Cup_Ice")rad_ = 20.0f;
+	else if (objId_ == "Hot_Cup")rad_ = 20.0f;
+	else if (objId_ == "Ice_Cup")rad_ = 20.0f;
 
 	sphere_->SetRadius(rad_);
 
@@ -66,16 +68,36 @@ void StageObject::Update(void)
 
 	isActioned_ = false;
 
-	switch (state_)
+	switch (itemState_)
 	{
 	case StageObject::ITEM_STATE::NONE:
 		break;
+
 	case StageObject::ITEM_STATE::PLACED:
 		UpdatePlaced();
 		break;
+
 	case StageObject::ITEM_STATE::HOLD:
 		UpdateHold();
 		break;
+
+	default:
+		break;
+	}
+
+	switch (machineState_)
+	{
+	case StageObject::MACHINE_STATE::NONE:
+		break;
+
+	case StageObject::MACHINE_STATE::INACTIVE:
+		UpdateInActive();
+		break;
+
+	case StageObject::MACHINE_STATE::ACTIVE:
+		UpdateActive();
+		break;
+
 	default:
 		break;
 	}
@@ -101,11 +123,12 @@ void StageObject::Draw(void)
 	else if (objId_ == "Table")col = 0xd2b48c;
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
-	else if (objId_ == "Cup_Hot")col = 0xcd5c5c;
-	else if (objId_ == "Cup_Ice")col = 0x87ceeb;
+	else if (objId_ == "Hot_Cup")col = 0xcd5c5c;
+	else if (objId_ == "Ice_Cup")col = 0x87ceeb;
 	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
 	else if (objId_ == "Lids")col = 0xa9a9a9;
 	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
+	else if (objId_ == "Cup_Hot_Rack")col = 0xffaaaa;
 	//intå^ÇCOLOR_U8Ç÷ïœä∑
 	retCol.r = (col >> 16) & 0xFF;
 	retCol.g = (col >> 8) & 0xFF;
@@ -117,13 +140,9 @@ void StageObject::Draw(void)
 	//DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
 	sphere_->Draw(col);
 
-	VECTOR screenPos = ConvWorldPosToScreenPos(transform_.pos);
-	// ïœä∑ê¨å˜
-	DrawString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50,
-		StringUtility::StringToWstring(objId_.c_str()).c_str(), GetColor(255, 255, 255));
-
 	int line = 3;	//çs
 	int lineHeight = 30;	//çs
+
 	//DebugDrawFormat::FormatStringRight(L"param", 0, line,lineHeight);
 	//DebugDrawFormat::FormatStringRight(L"id : %ws", StringUtility::StringToWstring(param_.id_).c_str(), line, lineHeight);
 	//DebugDrawFormat::FormatStringRight(L"name : %s", StringUtility::StringToWstring(param_.name_).c_str(), line, lineHeight);
@@ -160,7 +179,11 @@ void StageObject::ItemPlaced(VECTOR pos)
 {
 }
 
-void StageObject::Interact(void)
+void StageObject::Interact(const std::string& objId, std::vector<std::unique_ptr<StageObject>>& object)
+{
+}
+
+void StageObject::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
 {
 }
 
@@ -169,6 +192,11 @@ VECTOR StageObject::GetTopCenter(void) const
 	VECTOR center = transform_.pos;
 	center.y = height_;
 	return center;
+}
+
+float StageObject::GetSphereRad(void) const
+{
+	return sphere_->GetRadius();
 }
 
 bool StageObject::IsActioned(void) const
@@ -181,6 +209,14 @@ void StageObject::UpdatePlaced(void)
 }
 
 void StageObject::UpdateHold(void)
+{
+}
+
+void StageObject::UpdateInActive(void)
+{
+}
+
+void StageObject::UpdateActive(void)
 {
 }
 

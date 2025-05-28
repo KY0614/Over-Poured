@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Object\Stage\CupIce.cpp" />
-    <ClCompile Include="Src\Object\Stage\Machine.cpp" />
-    <ClCompile Include="Src\Object\Stage\CupHot.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\HotCupRack.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\HotCoffee.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\IceCup.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\Machine.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\HotCup.cpp" />
     <ClCompile Include="Src\Object\Common\Cube.cpp" />
     <ClCompile Include="Src\Object\Common\Sphere.cpp" />
     <ClCompile Include="Src\Manager\GameSystem\OrderCustomerManager.cpp" />
@@ -70,12 +72,14 @@
     <ClCompile Include="Src\Utility\StringUtility.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObjectLibrary.cpp" />
-    <ClCompile Include="Src\Object\Stage\Table.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Object\Stage\CupIce.h" />
-    <ClInclude Include="Src\Object\Stage\Machine.h" />
-    <ClInclude Include="Src\Object\Stage\CupHot.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\HotCupRack.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\HotCoffee.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\IceCup.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\Machine.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\HotCup.h" />
     <ClInclude Include="Src\Object\Common\Cube.h" />
     <ClInclude Include="Src\Object\Common\Sphere.h" />
     <ClInclude Include="Src\Libs\nlohmann\adl_serializer.hpp" />
@@ -171,7 +175,7 @@
     <ClInclude Include="Src\Utility\StringUtility.h" />
     <ClInclude Include="Src\Object\Stage\StageObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObjectLibrary.h" />
-    <ClInclude Include="Src\Object\Stage\Table.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\Table.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

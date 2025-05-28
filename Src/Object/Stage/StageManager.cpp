@@ -11,11 +11,24 @@
 #include "../Common/Sphere.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
-#include "Table.h"
-#include "Machine.h"
-#include "CupHot.h"
-#include "CupIce.h"
+#include "StageObject/Table.h"
+#include "StageObject/Machine.h"
+#include "StageObject/HotCup.h"
+#include "StageObject/IceCup.h"
+#include "StageObject/HotCupRack.h"
+#include "StageObject/HotCoffee.h"
 #include "StageManager.h"
+
+namespace {
+	const std::string TABLE = "Table";		//テーブル
+	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
+	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
+	const std::string HOT_CUP_RACK = "Cup_Hot_Rack";	//ホット用ラック
+	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
+	const std::string COFFEE_MACHINE = "Coffee_Machine";	//コーヒーマシン
+	const std::string LIB = "";		//
+}
+
 
 StageManager::StageManager(Vector2 mapSize, Player& player):player_(player)
 {
@@ -45,31 +58,45 @@ void StageManager::Init(void)
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
-	////テーブル
-	//table_ = std::make_unique<StageObject>("Table", 60.0f, 60.0f, 60.0f);
-	//table_->Init();
-	//table_->SetPos(AsoUtility::VECTOR_ZERO);
-	for (int x = 0; x < 4; x++)
+	//横のテーブル群
+	for (int x = 0; x < TABLE_NUM; x++)
 	{
 		VECTOR firstPos = TABLE_POS;
-		firstPos.x += (x * 95.0f);
-		tables_.emplace_back(std::make_unique<Table>("Table", 95.0f, 76.0f, 60.0f, player_,objects_));
+		firstPos.x += (x * TABLE_WIDTH);
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_,objects_));
+		tables_.back()->Init();
+		tables_.back()->SetPos(firstPos);
+	}
+	//縦のテーブル群
+	for (int z = TABLE_NUM; z < TABLE_NUM + TABLE_NUM - 1; z++)
+	{
+		VECTOR firstPos = COLUMN_TABLE_POS;
+		firstPos.z += ((z - TABLE_NUM) * TABLE_WIDTH);
+		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
 	}
 
-	objects_.emplace_back(std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f, player_,tables_));
+	//ホット用カップのラック
+	objects_.emplace_back(std::make_unique<HotCupRack>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init();
+	objects_.back()->SetPos(tables_[1]->GetTopCenter());
+	
+	//ホット用カップ
+	objects_.emplace_back(std::make_unique<HotCup>(HOT_CUP, 40.0f, 30.0f, 40.0f, player_));
 	StageObject& cupHotRef = *objects_.back();
 	objects_.back()->Init();
-	objects_.back()->SetPos(CUPHOT_POS);
+	objects_.back()->SetPos(tables_.back()->GetTopCenter());
 
-	objects_.emplace_back(std::make_unique<CupIce>("Cup_Ice", 40.0f, 30.0f, 40.0f, player_));
-	StageObject& cupIceRef = *objects_.back(); // 新しく追加されたCupIceへの参照を取得
+	//アイス用カップ
+	objects_.emplace_back(std::make_unique<IceCup>(ICE_CUP, 40.0f, 30.0f, 40.0f, player_));
+	StageObject& cupIceRef = *objects_.back(); // 新しく追加されたIceCupへの参照を取得
 	objects_.back()->Init();
-	objects_.back()->SetPos(CUPICE_POS);
-	
-	objects_.emplace_back(std::make_unique<Machine>("Coffee_Machine", 75.0f, 60.0f, 50.0f,
-		 player_ , cupHotRef, cupIceRef));
+	objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
+
+	//コーヒーマシン
+	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 75.0f, 60.0f, 50.0f,
+		 player_));
 	objects_.back()->Init();
 	VECTOR pos = AsoUtility::VECTOR_ZERO;
 	pos = tables_.front()->GetTopCenter();
@@ -81,7 +108,7 @@ void StageManager::Init(void)
 	//cupH_->SetPos(CUPHOT_POS);
 	
 	////アイス用カップ
-	//cupI_ = std::make_unique<CupIce>("Cup_Ice", 40.0f, 30.0f, 40.0f);
+	//cupI_ = std::make_unique<IceCup>("Cup_Ice", 40.0f, 30.0f, 40.0f);
 	//cupI_->Init();
 	//cupI_->SetPos(CUPICE_POS);
 	
@@ -143,28 +170,24 @@ void StageManager::Update(void)
 		obj->Update();
 	}
 
-	//for (const auto& table : tables_)
-	//{
-	//	for (const auto& obj : objects_)
-	//	{
-	//		if (!player_.GetIsHolding() && obj->IsCarryable() &&
-	//			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-	//				obj->GetSpherePos(), obj->GetSphereRad()))
-	//		{
-	//			obj->ItemCarry();
-	//		}
-	//		if (player_.GetIsHolding() && table->IsPlaceable() &&
-	//			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-	//				table->GetSpherePos(), table->GetSphereRad()))
-	//		{
-	//			obj->ItemPlaced(table->GetTopCenter());
-	//		}
-	//	}
-	//}
+	//ラックからカップを取り出す処理
+	for (const auto& obj : objects_)
+	{
+		//プレイヤーが何も持っていないときの処理
+		if (!player_.GetIsHolding() && obj->IsInteractable() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			obj->PickUp(objects_);
+			break;
+		}
+	}
 
+	//持ち運び可能なアイテムに対しての処理
 	for (const auto& obj : objects_)
 	{
 
+		//プレイヤーが何も持っていないときの処理
 		if (!player_.GetIsHolding() && obj->IsCarryable() &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
@@ -173,17 +196,18 @@ void StageManager::Update(void)
 			break;
 		}
 
+		//プレイヤーがアイテムを持っているときの処理
 		if (player_.GetIsHolding())
 		{
 			for (const auto& table : tables_)
 			{
+				//設置可能なテーブルの上にアイテムを設置する処理
 				if(table->IsPlaceable() &&
 					AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 						table->GetSpherePos(), table->GetSphereRad()
 					))
 				{
 					obj->ItemPlaced(table->GetTopCenter());
-					//table->CanNotPlaceable();
 				}
 
 				if (obj->IsActioned())
@@ -191,35 +215,31 @@ void StageManager::Update(void)
 					break;
 				}
 			}
-
 		}
-
 		if (obj->IsActioned())
 		{
 			break;
 		}
-
 	}
 
+	for (const auto& obj : objects_)
+	{
+		if (obj->GetObjectId() != COFFEE_MACHINE)continue;
 
+		//持っているアイテムをマシンに設置する処理
+		if (obj->GetInteractType() == "machine" && player_.GetIsHolding()&&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+			obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			obj->Interact(player_.GetHoldItem(), objects_);
+		}
 
+		if (obj->GetInteractTime() <= 0.0f)
+		{
+			
+		}
+	}
 
-	////とりあえずホット用のみ
-	////プレイヤーとホット用カップの球体判定
-	//if (AsoUtility::IsHitSpheres(pSphere.GetPos(),pSphere.GetRadius(),
-	//	cupH_->GetSpherePos(), 20.0f))
-	//{
-	//	if (!cupH_->IsCarryable())return;
-	//	//↓の中で処理を書いてもいいかも？
-	//	cupH_->Interact(player_);
-	//}
-
-	////マシンとプレイヤーの球体判定
-	//if (AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-	//	machine_->GetSpherePos(), 35.0f))
-	//{
-	//	machine_->Interact(player_);
-	//}
 
 	////カップとマシンの球体判定
 	//if (AsoUtility::IsHitSpheres(cupH_->GetSpherePos(), 20.0f,
@@ -278,26 +298,62 @@ void StageManager::Draw(void)
 		obj->Draw();
 	}
 
+#ifdef _DEBUG
+
 	int line = 8;	//行
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
 	for (int i = 0; i < tables_.size(); i++)
 	{
-		DebugDrawFormat::FormatString(L"table.placeable : %d",
+		DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
 			tables_[i]->IsPlaceable(), line, lineHeight);
 	}
+
+	for (int i = 0; i < TABLE_NUM + TABLE_NUM - 1; i++)
+	{
+		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
+		// 変換成功
+		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+			L"%s : %d",
+			StringUtility::StringToWstring(tables_[i]->GetObjectId().c_str()).c_str(), i);
+	}
+
+	for (const auto& obj : objects_)
+	{
+		VECTOR screenPos = ConvWorldPosToScreenPos(obj->GetTransform().pos);
+		// 変換成功
+		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+			L"%s",
+			StringUtility::StringToWstring(obj->GetObjectId().c_str()).c_str());
+	}
+
+#endif // _DEBUG
 }
 
-void StageManager::ResetHotCup(void)
+void StageManager::MakeHotCoffee(void)
 {
 	player_.SetIsHoldiong(false);
 
+	//auto* hot = FindValue<HotCup>(objects_);
+
 	////ホット用カップ
-	//cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
-	//cupH_->Init();
-	//cupH_->SetPos(CUPHOT_POS);
+	//hot = std::make_unique<HotCoffee>("Hot_Coffee", 40.0f, 30.0f, 40.0f);
+	//hot->Init();
+	//hot->SetPos(MACHINE_POS);
 }
+
+template<typename Value>
+inline Value* StageManager::FindValue(const std::vector<std::unique_ptr<StageObject>>& objects)
+{
+	for (const auto& obj : objects) {
+		if (auto* object = dynamic_cast<Value*>(obj.get())) {
+			return object;
+		}
+	}
+	return nullptr;
+}
+
 
 bool StageManager::IsInBounds(int x, int y) const
 {

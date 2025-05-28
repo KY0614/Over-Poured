@@ -27,7 +27,7 @@ StageObjectLibrary::LoadData(const std::string& objName)
     obj.placeable_ = value.value("placeable", false);
     obj.carryable_ = value.value("carryable", false);
     obj.interactable_ = value.value("interactable", false);
-    obj.interactType_ = value.value("interactType", "");
+    obj.interactType_ = value.value("type", "");
     obj.interactTime = value.value("interactTime", 0.0f);
     obj.category_ = value.value("type", "");
 

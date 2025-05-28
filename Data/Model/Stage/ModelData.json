@@ -1,17 +1,17 @@
 {
     "Coffee_Machine": {
-    "id": "coffee_machine",
+    "id": "Coffee_Machine",
     "type": "machine",
     "name": "Coffee_Machine",
     "model": "models/coffee_machine.mv1",
     "interactable": true,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":["cup_hot","cup_with_ice"],
+    "acceptedItems":["Hot_Cup","Cup_With_Ice"],
     "produces": ["hot_coffee","ice_coffee"]
     },
     "Ice_Dispenser": {
-    "id": "ice_dispenser",
+    "id": "Ice_Dispenser",
     "type": "machine",
     "name": "Ice_Dispenser",
     "model": "models/ice_dispenser.mv1",
@@ -22,7 +22,7 @@
     "produces": ["cup_with_ice"]
     },
   "Table": {
-    "id": "table",
+    "id": "Table",
     "type": "surface",
     "name": "Table",
     "model": "models/table.mv1",
@@ -54,8 +54,8 @@
     "acceptedItems":[],
     "placeable": false
     },
-    "Cup_Hot": {
-    "id": "cup_hot",
+    "Hot_Cup": {
+    "id": "Hot_Cup",
     "type": "item",
     "name": "HotCup",
     "model": "models/cup_hot.mv1",
@@ -65,8 +65,8 @@
     "acceptedItems":[],
     "produces": []
     },
-    "Cup_Ice": {
-    "id": "cup_ice",
+    "Ice_Cup": {
+    "id": "Ice_Cup",
     "type": "item",
     "name": "IceCup",
     "model": "models/cup_ice.mv1",
@@ -77,7 +77,7 @@
     "produces": []
     },
     "Cup_With_Ice": {
-    "id": "cup_with_ice",
+    "id": "Cup_With_Ice",
     "type": "item",
     "name": "CupWithIce",
     "model": "models/cup_with_ice.mv1",
@@ -87,8 +87,19 @@
     "acceptedItems":[],
     "produces": []
     },
+    "Cup_Hot_Rack": {
+    "id": "Cup_Hot_Rack",
+    "type": "item",
+    "name": "HotCupRack",
+    "model": "models/racks.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":[],
+    "produces": ["Hot_Cup","Ice_Cup"]
+    },
     "Hot_Coffee": {
-    "id": "hot_coffee",
+    "id": "Hot_Coffee",
     "type": "item",
     "name": "HotCoffee",
     "model": "models/cup_hot.mv1",
@@ -99,7 +110,7 @@
     "produces": []
     },
     "Ice_Coffee": {
-    "id": "ice_coffee",
+    "id": "Ice_Coffee",
     "type": "item",
     "name": "IceCoffee",
     "model": "models/cup_ice.mv1",

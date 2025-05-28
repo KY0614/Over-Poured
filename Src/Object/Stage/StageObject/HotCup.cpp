@@ -1,16 +1,16 @@
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
-#include "StageManager.h"
-#include "CupIce.h"
+#include "../Object/Stage/StageManager.h"
+#include "HotCup.h"
 
-CupIce::CupIce(const std::string objId, const float width,
-	const float height, const float depth, Player& player) : 
-	StageObject(objId, width, height, depth,player)
+HotCup::HotCup(const std::string objId, const float width,
+	const float height, const float depth ,Player& player) : 
+    StageObject(objId,width,height,depth,player)
 {
 }
 
-void CupIce::ItemCarry(void)
+void HotCup::ItemCarry(void)
 {
     auto& ins = InputManager::GetInstance();
     // ホット用カップ固有のインタラクションロジック
@@ -22,7 +22,7 @@ void CupIce::ItemCarry(void)
     }
 }
 
-void CupIce::ItemPlaced(VECTOR pos)
+void HotCup::ItemPlaced(VECTOR pos)
 {
     auto& ins = InputManager::GetInstance();
     if (ins.IsTrgDown(KEY_INPUT_SPACE) && GetItemState() == ITEM_STATE::HOLD)
@@ -34,22 +34,19 @@ void CupIce::ItemPlaced(VECTOR pos)
     }
 }
 
-void CupIce::Interact(void)
-{
-}
-
-void CupIce::UpdatePlaced(void)
+void HotCup::UpdatePlaced(void)
 {
     transform_.Update();
 }
 
-void CupIce::UpdateHold(void)
+void HotCup::UpdateHold(void)
 {
-    auto& pSphere = player_.GetSphere();
+    //auto& pSphere = ;
 
-    SetFollowPos(pSphere.GetPos());
+    //SetFollowPos(pSphere.GetPos());
 
-    transform_.pos = followPos_;
+    transform_.pos = player_.GetSphere().GetPos();
     sphereTran_.pos = followPos_;
+
     transform_.Update();
 }

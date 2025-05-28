@@ -77,7 +77,7 @@ void GameScene::Update(void)
 		{
 	 		score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
 			customer_->IsServe();
-			stage_->ResetHotCup();
+			//stage_->ResetHotCup();
 		}
 	}
 

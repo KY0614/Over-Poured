@@ -1,5 +1,5 @@
 #pragma once
-#include "StageObject.h"
+#include "../Object/Stage/StageObject.h"
 
 class Table : public StageObject
 {
@@ -13,7 +13,6 @@ public:
 
 	void Update(void)override;
 
-	void Interact(void) override;
 
 private:
 

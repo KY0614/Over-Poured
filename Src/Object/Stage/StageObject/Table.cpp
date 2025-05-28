@@ -2,7 +2,7 @@
 #include "../Utility/AsoUtility.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
-#include "StageManager.h"
+#include "../Object/Stage/StageManager.h"
 #include "Table.h"
 
 Table::Table(const std::string objId, const float width,
@@ -31,8 +31,4 @@ void Table::Update(void)
 			param_.placeable_ = true;
 		}
 	}
-}
-
-void Table::Interact(void)
-{
 }

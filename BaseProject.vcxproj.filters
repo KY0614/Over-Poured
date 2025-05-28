@@ -201,16 +201,22 @@
     <ClCompile Include="Src\Object\Common\Cube.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Stage\CupHot.cpp">
+    <ClCompile Include="Src\Object\Stage\StageObject\HotCup.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Stage\Machine.cpp">
+    <ClCompile Include="Src\Object\Stage\StageObject\Machine.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Stage\CupIce.cpp">
+    <ClCompile Include="Src\Object\Stage\StageObject\IceCup.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Stage\Table.cpp">
+    <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Stage\StageObject\HotCoffee.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Stage\StageObject\HotCupRack.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -500,16 +506,22 @@
     <ClInclude Include="Src\Object\Common\Cube.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Stage\CupHot.h">
+    <ClInclude Include="Src\Object\Stage\StageObject\HotCup.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Stage\Machine.h">
+    <ClInclude Include="Src\Object\Stage\StageObject\Machine.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Stage\CupIce.h">
+    <ClInclude Include="Src\Object\Stage\StageObject\IceCup.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Stage\Table.h">
+    <ClInclude Include="Src\Object\Stage\StageObject\Table.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Stage\StageObject\HotCoffee.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Stage\StageObject\HotCupRack.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
