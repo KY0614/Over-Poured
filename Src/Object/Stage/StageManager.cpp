@@ -7,7 +7,6 @@
 #include "../Manager/Generic/ResourceManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Player.h"
-#include "../Common/Transform.h"
 #include "../Common/Sphere.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
