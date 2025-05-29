@@ -4,11 +4,8 @@
 #include "HotCupRack.h"
 
 namespace {
-	const std::string NO_ITEM = "";	//ホット用カップ
 	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
 	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
-	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
-	const std::string COFFEE_MACHINE = "Coffee_Machine";	//コーヒーマシン
 }
 
 HotCupRack::HotCupRack(const std::string objId, const float width,
@@ -28,12 +25,4 @@ void HotCupRack::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
 		isActioned_ = true;
 		object.back()->SetPos(player_.GetTransform().pos);
 	}
-}
-
-void HotCupRack::UpdateInActive(void)
-{
-}
-
-void HotCupRack::UpdateActive(void)
-{
 }

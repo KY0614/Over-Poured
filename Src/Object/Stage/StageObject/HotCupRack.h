@@ -12,12 +12,7 @@ public:
 
 	void PickUp(std::vector<std::unique_ptr<StageObject>>& object) override;
 
-	void UpdateInActive(void)override;
-	void UpdateActive(void)override;
-
 private:
-
-	StageObject* MakeHotCup(void);
 
 };
 

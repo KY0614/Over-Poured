@@ -36,16 +36,10 @@ void IceCup::ItemPlaced(VECTOR pos)
 
 void IceCup::UpdatePlaced(void)
 {
-    transform_.Update();
 }
 
 void IceCup::UpdateHold(void)
 {
-    auto& pSphere = player_.GetSphere();
-
-    SetFollowPos(pSphere.GetPos());
-
-    transform_.pos = followPos_;
+    transform_.pos = player_.GetSphere().GetPos();
     sphereTran_.pos = followPos_;
-    transform_.Update();
 }

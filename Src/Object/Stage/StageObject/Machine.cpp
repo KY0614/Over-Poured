@@ -8,11 +8,9 @@
 #include "Machine.h"
 
 namespace {
-	const std::string NO_ITEM = "";	//ホット用カップ
 	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
 	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
 	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
-	const std::string COFFEE_MACHINE = "Coffee_Machine";	//コーヒーマシン
 }
 
 Machine::Machine(const std::string objId, const float width,
@@ -23,7 +21,7 @@ Machine::Machine(const std::string objId, const float width,
 	SetProduceTime(COFFEE_PRODUCES_TIME);
 }
 
-void Machine::Interact(const std::string& objId, std::vector<std::unique_ptr<StageObject>>& object)
+void Machine::Interact(const std::string& objId)
 {
 	auto& items = param_.acceptedItems_;
 	//objIdがインタラクト対象物に存在するかどうか
@@ -31,10 +29,13 @@ void Machine::Interact(const std::string& objId, std::vector<std::unique_ptr<Sta
 	if (!isAccepted)return;	//存在しなかったら処理しない
 
 	auto& ins = InputManager::GetInstance();
-	bool setCup = false;
-	for (const auto& obj : object)
+	for (const auto& obj : objects_)
 	{
-		if (player_.GetIsHolding())
+		//ホット用カップ以外のオブジェクトは判定しない
+		if (obj->GetObjectId() != HOT_CUP) continue;
+
+		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
+			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
 			//スペースキー押下でマシンの場所にカップを置く(とりあえず)
 			if (player_.GetHoldItem() == items.front().c_str() &&
@@ -56,7 +57,7 @@ void Machine::UpdateActive(void)
 {
 	param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
 
-	auto& pSphere = player_.GetSphere();
+	//インタラクト時間が過ぎるもしくはアイテムが設置状態ではなかったら非アクティブにする
 	for (const auto& obj : objects_)
 	{
 		if (param_.interactTime <= 0.0f ||

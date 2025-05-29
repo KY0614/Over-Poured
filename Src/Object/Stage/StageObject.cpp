@@ -171,20 +171,9 @@ void StageObject::SetPos(VECTOR pos)
 	sphereTran_.pos = pos;
 }
 
-void StageObject::ItemCarry(void)
+VECTOR StageObject::GetSpherePos(void) const
 {
-}
-
-void StageObject::ItemPlaced(VECTOR pos)
-{
-}
-
-void StageObject::Interact(const std::string& objId, std::vector<std::unique_ptr<StageObject>>& object)
-{
-}
-
-void StageObject::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
-{
+	return sphere_->GetPos();
 }
 
 VECTOR StageObject::GetTopCenter(void) const
@@ -202,6 +191,22 @@ float StageObject::GetSphereRad(void) const
 bool StageObject::IsActioned(void) const
 {
 	return isActioned_;
+}
+
+void StageObject::ItemCarry(void)
+{
+}
+
+void StageObject::ItemPlaced(VECTOR pos)
+{
+}
+
+void StageObject::Interact(const std::string& objId)
+{
+}
+
+void StageObject::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
+{
 }
 
 void StageObject::UpdatePlaced(void)

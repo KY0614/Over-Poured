@@ -17,13 +17,14 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
-	void Interact(const std::string& objId, std::vector<std::unique_ptr<StageObject>>& object) override;
+	void Interact(const std::string& objId) override;
 
 	void UpdateInActive(void)override;
 	void UpdateActive(void)override;
 
 private:
 
+	//
 	std::vector<std::unique_ptr<StageObject>>& objects_;
 
 	void SetProduceTime(float time) { param_.interactTime = time; }

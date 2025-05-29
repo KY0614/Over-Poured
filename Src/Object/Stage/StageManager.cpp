@@ -16,6 +16,7 @@
 #include "StageObject/IceCup.h"
 #include "StageObject/HotCupRack.h"
 #include "StageObject/HotCoffee.h"
+#include "StageObject/CupLid.h"
 #include "StageManager.h"
 
 namespace {
@@ -27,7 +28,7 @@ namespace {
 	const std::string HOT_COFFEE = "Hot_Coffee";	//ホットコーヒー
 	const std::string ICE_COFFEE = "Ice_Coffee";	//アイスコーヒー
 	const std::string COFFEE_MACHINE = "Coffee_Machine";	//コーヒーマシン
-	const std::string LID = "Cup_Lid";		//
+	const std::string CUP_LID = "Cup_Lid";		//
 }
 
 
@@ -81,6 +82,11 @@ void StageManager::Init(void)
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[1]->GetTopCenter());
 	
+	//カップ用の蓋
+	objects_.emplace_back(std::make_unique<CupLid>(CUP_LID, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init();
+	objects_.back()->SetPos(tables_[2]->GetTopCenter());
+	
 	//ホット用カップ
 	objects_.emplace_back(std::make_unique<HotCup>(HOT_CUP, 40.0f, 30.0f, 40.0f, player_));
 	StageObject& cupHotRef = *objects_.back();
@@ -100,21 +106,6 @@ void StageManager::Init(void)
 	VECTOR pos = AsoUtility::VECTOR_ZERO;
 	pos = tables_.front()->GetTopCenter();
 	objects_.back()->SetPos(pos);
-	
-	////ホット用カップ
-	//cupH_ = std::make_unique<CupHot>("Cup_Hot", 40.0f, 30.0f, 40.0f);
-	//cupH_->Init();
-	//cupH_->SetPos(CUPHOT_POS);
-	
-	////アイス用カップ
-	//cupI_ = std::make_unique<IceCup>("Cup_Ice", 40.0f, 30.0f, 40.0f);
-	//cupI_->Init();
-	//cupI_->SetPos(CUPICE_POS);
-	
-	////コーヒーマシン
-	//machine_ = std::make_unique<Machine>("Coffee_Machine", 75.0f, 60.0f, 60.0f,*cupH_,*cupI_);
-	//machine_->Init();
-	//machine_->SetPos(MACHINE_POS);
 
 	////アイスディスペンサー(氷を入れるやつ）
 	//iceDispenser_ = std::make_unique<StageObject>("Ice_Dispenser", 60.0f, 20.0f, 60.0f);
@@ -173,7 +164,7 @@ void StageManager::Update(void)
 	for (const auto& obj : objects_)
 	{
 		//プレイヤーが何も持っていないときの処理
-		if (!player_.GetIsHolding() && obj->IsInteractable() &&
+		if (!player_.GetIsHolding() && obj->GetIsInteractable() &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
@@ -186,7 +177,7 @@ void StageManager::Update(void)
 	for (const auto& obj : objects_)
 	{
 		//プレイヤーが何も持っていないときの処理
-		if (!player_.GetIsHolding() && obj->IsCarryable() &&
+		if (!player_.GetIsHolding() && obj->GetIsCarryable() &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
@@ -200,7 +191,7 @@ void StageManager::Update(void)
 			for (const auto& table : tables_)
 			{
 				//設置可能なテーブルの上にアイテムを設置する処理
-				if(table->IsPlaceable() &&
+				if(table->GetIsPlaceable() &&
 					AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 						table->GetSpherePos(), table->GetSphereRad()
 					))
@@ -230,7 +221,7 @@ void StageManager::Update(void)
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			obj->Interact(player_.GetHoldItem(), objects_);
+			obj->Interact(player_.GetHoldItem());
 		}
 
 		//設置して一定時間経ったらコーヒーを出力する
@@ -240,28 +231,6 @@ void StageManager::Update(void)
 			break;
 		}
 	}
-
-
-	////カップとマシンの球体判定
-	//if (AsoUtility::IsHitSpheres(cupH_->GetSpherePos(), 20.0f,
-	//	machine_->GetSpherePos(), 35.0f))
-	//{
-	//	//カップが設置状態でかつプレイヤーがマシンの前にいるときに
-	//	//Rキー押下でホットコーヒー作成
-	//	if (cupH_->GetState() == StageObject::STATE::PLACED &&
-	//		AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-	//			machine_->GetSpherePos(), 35.0f))
-	//	{
-	//		if (ins.IsTrgDown(KEY_INPUT_R))
-	//		{
-	//			//ホットコーヒー生成
-	//			cupH_ = std::make_unique<CupHot>("Hot_Coffee", 40.0f, 30.0f, 40.0f);
-	//			cupH_->Init();
-	//			cupH_->SetPos(MACHINE_POS);
-	//		}
-	//	}
-	//}
-
 
 #ifdef _DEBUG
 
@@ -282,13 +251,6 @@ void StageManager::Draw(void)
 	MV1DrawModel(transform_.modelId);
 	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
 
-	//machine_->Draw();
-	//table_->Draw();
-	//cupH_->Draw();
-	//cupI_->Draw();
-	//iceDispenser_->Draw();
-	//libs_->Draw();
-	//dustBox_->Draw();
 	for (const auto& table : tables_)
 	{
 		table->Draw();
@@ -308,7 +270,7 @@ void StageManager::Draw(void)
 	for (int i = 0; i < tables_.size(); i++)
 	{
 		DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
-			tables_[i]->IsPlaceable(), line, lineHeight);
+			tables_[i]->GetIsPlaceable(), line, lineHeight);
 	}
 
 	for (int i = 0; i < TABLE_NUM + TABLE_NUM - 1; i++)
@@ -352,32 +314,26 @@ void StageManager::MakeHotCoffee(void)
 				objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 40.0f, 30.0f, 40.0f, player_);
 				objects_[i]->Init();
 				objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-				objects_[i]->SetPos(machine->GetPos());
+				objects_[i]->SetPos(MACHINE_POS);
 			}
 		}
 	}
-
-	//objects_.emplace_back(std::make_unique<HotCoffee>(HOT_COFFEE, 40.0f, 30.0f, 40.0f, player_));
-	//objects_.back()->Init();
-	//player_.SetHoldItem(objects_.back()->GetObjectId());
-	//objects_.back()->ChangeItemState(StageObject::ITEM_STATE::HOLD);
-	//objects_.back()->SetPos(player_.GetTransform().pos);
 }
 
 void StageManager::SurveItem(void)
 {
 }
 
-template<typename Value>
-inline Value* StageManager::FindValue(const std::vector<std::unique_ptr<StageObject>>& objects)
-{
-	for (const auto& obj : objects) {
-		if (auto* object = dynamic_cast<Value*>(obj.get())) {
-			return object;
-		}
-	}
-	return nullptr;
-}
+//template<typename Value>
+//inline Value* StageManager::FindValue(const std::vector<std::unique_ptr<StageObject>>& objects)
+//{
+//	for (const auto& obj : objects) {
+//		if (auto* object = dynamic_cast<Value*>(obj.get())) {
+//			return object;
+//		}
+//	}
+//	return nullptr;
+//}
 
 
 bool StageManager::IsInBounds(int x, int y) const

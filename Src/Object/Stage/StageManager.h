@@ -12,17 +12,24 @@ class StageManager : public ActorBase
 {
 
 public:
+	//オブジェクト関連
 
-	static constexpr int TABLE_NUM = 4;
-	static constexpr float TABLE_WIDTH = 95.0f;
-	static constexpr VECTOR TABLE_POS = { -140.0f, 0.0f, -175.0f };
-	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };
-	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };
-	static constexpr VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };
-	static constexpr VECTOR CUPICE_POS = { 45.0f, 76.0f, -175.0f };
-	static constexpr VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };
-	static constexpr VECTOR LIBS_POS = { 74.0f, 76.0f, -175.0f };
-	static constexpr VECTOR DUSTBOX_POS = { 227.0f, 0.0f, -175.0f };
+	//テーブル関連
+	static constexpr int TABLE_NUM = 4;			//テーブルの数
+
+	static constexpr float TABLE_WIDTH = 95.0f;	//テーブルの横幅
+
+	//座標
+
+	static constexpr VECTOR TABLE_POS = { -140.0f, 0.0f, -175.0f };	//テーブルの座標
+	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };	//列テーブルの座標
+
+	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };	//コーヒーマシンの座標
+	static constexpr VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };	//ホット用カップの座標
+	static constexpr VECTOR CUPICE_POS = { 45.0f, 76.0f, -175.0f };		//アイス用カップの座標
+	static constexpr VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };	//アイスディスペンサーの座標
+	static constexpr VECTOR LIBS_POS = { 74.0f, 76.0f, -175.0f };		//カップの蓋の座標
+	static constexpr VECTOR DUSTBOX_POS = { 227.0f, 0.0f, -175.0f };	//ゴミ箱の座標
 	
 	//コンストラクタ
 	StageManager(Player& player);
@@ -34,29 +41,26 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
+	/// <summary>
+	/// ホットコーヒーを作る
+	/// </summary>
+	/// <param name="">マシンとホット用カップだけ処理し、カップの場所にコーヒー生成</param>
 	void MakeHotCoffee(void);
 
 	void SurveItem(void);
 
-	template <typename Value>
-	Value* FindValue(const std::vector<std::unique_ptr<StageObject>>& objects);
+	//template <typename Value>
+	//Value* FindValue(const std::vector<std::unique_ptr<StageObject>>& objects);
 
 private:
 
+	//プレイヤーの参照
 	Player& player_;
 
-	//std::unique_ptr<StageObject> machine_;
-	//std::unique_ptr<StageObject> iceDispenser_;
-	//std::unique_ptr<StageObject> table_;
-	//std::unique_ptr<StageObject> sweetsC_;
-	//std::unique_ptr<StageObject> sweetsS_;
-	//std::unique_ptr<StageObject> cupH_;
-	//std::unique_ptr<StageObject> cupI_;
-	//std::unique_ptr<StageObject> cupIWithIce_;
-	//std::unique_ptr<StageObject> libs_;
-	//std::unique_ptr<StageObject> dustBox_;
-
+	//ステージに配置するオブジェクト達
 	std::vector<std::unique_ptr<StageObject>> objects_;
+
+	//ステージに配置する机
 	std::vector<std::unique_ptr<StageObject>> tables_;
 
 	std::vector<std::vector<std::unique_ptr<StageObject>>> grid_;
