@@ -44,8 +44,7 @@ void StageObject::Init(void)
 
 	if (objId_ == "Coffee_Machine")rad_ = 35.0f;
 	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
-	else if (objId_ == "Hot_Cup")rad_ = 20.0f;
-	else if (objId_ == "Ice_Cup")rad_ = 20.0f;
+	else if (objId_ == "Hot_Cup" || objId_ == "Ice_Cup" || objId_ == "Hot_Coffee")rad_ = 20.0f;
 
 	sphere_->SetRadius(rad_);
 
@@ -124,9 +123,10 @@ void StageObject::Draw(void)
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
 	else if (objId_ == "Hot_Cup")col = 0xcd5c5c;
+	else if (objId_ == "Hot_Coffee")col = 0xffaaaa;
 	else if (objId_ == "Ice_Cup")col = 0x87ceeb;
 	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
-	else if (objId_ == "Lids")col = 0xa9a9a9;
+	else if (objId_ == "Cup_Lid")col = 0xa9a9a9;
 	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
 	else if (objId_ == "Cup_Hot_Rack")col = 0xffaaaa;
 	//intŒ^‚ðCOLOR_U8‚Ö•ÏŠ·

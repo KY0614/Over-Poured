@@ -36,7 +36,6 @@ void HotCup::ItemPlaced(VECTOR pos)
 
 void HotCup::UpdatePlaced(void)
 {
-    transform_.Update();
 }
 
 void HotCup::UpdateHold(void)
@@ -47,6 +46,4 @@ void HotCup::UpdateHold(void)
 
     transform_.pos = player_.GetSphere().GetPos();
     sphereTran_.pos = followPos_;
-
-    transform_.Update();
 }

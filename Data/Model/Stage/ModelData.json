@@ -120,10 +120,10 @@
     "acceptedItems":[],
     "produces": []
     },
-    "Lids": {
-    "id": "lids",
+    "Cup_Lid": {
+    "id": "Cup_Lid",
     "type": "item",
-    "name": "Lids",
+    "name": "CupLids",
     "model": "models/lids.mv1",
     "interactable": true,
     "placeable": false,

@@ -24,13 +24,8 @@ public:
 	static constexpr VECTOR LIBS_POS = { 74.0f, 76.0f, -175.0f };
 	static constexpr VECTOR DUSTBOX_POS = { 227.0f, 0.0f, -175.0f };
 	
-	struct Size {
-		int height_;
-		int width_;
-	};
-
 	//コンストラクタ
-	StageManager(Vector2 mapSize,Player& player);
+	StageManager(Player& player);
 
 	//デストラクタ
 	~StageManager(void);
@@ -41,12 +36,12 @@ public:
 
 	void MakeHotCoffee(void);
 
+	void SurveItem(void);
+
 	template <typename Value>
 	Value* FindValue(const std::vector<std::unique_ptr<StageObject>>& objects);
 
 private:
-
-	Size size_;
 
 	Player& player_;
 

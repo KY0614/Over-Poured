@@ -1,5 +1,8 @@
+#include "../Common/DebugDrawFormat.h"
+#include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
+#include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../Object/Stage/StageManager.h"
 #include "Machine.h"
@@ -13,10 +16,11 @@ namespace {
 }
 
 Machine::Machine(const std::string objId, const float width,
-	const float height, const float depth,Player& player) : 
-	StageObject(objId, width, height, depth,player)
+	const float height, const float depth,Player& player,
+	std::vector<std::unique_ptr<StageObject>>& object) :
+	StageObject(objId, width, height, depth,player),objects_(object)
 {
-	param_.interactTime = 6.0f;
+	SetProduceTime(COFFEE_PRODUCES_TIME);
 }
 
 void Machine::Interact(const std::string& objId, std::vector<std::unique_ptr<StageObject>>& object)
@@ -37,37 +41,28 @@ void Machine::Interact(const std::string& objId, std::vector<std::unique_ptr<Sta
 				ins.IsTrgDown(KEY_INPUT_SPACE))
 			{
 				obj->ItemPlaced(StageManager::MACHINE_POS);
-				setCup = true;
-			}
-		}
-		else if (setCup)
-		{
-			//置いたらコーヒーを注ぐ
-			if (player_.GetHoldItem() == NO_ITEM)
-			{
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}
 		}
 	}
-
-	//スペースキー押下でマシンの場所にカップを置く(とりあえず)
-	//if (ins.IsTrgDown(KEY_INPUT_SPACE) &&
-	//	player_.GetHoldItem() == CUP_WITH_ICE)
-	//{
-	//	player_.SetIsHoldiong(false);
-	//	cupI_.ChangeItemState(StageObject::ITEM_STATE::PLACED);
-	//	cupI_.SetPos(StageManager::MACHINE_POS);
-	//}
 }
 
 void Machine::UpdateInActive(void)
 {
-	param_.interactTime = 6.0f;
+	SetProduceTime(COFFEE_PRODUCES_TIME);
 }
 
 void Machine::UpdateActive(void)
 {
 	param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
+
+	auto& pSphere = player_.GetSphere();
+	for (const auto& obj : objects_)
+	{
+		if (param_.interactTime <= 0.0f ||
+			(AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+				GetSpherePos(), GetSphereRad())&& obj->GetItemState() != ITEM_STATE::PLACED))ChangeMachineState(MACHINE_STATE::INACTIVE);
+	}
 }
 
 void Machine::Init(void)
@@ -82,5 +77,8 @@ void Machine::Update(void)
 
 void Machine::Draw(void)
 {
+	int line = 3;	//行
+	int lineHeight = 30;	//行
+	DebugDrawFormat::FormatStringRight(L"iteractTime %2.f", param_.interactTime, line, lineHeight);
 	StageObject::Draw();
 }

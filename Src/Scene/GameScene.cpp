@@ -35,9 +35,8 @@ void GameScene::Init(void)
 	player_ = std::make_shared<Player>();
 	player_->Init();
 
-	Vector2 size = { 1000,1000 };
 	//ステージ
-	stage_ = std::make_unique<StageManager>(size,*player_);
+	stage_ = std::make_unique<StageManager>(*player_);
 	stage_->Init();
 
 	//ステージのコライダーを追加
