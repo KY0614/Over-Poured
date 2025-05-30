@@ -1,5 +1,5 @@
 #pragma once
-#include "../StageObject.h"
+#include "../Object/Stage/StageObject.h"
 
 class CupLid : public StageObject
 {
@@ -10,10 +10,8 @@ public:
 
 	~CupLid(void) = default;
 
-	void Interact(const std::string& objId) override;
+	void Update(void)override;
 
 private:
-
-
 };
 

@@ -12,7 +12,6 @@ StageObject::StageObject(const std::string objId, const float width,
 	objId_(objId),width_(width),height_(height),
 	depth_(depth),player_(player)
 {
-	followPos_ = AsoUtility::VECTOR_ZERO;
 	itemState_ = ITEM_STATE::NONE;
 	machineState_ = MACHINE_STATE::NONE;
 	param_ = StageObjectLibrary::ObjectParams();
@@ -223,6 +222,12 @@ void StageObject::UpdateInActive(void)
 
 void StageObject::UpdateActive(void)
 {
+}
+
+VECTOR StageObject::GetRotPos(const VECTOR& localPos) const
+{
+	VECTOR localRotPos = follow_.quaRot.PosAxis(localPos);
+	return VAdd(follow_.pos, localRotPos);
 }
 
 void StageObject::UpdateDebugImGui(void)

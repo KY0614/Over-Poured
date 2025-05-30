@@ -41,5 +41,4 @@ void IceCup::UpdatePlaced(void)
 void IceCup::UpdateHold(void)
 {
     transform_.pos = player_.GetSphere().GetPos();
-    sphereTran_.pos = followPos_;
 }

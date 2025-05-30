@@ -1,6 +1,4 @@
 #include <DxLib.h>
-#include <fstream>
-#include"../Libs/nlohmann/json.hpp"
 #include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Libs/ImGui/imgui.h"
@@ -16,6 +14,7 @@
 #include "StageObject/IceCup.h"
 #include "StageObject/HotCupRack.h"
 #include "StageObject/HotCoffee.h"
+#include "StageObject/CupLidRack.h"
 #include "StageObject/CupLid.h"
 #include "StageManager.h"
 
@@ -83,7 +82,7 @@ void StageManager::Init(void)
 	objects_.back()->SetPos(tables_[1]->GetTopCenter());
 	
 	//カップ用の蓋
-	objects_.emplace_back(std::make_unique<CupLid>(CUP_LID, 60.0f, 20.0f, 60.0f, player_));
+	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID, 60.0f, 20.0f, 60.0f, player_,objects_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[2]->GetTopCenter());
 	
@@ -107,21 +106,6 @@ void StageManager::Init(void)
 	pos = tables_.front()->GetTopCenter();
 	objects_.back()->SetPos(pos);
 
-	////アイスディスペンサー(氷を入れるやつ）
-	//iceDispenser_ = std::make_unique<StageObject>("Ice_Dispenser", 60.0f, 20.0f, 60.0f);
-	//iceDispenser_->Init();
-	//iceDispenser_->SetPos(ICEDIS_POS);
-	//	
-	////蓋類
-	//libs_ = std::make_unique<StageObject>("Libs", 40.0f, 30.0f, 40.0f);
-	//libs_->Init();
-	//libs_->SetPos(LIBS_POS);
-	//		
-	////ゴミ箱
-	//dustBox_ = std::make_unique<StageObject>("Dust_Box", 40.0f, 70.0f, 40.0f);
-	//dustBox_->Init();
-	//dustBox_->SetPos(DUSTBOX_POS);
-
 #ifdef _DEBUG
 
 	//カウンター前の当たり判定用の球体
@@ -139,14 +123,6 @@ void StageManager::Init(void)
 void StageManager::Update(void)
 {
 	auto& ins = InputManager::GetInstance();
-
-	//machine_->Update();
-	//table_->Update();
-	//cupH_->Update();
-	//cupI_->Update();
-	//iceDispenser_->Update();
-	//libs_->Update();
-	//dustBox_->Update();
 
 	auto& pSphere = player_.GetSphere();
 
@@ -228,6 +204,27 @@ void StageManager::Update(void)
 		if (obj->GetInteractTime() <= 0.0f)
 		{
 			MakeHotCoffee();
+			break;
+		}
+	}
+
+	//コーヒーと蓋の処理
+	for (const auto& obj : objects_)
+	{
+		if (obj->GetObjectId() != CUP_LID)continue;
+
+		//持っているコーヒーに蓋をつける処理
+		if (player_.GetIsHolding() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			obj->Interact(player_.GetHoldItem());
+		}
+
+		//インタラクトし続けて一定時間経ったらコーヒーを出力する
+		if (obj->GetInteractTime() <= 0.0f)
+		{
+			LidFollowCup();
 			break;
 		}
 	}
@@ -320,21 +317,39 @@ void StageManager::MakeHotCoffee(void)
 	}
 }
 
-void StageManager::SurveItem(void)
+void StageManager::LidFollowCup(void)
 {
+	for (size_t i = 0; i < objects_.size(); ++i)
+	{
+		//コーヒー以外のオブジェクトは判定しない
+		if (objects_[i]->GetObjectId() != HOT_COFFEE && 
+			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
+
+		for (const auto& lid : objects_)
+		{
+			//蓋の判定だけさせたい
+			if (lid->GetObjectId() != CUP_LID)continue;
+
+			//蓋の球体と当たっているカップだけ処理する
+			if (AsoUtility::IsHitSpheres(lid->GetPos(), lid->GetSphereRad(),
+				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+			{
+				//当たっているコーヒーに蓋をつける
+				objects_.emplace_back(std::make_unique<CupLid>(CUP_LID, 25.0f, 10.0f, 25.0f, player_));
+				objects_.back()->Init();
+				VECTOR pos = objects_[i]->GetPos();
+				objects_.back()->SetFollow(objects_[i]->GetTransform());
+				//objects_.back()->SetFollowPos({0.0f,30.0f,0.0f});
+				break;
+			}
+		}
+	}
 }
 
-//template<typename Value>
-//inline Value* StageManager::FindValue(const std::vector<std::unique_ptr<StageObject>>& objects)
-//{
-//	for (const auto& obj : objects) {
-//		if (auto* object = dynamic_cast<Value*>(obj.get())) {
-//			return object;
-//		}
-//	}
-//	return nullptr;
-//}
+void StageManager::SurveItem(void)
+{
 
+}
 
 bool StageManager::IsInBounds(int x, int y) const
 {

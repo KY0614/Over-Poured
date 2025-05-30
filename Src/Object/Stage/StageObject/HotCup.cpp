@@ -40,10 +40,5 @@ void HotCup::UpdatePlaced(void)
 
 void HotCup::UpdateHold(void)
 {
-    //auto& pSphere = ;
-
-    //SetFollowPos(pSphere.GetPos());
-
     transform_.pos = player_.GetSphere().GetPos();
-    sphereTran_.pos = followPos_;
 }

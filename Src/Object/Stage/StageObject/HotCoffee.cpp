@@ -40,5 +40,4 @@ void HotCoffee::UpdatePlaced(void)
 void HotCoffee::UpdateHold(void)
 {
 	transform_.pos = player_.GetSphere().GetPos();
-	sphereTran_.pos = followPos_;
 }

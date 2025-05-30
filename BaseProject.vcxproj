@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Object\Stage\StageObject\CupLid.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\CupLidRack.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\HotCupRack.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\HotCoffee.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceCup.cpp" />
@@ -77,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\Stage\StageObject\CupLid.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\CupLidRack.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\HotCupRack.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\HotCoffee.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceCup.h" />

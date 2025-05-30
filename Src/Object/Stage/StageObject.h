@@ -12,12 +12,14 @@ class StageObject : public ActorBase
 {
 public:
 
+	//アイテムオブジェクトの状態
 	enum class ITEM_STATE {
 		NONE,
 		PLACED,
 		HOLD,
 	};
 
+	//マシンの稼働状態
 	enum class MACHINE_STATE {
 		NONE,
 		INACTIVE,
@@ -40,6 +42,12 @@ public:
 	/// </summary>
 	/// <param name="pos">設定座標</param>
 	void SetPos(VECTOR pos);
+	void SetFollowPos(void) { transform_.pos = GetRotPos(follow_.localPos); }
+
+	void SetFollowPos(VECTOR pos) { follow_.pos = pos; }
+	void SetFollowLocalPos(VECTOR localPos) { follow_.localPos = localPos; }
+
+	void SetFollow(const Transform& parent) { follow_ = parent; }
 
 	/// <summary>
 	/// アイテムオブジェクトの状態を変更する
@@ -110,6 +118,8 @@ public:
 	/// <returns>ID</returns>
 	std::string GetObjectId(void)const { return param_.id_; }
 
+	std::string GetObjCategory(void)const { return param_.category_; }
+
 	/// <summary>
 	/// アイテムオブジェクトの状態を取得
 	/// </summary>
@@ -178,7 +188,7 @@ protected:
 
 	Player& player_;
 
-	VECTOR followPos_;
+	Transform follow_;
 
 	//仮モデルの立方体
 	std::unique_ptr<Cube> cube_;
@@ -207,6 +217,9 @@ private:
 
 	ITEM_STATE itemState_;
 	MACHINE_STATE machineState_;
+
+	//相対座標を回転させてワールド座標で取得する
+	VECTOR GetRotPos(const VECTOR& localPos) const;
 
 	/// <summary>
 	/// 座標や拡大率を調整する用のGUI

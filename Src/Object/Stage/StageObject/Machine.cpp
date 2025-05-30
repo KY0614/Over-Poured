@@ -18,7 +18,6 @@ Machine::Machine(const std::string objId, const float width,
 	std::vector<std::unique_ptr<StageObject>>& object) :
 	StageObject(objId, width, height, depth,player),objects_(object)
 {
-	SetProduceTime(COFFEE_PRODUCES_TIME);
 }
 
 void Machine::Interact(const std::string& objId)
@@ -62,7 +61,10 @@ void Machine::UpdateActive(void)
 	{
 		if (param_.interactTime <= 0.0f ||
 			(AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-				GetSpherePos(), GetSphereRad())&& obj->GetItemState() != ITEM_STATE::PLACED))ChangeMachineState(MACHINE_STATE::INACTIVE);
+			GetSpherePos(), GetSphereRad()) && obj->GetItemState() != ITEM_STATE::PLACED))
+		{
+			ChangeMachineState(MACHINE_STATE::INACTIVE);
+		}
 	}
 }
 

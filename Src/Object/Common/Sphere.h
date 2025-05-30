@@ -6,7 +6,7 @@ class Transform;
 class Sphere
 {
 public:
-	//デバッグ時の簡易カプセル表示の色
+	//デバッグ時の簡易球体表示の色
 	static constexpr int COLOR = 0x000000;
 
 	//コンストラクタ

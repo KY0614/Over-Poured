@@ -47,10 +47,13 @@ public:
 	/// <param name="">マシンとホット用カップだけ処理し、カップの場所にコーヒー生成</param>
 	void MakeHotCoffee(void);
 
-	void SurveItem(void);
+	/// <summary>
+	/// コーヒーに蓋をつける
+	/// </summary>
+	/// <param name=""></param>
+	void LidFollowCup(void);
 
-	//template <typename Value>
-	//Value* FindValue(const std::vector<std::unique_ptr<StageObject>>& objects);
+	void SurveItem(void);
 
 private:
 
