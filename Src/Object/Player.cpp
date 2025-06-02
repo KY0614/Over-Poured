@@ -160,6 +160,12 @@ bool Player::IsPlay(void)
 	return state_ == STATE::PLAY;
 }
 
+void Player::SurveItem(void)
+{
+	isHolding_ = false;
+	holdItemId_ = "";
+}
+
 void Player::ProcessSelect(void)
 {
 	InputManager& ins = InputManager::GetInstance();

@@ -1,10 +1,9 @@
 #pragma once
 #include <memory>
-#include <map>
+#include <vector>
+#include "../Order/Order.h"
 #include "../ActorBase.h"
-#include "../../Common/Vector2.h"
 
-class ResourceManager;
 class StageObject;
 class Player;
 
@@ -21,7 +20,8 @@ public:
 
 	//座標
 
-	static constexpr VECTOR TABLE_POS = { -140.0f, 0.0f, -175.0f };	//テーブルの座標
+	static constexpr VECTOR TABLE_POS = { -140.0f, 0.0f, -175.0f };		//テーブルの座標
+	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };	//カウンターの座標
 	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };	//列テーブルの座標
 
 	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };	//コーヒーマシンの座標
@@ -53,7 +53,9 @@ public:
 	/// <param name=""></param>
 	void LidFollowCup(void);
 
-	void SurveItem(void);
+	Order::OrderData GetServeData(void);
+
+	void ResetServeData(void);
 
 private:
 
@@ -66,9 +68,17 @@ private:
 	//ステージに配置する机
 	std::vector<std::unique_ptr<StageObject>> tables_;
 
+	//カウンター用
+	std::unique_ptr<StageObject> counter_;
+
+	Order::DRINK surveDrink_;
+	Order::SWEETS surveSweets_;
+
+	bool surveDrinkLid_;
+
 	std::vector<std::vector<std::unique_ptr<StageObject>>> grid_;
 
-	bool IsInBounds(int x, int y) const;
+	void SurveItem(StageObject& obj);
 
 	void UpdateDebugImGui(void);
 };

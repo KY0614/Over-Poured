@@ -24,47 +24,51 @@ void CupLidRack::Interact(const std::string& objId)
 	//objIdがインタラクト対象物に存在するかどうか
 	bool isAccepted = std::find(items.begin(), items.end(), objId) != items.end();
 	if (!isAccepted)return;	//存在しなかったら処理しない
+	if (param_.interactTime <= 0.0f)return;
+
+	//ホットコーヒーを持っているか（いらないかも）
+	bool isHoldingHotCoffee = (player_.GetHoldItem() == HOT_COFFEE);
 
 	auto& ins = InputManager::GetInstance();
 	for (const auto& obj : objects_)
 	{
 		//コーヒー以外のオブジェクトは判定しない
-		if (obj->GetObjectId() != HOT_COFFEE && obj->GetObjectId() != ICE_COFFEE) continue;
+		if (obj->GetObjectId() != HOT_COFFEE && 
+			obj->GetObjectId() != ICE_COFFEE) continue;
+		//既に蓋されているコーヒーだった場合はreturn
+		if (obj->IsLidOn())return;
 
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
 			//スペースキーを押下し続けるとゲージがたまっていく
-			if (player_.GetHoldItem() == HOT_COFFEE &&
+			if (isHoldingHotCoffee &&
 				ins.IsNew(KEY_INPUT_SPACE))
 			{
+				param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
 				isActioned_ = true;
-				break;
 			}
 			else
 			{
+				param_.interactTime = 3.0f;
 				isActioned_ = false;
-				
 			}
 		}
-		else
-		{
-			isActioned_ = false;
-		}
 	}
-
 }
 
 void CupLidRack::Update(void)
 {
-	if (isActioned_)
-	{
-		param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
-	}
-	else
+	if (!isActioned_)
 	{
 		param_.interactTime = 3.0f;
 	}
+	if (param_.interactTime <= 0.0f)
+	{
+		isActioned_ = false;
+	}
+
+	transform_.Update();
 }
 
 void CupLidRack::Draw(void)

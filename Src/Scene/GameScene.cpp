@@ -68,15 +68,16 @@ void GameScene::Update(void)
 	timer_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
-	int r = 30;
+	float r = 30.0f;
 	if (!customer_->GetIsMoving()&&
 		AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
 	{
 		if (ins.IsTrgDown(KEY_INPUT_SPACE))
 		{
-	 		score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
+	 		score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
+			stage_->ResetServeData();
+	 		//score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
 			customer_->IsServe();
-			//stage_->ResetHotCup();
 		}
 	}
 

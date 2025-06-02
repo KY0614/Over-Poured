@@ -69,6 +69,8 @@ public:
 
 	void SetIsHoldiong(bool hold) { isHolding_ = hold; }
 
+	void SurveItem(void);
+
 	Order::OrderData GetPlayerItem(void) { return data_; }
 
 	bool GetIsHolding(void)const { return isHolding_; }

@@ -5,6 +5,7 @@
 
 class OrderManager;
 class CustomerManager;
+class StageObject;
 
 class OrderCustomerManager
 {
@@ -50,6 +51,8 @@ public:
 	/// <param name="serve">’ñ‹Ÿ‚³‚ê‚½‚à‚Ì</param>
 	/// <returns>ƒXƒRƒA</returns>
 	int CheckServeAndOrder(Order::OrderData serve);
+
+	int CheckServeAndOrder(StageObject& obj);
 
 	void IsServe(void) { isServe_ = true; }
 

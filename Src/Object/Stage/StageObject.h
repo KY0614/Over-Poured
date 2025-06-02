@@ -2,6 +2,7 @@
 #include <string>
 #include <functional>
 #include "../ActorBase.h"
+#include "../Manager/GameSystem/OrderCustomerManager.h"
 #include "StageObjectLibrary.h"
 
 class Cube;
@@ -42,12 +43,12 @@ public:
 	/// </summary>
 	/// <param name="pos">設定座標</param>
 	void SetPos(VECTOR pos);
-	void SetFollowPos(void) { transform_.pos = GetRotPos(follow_.localPos); }
 
-	void SetFollowPos(VECTOR pos) { follow_.pos = pos; }
-	void SetFollowLocalPos(VECTOR localPos) { follow_.localPos = localPos; }
+	void SetInteractTime(const float time) { param_.interactTime = time; }
 
-	void SetFollow(const Transform& parent) { follow_ = parent; }
+	void IsNotActioned(void) { isActioned_ = false; }
+
+	void PutOnTheLid(void) { isLid_ = true; }
 
 	/// <summary>
 	/// アイテムオブジェクトの状態を変更する
@@ -75,6 +76,8 @@ public:
 	/// </summary>
 	/// <returns>球体の座標</returns>
 	VECTOR GetSpherePos(void)const;
+
+	float GetObjHeight(void)const { return height_; }
 
 	/// <summary>
 	/// 持ち運び可能のオブジェクトかどうか
@@ -155,6 +158,16 @@ public:
 	/// <returns></returns>
 	bool IsActioned(void) const;
 
+	/// <summary>
+	/// 蓋が乗っているかどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:乗っている、false:乗っていない</returns>
+	bool IsLidOn(void) const { return isLid_; }
+
+	Order::DRINK GetDrinkType(void) const { return drink_; }
+	Order::SWEETS GetSweetsType(void) const { return sweets_; }
+
 	//-------------------------------------------------------------------------
 
 	/// <summary>
@@ -203,6 +216,12 @@ protected:
 
 	//
 	bool isActioned_;	
+
+	//蓋をしているかどうか(コーヒー以外のオブジェクトはfalse）
+	bool isLid_;
+
+	Order::DRINK drink_;
+	Order::SWEETS sweets_;
 
 	virtual void UpdatePlaced(void);
 	virtual void UpdateHold(void);

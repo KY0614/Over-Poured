@@ -3,6 +3,7 @@
 #include "../../Common/DebugDrawFormat.h"
 #include "../../Object/Customer/CustomerManager.h"
 #include "../../Object/Order/OrderManager.h"
+#include "../../Object/Stage/StageObject.h"
 #include "../Generic/SceneManager.h"
 #include "OrderCustomerManager.h"
 
@@ -116,25 +117,35 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 {
 	Order::DRINK serveDrink = serve.drink_;
 	Order::SWEETS serveSweets = serve.sweets_;
+	bool serveDrinkLid = serve.lid_;
 	int score = 0;
 
 	if(orderMng_->GetFirstOrder().num_ == 1)
 	{
+		//飲み物と提供品を比較して加点
 		if (serveDrink == orderMng_->GetFirstOrder().drink_)
 		{
 			score += 50;
 		}
 		else
 		{
-			score -= 100;
+			score -= 50;
 		}
 
+		//飲み物の蓋がされていたら加点
+		if (serveDrinkLid)
+		{
+			score += 20;
+		}
+
+		//注文数が１のときはサブオーダーはないので-50点
 		if (serveSweets != orderMng_->GetFirstOrder().sweets_)
 		{
 			score -= 50;
 		}
 
-		if (orderMng_->GetFirstOrder().time_ > 7.0f)
+		//オーダーの残り制限時間による加点
+		if (orderMng_->GetFirstOrder().time_ > 10.0f)
 		{
 			score += 50;
 		}
@@ -142,6 +153,82 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 		{
 			score += 10;
 		}	
+	}
+	else if (orderMng_->GetFirstOrder().num_ == 2)
+	{
+		//飲み物と提供品を比較して加点
+		if (serveDrink == orderMng_->GetFirstOrder().drink_)
+		{
+			score += 50;
+		}
+		else
+		{
+			score -= 50;
+		}
+
+		//飲み物の蓋がされていたら加点
+		if (serveDrinkLid)
+		{
+			score += 20;
+		}
+
+		//サブオーダーのスイーツとの比較して加点
+		if (serveSweets == orderMng_->GetFirstOrder().sweets_)
+		{
+			score += 30;
+		}
+		else
+		{
+			score -= 20;
+		}
+
+		//オーダーの残り制限時間による加点
+		if (orderMng_->GetFirstOrder().time_ > 12.0f)
+		{
+			score += 40;
+		}
+		else if (orderMng_->GetFirstOrder().time_ > 6.0f)
+		{
+			score += 20;
+		}		
+	}
+	customerMng_->SetCustomerReacton(score);
+	return score;
+}
+
+int OrderCustomerManager::CheckServeAndOrder(StageObject& obj)
+{
+	Order::DRINK serveDrink = obj.GetDrinkType();
+	Order::SWEETS serveSweets = obj.GetSweetsType();
+	int score = 0;
+
+	if (orderMng_->GetFirstOrder().num_ == 1)
+	{
+		//飲み物と提供品を比較して加点
+		if (serveDrink == orderMng_->GetFirstOrder().drink_)
+		{
+			score += 50;
+		}
+		else
+		{
+			score -= 50;
+		}
+
+		//注文数が１のときはサブオーダーはないので-50点
+		if (serveSweets != orderMng_->GetFirstOrder().sweets_)
+		{
+			score -= 50;
+		}
+
+		//オーダーの残り制限時間による加点
+		if (orderMng_->GetFirstOrder().time_ > 7.0f)
+		{
+			score += 50;
+		}
+		else if (orderMng_->GetFirstOrder().time_ > 3.0f)
+		{
+			score += 10;
+		}
 	}
 	else
 	{
@@ -162,7 +249,7 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 		else if (orderMng_->GetFirstOrder().time_ > 6.0f)
 		{
 			score += 20;
-		}		
+		}
 	}
 	customerMng_->SetCustomerReacton(score);
 	return score;

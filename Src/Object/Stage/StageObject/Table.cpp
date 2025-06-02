@@ -15,6 +15,7 @@ Table::Table(const std::string objId, const float width,
 
 void Table::Update(void)
 {
+	StageObject::Update();
 	//当たり判定用の球体をテーブルの高さと合わせる
 	sphereTran_.pos.y = height_;
 

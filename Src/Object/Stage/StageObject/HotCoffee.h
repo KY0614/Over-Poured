@@ -1,5 +1,6 @@
 #pragma once
-#include "../Object/Stage/StageObject.h"
+#include "../StageObject.h"
+
 class HotCoffee : public StageObject
 {
 public:

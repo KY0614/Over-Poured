@@ -16,6 +16,9 @@ StageObject::StageObject(const std::string objId, const float width,
 	machineState_ = MACHINE_STATE::NONE;
 	param_ = StageObjectLibrary::ObjectParams();
 	rad_ = 0.0f;
+	isLid_ = false;
+	drink_ = Order::DRINK::NONE;
+	sweets_ = Order::SWEETS::NONE;
 }
 
 StageObject::~StageObject(void)
@@ -32,7 +35,7 @@ void StageObject::Init(void)
 
 	sphere_ = std::make_unique<Sphere>(transform_);
 	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
-	if(objId_ == "Table")sphere_->SetLocalPos({ 0.0f, height_, 0.0f });
+	if(objId_ == "Table" || objId_ == "Counter")sphere_->SetLocalPos({0.0f, height_, 0.0f});
 
 	itemState_ = ITEM_STATE::PLACED;
 	machineState_ = MACHINE_STATE::INACTIVE;
@@ -43,7 +46,12 @@ void StageObject::Init(void)
 
 	if (objId_ == "Coffee_Machine")rad_ = 35.0f;
 	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
-	else if (objId_ == "Hot_Cup" || objId_ == "Ice_Cup" || objId_ == "Hot_Coffee")rad_ = 20.0f;
+	else if (objId_ == "Cup_Lid")rad_ = 5.0f;
+	else if (objId_ == "Hot_Cup" || objId_ == "Ice_Cup" ||
+		objId_ == "Hot_Coffee" || objId_ == "Cup_Lid_Rack")rad_ = 20.0f;
+
+	if (objId_ == "Hot_Coffee")drink_ = Order::DRINK::HOT;
+	if (objId_ == "Ice_Coffee")drink_ = Order::DRINK::ICE;
 
 	sphere_->SetRadius(rad_);
 
@@ -118,7 +126,7 @@ void StageObject::Draw(void)
 
 	if (objId_ == "Coffee_Machine")col = 0x3f312b;
 	else if (objId_ == "Ice_Dispenser")col = 0x4682b4,pos.y -= 10.0f;
-	else if (objId_ == "Table")col = 0xd2b48c;
+	else if (objId_ == "Table" || objId_ == "Counter")col = 0xd2b48c;
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
 	else if (objId_ == "Hot_Cup")col = 0xcd5c5c;
@@ -126,6 +134,7 @@ void StageObject::Draw(void)
 	else if (objId_ == "Ice_Cup")col = 0x87ceeb;
 	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
 	else if (objId_ == "Cup_Lid")col = 0xa9a9a9;
+	else if (objId_ == "Cup_Lid_Rack")col = 0xa9a9a9;
 	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
 	else if (objId_ == "Cup_Hot_Rack")col = 0xffaaaa;
 	//intŒ^‚ðCOLOR_U8‚Ö•ÏŠ·

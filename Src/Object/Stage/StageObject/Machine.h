@@ -1,5 +1,5 @@
 #pragma once
-#include "../Object/Stage/StageObject.h"
+#include "../StageObject.h"
 
 class Machine : public StageObject
 {

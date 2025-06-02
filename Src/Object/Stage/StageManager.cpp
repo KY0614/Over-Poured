@@ -16,10 +16,12 @@
 #include "StageObject/HotCoffee.h"
 #include "StageObject/CupLidRack.h"
 #include "StageObject/CupLid.h"
+#include "StageObject/Counter.h"
 #include "StageManager.h"
 
 namespace {
 	const std::string TABLE = "Table";		//テーブル
+	const std::string COUNTER = "Counter";		//カウンター
 	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
 	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
 	const std::string HOT_CUP_RACK = "Cup_Hot_Rack";	//ホット用ラック
@@ -27,12 +29,17 @@ namespace {
 	const std::string HOT_COFFEE = "Hot_Coffee";	//ホットコーヒー
 	const std::string ICE_COFFEE = "Ice_Coffee";	//アイスコーヒー
 	const std::string COFFEE_MACHINE = "Coffee_Machine";	//コーヒーマシン
+	const std::string CUP_LID_RACK = "Cup_Lid_Rack";		//
 	const std::string CUP_LID = "Cup_Lid";		//
 }
 
 
 StageManager::StageManager(Player& player):player_(player)
 {
+	surveDrink_ = Order::DRINK::NONE;
+	surveSweets_ = Order::SWEETS::NONE;
+
+	surveDrinkLid_ = false;
 }
 
 StageManager::~StageManager(void)
@@ -66,6 +73,7 @@ void StageManager::Init(void)
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
 	}
+
 	//縦のテーブル群
 	for (int z = TABLE_NUM; z < TABLE_NUM + TABLE_NUM - 1; z++)
 	{
@@ -76,13 +84,18 @@ void StageManager::Init(void)
 		tables_.back()->SetPos(firstPos);
 	}
 
+	//カウンター用テーブル
+	counter_ = std::make_unique<Counter>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
+	counter_->Init();
+	counter_->SetPos(COUNTER_POS);
+
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<HotCupRack>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[1]->GetTopCenter());
 	
 	//カップ用の蓋
-	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID, 60.0f, 20.0f, 60.0f, player_,objects_));
+	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID_RACK, 60.0f, 20.0f, 60.0f, player_,objects_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[2]->GetTopCenter());
 	
@@ -126,6 +139,8 @@ void StageManager::Update(void)
 
 	auto& pSphere = player_.GetSphere();
 
+	counter_->Update();
+
 	for (const auto& obj : objects_)
 	{
 		obj->Update();
@@ -149,9 +164,10 @@ void StageManager::Update(void)
 		}
 	}
 
-	//持ち運び可能なアイテムに対しての処理
-	for (const auto& obj : objects_)
+	for (auto it = objects_.begin(); it != objects_.end(); /* incrementは中で */)
 	{
+		auto& obj = *it;
+
 		//プレイヤーが何も持っていないときの処理
 		if (!player_.GetIsHolding() && obj->GetIsCarryable() &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
@@ -164,10 +180,20 @@ void StageManager::Update(void)
 		//プレイヤーがアイテムを持っているときの処理
 		if (player_.GetIsHolding())
 		{
+			//カウンターで商品を提供する処理
+			if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+					counter_->GetSpherePos(), counter_->GetSphereRad()
+				))
+			{
+				SurveItem(*obj);
+				it = objects_.erase(it);
+				break;
+			}
+
 			for (const auto& table : tables_)
 			{
 				//設置可能なテーブルの上にアイテムを設置する処理
-				if(table->GetIsPlaceable() &&
+				if (table->GetIsPlaceable() &&
 					AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 						table->GetSpherePos(), table->GetSphereRad()
 					))
@@ -181,9 +207,19 @@ void StageManager::Update(void)
 				}
 			}
 		}
+		//if (obj->IsActioned())
+		//{
+		//	break;
+		//}
+
 		if (obj->IsActioned())
 		{
+			++it;
 			break;
+		}
+		else
+		{
+			++it;
 		}
 	}
 
@@ -195,7 +231,7 @@ void StageManager::Update(void)
 		//持っているアイテムをマシンに設置する処理
 		if (obj->GetInteractType() == "machine" && player_.GetIsHolding() &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-			obj->GetSpherePos(), obj->GetSphereRad()))
+				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
 			obj->Interact(player_.GetHoldItem());
 		}
@@ -211,7 +247,7 @@ void StageManager::Update(void)
 	//コーヒーと蓋の処理
 	for (const auto& obj : objects_)
 	{
-		if (obj->GetObjectId() != CUP_LID)continue;
+		if (obj->GetObjectId() != CUP_LID_RACK)continue;
 
 		//持っているコーヒーに蓋をつける処理
 		if (player_.GetIsHolding() &&
@@ -219,6 +255,12 @@ void StageManager::Update(void)
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
 			obj->Interact(player_.GetHoldItem());
+		}
+		else
+		{
+			//判定外の場合は初期値に戻す
+			obj->IsNotActioned();
+			obj->SetInteractTime(3.0f);
 		}
 
 		//インタラクトし続けて一定時間経ったらコーヒーを出力する
@@ -253,6 +295,8 @@ void StageManager::Draw(void)
 		table->Draw();
 	}
 
+	counter_->Draw();
+
 	for (const auto& obj : objects_)
 	{
 		obj->Draw();
@@ -264,6 +308,31 @@ void StageManager::Draw(void)
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
+
+	//size_t size = objects_.size();
+	////蓋生成数確認用
+	//DebugDrawFormat::FormatString(L"end - 2 : %s",
+	//	StringUtility::StringToWstring(objects_[size - 3]->GetObjectId()).c_str(), line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"end - 1 : %s",
+	//	StringUtility::StringToWstring(objects_[size - 2]->GetObjectId()).c_str(), line, lineHeight);
+
+	//DebugDrawFormat::FormatString(L"end : %s",
+	//	StringUtility::StringToWstring(objects_.back()->GetObjectId()).c_str(), line, lineHeight);
+
+	DebugDrawFormat::FormatString(L"surveD : %d",
+		surveDrink_, line, lineHeight);
+	
+	DebugDrawFormat::FormatString(L"surveS : %d",
+		surveSweets_, line, lineHeight);
+
+	//for (const auto& obj : objects_)
+	//{
+	//	DebugDrawFormat::FormatString(L"objActioned : %d",
+	//		obj->IsActioned() , line, lineHeight);
+	//}
+
+
 	for (int i = 0; i < tables_.size(); i++)
 	{
 		DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
@@ -308,7 +377,7 @@ void StageManager::MakeHotCoffee(void)
 				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
 				//当たっているカップをコーヒーに上書きする
-				objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 40.0f, 30.0f, 40.0f, player_);
+				objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
 				objects_[i]->Init();
 				objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 				objects_[i]->SetPos(MACHINE_POS);
@@ -319,41 +388,78 @@ void StageManager::MakeHotCoffee(void)
 
 void StageManager::LidFollowCup(void)
 {
+	bool isCreate = false;
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//コーヒー以外のオブジェクトは判定しない
 		if (objects_[i]->GetObjectId() != HOT_COFFEE && 
 			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
+		if (objects_[i]->IsLidOn())break;
 
 		for (const auto& lid : objects_)
 		{
 			//蓋の判定だけさせたい
-			if (lid->GetObjectId() != CUP_LID)continue;
+			if (lid->GetObjectId() != CUP_LID_RACK)continue;
 
 			//蓋の球体と当たっているカップだけ処理する
 			if (AsoUtility::IsHitSpheres(lid->GetPos(), lid->GetSphereRad(),
 				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
-				//当たっているコーヒーに蓋をつける
-				objects_.emplace_back(std::make_unique<CupLid>(CUP_LID, 25.0f, 10.0f, 25.0f, player_));
+				//コーヒーオブジェクトに蓋をする
+				objects_[i]->PutOnTheLid();
+
+				//蓋を生成＆追従させる
+				objects_.emplace_back(std::make_unique<CupLid>(CUP_LID, 23.0f, 5.0f, 23.0f, player_,*objects_[i]));
 				objects_.back()->Init();
-				VECTOR pos = objects_[i]->GetPos();
-				objects_.back()->SetFollow(objects_[i]->GetTransform());
-				//objects_.back()->SetFollowPos({0.0f,30.0f,0.0f});
+				objects_.back()->Update();
+				isCreate = true;
 				break;
 			}
 		}
+		if (isCreate)break;
 	}
 }
 
-void StageManager::SurveItem(void)
+Order::OrderData StageManager::GetServeData(void)
 {
+	Order::OrderData data = {};
 
+	data.drink_ = surveDrink_;
+	data.sweets_ = surveSweets_;
+	data.lid_ = surveDrinkLid_;
+
+	return data;
 }
 
-bool StageManager::IsInBounds(int x, int y) const
+void StageManager::ResetServeData(void)
 {
-	return false;//(x >= 0 && x < size_.width_ && y >= 0 && y < size_.height_);
+	surveDrink_ = Order::DRINK::NONE;
+	surveSweets_ = Order::SWEETS::NONE;
+	surveDrinkLid_ = false;
+}
+
+void StageManager::SurveItem(StageObject& obj)
+{
+	auto& ins = InputManager::GetInstance();
+
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	{
+		surveDrinkLid_ = obj.IsLidOn();
+
+		if (obj.GetObjectId() == HOT_COFFEE)
+		{
+			surveDrink_ = Order::DRINK::HOT;
+		}
+		else if (obj.GetObjectId() == ICE_COFFEE)
+		{
+			surveDrink_ = Order::DRINK::ICE;
+		}
+		else
+		{
+			surveDrink_ = Order::DRINK::NONE;
+		}
+		player_.SurveItem();
+	}
 }
 
 void StageManager::UpdateDebugImGui(void)

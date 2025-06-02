@@ -30,8 +30,17 @@
     "interactable": true,
     "placeable": true,
     "carryable": false,
-    "acceptedItems":[],
-    "placeable": true
+    "acceptedItems":[]
+    },
+    "Counter": {
+    "id": "Counter",
+    "type": "surface",
+    "name": "Counter",
+    "model": "models/counter.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":["Hot_Coffee","Ice_Coffee","Sweets_Choco","Sweets_Strawberry"]
     },
   "Sweets_Choco": {
     "id": "sweets_choco",
@@ -121,10 +130,10 @@
     "acceptedItems":[],
     "produces": []
     },
-    "Cup_Lid": {
-    "id": "Cup_Lid",
+    "Cup_Lid_Rack": {
+    "id": "Cup_Lid_Rack",
     "type": "item",
-    "name": "CupLids",
+    "name": "CupLidRack",
     "model": "models/lids.mv1",
     "interactable": true,
     "placeable": false,
@@ -132,6 +141,17 @@
     "interactTime": 3.0,
     "acceptedItems":["Hot_Coffee","Ice_Coffee"],
     "produces": ["Hot_Coffee_With_Lid","Ice_Coffee_With_Lid"]
+    },
+    "Cup_Lid": {
+    "id": "Cup_Lid",
+    "type": "item",
+    "name": "CupLid",
+    "model": "models/lids.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":[],
+    "produces": []
     },
     "Hot_Coffee_With_Lid": {
     "id": "Hot_Coffee_With_Lid",
