@@ -41,7 +41,7 @@ public:
 	std::vector<Order::DRINK> GetAllOrderDrink(void) const;
 	Order::DRINK GetLastOrderDrink(void) const;
 
-	int GetCount(void) { return count_; }
+	//int GetCount(void) { return count_; }
 
 private:
 	//’•¶ŠÇ——p

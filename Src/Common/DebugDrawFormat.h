@@ -1,6 +1,7 @@
 //#pragma once
 #include <DxLib.h>
 #include <string>
+#include"../Application.h"
 #include"../Utility/StringUtility.h"
 
 class DebugDrawFormat
@@ -31,7 +32,7 @@ public:
     static void FormatStringRight(const TCHAR* format, const Value val, int& line, const int lineH = 20)
     {
         int strWidth = GetDrawFormatStringWidth(format, val); // 文字列の幅を取得
-        int screenWidth = 1024; // 画面の幅 (適宜変更してください)
+        int screenWidth = Application::SCREEN_SIZE_X; // 画面の幅 (適宜変更してください)
         int rightX = screenWidth - strWidth; // X座標を計算
         DrawFormatString(rightX, line * lineH, 0xFFFFFF, format, val);
         line++;
@@ -55,7 +56,7 @@ public:
     static void FormatStringRight(const TCHAR* format, const ValA valA, const ValB valB, int& line, const int lineH = 20)
     {
         int strWidth = GetDrawFormatStringWidth(format, valA, valB); // 文字列の幅を取得
-        int screenWidth = 1024; // 画面の幅 (適宜変更してください)
+        int screenWidth = Application::SCREEN_SIZE_X; // 画面の幅 (適宜変更してください)
         int rightX = screenWidth - strWidth; // X座標を計算
         DrawFormatString(rightX, line * lineH, 0xFFFFFF, format, valA, valB);
         line++;

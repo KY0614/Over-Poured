@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include <math.h>
+#include "../Application.h"
 #include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
@@ -63,23 +64,25 @@ void GameScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	Score& scr = Score::GetInstance();
 
-#ifdef _DEBUG
-
 	timer_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
 	float r = 30.0f;
-	if (!customer_->GetIsMoving()&&
+	if (!customer_->GetIsMoving() &&
 		AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
 	{
 		if (ins.IsTrgDown(KEY_INPUT_SPACE))
 		{
-	 		score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
-			stage_->ResetServeData();
-	 		//score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
+			//score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
+			//stage_->ResetServeData();
+			//player_->SurveItem();
+			score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
 			customer_->IsServe();
 		}
 	}
+
+#ifdef _DEBUG
+
 
 	//if (timer_ < 0.0f)
 	//{
@@ -89,8 +92,15 @@ void GameScene::Update(void)
 
 #endif // _DEBUG
 
+	if (timer_ <= 0.0f)
+	{
+		scr.SetCurrentScore(score_);
+		scr.SaveScore(score_);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+	}
+
 	//シーン遷移
-	if (ins.IsTrgDown(KEY_INPUT_N))
+	if (ins.IsTrgDown(KEY_INPUT_RETURN))
 	{
 		scr.SetCurrentScore(score_);
 		scr.SaveScore(score_);
@@ -124,41 +134,48 @@ void GameScene::Draw(void)
 	player_->Draw();
 
 	customer_->Draw();
+
+	DebugDraw();
 }
 
 void GameScene::DebugDraw(void)
 {
-	//グリッド線描画
-	VECTOR sPos;
-	VECTOR ePos;
-	float LEN = 1200.0f;
-	float HLEN = LEN / 2.0f;
-	float num = 0.0f;
-	for (int z = -10; z < 10; z++)
-	{
-		num = static_cast<float>(z);
-		sPos = { -HLEN, 0.0f, num * 50.0f };
-		ePos = { HLEN, 0.0f, num * 50.0f };
-		DrawLine3D(sPos, ePos, 0xff0000);
-	}
+	////グリッド線描画
+	//VECTOR sPos;
+	//VECTOR ePos;
+	//float LEN = 1200.0f;
+	//float HLEN = LEN / 2.0f;
+	//float num = 0.0f;
+	//for (int z = -10; z < 10; z++)
+	//{
+	//	num = static_cast<float>(z);
+	//	sPos = { -HLEN, 0.0f, num * 50.0f };
+	//	ePos = { HLEN, 0.0f, num * 50.0f };
+	//	DrawLine3D(sPos, ePos, 0xff0000);
+	//}
 
-	for (int x = -12; x < 12; x++)
-	{
-		num = static_cast<float>(x);
-		sPos = { num * 50.0f, 0.0f, -HLEN };
-		ePos = { num * 50.0f, 0.0f,  HLEN };
-		DrawLine3D(sPos, ePos, 0x0000FF);
-	}
+	//for (int x = -12; x < 12; x++)
+	//{
+	//	num = static_cast<float>(x);
+	//	sPos = { num * 50.0f, 0.0f, -HLEN };
+	//	ePos = { num * 50.0f, 0.0f,  HLEN };
+	//	DrawLine3D(sPos, ePos, 0x0000FF);
+	//}
 
-	sPos = { 0.0f,  -HLEN, 0.0f };
-	ePos = { 0.0f, HLEN, 0.0f };
-	DrawLine3D(sPos, ePos, 0x00FF00);
-	
-	int line = 0;	//行
+	//sPos = { 0.0f,  -HLEN, 0.0f };
+	//ePos = { 0.0f, HLEN, 0.0f };
+	//DrawLine3D(sPos, ePos, 0x00FF00);
+	//
+	int line = 2;	//行
 	int lineHeight = 50;	//行
 	SetFontSize(24);
+
 	//左上から
-	DebugDrawFormat::FormatString(L"                                     time : %2.f", timer_, line);
-	DebugDrawFormat::FormatStringRight(L"score : %d", score_, line, lineHeight);
+	//DebugDrawFormat::FormatString(L"                                     time : %2.f", timer_, line);
+	int width = GetDrawStringWidth(L"time : %2.f", timer_);
+	DrawFormatString(Application::SCREEN_SIZE_X / 2 - width /2, 0, 0xffffff, L"time : %2.f秒", timer_);
+	DrawFormatString(Application::SCREEN_SIZE_X / 2 - width / 2, 32, 0xffffff, L"score : ￥%d", score_);
+	//DebugDrawFormat::FormatStringRight(L"score : %d", score_, line, lineHeight);
+
 	SetFontSize(16);
 }

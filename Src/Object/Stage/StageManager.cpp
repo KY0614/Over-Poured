@@ -185,9 +185,9 @@ void StageManager::Update(void)
 					counter_->GetSpherePos(), counter_->GetSphereRad()
 				))
 			{
-				SurveItem(*obj);
-				it = objects_.erase(it);
-				break;
+				//SurveItem(*obj);
+				//it = objects_.erase(it);
+				//break;
 			}
 
 			for (const auto& table : tables_)
@@ -288,7 +288,7 @@ void StageManager::Draw(void)
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
 
 	MV1DrawModel(transform_.modelId);
-	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
+	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
 
 	for (const auto& table : tables_)
 	{
@@ -300,6 +300,19 @@ void StageManager::Draw(void)
 	for (const auto& obj : objects_)
 	{
 		obj->Draw();
+	}
+
+	int line = 8;	//s
+	int lineHeight = 30;	//s
+
+
+	for (const auto& obj : objects_)
+	{
+		VECTOR screenPos = ConvWorldPosToScreenPos(obj->GetTransform().pos);
+		// •ÏŠ·¬Œ÷
+		DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+			L"%s",
+			StringUtility::StringToWstring(obj->GetObjectId().c_str()).c_str());
 	}
 
 #ifdef _DEBUG

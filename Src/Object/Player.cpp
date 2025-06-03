@@ -122,12 +122,12 @@ void Player::Update(void)
 
 void Player::Draw(void)
 {
-	DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
+	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
 
 	//capsule_->Draw();
 	//capsule2_->Draw();
 	//cube_->Draw();
-	sphere_->Draw();
+	//sphere_->Draw();
 
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
 	MV1DrawModel(transform_.modelId);

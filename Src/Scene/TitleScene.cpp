@@ -61,9 +61,9 @@ void TitleScene::Update(void)
 
 	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	if (ins.IsTrgDown(KEY_INPUT_RETURN))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
 	}
 
 	//キャラアニメーション
@@ -79,8 +79,12 @@ void TitleScene::Draw(void)
 	skyDome_->Draw();
 
 	MV1DrawModel(planet_.modelId);
-	MV1DrawModel(charactor_.modelId);
+	//MV1DrawModel(charactor_.modelId);
 
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, 500, 1.0, 0.0, imgPush_, true);
+	//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, 500, 1.0, 0.0, imgPush_, true);
 
+	SetFontSize(32);
+	int width = GetDrawStringWidth(L"Push Enter", 10);
+	DrawString(Application::SCREEN_SIZE_X / 2 - width/2, 300, L"Push Enter", 0xffffff);
+	SetFontSize(16);
 }
