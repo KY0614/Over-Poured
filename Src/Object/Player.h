@@ -20,7 +20,7 @@ public:
 
 	//スピード
 	static constexpr float SPEED_MOVE = 5.0f;
-	static constexpr float SPEED_RUN = 10.0f;
+	static constexpr float SPEED_RUN = 7.0f;
 
 	//回転完了までの時間
 	static constexpr float TIME_ROT = 1.0f;

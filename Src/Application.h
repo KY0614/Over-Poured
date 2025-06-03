@@ -15,12 +15,12 @@ public:
 #endif // _DEBUG
 
 	//スクリーンサイズ
-	//static constexpr int SCREEN_SIZE_X = 1920;
-	//static constexpr int SCREEN_SIZE_Y = 1080;
+	static constexpr int SCREEN_SIZE_X = 1920;
+	static constexpr int SCREEN_SIZE_Y = 1080;
 
 	//スクリーンサイズ
-	static constexpr int SCREEN_SIZE_X = 1024;
-	static constexpr int SCREEN_SIZE_Y = 640;
+	//static constexpr int SCREEN_SIZE_X = 1024;
+	//static constexpr int SCREEN_SIZE_Y = 640;
 
 
 	//データパス関連

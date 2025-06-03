@@ -13,7 +13,6 @@
 #include "Common/Capsule.h"
 #include "Common/Collider.h"
 #include "Common/Sphere.h"
-#include "Common/Cube.h"
 #include "Order/Order.h"
 #include "Player.h"
 
@@ -126,7 +125,6 @@ void Player::Draw(void)
 
 	//capsule_->Draw();
 	//capsule2_->Draw();
-	//cube_->Draw();
 	//sphere_->Draw();
 
 	//モデルの描画
@@ -170,19 +168,46 @@ void Player::ProcessSelect(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_Q))
+	switch (data_.drink_)
 	{
+	case Order::DRINK::HOT:
+		if (ins.IsTrgDown(KEY_INPUT_N))
+		{
+			data_.drink_ = Order::DRINK::ICE;
+		}
+		else if (ins.IsTrgDown(KEY_INPUT_Q))
+		{
+			data_.drink_ = Order::DRINK::ICE;
+		}
+		break;
+
+	case Order::DRINK::ICE:
+		if (ins.IsTrgDown(KEY_INPUT_N))
+		{
+			data_.drink_ = Order::DRINK::HOT;
+		}
+		else if (ins.IsTrgDown(KEY_INPUT_Q))
+		{
+			data_.drink_ = Order::DRINK::HOT;
+		}
+		break;
+
+	case Order::DRINK::NONE:
 		data_.drink_ = Order::DRINK::HOT;
-	}
-	if (ins.IsTrgDown(KEY_INPUT_E))
-	{
-		data_.drink_ = Order::DRINK::ICE;
+		break;
+
+	default:
+		break;
 	}
 
 	switch (data_.sweets_)
 	{
 	case Order::SWEETS::NONE:
 		if (ins.IsTrgDown(KEY_INPUT_M))
+		{
+			data_.sweets_ = Order::SWEETS::CHOCO;
+		}
+		else if (ins.IsTrgDown(KEY_INPUT_E))
 		{
 			data_.sweets_ = Order::SWEETS::CHOCO;
 		}
@@ -193,10 +218,18 @@ void Player::ProcessSelect(void)
 		{
 			data_.sweets_ = Order::SWEETS::STRAWBERRY;
 		}
+		else if (ins.IsTrgDown(KEY_INPUT_E))
+		{
+			data_.sweets_ = Order::SWEETS::STRAWBERRY;
+		}
 		break;
 
 	case Order::SWEETS::STRAWBERRY:
 		if (ins.IsTrgDown(KEY_INPUT_M))
+		{
+			data_.sweets_ = Order::SWEETS::NONE;
+		}
+		else if (ins.IsTrgDown(KEY_INPUT_E))
 		{
 			data_.sweets_ = Order::SWEETS::NONE;
 		}
@@ -272,7 +305,7 @@ void Player::UpdatePlay(void)
 	if (holdItemId_ == "")isHolding_ = false;
 	else isHolding_ = true;
 
-	if(holdItemId_ == "Hot_Coffee")data_.drink_ = Order::DRINK::HOT;
+	//if(holdItemId_ == "Hot_Coffee")data_.drink_ = Order::DRINK::HOT;
 
 	//移動処理
 	ProcessMove();
@@ -296,21 +329,32 @@ void Player::UpdatePlay(void)
 
 void Player::DrawDebug(void)
 {
+
 	SetFontSize(24);
 	int line = 0;
-	DebugDrawFormat::FormatStringRight(L"提供品 : %d, %d", data_.drink_, data_.sweets_,line);
+	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
+	// 変換成功
+	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
+		L"提供品 : % d,%d", data_.drink_, data_.sweets_);
+
+	//DebugDrawFormat::FormatStringRight(L"提供品 : %d, %d", data_.drink_, data_.sweets_,line);
 	SetFontSize(16);
 
 	auto orders = data_;
 
 	//注文に合わせて四角の色を変える
-	int startX = Application::SCREEN_SIZE_X - (DebugDrawFormat::GetFormatSize(L"提供品 : %d, %d", data_.drink_, data_.sweets_) * 1.5);
-	//startX = startX * 1.5;//フォントサイズが1.5倍なので
-	int scale = 25;
-	int endX = startX + scale;
-	int startY = 30;
-	int endY = startY + scale;
 	int drinkCol = GetColor(0, 0, 0);
+
+	//表示ベース位置（Yはちょっと上にオフセット）
+	int baseX = static_cast<int>(screenPos.x) + 70;
+	int baseY = static_cast<int>(screenPos.y) - 150; // 文字のYと合わせる
+
+	// 四角形の描画位置を決定（文字の下に並べる）
+	int startX = baseX;
+	int startY = baseY + 40; // 文字の下に少し空けて
+
+	int scale = 25;//大きさ
+	int gap = 10; // 文字とボックスの隙間
 
 	if (orders.drink_ == Order::DRINK::HOT)
 	{
@@ -321,7 +365,7 @@ void Player::DrawDebug(void)
 		drinkCol = GetColor(0, 255, 255);
 	}
 	//飲み物用
-	DrawBox(startX, startY, endX, endY, drinkCol, true);
+	DrawBox(startX, startY, startX + scale, startY + scale, drinkCol, true);
 
 	int foodCol = GetColor(0, 0, 0);
 	switch (orders.sweets_)
@@ -342,7 +386,7 @@ void Player::DrawDebug(void)
 	}
 
 	//食べ物用
-	DrawBox(endX + scale, startY, endX + (scale * 2), endY, foodCol, true);
+	DrawBox(startX + scale + gap, startY, startX + scale * 2 + gap, startY + scale, foodCol, true);
 }
 
 void Player::DrawShadow(void)
@@ -454,7 +498,7 @@ void Player::ProcessMove(void)
 	{
 		//移動スピード
 		speed_ = SPEED_MOVE;
-		if (ins.IsNew(KEY_INPUT_RSHIFT))
+		if (ins.IsNew(KEY_INPUT_LSHIFT))
 		{
 			speed_ = SPEED_RUN;
 		}
@@ -468,7 +512,7 @@ void Player::ProcessMove(void)
 		if (IsEndLanding())
 		{
 			//アニメーション
-			if (ins.IsNew(KEY_INPUT_RSHIFT))
+			if (ins.IsNew(KEY_INPUT_LSHIFT))
 			{
 				//速く走るアニメーション
 				animationController_->Play((int)ANIM_TYPE::FAST_RUN);

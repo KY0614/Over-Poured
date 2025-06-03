@@ -17,6 +17,9 @@
 #include "../Object/Score.h"
 #include "../Object/SkyDome.h"
 #include "GameScene.h"
+namespace {
+	bool stop = true;
+}
 
 GameScene::GameScene(void)
 {
@@ -24,6 +27,8 @@ GameScene::GameScene(void)
 	skyDome_ = nullptr;
 	stage_ = nullptr;
 	customer_ = nullptr;
+	score_ = 0;
+	timer_ = 0.0f;
 }
 
 GameScene::~GameScene(void)
@@ -53,7 +58,7 @@ void GameScene::Init(void)
 
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
+	mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 
 	//タイマーの設定
 	timer_ = MAX_TIME;
@@ -64,7 +69,15 @@ void GameScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	Score& scr = Score::GetInstance();
 
-	timer_ -= SceneManager::GetInstance().GetDeltaTime();
+	if(ins.IsTrgDown(KEY_INPUT_T))
+	{
+		stop = !stop;
+	}
+
+	if(stop)
+	{
+		timer_ -= SceneManager::GetInstance().GetDeltaTime();
+	}
 
 	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
 	float r = 30.0f;
