@@ -332,6 +332,16 @@ void StageManager::Draw(void)
 	//		obj->IsActioned() , line, lineHeight);
 	//}
 
+	for (size_t i = 0; i < objects_.size(); ++i)
+	{
+		//コーヒー以外のオブジェクトは判定しない
+		if (objects_[i]->GetObjectId() != HOT_COFFEE &&
+			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
+
+		DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
+			objects_[i]->IsLidOn(), line, lineHeight);
+	}
+
 
 	for (int i = 0; i < tables_.size(); i++)
 	{
