@@ -22,7 +22,7 @@ void ResultScene::Update(void)
 {
 	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	if (ins.IsTrgDown(KEY_INPUT_RETURN))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
@@ -39,10 +39,10 @@ void ResultScene::Draw(void)
 	int line = 1;	//行
 	int lineHeight = 40;	//行
 	SetFontSize(24);
-	DebugDrawFormat::FormatString(L"今回のスコア : %d", scr.GetCurrentScore(),line,lineHeight);
-	DebugDrawFormat::FormatString(L"全プレイヤーの総スコア : %d", scr.GetAggregateScore(),line,lineHeight);
+	DebugDrawFormat::FormatString(L"今回のスコア : ￥%d", scr.GetCurrentScore(),line,lineHeight);
+	DebugDrawFormat::FormatString(L"全プレイヤーの総スコア : ￥%d", scr.GetAggregateScore(),line,lineHeight);
 	for (int i = 0; i < Score::RANKING_NUM; ++i) {
-		DebugDrawFormat::FormatString(L"%d 位 : %d", i + 1, scr.GetRankingScore(i), line, lineHeight);
+		DebugDrawFormat::FormatString(L"%d 位 : ￥%d", i + 1, scr.GetRankingScore(i), line, lineHeight);
 	}
 	SetFontSize(16);
 }

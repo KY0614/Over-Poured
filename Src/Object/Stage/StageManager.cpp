@@ -185,9 +185,9 @@ void StageManager::Update(void)
 					counter_->GetSpherePos(), counter_->GetSphereRad()
 				))
 			{
-				SurveItem(*obj);
-				it = objects_.erase(it);
-				break;
+				//SurveItem(*obj);
+				//it = objects_.erase(it);
+				//break;
 			}
 
 			for (const auto& table : tables_)
@@ -288,7 +288,7 @@ void StageManager::Draw(void)
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
 
 	MV1DrawModel(transform_.modelId);
-	DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
+	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
 
 	for (const auto& table : tables_)
 	{
@@ -341,7 +341,6 @@ void StageManager::Draw(void)
 		DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
 			objects_[i]->IsLidOn(), line, lineHeight);
 	}
-
 
 	for (int i = 0; i < tables_.size(); i++)
 	{

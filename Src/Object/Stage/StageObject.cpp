@@ -115,9 +115,9 @@ void StageObject::Update(void)
 
 void StageObject::Draw(void)
 {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 
-	//とりあえず仮のモデルとして色違いのCubeを生成する
+		//とりあえず仮のモデルとして色違いのCubeを生成する
 
 	int col = 0x000000;
 	COLOR_U8  retCol;
@@ -125,7 +125,7 @@ void StageObject::Draw(void)
 	VECTOR pos = transform_.pos;
 
 	if (objId_ == "Coffee_Machine")col = 0x3f312b;
-	else if (objId_ == "Ice_Dispenser")col = 0x4682b4,pos.y -= 10.0f;
+	else if (objId_ == "Ice_Dispenser")col = 0x4682b4, pos.y -= 10.0f;
 	else if (objId_ == "Table" || objId_ == "Counter")col = 0xd2b48c;
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
@@ -143,10 +143,30 @@ void StageObject::Draw(void)
 	retCol.b = col & 0xFF;
 	retCol.a = 255;
 
-	cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
+	if (objId_ == "Coffee_Machine")
+	{
+		retCol.a = 128;
+		cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
+	}
+	else
+	{
+		//Zバッファを有効にする
+		SetUseZBuffer3D(true);
+
+		//Zバッファへの書き込みを有効にする
+		SetWriteZBuffer3D(true);
+
+		cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
+
+		//Zバッファを有効にする
+		SetUseZBuffer3D(false);
+
+		//Zバッファへの書き込みを有効にする
+		SetWriteZBuffer3D(false);
+	}
 
 	//DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
-	sphere_->Draw(col);
+	//sphere_->Draw(col);
 
 	int line = 3;	//行
 	int lineHeight = 30;	//行
@@ -169,7 +189,7 @@ void StageObject::Draw(void)
 	//{
 	//	DebugDrawFormat::FormatStringRight(L"produce : %s", StringUtility::StringToWstring(produce).c_str(), line, lineHeight);
 	//}
-#endif // _DEBUG
+//#endif // _DEBUG
 
 }
 

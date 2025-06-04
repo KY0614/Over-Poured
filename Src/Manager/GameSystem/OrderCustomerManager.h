@@ -19,7 +19,6 @@ public:
 	//デストラクタ
 	~OrderCustomerManager(void);
 
-	
 	void Init(void);	//初期化処理
 	void Update(void);	//更新処理
 	void Draw(void);	//描画処理

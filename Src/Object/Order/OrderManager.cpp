@@ -5,7 +5,7 @@
 
 OrderManager::OrderManager(void)
 {
-	count_ = 0;
+	//count_ = 0;
 }
 
 OrderManager::~OrderManager(void)
@@ -17,7 +17,7 @@ void OrderManager::Init(void)
 {
 	orders_.clear();
 	InitOrder();
-	count_ = 1;
+	//count_ = 1;
 }
 
 void OrderManager::FirstOrderUpdate(void)
@@ -126,7 +126,7 @@ void OrderManager::ClearFirstOrder(void)
 {
 	//æ“ª‚Ì—v‘f‚ğíœ
 	orders_.erase(orders_.begin());
-	count_++;
+	//count_++;
 }
 
 std::vector<Order::DRINK> OrderManager::GetAllOrderDrink(void) const

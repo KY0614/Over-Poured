@@ -31,7 +31,7 @@ void Application::Init(void)
 {
 
 	//アプリケーションの初期設定
-	SetWindowText(L"Over");
+	SetWindowText(L"Over Poured");
 
 	//ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);

@@ -76,8 +76,6 @@ private:
 
 	bool surveDrinkLid_;
 
-	std::vector<std::vector<std::unique_ptr<StageObject>>> grid_;
-
 	void SurveItem(StageObject& obj);
 
 	void UpdateDebugImGui(void);

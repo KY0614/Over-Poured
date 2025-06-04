@@ -82,6 +82,12 @@ void Machine::Draw(void)
 {
 	int line = 3;	//行
 	int lineHeight = 30;	//行
-	DebugDrawFormat::FormatStringRight(L"iteractTime %2.f", param_.interactTime, line, lineHeight);
+
+	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
+	// 変換成功
+	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
+		L"コーヒーができるまで %2.f", param_.interactTime);
+
+	//DebugDrawFormat::FormatStringRight(L"iteractTime %2.f", param_.interactTime, line, lineHeight);
 	StageObject::Draw();
 }
