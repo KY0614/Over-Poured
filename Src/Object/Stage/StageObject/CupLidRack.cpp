@@ -27,7 +27,7 @@ void CupLidRack::Interact(const std::string& objId)
 	if (param_.interactTime <= 0.0f)return;
 
 	//ホットコーヒーを持っているか（いらないかも）
-	bool isHoldingHotCoffee = (player_.GetHoldItem() == HOT_COFFEE);
+	//bool isHoldingHotCoffee = (player_.GetHoldItem() == HOT_COFFEE);
 
 	auto& ins = InputManager::GetInstance();
 	for (const auto& obj : objects_)
@@ -35,8 +35,10 @@ void CupLidRack::Interact(const std::string& objId)
 		//コーヒー以外のオブジェクトは判定しない
 		if (obj->GetObjectId() != HOT_COFFEE && 
 			obj->GetObjectId() != ICE_COFFEE) continue;
-		//既に蓋されているコーヒーだった場合はreturn
-		if (obj->IsLidOn())return;
+		//既に蓋されているコーヒーは判定しない
+		if (obj->IsLidOn())continue;
+		
+		bool isHoldingHotCoffee = obj->GetItemState()==ITEM_STATE::HOLD;
 
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))

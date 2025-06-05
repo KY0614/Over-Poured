@@ -78,8 +78,6 @@ void OrderCustomerManager::Draw(void)
 
 	customerMng_->Draw();
 
-	DebugDraw();
-
 #ifdef _DEBUG
 
 	DebugDraw();

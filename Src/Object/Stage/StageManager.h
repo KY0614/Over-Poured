@@ -53,6 +53,10 @@ public:
 	/// <param name=""></param>
 	void LidFollowCup(void);
 
+	bool IsSurved(void) const { return isSurved_; }
+
+	void SurvedItem(void);
+
 	Order::OrderData GetServeData(void);
 
 	void ResetServeData(void);
@@ -70,6 +74,8 @@ private:
 
 	//カウンター用
 	std::unique_ptr<StageObject> counter_;
+
+	bool isSurved_;
 
 	Order::DRINK surveDrink_;
 	Order::SWEETS surveSweets_;

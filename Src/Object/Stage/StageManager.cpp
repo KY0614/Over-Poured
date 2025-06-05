@@ -36,6 +36,7 @@ namespace {
 
 StageManager::StageManager(Player& player):player_(player)
 {
+	isSurved_ = false;
 	surveDrink_ = Order::DRINK::NONE;
 	surveSweets_ = Order::SWEETS::NONE;
 
@@ -164,9 +165,23 @@ void StageManager::Update(void)
 		}
 	}
 
-	for (auto it = objects_.begin(); it != objects_.end(); /* incrementは中で */)
+	//for (auto it = objects_.begin(); it != objects_.end(); /* incrementは中で */)
+	for (const auto& obj : objects_)
 	{
-		auto& obj = *it;
+		//カウンターで商品を提供する処理
+		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+			counter_->GetSpherePos(), counter_->GetSphereRad()
+		))
+		{
+			if (obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
+			{
+				SurveItem(*obj);
+			}
+			else 
+			{
+				ResetServeData();
+			}
+		}
 
 		//プレイヤーが何も持っていないときの処理
 		if (!player_.GetIsHolding() && obj->GetIsCarryable() &&
@@ -180,14 +195,12 @@ void StageManager::Update(void)
 		//プレイヤーがアイテムを持っているときの処理
 		if (player_.GetIsHolding())
 		{
-			//カウンターで商品を提供する処理
+			//カウンターに設置
 			if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 					counter_->GetSpherePos(), counter_->GetSphereRad()
 				))
 			{
-				//SurveItem(*obj);
-				//it = objects_.erase(it);
-				//break;
+				obj->ItemPlaced(counter_->GetTopCenter());
 			}
 
 			for (const auto& table : tables_)
@@ -207,20 +220,20 @@ void StageManager::Update(void)
 				}
 			}
 		}
-		//if (obj->IsActioned())
-		//{
-		//	break;
-		//}
-
 		if (obj->IsActioned())
 		{
-			++it;
 			break;
 		}
-		else
-		{
-			++it;
-		}
+
+		//if (obj->IsActioned())
+		//{
+		//	++it;
+		//	break;
+		//}
+		//else
+		//{
+		//	++it;
+		//}
 	}
 
 	//マシンとカップの処理
@@ -280,7 +293,6 @@ void StageManager::Update(void)
 
 	transform_.Update();
 	sphereTran_.Update();
-
 }
 
 void StageManager::Draw(void)
@@ -325,6 +337,12 @@ void StageManager::Draw(void)
 	
 	DebugDrawFormat::FormatString(L"surveS : %d",
 		surveSweets_, line, lineHeight);
+	
+	DebugDrawFormat::FormatString(L"surveL : %d",
+		surveDrinkLid_, line, lineHeight);
+	
+	DebugDrawFormat::FormatString(L"surve : %d",
+		isSurved_, line, lineHeight);
 
 	//for (const auto& obj : objects_)
 	//{
@@ -348,14 +366,15 @@ void StageManager::Draw(void)
 			tables_[i]->GetIsPlaceable(), line, lineHeight);
 	}
 
-	for (int i = 0; i < TABLE_NUM + TABLE_NUM - 1; i++)
-	{
-		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
-		// 変換成功
-		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
-			L"%s : %d",
-			StringUtility::StringToWstring(tables_[i]->GetObjectId().c_str()).c_str(), i);
-	}
+	////テーブル番号を表示
+	//for (int i = 0; i < TABLE_NUM + TABLE_NUM - 1; i++)
+	//{
+	//	VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
+	//	// 変換成功
+	//	DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+	//		L"%s : %d",
+	//		StringUtility::StringToWstring(tables_[i]->GetObjectId().c_str()).c_str(), i);
+	//}
 
 	for (const auto& obj : objects_)
 	{
@@ -403,7 +422,8 @@ void StageManager::LidFollowCup(void)
 		//コーヒー以外のオブジェクトは判定しない
 		if (objects_[i]->GetObjectId() != HOT_COFFEE && 
 			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
-		if (objects_[i]->IsLidOn())break;
+		//既に蓋が乗っているカップは判定しない
+		if (objects_[i]->IsLidOn())continue;
 
 		for (const auto& lid : objects_)
 		{
@@ -429,6 +449,26 @@ void StageManager::LidFollowCup(void)
 	}
 }
 
+void StageManager::SurvedItem(void)
+{
+	// カウンターの球体と当たっているオブジェクトを削除
+	for (auto it = objects_.begin(); it != objects_.end(); )
+	{
+		if (AsoUtility::IsHitSpheres(
+			(*it)->GetSpherePos(), (*it)->GetSphereRad(),
+			counter_->GetSpherePos(), counter_->GetSphereRad()))
+		{
+			// 必要なら提供処理などをここで呼ぶ
+			ResetServeData(); // 提供データをリセット
+			it = objects_.erase(it); // eraseは次の要素のイテレータを返す
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+
 Order::OrderData StageManager::GetServeData(void)
 {
 	Order::OrderData data = {};
@@ -442,6 +482,7 @@ Order::OrderData StageManager::GetServeData(void)
 
 void StageManager::ResetServeData(void)
 {
+	isSurved_ = false;
 	surveDrink_ = Order::DRINK::NONE;
 	surveSweets_ = Order::SWEETS::NONE;
 	surveDrinkLid_ = false;
@@ -451,23 +492,21 @@ void StageManager::SurveItem(StageObject& obj)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
-	{
-		surveDrinkLid_ = obj.IsLidOn();
+	isSurved_ = true;
 
-		if (obj.GetObjectId() == HOT_COFFEE)
-		{
-			surveDrink_ = Order::DRINK::HOT;
-		}
-		else if (obj.GetObjectId() == ICE_COFFEE)
-		{
-			surveDrink_ = Order::DRINK::ICE;
-		}
-		else
-		{
-			surveDrink_ = Order::DRINK::NONE;
-		}
-		player_.SurveItem();
+	surveDrinkLid_ = obj.IsLidOn();
+
+	if (obj.GetObjectId() == HOT_COFFEE)
+	{
+		surveDrink_ = Order::DRINK::HOT;
+	}
+	else if (obj.GetObjectId() == ICE_COFFEE)
+	{
+		surveDrink_ = Order::DRINK::ICE;
+	}
+	else
+	{
+		surveDrink_ = Order::DRINK::NONE;
 	}
 }
 

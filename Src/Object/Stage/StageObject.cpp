@@ -12,6 +12,7 @@ StageObject::StageObject(const std::string objId, const float width,
 	objId_(objId),width_(width),height_(height),
 	depth_(depth),player_(player)
 {
+	isActioned_ = false;
 	itemState_ = ITEM_STATE::NONE;
 	machineState_ = MACHINE_STATE::NONE;
 	param_ = StageObjectLibrary::ObjectParams();
@@ -46,7 +47,7 @@ void StageObject::Init(void)
 
 	if (objId_ == "Coffee_Machine")rad_ = 35.0f;
 	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
-	else if (objId_ == "Cup_Lid")rad_ = 5.0f;
+	else if (objId_ == "Cup_Lid")rad_ = 10.0f;
 	else if (objId_ == "Hot_Cup" || objId_ == "Ice_Cup" ||
 		objId_ == "Hot_Coffee" || objId_ == "Cup_Lid_Rack")rad_ = 20.0f;
 
@@ -71,7 +72,6 @@ void StageObject::Init(void)
 
 void StageObject::Update(void)
 {
-
 	isActioned_ = false;
 
 	switch (itemState_)
@@ -115,7 +115,7 @@ void StageObject::Update(void)
 
 void StageObject::Draw(void)
 {
-//#ifdef _DEBUG
+#ifdef _DEBUG
 
 		//とりあえず仮のモデルとして色違いのCubeを生成する
 
@@ -166,7 +166,7 @@ void StageObject::Draw(void)
 	}
 
 	//DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
-	//sphere_->Draw(col);
+	sphere_->Draw(col);
 
 	int line = 3;	//行
 	int lineHeight = 30;	//行
@@ -189,7 +189,7 @@ void StageObject::Draw(void)
 	//{
 	//	DebugDrawFormat::FormatStringRight(L"produce : %s", StringUtility::StringToWstring(produce).c_str(), line, lineHeight);
 	//}
-//#endif // _DEBUG
+#endif // _DEBUG
 
 }
 

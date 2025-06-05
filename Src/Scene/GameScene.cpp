@@ -58,7 +58,7 @@ void GameScene::Init(void)
 
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
+	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
 
 	//タイマーの設定
 	timer_ = MAX_TIME;
@@ -79,23 +79,29 @@ void GameScene::Update(void)
 		timer_ -= SceneManager::GetInstance().GetDeltaTime();
 	}
 
-	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
-	float r = 30.0f;
-	if (!customer_->GetIsMoving() &&
-		AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
-	{
-		if (ins.IsTrgDown(KEY_INPUT_SPACE))
-		{
-			//score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
-			//stage_->ResetServeData();
-			//player_->SurveItem();
-			score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
-			customer_->IsServe();
-		}
-	}
-
 #ifdef _DEBUG
 
+	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
+	float r = 30.0f;
+	//if (!customer_->GetIsMoving() &&
+	//	AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
+	//{
+	//	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	//	{
+	//		//score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
+	//		//stage_->ResetServeData();
+	//		//player_->SurveItem();
+	//		//score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
+	//		//customer_->IsServe();
+	//	}
+	//}
+
+	if (stage_->IsSurved())
+	{
+		score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
+		customer_->IsServe();	//注文を出す
+		stage_->SurvedItem();	//サーブしたアイテムをリセット
+	}
 
 	//if (timer_ < 0.0f)
 	//{
@@ -105,12 +111,12 @@ void GameScene::Update(void)
 
 #endif // _DEBUG
 
-	if (timer_ <= 0.0f)
-	{
-		scr.SetCurrentScore(score_);
-		scr.SaveScore(score_);
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
-	}
+	//if (timer_ <= 0.0f)
+	//{
+	//	scr.SetCurrentScore(score_);
+	//	scr.SaveScore(score_);
+	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+	//}
 
 	//シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_RETURN))
@@ -147,8 +153,6 @@ void GameScene::Draw(void)
 	player_->Draw();
 
 	customer_->Draw();
-
-	DebugDraw();
 }
 
 void GameScene::DebugDraw(void)

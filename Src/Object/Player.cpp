@@ -100,6 +100,7 @@ void Player::Init(void)
 	data_.drink_ = Order::DRINK::ICE;
 	data_.sweets_ = Order::SWEETS::NONE;
 	isHolding_ = false;
+
 }
 
 void Player::Update(void)
