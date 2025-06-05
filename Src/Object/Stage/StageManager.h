@@ -53,13 +53,18 @@ public:
 	/// <param name=""></param>
 	void LidFollowCup(void);
 
+	/// <summary>
+	/// 提供したかどうかを取得する
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:提供した　flase:未提供</returns>
 	bool IsSurved(void) const { return isSurved_; }
 
-	void SurvedItem(void);
-
-	Order::OrderData GetServeData(void);
-
-	void ResetServeData(void);
+	/// <summary>
+	/// 提供したアイテムを削除する
+	/// </summary>
+	/// <param name=""></param>
+	void DeleteSurvedItem(void);
 
 private:
 
@@ -82,6 +87,16 @@ private:
 
 	bool surveDrinkLid_;
 
+	/// <summary>
+	/// 提供データをリセットする
+	/// </summary>
+	/// <param name=""></param>
+	void ResetServeData(void);
+
+	/// <summary>
+	/// 提供するアイテムを設定する
+	/// </summary>
+	/// <param name="obj"></param>
 	void SurveItem(StageObject& obj);
 
 	void UpdateDebugImGui(void);

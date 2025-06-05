@@ -98,9 +98,10 @@ void GameScene::Update(void)
 
 	if (stage_->IsSurved())
 	{
+		//スコアの加算
 		score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
 		customer_->IsServe();	//注文を出す
-		stage_->SurvedItem();	//サーブしたアイテムをリセット
+		stage_->DeleteSurvedItem();	//サーブしたアイテムをリセット
 	}
 
 	//if (timer_ < 0.0f)

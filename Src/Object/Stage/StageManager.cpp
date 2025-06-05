@@ -173,12 +173,14 @@ void StageManager::Update(void)
 			counter_->GetSpherePos(), counter_->GetSphereRad()
 		))
 		{
+			//設置されているアイテムを提供する処理
 			if (obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
 			{
 				SurveItem(*obj);
 			}
 			else 
 			{
+				//アイテムが設置されていない場合は提供データをリセット
 				ResetServeData();
 			}
 		}
@@ -449,7 +451,7 @@ void StageManager::LidFollowCup(void)
 	}
 }
 
-void StageManager::SurvedItem(void)
+void StageManager::DeleteSurvedItem(void)
 {
 	// カウンターの球体と当たっているオブジェクトを削除
 	for (auto it = objects_.begin(); it != objects_.end(); )
@@ -467,17 +469,6 @@ void StageManager::SurvedItem(void)
 			++it;
 		}
 	}
-}
-
-Order::OrderData StageManager::GetServeData(void)
-{
-	Order::OrderData data = {};
-
-	data.drink_ = surveDrink_;
-	data.sweets_ = surveSweets_;
-	data.lid_ = surveDrinkLid_;
-
-	return data;
 }
 
 void StageManager::ResetServeData(void)
