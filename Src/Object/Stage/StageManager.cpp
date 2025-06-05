@@ -66,7 +66,7 @@ void StageManager::Init(void)
 	transform_.Update();
 
 	//‰¡‚Ìƒe[ƒuƒ‹ŒQ
-	for (int x = 0; x < TABLE_NUM; x++)
+	for (int x = 0; x < TABLE_X_NUM; x++)
 	{
 		VECTOR firstPos = TABLE_POS;
 		firstPos.x += (x * TABLE_WIDTH);
@@ -469,6 +469,17 @@ void StageManager::DeleteSurvedItem(void)
 			++it;
 		}
 	}
+}
+
+Order::OrderData StageManager::GetServeData(void)
+{
+	Order::OrderData data = {};
+
+	data.drink_ = surveDrink_;
+	data.sweets_ = surveSweets_;
+	data.lid_ = surveDrinkLid_;
+
+	return data;
 }
 
 void StageManager::ResetServeData(void)

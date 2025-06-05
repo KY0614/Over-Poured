@@ -15,6 +15,7 @@ public:
 
 	//テーブル関連
 	static constexpr int TABLE_NUM = 4;			//テーブルの数
+	static constexpr int TABLE_X_NUM = 5;			//テーブルの数
 
 	static constexpr float TABLE_WIDTH = 95.0f;	//テーブルの横幅
 
@@ -52,6 +53,8 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	void LidFollowCup(void);
+
+	Order::OrderData GetServeData(void);
 
 	/// <summary>
 	/// 提供したかどうかを取得する
