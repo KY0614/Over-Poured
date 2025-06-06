@@ -5,24 +5,35 @@
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../Object/Stage/StageManager.h"
-#include "Machine.h"
+#include "IceDispenser.h"
 
 namespace {
-	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
 	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
 	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
-	const std::string HOT_COFFEE = "Hot_Coffee";		//ホットコーヒー
 	const std::string ICE_COFFEE = "Ice_Coffee";		//アイスコーヒー
 }
 
-Machine::Machine(const std::string objId, const float width,
-	const float height, const float depth,Player& player,
+IceDispenser::IceDispenser(const std::string objId, const float width,
+	const float height, const float depth, Player& player,
 	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId, width, height, depth,player),objects_(object)
+	StageObject(objId, width, height, depth, player), objects_(object)
 {
 }
 
-void Machine::Interact(const std::string& objId)
+void IceDispenser::Draw(void)
+{
+	int line = 3;	//行
+	int lineHeight = 30;	//行
+
+	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
+	// 変換成功
+	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
+		L"氷をいれるまで %2.f", param_.interactTime);
+
+	StageObject::Draw();
+}
+
+void IceDispenser::Interact(const std::string& objId)
 {
 	if (GetMachineState() == MACHINE_STATE::ACTIVE)return;	//アクティブ状態だったら処理しない
 
@@ -34,8 +45,8 @@ void Machine::Interact(const std::string& objId)
 	//既にマシン内にカップまたはコーヒーがある場合は何もしない
 	for (const auto& obj : objects_)
 	{
-		// ホットカップまたはホットコーヒー
-		if ((obj->GetObjectId() == HOT_CUP || obj->GetObjectId() == HOT_COFFEE) &&
+		//アイスカップまたはアイスコーヒー
+		if ((obj->GetObjectId() == ICE_CUP || obj->GetObjectId() == ICE_COFFEE) &&
 			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
@@ -48,8 +59,8 @@ void Machine::Interact(const std::string& objId)
 	auto& ins = InputManager::GetInstance();
 	for (const auto& obj : objects_)
 	{
-		//カップ以外のオブジェクトは判定しない
-		if (obj->GetObjectId() != HOT_CUP && obj->GetObjectId() != CUP_WITH_ICE) continue;
+		//アイス用カップ以外のオブジェクトは判定しない
+		if (obj->GetObjectId() != ICE_CUP) continue;
 
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
@@ -67,12 +78,12 @@ void Machine::Interact(const std::string& objId)
 	}
 }
 
-void Machine::UpdateInActive(void)
+void IceDispenser::UpdateInActive(void)
 {
 	SetProduceTime(COFFEE_PRODUCES_TIME);
 }
 
-void Machine::UpdateActive(void)
+void IceDispenser::UpdateActive(void)
 {
 	param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
 
@@ -108,18 +119,4 @@ void Machine::UpdateActive(void)
 		ChangeMachineState(MACHINE_STATE::INACTIVE);
 		return;
 	}
-}
-
-void Machine::Draw(void)
-{
-	int line = 3;	//行
-	int lineHeight = 30;	//行
-
-	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	// 変換成功
-	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-		L"コーヒーができるまで %2.f", param_.interactTime);
-
-	//DebugDrawFormat::FormatStringRight(L"iteractTime %2.f", param_.interactTime, line, lineHeight);
-	StageObject::Draw();
 }

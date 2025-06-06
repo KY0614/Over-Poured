@@ -36,7 +36,7 @@ void StageObject::Init(void)
 
 	sphere_ = std::make_unique<Sphere>(transform_);
 	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
-	if(objId_ == "Table" || objId_ == "Counter")sphere_->SetLocalPos({0.0f, height_, 0.0f});
+	if(objId_ == "Table" || objId_ == "Counter" || objId_ == "Dust_Box")sphere_->SetLocalPos({0.0f, height_, 0.0f});
 
 	itemState_ = ITEM_STATE::PLACED;
 	machineState_ = MACHINE_STATE::INACTIVE;
@@ -125,7 +125,7 @@ void StageObject::Draw(void)
 	VECTOR pos = transform_.pos;
 
 	if (objId_ == "Coffee_Machine")col = 0x3f312b;
-	else if (objId_ == "Ice_Dispenser")col = 0x4682b4, pos.y -= 10.0f;
+	else if (objId_ == "Ice_Dispenser")col = 0x4682b4;/*, pos.y -= 10.0f;*/
 	else if (objId_ == "Table" || objId_ == "Counter")col = 0xd2b48c;
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
@@ -137,6 +137,7 @@ void StageObject::Draw(void)
 	else if (objId_ == "Cup_Lid_Rack")col = 0xa9a9a9;
 	else if (objId_ == "Dust_Box")col = 0x2f4f4f;
 	else if (objId_ == "Cup_Hot_Rack")col = 0xffaaaa;
+	else if (objId_ == "Cup_Ice_Rack")col = 0xaaffff;
 	//intŒ^‚ðCOLOR_U8‚Ö•ÏŠ·
 	retCol.r = (col >> 16) & 0xFF;
 	retCol.g = (col >> 8) & 0xFF;

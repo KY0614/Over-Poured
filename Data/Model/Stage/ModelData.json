@@ -14,13 +14,13 @@
     "Ice_Dispenser": {
     "id": "Ice_Dispenser",
     "type": "machine",
-    "name": "Ice_Dispenser",
+    "name": "IceDispenser",
     "model": "models/ice_dispenser.mv1",
     "interactable": true,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":["cup_ice"],
-    "produces": ["cup_with_ice"]
+    "acceptedItems":["Ice_Cup"],
+    "produces": ["Cup_With_Ice"]
     },
   "Table": {
     "id": "Table",
@@ -106,7 +106,18 @@
     "placeable": false,
     "carryable": false,
     "acceptedItems":[],
-    "produces": ["Hot_Cup","Ice_Cup"]
+    "produces": ["Hot_Cup"]
+    },
+    "Cup_Ice_Rack": {
+    "id": "Cup_Ice_Rack",
+    "type": "item",
+    "name": "IceCupRack",
+    "model": "models/racks.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":[],
+    "produces": ["Ice_Cup"]
     },
     "Hot_Coffee": {
     "id": "Hot_Coffee",

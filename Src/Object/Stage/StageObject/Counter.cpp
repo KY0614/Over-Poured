@@ -16,29 +16,4 @@ void Counter::Interact(const std::string& objId)
 	bool isAccepted = std::find(items.begin(), items.end(), objId) != items.end();
 	//if (!isAccepted)return;	//存在しなかったら処理しない
 
-
-	//auto& ins = InputManager::GetInstance();
-	//for (const auto& obj : objects_)
-	//{
-	//	//コーヒー以外のオブジェクトは判定しない
-	//	if (obj->GetObjectId() != HOT_COFFEE &&
-	//		obj->GetObjectId() != ICE_COFFEE) continue;
-
-	//	if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
-	//		obj->GetSpherePos(), obj->GetSphereRad()))
-	//	{
-	//		//スペースキーを押下し続けるとゲージがたまっていく
-	//		if (isHoldingHotCoffee &&
-	//			ins.IsNew(KEY_INPUT_SPACE))
-	//		{
-	//			param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
-	//			isActioned_ = true;
-	//		}
-	//		else
-	//		{
-	//			param_.interactTime = 3.0f;
-	//			isActioned_ = false;
-	//		}
-	//	}
-	//}
 }

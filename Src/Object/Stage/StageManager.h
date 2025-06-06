@@ -22,8 +22,9 @@ public:
 	//座標
 
 	static constexpr VECTOR TABLE_POS = { -140.0f, 0.0f, -175.0f };		//テーブルの座標
-	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };	//カウンターの座標
-	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };	//列テーブルの座標
+	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };//列テーブルの座標
+	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };		//カウンターの座標
+	static constexpr VECTOR DUST_BOX_POS = { 320.0f, 0.0f, -173.0f };		//カウンターの座標
 
 	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };	//コーヒーマシンの座標
 	static constexpr VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };	//ホット用カップの座標
@@ -43,17 +44,10 @@ public:
 	void Draw(void) override;
 
 	/// <summary>
-	/// ホットコーヒーを作る
-	/// </summary>
-	/// <param name="">マシンとホット用カップだけ処理し、カップの場所にコーヒー生成</param>
-	void MakeHotCoffee(void);
-
-	/// <summary>
-	/// コーヒーに蓋をつける
+	/// 提供するアイテムを取得する
 	/// </summary>
 	/// <param name=""></param>
-	void LidFollowCup(void);
-
+	/// <returns></returns>
 	Order::OrderData GetServeData(void);
 
 	/// <summary>
@@ -101,6 +95,28 @@ private:
 	/// </summary>
 	/// <param name="obj"></param>
 	void SurveItem(StageObject& obj);
+
+	/// <summary>
+	/// 持ち運び可能なオブジェクトのインタラクト処理
+	/// </summary>
+	/// <param name=""></param>
+	void CarryableObjInteract(void);
+
+	void MachineInteract(void);
+
+	void LidRackInteract(void);
+
+	/// <summary>
+	/// ホットコーヒーを作る
+	/// </summary>
+	/// <param name="">マシンとホット用カップだけ処理し、カップの場所にコーヒー生成</param>
+	void MakeHotCoffee(void);
+
+	/// <summary>
+	/// コーヒーに蓋をつける
+	/// </summary>
+	/// <param name=""></param>
+	void LidFollowCup(void);
 
 	void UpdateDebugImGui(void);
 };

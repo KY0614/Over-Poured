@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\StageObject\IceCupRack.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\IceDispenser.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\DustBox.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\Counter.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\CupLid.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\CupLidRack.cpp" />
@@ -78,6 +81,9 @@
     <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\StageObject\IceCupRack.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\IceDispenser.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\DustBox.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\Counter.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\CupLid.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\CupLidRack.h" />

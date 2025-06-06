@@ -1,16 +1,16 @@
 #pragma once
 #include "../StageObject.h"
 
-class Machine : public StageObject
+class IceDispenser : public StageObject
 {
 public:
 
 	static constexpr float COFFEE_PRODUCES_TIME = 3.0f;
 
-	Machine(const std::string objId, const float width,
-		const float height, const float depth,Player& player,
+	IceDispenser(const std::string objId, const float width,
+		const float height, const float depth, Player& player,
 		std::vector<std::unique_ptr<StageObject>>& object);
-	~Machine(void) = default;
+	~IceDispenser(void) = default;
 
 	void Draw(void) override;
 
