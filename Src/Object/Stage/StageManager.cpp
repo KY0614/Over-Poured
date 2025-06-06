@@ -468,6 +468,7 @@ void StageManager::MachineInteract(void)
 		//設置して一定時間経ったら氷入りカップを出力する
 		if (obj->GetInteractTime() <= 0.0f)
 		{
+			DispenseIce2Cup();
 			break;
 		}
 	}
@@ -522,6 +523,33 @@ void StageManager::MakeHotCoffee(void)
 					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
 				//設置されているカップをコーヒーに上書きする
+				objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
+				objects_[i]->Init();
+				objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
+				objects_[i]->SetPos(tables_[5]->GetTopCenter());
+			}
+		}
+	}
+}
+
+void StageManager::DispenseIce2Cup(void)
+{
+	for (size_t i = 0; i < objects_.size(); ++i)
+	{
+		//アイス用カップ以外のオブジェクトは判定しない
+		if (objects_[i]->GetObjectId() != ICE_CUP) continue;
+
+		for (const auto& machine : objects_)
+		{
+			//ディスペンサーの判定だけさせたい
+			if (machine->GetObjectId() != ICE_DISPENSER)continue;
+
+			//マシンの球体と設置されているカップだけ処理する
+			if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
+				AsoUtility::IsHitSpheres(machine->GetPos(), machine->GetSphereRad(),
+					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+			{
+				//設置されているカップに氷を入れる
 				objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
 				objects_[i]->Init();
 				objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);

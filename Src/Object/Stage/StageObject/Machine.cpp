@@ -96,14 +96,7 @@ void Machine::UpdateActive(void)
 	}
 
 	//PLACED状態のカップがなければ非アクティブにする
-	if (!hasPlacedCup)
-	{
-		ChangeMachineState(MACHINE_STATE::INACTIVE);
-		return;
-	}
-
-	//インタラクト時間が過ぎたら非アクティブにする
-	if (param_.interactTime <= 0.0f)
+	if (!hasPlacedCup || param_.interactTime <= 0.0f)
 	{
 		ChangeMachineState(MACHINE_STATE::INACTIVE);
 		return;

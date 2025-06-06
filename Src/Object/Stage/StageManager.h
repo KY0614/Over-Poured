@@ -112,6 +112,8 @@ private:
 	/// <param name="">マシンとホット用カップだけ処理し、カップの場所にコーヒー生成</param>
 	void MakeHotCoffee(void);
 
+	void DispenseIce2Cup(void);
+
 	/// <summary>
 	/// コーヒーに蓋をつける
 	/// </summary>
