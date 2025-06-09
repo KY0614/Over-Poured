@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\StageObject\ChocoSweetsRack.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceCoffee.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceCupRack.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceDispenser.cpp" />
@@ -82,6 +83,7 @@
     <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\StageObject\ChocoSweetsRack.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceCoffee.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceCupRack.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceDispenser.h" />

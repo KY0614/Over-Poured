@@ -164,28 +164,6 @@
     "acceptedItems":[],
     "produces": []
     },
-    "Hot_Coffee_With_Lid": {
-    "id": "Hot_Coffee_With_Lid",
-    "type": "coffee",
-    "name": "HotCoffeeWithLid",
-    "model": "models/cup_hot.mv1",
-    "interactable": false,
-    "placeable": false,
-    "carryable": true,
-    "acceptedItems":[],
-    "produces": []
-    },
-    "Ice_Coffee_With_Lid": {
-    "id": "Ice_Coffee_With_Lid",
-    "type": "item",
-    "name": "IceCoffeeWithLid",
-    "model": "models/cup_ice.mv1",
-    "interactable": false,
-    "placeable": false,
-    "carryable": true,
-    "acceptedItems":[],
-    "produces": []
-    },
     "Dust_Box": {
     "id": "Dust_Box",
     "type": "item",
