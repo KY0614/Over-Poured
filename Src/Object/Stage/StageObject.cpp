@@ -49,7 +49,7 @@ void StageObject::Init(void)
 	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
 	else if (objId_ == "Cup_Lid")rad_ = 10.0f;
 	else if (objId_ == "Hot_Cup" || objId_ == "Ice_Cup" ||
-		objId_ == "Hot_Coffee" || objId_ == "Cup_Lid_Rack")rad_ = 20.0f;
+		objId_ == "Hot_Coffee" ||objId_ == "Ice_Coffee" || objId_ == "Cup_Lid_Rack")rad_ = 20.0f;
 
 	if (objId_ == "Hot_Coffee")drink_ = Order::DRINK::HOT;
 	if (objId_ == "Ice_Coffee")drink_ = Order::DRINK::ICE;
@@ -131,6 +131,7 @@ void StageObject::Draw(void)
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
 	else if (objId_ == "Hot_Cup")col = 0xcd5c5c;
 	else if (objId_ == "Hot_Coffee")col = 0xffaaaa;
+	else if (objId_ == "Ice_Coffee")col = 0xaaffff;
 	else if (objId_ == "Ice_Cup")col = 0x87ceeb;
 	else if (objId_ == "Cup_With_Ice")col = 0x6495ed;
 	else if (objId_ == "Cup_Lid")col = 0xa9a9a9;
@@ -144,7 +145,7 @@ void StageObject::Draw(void)
 	retCol.b = col & 0xFF;
 	retCol.a = 255;
 
-	if (objId_ == "Coffee_Machine")
+	if (objId_ == "Coffee_Machine" || objId_ == "Ice_Dispenser")
 	{
 		retCol.a = 128;
 		cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);

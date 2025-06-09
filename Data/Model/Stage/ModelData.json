@@ -9,7 +9,7 @@
     "carryable": false,
     "interactTime": 3.0,
     "acceptedItems":["Hot_Cup","Cup_With_Ice"],
-    "produces": ["hot_coffee","ice_coffee"]
+    "produces": ["Hot_Coffee","Ice_Coffee"]
     },
     "Ice_Dispenser": {
     "id": "Ice_Dispenser",

@@ -35,7 +35,9 @@ void Machine::Interact(const std::string& objId)
 	for (const auto& obj : objects_)
 	{
 		// ホットカップまたはホットコーヒー
-		if ((obj->GetObjectId() == HOT_CUP || obj->GetObjectId() == HOT_COFFEE) &&
+		if ((obj->GetObjectId() == HOT_CUP ||
+			obj->GetObjectId() == HOT_COFFEE ||
+			obj->GetObjectId() == CUP_WITH_ICE) &&
 			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
@@ -54,8 +56,9 @@ void Machine::Interact(const std::string& objId)
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			//スペースキー押下でマシンの場所にカップを置く(とりあえず)
-			if (player_.GetHoldItem() == items.front().c_str() &&
+			//スペースキー押下でマシンの場所にカップを置く
+			if ((player_.GetHoldItem() == items.front().c_str() ||
+				player_.GetHoldItem() == items.back().c_str()) &&
 				ins.IsTrgDown(KEY_INPUT_SPACE))
 			{
 				VECTOR cupPos = GetTopCenter();	//マシンの上部中央にカップを置く
@@ -80,18 +83,15 @@ void Machine::UpdateActive(void)
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
+		if (obj->GetObjectId() != HOT_CUP &&
+			obj->GetObjectId() != CUP_WITH_ICE )continue;
+
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
 			hasPlacedCup = true;
 			break;
-		}
-		else if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			GetSpherePos(), GetSphereRad()) &&
-			obj->GetItemState() != ITEM_STATE::PLACED)
-		{
-			break;	//PLACED状態のカップがなければループを抜ける
 		}
 	}
 

@@ -147,7 +147,7 @@ int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
 		}
 
 		//オーダーの残り制限時間による加点
-		if (orderMng_->GetFirstOrder().time_ > 10.0f)
+		if (orderMng_->GetFirstOrder().time_ > 6.0f)
 		{
 			score += 50;
 		}

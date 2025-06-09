@@ -8,6 +8,7 @@ IceCup::IceCup(const std::string objId, const float width,
 	const float height, const float depth, Player& player) : 
 	StageObject(objId, width, height, depth,player)
 {
+	isIced_ = false;
 }
 
 void IceCup::ItemCarry(void)
@@ -32,6 +33,30 @@ void IceCup::ItemPlaced(VECTOR pos)
         SetPos(pos);
         isActioned_ = true;
     }
+}
+
+void IceCup::Draw(void)
+{
+    int line = 3;	//行
+    int lineHeight = 30;	//行
+
+    VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
+    // 変換成功
+    DrawFormatString(static_cast<int>(screenPos.x),
+        static_cast<int>(screenPos.y) - 100, GetColor(255, 255, 255),
+        L"氷 %d", isIced_);
+
+
+    StageObject::Draw();
+}
+
+void IceCup::PouredIce(void)
+{
+	isIced_ = true;
+	objId_ = "Cup_With_Ice"; //氷が入ったカップのオブジェクトIDに変更
+    object_ = StageObjectLibrary::LoadData(objId_);
+    param_ = object_.second;
+	return;
 }
 
 void IceCup::UpdatePlaced(void)

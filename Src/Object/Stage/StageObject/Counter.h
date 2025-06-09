@@ -14,7 +14,5 @@ public:
 	void Interact(const std::string& objId) override;
 
 private:
-
-	std::vector<std::unique_ptr<StageObject>>& objects_;
 };
 

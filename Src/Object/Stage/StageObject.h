@@ -229,10 +229,9 @@ protected:
 	virtual void UpdateInActive(void);
 	virtual void UpdateActive(void);
 
-private:
 	std::string objId_;
-
 	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
+private:
 
 	ITEM_STATE itemState_;
 	MACHINE_STATE machineState_;

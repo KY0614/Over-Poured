@@ -14,8 +14,8 @@ public:
 	//オブジェクト関連
 
 	//テーブル関連
-	static constexpr int TABLE_NUM = 4;			//テーブルの数
-	static constexpr int TABLE_X_NUM = 5;			//テーブルの数
+	static constexpr int TABLE_Y_NUM = 3;		//テーブルの数
+	static constexpr int TABLE_X_NUM = 5;		//テーブルの数
 
 	static constexpr float TABLE_WIDTH = 95.0f;	//テーブルの横幅
 
@@ -110,7 +110,9 @@ private:
 	/// ホットコーヒーを作る
 	/// </summary>
 	/// <param name="">マシンとホット用カップだけ処理し、カップの場所にコーヒー生成</param>
-	void MakeHotCoffee(void);
+	void MakeCoffee(void);
+	void MakeHotCoffee(int i);
+	void MakeIceCoffee(int i);
 
 	void DispenseIce2Cup(void);
 

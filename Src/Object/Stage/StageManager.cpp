@@ -15,6 +15,7 @@
 #include "StageObject/HotCupRack.h"
 #include "StageObject/IceCupRack.h"
 #include "StageObject/HotCoffee.h"
+#include "StageObject/IceCoffee.h"
 #include "StageObject/CupLidRack.h"
 #include "StageObject/CupLid.h"
 #include "StageObject/Counter.h"
@@ -82,10 +83,10 @@ void StageManager::Init(void)
 	}
 
 	//縦のテーブル群
-	for (int z = TABLE_NUM; z < TABLE_NUM + TABLE_NUM - 1; z++)
+	for (int z = TABLE_X_NUM; z < TABLE_X_NUM + TABLE_Y_NUM; z++)
 	{
 		VECTOR firstPos = COLUMN_TABLE_POS;
-		firstPos.z += ((z - TABLE_NUM) * TABLE_WIDTH);
+		firstPos.z += ((z - TABLE_X_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
@@ -213,7 +214,6 @@ void StageManager::Draw(void)
 	//モデルの描画
 
 	MV1DrawModel(transform_.modelId);
-	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xff0000, 0xff0000, false);
 
 	for (const auto& table : tables_)
 	{
@@ -227,7 +227,11 @@ void StageManager::Draw(void)
 		obj->Draw();
 	}
 
+
 #ifdef _DEBUG
+
+	//DrawSphere3D(objects_[3]->GetSpherePos(),
+	//	objects_[3]->GetSphereRad(), 8, 0xff0000, 0xff0000, true);
 
 	int line = 8;	//行
 	int lineHeight = 30;	//行
@@ -280,7 +284,7 @@ void StageManager::Draw(void)
 	}
 
 	//テーブル番号を表示
-	for (int i = 0; i < TABLE_NUM + TABLE_NUM - 1; i++)
+	for (int i = 0; i < TABLE_Y_NUM + TABLE_X_NUM - 1; i++)
 	{
 		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
 		// 変換成功
@@ -431,6 +435,7 @@ void StageManager::CarryableObjInteract(void)
 void StageManager::MachineInteract(void)
 {
 	auto& pSphere = player_.GetSphere();
+
 	//マシンとカップの処理
 	for (const auto& obj : objects_)
 	{
@@ -441,18 +446,19 @@ void StageManager::MachineInteract(void)
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			obj->Interact(player_.GetHoldItem());
+ 			obj->Interact(player_.GetHoldItem());
 		}
 
 		//設置して一定時間経ったらコーヒーを出力する
-		if (obj->GetInteractTime() <= 0.0f)
+		if (obj->GetObjectId() == COFFEE_MACHINE &&
+			obj->GetInteractTime() <= 0.0f)
 		{
-			MakeHotCoffee();
+			MakeCoffee();
 			break;
 		}
 	}
 
-	//マシンとカップの処理
+	//ディスペンサーとカップの処理
 	for (const auto& obj : objects_)
 	{
 		if (obj->GetObjectId() != ICE_DISPENSER)continue;
@@ -505,12 +511,13 @@ void StageManager::LidRackInteract(void)
 	}
 }
 
-void StageManager::MakeHotCoffee(void)
+void StageManager::MakeCoffee(void)
 {
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//ホット用カップ以外のオブジェクトは判定しない
-		if (objects_[i]->GetObjectId() != HOT_CUP) continue;
+		if (objects_[i]->GetObjectId() != HOT_CUP &&
+			objects_[i]->GetObjectId() != CUP_WITH_ICE) continue;
 
 		for (const auto& machine : objects_)
 		{
@@ -522,14 +529,36 @@ void StageManager::MakeHotCoffee(void)
 				AsoUtility::IsHitSpheres(machine->GetPos(), machine->GetSphereRad(),
 					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
-				//設置されているカップをコーヒーに上書きする
-				objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
-				objects_[i]->Init();
-				objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-				objects_[i]->SetPos(tables_[5]->GetTopCenter());
+				if(objects_[i]->GetObjectId() == HOT_CUP)
+				{
+					MakeHotCoffee(i);
+					return; // ホットコーヒーを作ったら処理を終了
+				}
+				else {
+					MakeIceCoffee(i);
+					return; // アイスコーヒーを作ったら処理を終了
+				}
 			}
 		}
 	}
+}
+
+void StageManager::MakeHotCoffee(int i)
+{
+	//設置されているカップをコーヒーに上書きする
+	objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
+	objects_[i]->Init();
+	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
+	objects_[i]->SetPos(tables_[5]->GetTopCenter());
+}
+
+void StageManager::MakeIceCoffee(int i)
+{
+	//設置されているカップをコーヒーに上書きする
+	objects_[i] = std::make_unique<IceCoffee>(ICE_COFFEE, 20.0f, 30.0f, 20.0f, player_);
+	objects_[i]->Init();
+	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
+	objects_[i]->SetPos(tables_[5]->GetTopCenter());
 }
 
 void StageManager::DispenseIce2Cup(void)
@@ -550,10 +579,9 @@ void StageManager::DispenseIce2Cup(void)
 					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
 				//設置されているカップに氷を入れる
-				objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
-				objects_[i]->Init();
-				objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-				objects_[i]->SetPos(tables_[5]->GetTopCenter());
+				if (auto iceCup = dynamic_cast<IceCup*>(objects_[i].get())) {
+					iceCup->PouredIce();
+				}
 			}
 		}
 	}

@@ -71,7 +71,7 @@ void IceDispenser::Interact(const std::string& objId)
 			{
 				VECTOR cupPos = GetTopCenter();	//マシンの上部中央にカップを置く
 				cupPos.y += obj->GetObjHeight() / 2.0f;	//少し上にずらす
-				obj->ItemPlaced(cupPos);
+				obj->ItemPlaced(GetPos());
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}
 		}
@@ -91,6 +91,8 @@ void IceDispenser::UpdateActive(void)
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
+		if (obj->GetObjectId() != ICE_CUP)continue;
+
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
@@ -98,12 +100,12 @@ void IceDispenser::UpdateActive(void)
 			hasPlacedCup = true;
 			break;
 		}
-		else if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			GetSpherePos(), GetSphereRad()) &&
-			obj->GetItemState() != ITEM_STATE::PLACED)
-		{
-			break;	//PLACED状態のカップがなければループを抜ける
-		}
+		//else if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+		//	GetSpherePos(), GetSphereRad()) &&
+		//	obj->GetItemState() != ITEM_STATE::PLACED)
+		//{
+		//	break;	//PLACED状態のカップがなければループを抜ける
+		//}
 	}
 
 	//PLACED状態のカップがなければ非アクティブにする
