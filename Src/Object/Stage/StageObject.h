@@ -50,6 +50,8 @@ public:
 
 	void PutOnTheLid(void) { isLid_ = true; }
 
+	void SetLidOn(const bool isLid) { isLid_ = isLid; }
+
 	/// <summary>
 	/// アイテムオブジェクトの状態を変更する
 	/// </summary>

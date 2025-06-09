@@ -26,9 +26,6 @@ void CupLidRack::Interact(const std::string& objId)
 	if (!isAccepted)return;	//存在しなかったら処理しない
 	if (param_.interactTime <= 0.0f)return;
 
-	//ホットコーヒーを持っているか（いらないかも）
-	//bool isHoldingHotCoffee = (player_.GetHoldItem() == HOT_COFFEE);
-
 	auto& ins = InputManager::GetInstance();
 	for (const auto& obj : objects_)
 	{

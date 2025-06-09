@@ -111,18 +111,6 @@ void StageManager::Init(void)
 	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID_RACK, 60.0f, 20.0f, 60.0f, player_,objects_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[2]->GetTopCenter());
-	//
-	////ホット用カップ
-	//objects_.emplace_back(std::make_unique<HotCup>(HOT_CUP, 40.0f, 30.0f, 40.0f, player_));
-	//StageObject& cupHotRef = *objects_.back();
-	//objects_.back()->Init();
-	//objects_.back()->SetPos(tables_.back()->GetTopCenter());
-
-	////アイス用カップ
-	//objects_.emplace_back(std::make_unique<IceCup>(ICE_CUP, 40.0f, 30.0f, 40.0f, player_));
-	//StageObject& cupIceRef = *objects_.back(); // 新しく追加されたIceCupへの参照を取得
-	//objects_.back()->Init();
-	//objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
 
 	//コーヒーマシン
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
@@ -139,8 +127,8 @@ void StageManager::Init(void)
 	objects_.back()->SetPos(tables_[4]->GetTopCenter());
 
 	//ゴミ箱
-	objects_.emplace_back(std::make_unique<Machine>(DUST_BOX, 50.0f, 75.0f, 60.0f,
-		 player_,objects_));
+	objects_.emplace_back(std::make_unique<StageObject>(DUST_BOX, 50.0f, 75.0f, 60.0f,
+		 player_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(DUST_BOX_POS);
 
@@ -198,6 +186,8 @@ void StageManager::Update(void)
 	//蓋ラックとのインタラクト処理
 	LidRackInteract();
 
+	DustBoxInteract();
+
 #ifdef _DEBUG
 
 	//ImGuiの操作を行う
@@ -237,6 +227,7 @@ void StageManager::Draw(void)
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
+	DebugDrawFormat::FormatString(L"size : %d", objects_.size(), line, lineHeight);
 
 	//size_t size = objects_.size();
 	////蓋生成数確認用
@@ -249,17 +240,17 @@ void StageManager::Draw(void)
 	//DebugDrawFormat::FormatString(L"end : %s",
 	//	StringUtility::StringToWstring(objects_.back()->GetObjectId()).c_str(), line, lineHeight);
 
-	DebugDrawFormat::FormatString(L"surveD : %d",
-		surveDrink_, line, lineHeight);
-	
-	DebugDrawFormat::FormatString(L"surveS : %d",
-		surveSweets_, line, lineHeight);
-	
-	DebugDrawFormat::FormatString(L"surveL : %d",
-		surveDrinkLid_, line, lineHeight);
-	
-	DebugDrawFormat::FormatString(L"surve : %d",
-		isSurved_, line, lineHeight);
+	//DebugDrawFormat::FormatString(L"surveD : %d",
+	//	surveDrink_, line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"surveS : %d",
+	//	surveSweets_, line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"surveL : %d",
+	//	surveDrinkLid_, line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"surve : %d",
+	//	isSurved_, line, lineHeight);
 
 	//for (const auto& obj : objects_)
 	//{
@@ -502,7 +493,7 @@ void StageManager::LidRackInteract(void)
 			obj->SetInteractTime(3.0f);
 		}
 
-		//インタラクトし続けて一定時間経ったらコーヒーを出力する
+		//インタラクトし続けて一定時間経ったら蓋をする
 		if (obj->GetInteractTime() <= 0.0f)
 		{
 			LidFollowCup();
@@ -621,6 +612,85 @@ void StageManager::LidFollowCup(void)
 		}
 		if (isCreate)break;
 	}
+}
+
+void StageManager::DustBoxInteract(void)
+{
+	auto& ins = InputManager::GetInstance();
+	auto& pSphere = player_.GetSphere();
+
+	// ゴミ箱の処理
+	for (const auto& obj : objects_)
+	{
+		if (obj->GetObjectId() != DUST_BOX) continue;
+
+		// プレイヤーが持っているアイテムをゴミ箱に近づけている場合
+		if (player_.GetIsHolding() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			if(ins.IsTrgDown(KEY_INPUT_SPACE))
+			{
+				//ゴミ箱にアイテムを捨てる処理
+				DiscardHoldObject();
+			}
+			break;
+		}
+	}
+}
+
+void StageManager::DiscardHoldObject(void)
+{
+	// プレイヤーが持っているアイテム名を取得
+	std::string heldItem = player_.GetHoldItem();
+
+	// コーヒー本体のインデックスを探す
+	int coffeeIndex = -1;
+	for (int i = 0; i < objects_.size(); ++i)
+	{
+		if ((objects_[i]->GetObjectId() == HOT_COFFEE || objects_[i]->GetObjectId() == ICE_COFFEE) &&
+			objects_[i]->GetItemState() == StageObject::ITEM_STATE::HOLD)
+		{
+			coffeeIndex = i;
+			break;
+		}
+	}
+
+	// 蓋付きコーヒーの場合は蓋も削除
+	if (coffeeIndex != -1 && objects_[coffeeIndex]->IsLidOn())
+	{
+		// 蓋のインデックスを探す
+		for (int i = 0; i < objects_.size(); ++i)
+		{
+			// dynamic_castでCupLid型に変換し、親参照を比較
+			//蓋を削除する
+			CupLid* lid = dynamic_cast<CupLid*>(objects_[i].get());
+			if (lid && &(lid->GetCoffee()) == objects_[coffeeIndex].get())
+			{
+				objects_.erase(objects_.begin() + i);
+				break;
+			}
+		}
+		// コーヒー本体も削除
+		objects_.erase(objects_.begin() + coffeeIndex);
+	}
+	else
+	{
+		// 通常のオブジェクト削除
+		for (auto it = objects_.begin(); it != objects_.end(); ++it)
+		{
+			if ((*it)->GetObjectId() == heldItem &&
+				(*it)->GetItemState() == StageObject::ITEM_STATE::HOLD)
+			{
+				objects_.erase(it);
+				break;
+			}
+		}
+	}
+
+	// プレイヤーの持ち物状態をリセット
+	player_.SetHoldItem("");
+	player_.SetIsHoldiong(false);
 }
 
 void StageManager::UpdateDebugImGui(void)

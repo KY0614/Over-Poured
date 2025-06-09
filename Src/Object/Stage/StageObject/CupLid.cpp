@@ -6,14 +6,14 @@
 CupLid::CupLid(const std::string objId, const float width,
     const float height, const float depth, Player& player,
     StageObject& object) :
-    StageObject(objId, width, height, depth, player),coffees_(object)
+    StageObject(objId, width, height, depth, player),coffee_(object)
 {
 }
 
 void CupLid::Update(void)
 {
-    VECTOR pos = coffees_.GetTransform().pos;
-    pos.y += coffees_.GetObjHeight();
+    VECTOR pos = coffee_.GetTransform().pos;
+    pos.y += coffee_.GetObjHeight();
 
     transform_.pos = pos;
 

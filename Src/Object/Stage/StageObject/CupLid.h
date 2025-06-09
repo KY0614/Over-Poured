@@ -13,8 +13,10 @@ public:
 
 	void Update(void)override;
 
+	StageObject& GetCoffee(void) const { return coffee_; }
+
 private:
 
-	StageObject& coffees_;
+	StageObject& coffee_;
 };
 

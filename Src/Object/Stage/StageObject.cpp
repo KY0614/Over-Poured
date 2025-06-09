@@ -34,27 +34,28 @@ void StageObject::Init(void)
 
 	cube_ = std::make_unique<Cube>(transform_);
 
-	sphere_ = std::make_unique<Sphere>(transform_);
-	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
-	if(objId_ == "Table" || objId_ == "Counter" || objId_ == "Dust_Box")sphere_->SetLocalPos({0.0f, height_, 0.0f});
-
-	itemState_ = ITEM_STATE::PLACED;
-	machineState_ = MACHINE_STATE::INACTIVE;
-
-	transform_.Update();
-
 	rad_ = 30.0f;
 
 	if (objId_ == "Coffee_Machine")rad_ = 35.0f;
 	else if (objId_ == "Ice_Dispenser")rad_ = 35.0f;
 	else if (objId_ == "Cup_Lid")rad_ = 10.0f;
 	else if (objId_ == "Hot_Cup" || objId_ == "Ice_Cup" ||
-		objId_ == "Hot_Coffee" ||objId_ == "Ice_Coffee" || objId_ == "Cup_Lid_Rack")rad_ = 20.0f;
+		objId_ == "Hot_Coffee" || objId_ == "Ice_Coffee" || objId_ == "Cup_Lid_Rack")rad_ = 20.0f;
 
 	if (objId_ == "Hot_Coffee")drink_ = Order::DRINK::HOT;
 	if (objId_ == "Ice_Coffee")drink_ = Order::DRINK::ICE;
 
+	sphere_ = std::make_unique<Sphere>(transform_);
+	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
 	sphere_->SetRadius(rad_);
+
+	if(objId_ == "Table" || objId_ == "Counter")sphere_->SetLocalPos({0.0f, height_, 0.0f});
+	if(objId_ == "Dust_Box")sphere_->SetLocalPos({0.0f, height_ + sphere_->GetRadius(), 0.0f});
+
+	itemState_ = ITEM_STATE::PLACED;
+	machineState_ = MACHINE_STATE::INACTIVE;
+
+	transform_.Update();
 
 #ifdef _DEBUG
 

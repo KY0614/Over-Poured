@@ -122,5 +122,9 @@ private:
 	/// <param name=""></param>
 	void LidFollowCup(void);
 
+	void DustBoxInteract(void);
+
+	void DiscardHoldObject(void);
+
 	void UpdateDebugImGui(void);
 };
