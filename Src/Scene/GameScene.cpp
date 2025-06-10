@@ -56,6 +56,9 @@ void GameScene::Init(void)
 	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
 
+	//StageManagerに注文をセット
+	stage_->SetCurrentOrder(customer_->GetOrderData());
+
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
 	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
@@ -81,8 +84,8 @@ void GameScene::Update(void)
 
 #ifdef _DEBUG
 
-	VECTOR spPos = { 221.0f, 0.0f, 139.0f };
-	float r = 30.0f;
+	//VECTOR spPos = { 221.0f, 0.0f, 139.0f };
+	//float r = 30.0f;
 	//if (!customer_->GetIsMoving() &&
 	//	AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
 	//{
@@ -100,6 +103,11 @@ void GameScene::Update(void)
 	{
 		//スコアの加算
 		score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
+		//処理を考え中ーーー
+		//if(customer_->GetOrderData().num_ > 1)
+		//{
+		//	score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
+		//}ーーーーーーーー
 		customer_->IsServe();	//注文を出す
 		stage_->DeleteSurvedItem();	//サーブしたアイテムをリセット
 	}

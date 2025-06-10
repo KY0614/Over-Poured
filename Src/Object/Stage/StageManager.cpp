@@ -227,7 +227,6 @@ void StageManager::Update(void)
 void StageManager::Draw(void)
 {
 	//モデルの描画
-
 	MV1DrawModel(transform_.modelId);
 
 	for (const auto& table : tables_)
@@ -242,82 +241,8 @@ void StageManager::Draw(void)
 		obj->Draw();
 	}
 
-
 #ifdef _DEBUG
-
-	//DrawSphere3D(objects_[3]->GetSpherePos(),
-	//	objects_[3]->GetSphereRad(), 8, 0xff0000, 0xff0000, true);
-
-	int line = 8;	//行
-	int lineHeight = 30;	//行
-	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"size : %d", objects_.size(), line, lineHeight);
-
-	//size_t size = objects_.size();
-	////蓋生成数確認用
-	//DebugDrawFormat::FormatString(L"end - 2 : %s",
-	//	StringUtility::StringToWstring(objects_[size - 3]->GetObjectId()).c_str(), line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"end - 1 : %s",
-	//	StringUtility::StringToWstring(objects_[size - 2]->GetObjectId()).c_str(), line, lineHeight);
-
-	//DebugDrawFormat::FormatString(L"end : %s",
-	//	StringUtility::StringToWstring(objects_.back()->GetObjectId()).c_str(), line, lineHeight);
-
-	//DebugDrawFormat::FormatString(L"surveD : %d",
-	//	surveDrink_, line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"surveS : %d",
-	//	surveSweets_, line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"surveL : %d",
-	//	surveDrinkLid_, line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"surve : %d",
-	//	isSurved_, line, lineHeight);
-
-	//for (const auto& obj : objects_)
-	//{
-	//	DebugDrawFormat::FormatString(L"objActioned : %d",
-	//		obj->IsActioned() , line, lineHeight);
-	//}
-
-	for (size_t i = 0; i < objects_.size(); ++i)
-	{
-		//コーヒー以外のオブジェクトは判定しない
-		if (objects_[i]->GetObjectId() != HOT_COFFEE &&
-			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
-
-		DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
-			objects_[i]->IsLidOn(), line, lineHeight);
-	}
-
-	for (int i = 0; i < tables_.size(); i++)
-	{
-		DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
-			tables_[i]->GetIsPlaceable(), line, lineHeight);
-	}
-
-	//テーブル番号を表示
-	for (int i = 0; i < TABLE_Y_NUM + TABLE_X_NUM - 1; i++)
-	{
-		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
-		// 変換成功
-		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
-			L"%s : %d",
-			StringUtility::StringToWstring(tables_[i]->GetObjectId().c_str()).c_str(), i);
-	}
-
-	for (const auto& obj : objects_)
-	{
-		VECTOR screenPos = ConvWorldPosToScreenPos(obj->GetTransform().pos);
-		// 変換成功
-		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
-			L"%s",
-			StringUtility::StringToWstring(obj->GetObjectId().c_str()).c_str());
-	}
-
+	DrawDebug();
 #endif // _DEBUG
 }
 
@@ -362,23 +287,50 @@ void StageManager::ResetServeData(void)
 
 void StageManager::SurveItem(StageObject& obj)
 {
-	auto& ins = InputManager::GetInstance();
+	//isSurved_ = true;
 
-	isSurved_ = true;
+	//surveDrinkLid_ = obj.IsLidOn();
 
-	surveDrinkLid_ = obj.IsLidOn();
+	//if (obj.GetObjectId() == HOT_COFFEE)
+	//{
+	//	surveDrink_ = Order::DRINK::HOT;
+	//}
+	//else if (obj.GetObjectId() == ICE_COFFEE)
+	//{
+	//	surveDrink_ = Order::DRINK::ICE;
+	//}
+	//else
+	//{
+	//	surveDrink_ = Order::DRINK::NONE;
+	//}
 
-	if (obj.GetObjectId() == HOT_COFFEE)
-	{
-		surveDrink_ = Order::DRINK::HOT;
+	// 商品情報をOrderDataに変換
+	Order::OrderData data;
+	// 例: objのIDや状態からOrderDataをセット
+	if (obj.GetObjectId() == HOT_COFFEE) {
+		data.drink_ = Order::DRINK::HOT;
+		data.lid_ = obj.IsLidOn();
 	}
-	else if (obj.GetObjectId() == ICE_COFFEE)
-	{
-		surveDrink_ = Order::DRINK::ICE;
+	else if (obj.GetObjectId() == ICE_COFFEE) {
+		data.drink_ = Order::DRINK::ICE;
+		data.lid_ = obj.IsLidOn();
 	}
-	else
-	{
-		surveDrink_ = Order::DRINK::NONE;
+	else if (obj.GetObjectId() == CHOCO_SWEETSRACK) {
+		data.sweets_ = Order::SWEETS::CHOCO;
+	}
+	else if (obj.GetObjectId() == BERRY_SWEETSRACK) {
+		data.sweets_ = Order::SWEETS::STRAWBERRY;
+	}
+	// ...他の商品も必要に応じて
+
+	servedItems_.push_back(data);
+
+	// 注文が揃ったか判定
+	if (IsOrderCompleted(servedItems_, currentOrder_)) {
+		isSurved_ = true;
+		// 注文完了処理
+		servedItems_.clear();
+		// 必要ならお客の状態を更新
 	}
 }
 
@@ -663,6 +615,108 @@ void StageManager::DustBoxInteract(void)
 			break;
 		}
 	}
+}
+
+bool StageManager::IsOrderCompleted(const std::vector<Order::OrderData>& served, const Order::OrderData& order)
+{
+	bool drinkOk = false;
+	bool sweetsOk = false;
+
+	for (const auto& item : served) {
+		if (order.drink_ != Order::DRINK::NONE && item.drink_ == order.drink_) {
+			drinkOk = true;
+		}
+		if (order.sweets_ != Order::SWEETS::NONE && item.sweets_ == order.sweets_) {
+			sweetsOk = true;
+		}
+	}
+
+	// ドリンクとスイーツ両方必要な場合
+	if (order.drink_ != Order::DRINK::NONE && order.sweets_ != Order::SWEETS::NONE) {
+		return drinkOk && sweetsOk;
+	}
+	// どちらかだけの場合
+	if (order.drink_ != Order::DRINK::NONE) return drinkOk;
+	if (order.sweets_ != Order::SWEETS::NONE) return sweetsOk;
+	return false;
+}
+
+void StageManager::DrawDebug(void)
+{
+
+	//DrawSphere3D(objects_[3]->GetSpherePos(),
+	//	objects_[3]->GetSphereRad(), 8, 0xff0000, 0xff0000, true);
+
+	int line = 8;	//行
+	int lineHeight = 30;	//行
+	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
+	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
+	DebugDrawFormat::FormatString(L"size : %d", objects_.size(), line, lineHeight);
+
+	//size_t size = objects_.size();
+	////蓋生成数確認用
+	//DebugDrawFormat::FormatString(L"end - 2 : %s",
+	//	StringUtility::StringToWstring(objects_[size - 3]->GetObjectId()).c_str(), line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"end - 1 : %s",
+	//	StringUtility::StringToWstring(objects_[size - 2]->GetObjectId()).c_str(), line, lineHeight);
+
+	//DebugDrawFormat::FormatString(L"end : %s",
+	//	StringUtility::StringToWstring(objects_.back()->GetObjectId()).c_str(), line, lineHeight);
+
+	//DebugDrawFormat::FormatString(L"surveD : %d",
+	//	surveDrink_, line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"surveS : %d",
+	//	surveSweets_, line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"surveL : %d",
+	//	surveDrinkLid_, line, lineHeight);
+	//
+	//DebugDrawFormat::FormatString(L"surve : %d",
+	//	isSurved_, line, lineHeight);
+
+	//for (const auto& obj : objects_)
+	//{
+	//	DebugDrawFormat::FormatString(L"objActioned : %d",
+	//		obj->IsActioned() , line, lineHeight);
+	//}
+
+	for (size_t i = 0; i < objects_.size(); ++i)
+	{
+		//コーヒー以外のオブジェクトは判定しない
+		if (objects_[i]->GetObjectId() != HOT_COFFEE &&
+			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
+
+		DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
+			objects_[i]->IsLidOn(), line, lineHeight);
+	}
+
+	for (int i = 0; i < tables_.size(); i++)
+	{
+		DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
+			tables_[i]->GetIsPlaceable(), line, lineHeight);
+	}
+
+	//テーブル番号を表示
+	for (int i = 0; i < TABLE_Y_NUM + TABLE_X_NUM - 1; i++)
+	{
+		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
+		// 変換成功
+		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+			L"%s : %d",
+			StringUtility::StringToWstring(tables_[i]->GetObjectId().c_str()).c_str(), i);
+	}
+
+	for (const auto& obj : objects_)
+	{
+		VECTOR screenPos = ConvWorldPosToScreenPos(obj->GetTransform().pos);
+		// 変換成功
+		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+			L"%s",
+			StringUtility::StringToWstring(obj->GetObjectId().c_str()).c_str());
+	}
+
 }
 
 void StageManager::UpdateDebugImGui(void)

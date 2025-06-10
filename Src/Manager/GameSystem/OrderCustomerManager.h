@@ -64,6 +64,8 @@ public:
 	/// <returns>‚¨‹q‚Ì”</returns>
 	int GetCustomerNum(void) const;
 
+	Order::OrderData GetOrderData(void) const;
+
 private:
 
 	//OrderManager‚Ìƒ|ƒCƒ“ƒ^

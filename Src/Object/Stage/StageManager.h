@@ -44,6 +44,8 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
+	void SetCurrentOrder(const Order::OrderData& order) { currentOrder_ = order; }
+
 	/// <summary>
 	/// 提供するアイテムを取得する
 	/// </summary>
@@ -79,6 +81,11 @@ private:
 	std::unique_ptr<StageObject> counter_;
 
 	bool isSurved_;
+
+	//提供済み商品リスト
+	std::vector<Order::OrderData> servedItems_; 
+	//現在のお客の注文内容
+	Order::OrderData currentOrder_;
 
 	Order::DRINK surveDrink_;
 	Order::SWEETS surveSweets_;
@@ -125,5 +132,10 @@ private:
 
 	void DustBoxInteract(void);
 
+	bool IsOrderCompleted(const std::vector<Order::OrderData>& served, const Order::OrderData& order);
+
+	void DrawDebug(void);
+
 	void UpdateDebugImGui(void);
+
 };

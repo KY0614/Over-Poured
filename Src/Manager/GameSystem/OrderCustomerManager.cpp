@@ -267,6 +267,11 @@ int OrderCustomerManager::GetCustomerNum(void) const
 	return customerMng_->GetCustomerNum();
 }
 
+Order::OrderData OrderCustomerManager::GetOrderData(void) const
+{
+	return orderMng_->GetFirstOrder();
+}
+
 void OrderCustomerManager::DebugDraw(void)
 {
 	SetFontSize(24);
