@@ -25,6 +25,21 @@
 #include "StageObject/IceDispenser.h"	
 #include "StageManager.h"
 
+#pragma region メモ
+
+//クラスが多すぎるので減らすためにカテゴリ分けしたクラスにしたい
+//例：HotCup,HotCoffee→Itemclass
+
+//ディスペンサーとマシンに重ねて設置できてしまうので要修正
+//（アイスのみ）
+
+//カテゴリ分けしたクラスにする際jsonデータをいじくるか検討中
+
+
+
+#pragma endregion
+
+
 namespace {
 	const std::string TABLE = "Table";		//テーブル
 	const std::string COUNTER = "Counter";	//カウンター
@@ -156,6 +171,8 @@ void StageManager::Init(void)
 		 player_,objects_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(DUST_BOX_POS);
+
+	servedItems_.clear();
 
 #ifdef _DEBUG
 
@@ -315,15 +332,16 @@ void StageManager::SurveItem(StageObject& obj)
 		data.drink_ = Order::DRINK::ICE;
 		data.lid_ = obj.IsLidOn();
 	}
-	else if (obj.GetObjectId() == CHOCO_SWEETSRACK) {
+	else if (obj.GetObjectId() == "Sweets_Choco") {
 		data.sweets_ = Order::SWEETS::CHOCO;
 	}
-	else if (obj.GetObjectId() == BERRY_SWEETSRACK) {
+	else if (obj.GetObjectId() == "Sweets_Strawberry") {
 		data.sweets_ = Order::SWEETS::STRAWBERRY;
 	}
 	// ...他の商品も必要に応じて
 
 	servedItems_.push_back(data);
+	//DeleteSurvedItem();
 
 	// 注文が揃ったか判定
 	if (IsOrderCompleted(servedItems_, currentOrder_)) {
