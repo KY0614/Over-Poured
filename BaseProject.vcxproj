@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\StageObject\BerrySweetsRack.cpp" />
+    <ClCompile Include="Src\FpsCounter.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\ChocoSweetsRack.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceCoffee.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceCupRack.cpp" />
@@ -81,8 +83,11 @@
     <ClCompile Include="Src\Object\Stage\StageObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObjectLibrary.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\Sweets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\StageObject\BerrySweetsRack.h" />
+    <ClInclude Include="Src\FpsCounter.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\ChocoSweetsRack.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceCoffee.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceCupRack.h" />
@@ -192,6 +197,7 @@
     <ClInclude Include="Src\Object\Stage\StageObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObjectLibrary.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\Table.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\Sweets.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

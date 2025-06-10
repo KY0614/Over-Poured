@@ -1,7 +1,6 @@
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
-#include "../Object/Stage/StageManager.h"
 #include "IceCup.h"
 
 IceCup::IceCup(const std::string objId, const float width,

@@ -25,6 +25,5 @@ void HotCupRack::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
 		player_.SetHoldItem(object.back()->GetObjectId());
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
-		
 	}
 }

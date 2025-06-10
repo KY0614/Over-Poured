@@ -14,6 +14,8 @@
 #include "StageObject/IceCup.h"
 #include "StageObject/HotCupRack.h"
 #include "StageObject/IceCupRack.h"
+#include "StageObject/ChocoSweetsRack.h"
+#include "StageObject/BerrySweetsRack.h"
 #include "StageObject/HotCoffee.h"
 #include "StageObject/IceCoffee.h"
 #include "StageObject/CupLidRack.h"
@@ -30,6 +32,8 @@ namespace {
 	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
 	const std::string HOT_CUP_RACK = "Cup_Hot_Rack";	//ホット用ラック
 	const std::string ICE_CUP_RACK = "Cup_Ice_Rack";	//アイス用ラック
+	const std::string CHOCO_SWEETSRACK = "Sweets_Choco_Rack";	//チョコスイーツ用ラック
+	const std::string BERRY_SWEETSRACK = "Sweets_Strawberry_Rack";	//ベリースイーツ用ラック
 	const std::string CUP_WITH_ICE = "Cup_With_Ice";	//アイス用カップ
 	const std::string HOT_COFFEE = "Hot_Coffee";		//ホットコーヒー
 	const std::string ICE_COFFEE = "Ice_Coffee";		//アイスコーヒー
@@ -72,10 +76,10 @@ void StageManager::Init(void)
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
-	//横のテーブル群
+	//横のテーブル群(手前)
 	for (int x = 0; x < TABLE_X_NUM; x++)
 	{
-		VECTOR firstPos = TABLE_POS;
+		VECTOR firstPos = TABLE_POS_BACK;
 		firstPos.x += (x * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_,objects_));
 		tables_.back()->Init();
@@ -92,6 +96,17 @@ void StageManager::Init(void)
 		tables_.back()->SetPos(firstPos);
 	}
 
+	//横のテーブル群(奥側)
+	for (int x = 0; x < 2; x++)
+	{
+		VECTOR firstPos = TABLE_POS_FRONT;
+		firstPos.x += (x * TABLE_WIDTH);
+		firstPos.z = 190.0f;
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
+		tables_.back()->Init();
+		tables_.back()->SetPos(firstPos);
+	}
+
 	//カウンター用テーブル
 	counter_ = std::make_unique<Counter>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
 	counter_->Init();
@@ -100,10 +115,20 @@ void StageManager::Init(void)
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<HotCupRack>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
-	objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
+	objects_.back()->SetPos(tables_[TABLE_X_NUM + TABLE_Y_NUM - 1]->GetTopCenter());
 	
 	//アイス用カップのラック
 	objects_.emplace_back(std::make_unique<IceCupRack>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init();
+	objects_.back()->SetPos(tables_[TABLE_Y_NUM]->GetTopCenter());
+
+	//チョコスイーツ用のラック
+	objects_.emplace_back(std::make_unique<ChocoSweetsRack>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init();
+	objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
+	
+	//ベリースイーツ用のラック
+	objects_.emplace_back(std::make_unique<BerrySweetsRack>(BERRY_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_.back()->GetTopCenter());
 	
@@ -127,8 +152,8 @@ void StageManager::Init(void)
 	objects_.back()->SetPos(tables_[4]->GetTopCenter());
 
 	//ゴミ箱
-	objects_.emplace_back(std::make_unique<StageObject>(DUST_BOX, 50.0f, 75.0f, 60.0f,
-		 player_));
+	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
+		 player_,objects_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(DUST_BOX_POS);
 
@@ -632,65 +657,12 @@ void StageManager::DustBoxInteract(void)
 			if(ins.IsTrgDown(KEY_INPUT_SPACE))
 			{
 				//ゴミ箱にアイテムを捨てる処理
-				DiscardHoldObject();
+				//DiscardHoldObject();
+				obj->Interact(player_.GetHoldItem());
 			}
 			break;
 		}
 	}
-}
-
-void StageManager::DiscardHoldObject(void)
-{
-	// プレイヤーが持っているアイテム名を取得
-	std::string heldItem = player_.GetHoldItem();
-
-	// コーヒー本体のインデックスを探す
-	int coffeeIndex = -1;
-	for (int i = 0; i < objects_.size(); ++i)
-	{
-		if ((objects_[i]->GetObjectId() == HOT_COFFEE || objects_[i]->GetObjectId() == ICE_COFFEE) &&
-			objects_[i]->GetItemState() == StageObject::ITEM_STATE::HOLD)
-		{
-			coffeeIndex = i;
-			break;
-		}
-	}
-
-	// 蓋付きコーヒーの場合は蓋も削除
-	if (coffeeIndex != -1 && objects_[coffeeIndex]->IsLidOn())
-	{
-		// 蓋のインデックスを探す
-		for (int i = 0; i < objects_.size(); ++i)
-		{
-			// dynamic_castでCupLid型に変換し、親参照を比較
-			//蓋を削除する
-			CupLid* lid = dynamic_cast<CupLid*>(objects_[i].get());
-			if (lid && &(lid->GetCoffee()) == objects_[coffeeIndex].get())
-			{
-				objects_.erase(objects_.begin() + i);
-				break;
-			}
-		}
-		// コーヒー本体も削除
-		objects_.erase(objects_.begin() + coffeeIndex);
-	}
-	else
-	{
-		// 通常のオブジェクト削除
-		for (auto it = objects_.begin(); it != objects_.end(); ++it)
-		{
-			if ((*it)->GetObjectId() == heldItem &&
-				(*it)->GetItemState() == StageObject::ITEM_STATE::HOLD)
-			{
-				objects_.erase(it);
-				break;
-			}
-		}
-	}
-
-	// プレイヤーの持ち物状態をリセット
-	player_.SetHoldItem("");
-	player_.SetIsHoldiong(false);
 }
 
 void StageManager::UpdateDebugImGui(void)

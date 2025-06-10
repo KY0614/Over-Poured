@@ -1,14 +1,14 @@
 #pragma once
 #include "../StageObject.h"
 
-class ChocoSweetsRack : public StageObject
+class BerrySweetsRack : public StageObject
 {
 public:
 
-	ChocoSweetsRack(const std::string objId, const float width,
+	BerrySweetsRack(const std::string objId, const float width,
 		const float height, const float depth, Player& player);
 
-	~ChocoSweetsRack(void) = default;
+	~BerrySweetsRack(void) = default;
 
 	void PickUp(std::vector<std::unique_ptr<StageObject>>& object) override;
 

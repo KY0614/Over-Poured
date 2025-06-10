@@ -130,6 +130,8 @@ void StageObject::Draw(void)
 	else if (objId_ == "Table" || objId_ == "Counter")col = 0xd2b48c;
 	else if (objId_ == "Sweets_Choco")col = 0xa0522d;
 	else if (objId_ == "Sweets_Strawberry")col = 0xdda0dd;
+	else if (objId_ == "Sweets_Choco_Rack")col = 0xa0522d;
+	else if (objId_ == "Sweets_Strawberry_Rack")col = 0xdda0dd;
 	else if (objId_ == "Hot_Cup")col = 0xcd5c5c;
 	else if (objId_ == "Hot_Coffee")col = 0xffaaaa;
 	else if (objId_ == "Ice_Coffee")col = 0xaaffff;

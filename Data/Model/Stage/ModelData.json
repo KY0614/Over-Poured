@@ -22,7 +22,7 @@
     "acceptedItems":["Ice_Cup"],
     "produces": ["Cup_With_Ice"]
     },
-  "Table": {
+    "Table": {
     "id": "Table",
     "type": "surface",
     "name": "Table",
@@ -42,27 +42,47 @@
     "carryable": false,
     "acceptedItems":["Hot_Coffee","Ice_Coffee","Sweets_Choco","Sweets_Strawberry"]
     },
-  "Sweets_Choco": {
-    "id": "sweets_choco",
+    "Sweets_Choco_Rack": {
+    "id": "Sweets_Choco_Rack",
+    "type": "sweets",
+    "name": "ChocoRack",
+    "model": "models/choco.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":[],
+    "produces": ["Sweets_Choco"]
+    },
+    "Sweets_Strawberry_Rack": {
+    "id": "Sweets_Strawberry_Rack",
+    "type": "sweets",
+    "name": "StrawberryRack",
+    "model": "models/strawberry.mv1",
+    "interactable": true,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":[],
+    "produces": ["Sweets_Strawberry"]
+    },
+    "Sweets_Choco": {
+    "id": "Sweets_Choco",
     "type": "sweets",
     "name": "Choco_Sweets",
     "model": "models/choco.mv1",
-    "interactable": true,
+    "interactable": false,
     "placeable": true,
-    "carryable": false,
-    "acceptedItems":[],
-    "placeable": false
+    "carryable": true,
+    "acceptedItems":[]
     },
-  "Sweets_Strawberry": {
-    "id": "sweets_strawberry",
+    "Sweets_Strawberry": {
+    "id": "Sweets_Strawberry",
     "type": "sweets",
     "name": "Strawberry_Sweets",
     "model": "models/strawberry.mv1",
-    "interactable": true,
+    "interactable": false,
     "placeable": true,
-    "carryable": false,
-    "acceptedItems":[],
-    "placeable": false
+    "carryable": true,
+    "acceptedItems":[]
     },
     "Hot_Cup": {
     "id": "Hot_Cup",
@@ -172,7 +192,7 @@
     "interactable": true,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":["Hot_Cup","Ice_Cup","Hot_Coffee","Ice_Coffee","Hot_Coffee_With_Lid","Ice_Coffee_With_Lid"],
+    "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco"],
     "produces": []
     }
 }

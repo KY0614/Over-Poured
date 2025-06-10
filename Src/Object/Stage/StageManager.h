@@ -21,7 +21,8 @@ public:
 
 	//座標
 
-	static constexpr VECTOR TABLE_POS = { -140.0f, 0.0f, -175.0f };		//テーブルの座標
+	static constexpr VECTOR TABLE_POS_BACK = { -140.0f, 0.0f, -175.0f };		//テーブルの座標
+	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, -175.0f };	//テーブルの座標
 	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };//列テーブルの座標
 	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };		//カウンターの座標
 	static constexpr VECTOR DUST_BOX_POS = { 320.0f, 0.0f, -173.0f };		//カウンターの座標
@@ -123,8 +124,6 @@ private:
 	void LidFollowCup(void);
 
 	void DustBoxInteract(void);
-
-	void DiscardHoldObject(void);
 
 	void UpdateDebugImGui(void);
 };
