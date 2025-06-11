@@ -49,7 +49,7 @@ public:
 	/// </summary>
 	/// <param name="serve">’ñ‹Ÿ‚³‚ê‚½‚à‚Ì</param>
 	/// <returns>ƒXƒRƒA</returns>
-	int CheckServeAndOrder(Order::OrderData serve);
+	int CheckServeAndOrder(const Order::OrderData serve);
 
 	int CheckServeAndOrder(StageObject& obj);
 

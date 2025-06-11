@@ -38,7 +38,7 @@ GameScene::~GameScene(void)
 void GameScene::Init(void)
 {
 	//プレイヤー
-	player_ = std::make_shared<Player>();
+	player_ = std::make_unique<Player>();
 	player_->Init();
 
 	//ステージ
@@ -56,7 +56,7 @@ void GameScene::Init(void)
 	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
 
-	//StageManagerに注文をセット
+	//最初のお客の注文を受け取る
 	stage_->SetCurrentOrder(customer_->GetOrderData());
 
 	//カメラ
@@ -99,17 +99,12 @@ void GameScene::Update(void)
 	//	}
 	//}
 
-	if (stage_->IsSurved())
+	if (stage_->IsServed())
 	{
 		//スコアの加算
-		score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
-		//処理を考え中ーーー
-		//if(customer_->GetOrderData().num_ > 1)
-		//{
-		//	score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
-		//}ーーーーーーーー
+		score_ += customer_->CheckServeAndOrder(stage_->GetServeItems());
 		customer_->IsServe();	//注文を出す
-		stage_->DeleteSurvedItem();	//サーブしたアイテムをリセット
+		stage_->ResetServeData();	//サーブしたアイテムをリセット
 	}
 
 	//if (timer_ < 0.0f)
@@ -144,6 +139,8 @@ void GameScene::Update(void)
 
 	customer_->Update();
 
+	//最初のお客の注文を受け取る
+	stage_->SetCurrentOrder(customer_->GetOrderData());
 }
 
 void GameScene::Draw(void)

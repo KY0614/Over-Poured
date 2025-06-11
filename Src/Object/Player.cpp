@@ -25,6 +25,7 @@ Player::Player(void)
 	//状態管理
 	stateChanges_.emplace(STATE::NONE, std::bind(&Player::ChangeStateNone, this));
 	stateChanges_.emplace(STATE::PLAY, std::bind(&Player::ChangeStatePlay, this));
+	stateChanges_.emplace(STATE::STOP, std::bind(&Player::ChangeStateStop, this));
 
 	//衝突チェック
 	gravHitPosDown_ = AsoUtility::VECTOR_ZERO;
@@ -97,10 +98,7 @@ void Player::Init(void)
 
 #endif // _DEBUG
 
-	data_.drink_ = Order::DRINK::ICE;
-	data_.sweets_ = Order::SWEETS::NONE;
 	isHolding_ = false;
-
 }
 
 void Player::Update(void)
@@ -165,81 +163,6 @@ void Player::SurveItem(void)
 	holdItemId_ = "";
 }
 
-void Player::ProcessSelect(void)
-{
-	InputManager& ins = InputManager::GetInstance();
-
-	switch (data_.drink_)
-	{
-	case Order::DRINK::HOT:
-		if (ins.IsTrgDown(KEY_INPUT_N))
-		{
-			data_.drink_ = Order::DRINK::ICE;
-		}
-		else if (ins.IsTrgDown(KEY_INPUT_Q))
-		{
-			data_.drink_ = Order::DRINK::ICE;
-		}
-		break;
-
-	case Order::DRINK::ICE:
-		if (ins.IsTrgDown(KEY_INPUT_N))
-		{
-			data_.drink_ = Order::DRINK::HOT;
-		}
-		else if (ins.IsTrgDown(KEY_INPUT_Q))
-		{
-			data_.drink_ = Order::DRINK::HOT;
-		}
-		break;
-
-	case Order::DRINK::NONE:
-		data_.drink_ = Order::DRINK::HOT;
-		break;
-
-	default:
-		break;
-	}
-
-	switch (data_.sweets_)
-	{
-	case Order::SWEETS::NONE:
-		if (ins.IsTrgDown(KEY_INPUT_M))
-		{
-			data_.sweets_ = Order::SWEETS::CHOCO;
-		}
-		else if (ins.IsTrgDown(KEY_INPUT_E))
-		{
-			data_.sweets_ = Order::SWEETS::CHOCO;
-		}
-		break;
-
-	case Order::SWEETS::CHOCO:
-		if (ins.IsTrgDown(KEY_INPUT_M))
-		{
-			data_.sweets_ = Order::SWEETS::STRAWBERRY;
-		}
-		else if (ins.IsTrgDown(KEY_INPUT_E))
-		{
-			data_.sweets_ = Order::SWEETS::STRAWBERRY;
-		}
-		break;
-
-	case Order::SWEETS::STRAWBERRY:
-		if (ins.IsTrgDown(KEY_INPUT_M))
-		{
-			data_.sweets_ = Order::SWEETS::NONE;
-		}
-		else if (ins.IsTrgDown(KEY_INPUT_E))
-		{
-			data_.sweets_ = Order::SWEETS::NONE;
-		}
-		break;
-	default:
-		break;
-	}
-}
-
 void Player::UpdateDebugImGui(void)
 {
 	//ウィンドウタイトル&開始処理
@@ -296,23 +219,22 @@ void Player::ChangeStatePlay(void)
 	stateUpdate_ = std::bind(&Player::UpdatePlay, this);
 }
 
+void Player::ChangeStateStop(void)
+{
+	stateUpdate_ = std::bind(&Player::UpdateStop, this);
+}
+
 void Player::UpdateNone(void)
 {
 }
 
 void Player::UpdatePlay(void)
 {
-	//if (!isHolding_)holdItemId_ = "";
 	if (holdItemId_ == "")isHolding_ = false;
 	else isHolding_ = true;
 
-	//if(holdItemId_ == "Hot_Coffee")data_.drink_ = Order::DRINK::HOT;
-
 	//移動処理
 	ProcessMove();
-
-	//選択処理(仮の機能)
-	ProcessSelect();
 
 	//移動方向に応じた回転
 	Rotate();
@@ -328,66 +250,23 @@ void Player::UpdatePlay(void)
 	transform_.quaRot = transform_.quaRot.Mult(playerRotY_);
 }
 
+void Player::UpdateStop(void)
+{
+	//ストップというよりインタラクト中という感じ
+	//インタラクト用のアニメーションをさせたい
+
+}
+
 void Player::DrawDebug(void)
 {
 
 	SetFontSize(24);
 	int line = 0;
 	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	// 変換成功
-	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-		L"提供品 : % d,%d", data_.drink_, data_.sweets_);
 
 	//DebugDrawFormat::FormatStringRight(L"提供品 : %d, %d", data_.drink_, data_.sweets_,line);
 	SetFontSize(16);
 
-	auto orders = data_;
-
-	//注文に合わせて四角の色を変える
-	int drinkCol = GetColor(0, 0, 0);
-
-	//表示ベース位置（Yはちょっと上にオフセット）
-	int baseX = static_cast<int>(screenPos.x) + 70;
-	int baseY = static_cast<int>(screenPos.y) - 150; // 文字のYと合わせる
-
-	// 四角形の描画位置を決定（文字の下に並べる）
-	int startX = baseX;
-	int startY = baseY + 40; // 文字の下に少し空けて
-
-	int scale = 25;//大きさ
-	int gap = 10; // 文字とボックスの隙間
-
-	if (orders.drink_ == Order::DRINK::HOT)
-	{
-		drinkCol = GetColor(255, 0, 0);
-	}
-	else
-	{
-		drinkCol = GetColor(0, 255, 255);
-	}
-	//飲み物用
-	DrawBox(startX, startY, startX + scale, startY + scale, drinkCol, true);
-
-	int foodCol = GetColor(0, 0, 0);
-	switch (orders.sweets_)
-	{
-	case Order::SWEETS::NONE:
-		foodCol = GetColor(0, 0, 0);
-		break;
-
-	case Order::SWEETS::CHOCO:
-		foodCol = GetColor(132, 98, 68);
-		break;
-
-	case Order::SWEETS::STRAWBERRY:
-		foodCol = GetColor(255, 198, 244);
-		break;
-	default:
-		break;
-	}
-
-	//食べ物用
-	DrawBox(startX + scale + gap, startY, startX + scale * 2 + gap, startY + scale, foodCol, true);
 }
 
 void Player::DrawShadow(void)

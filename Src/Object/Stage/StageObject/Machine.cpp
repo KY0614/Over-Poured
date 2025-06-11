@@ -9,7 +9,6 @@
 
 namespace {
 	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
-	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
 	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
 	const std::string HOT_COFFEE = "Hot_Coffee";		//ホットコーヒー
 	const std::string ICE_COFFEE = "Ice_Coffee";		//アイスコーヒー
@@ -37,7 +36,8 @@ void Machine::Interact(const std::string& objId)
 		// ホットカップまたはホットコーヒー
 		if ((obj->GetObjectId() == HOT_CUP ||
 			obj->GetObjectId() == HOT_COFFEE ||
-			obj->GetObjectId() == CUP_WITH_ICE) &&
+			obj->GetObjectId() == CUP_WITH_ICE ||
+			obj->GetObjectId() == ICE_COFFEE) &&
 			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)

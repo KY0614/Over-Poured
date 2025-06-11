@@ -81,6 +81,8 @@ public:
 
 	float GetObjHeight(void)const { return height_; }
 
+	StageObjectLibrary::ObjectParams GetParam(void)const { return param_; }
+
 	/// <summary>
 	/// 持ち運び可能のオブジェクトかどうか
 	/// </summary>

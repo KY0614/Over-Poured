@@ -14,17 +14,18 @@ public:
 	//オブジェクト関連
 
 	//テーブル関連
-	static constexpr int TABLE_Y_NUM = 3;		//テーブルの数
-	static constexpr int TABLE_X_NUM = 5;		//テーブルの数
+	static constexpr int TABLE_COLUMN_NUM = 3;		//テーブルの数
+	static constexpr int TABLE_ROW_FRONT_NUM = 5;	//テーブルの数
+	static constexpr int TABLE_ROW_BACK_NUM = 2;	//テーブルの数
 
 	static constexpr float TABLE_WIDTH = 95.0f;	//テーブルの横幅
 
 	//座標
 
-	static constexpr VECTOR TABLE_POS_BACK = { -140.0f, 0.0f, -175.0f };		//テーブルの座標
-	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, -175.0f };	//テーブルの座標
-	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };//列テーブルの座標
-	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };		//カウンターの座標
+	static constexpr VECTOR TABLE_POS_BACK = { -140.0f, 0.0f, -175.0f };	//テーブルの座標
+	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 190.0f };	//テーブルの座標
+	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };	//列テーブルの座標
+	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };			//カウンターの座標
 	static constexpr VECTOR DUST_BOX_POS = { 320.0f, 0.0f, -173.0f };		//カウンターの座標
 
 	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };	//コーヒーマシンの座標
@@ -44,7 +45,7 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
-	void SetCurrentOrder(const Order::OrderData& order) { currentOrder_ = order; }
+	void SetCurrentOrder(const Order::OrderData& order);
 
 	/// <summary>
 	/// 提供するアイテムを取得する
@@ -53,18 +54,20 @@ public:
 	/// <returns></returns>
 	Order::OrderData GetServeData(void);
 
+	Order::OrderData GetServeItems(void)const { return servedItems_; }
+
 	/// <summary>
 	/// 提供したかどうかを取得する
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true:提供した　flase:未提供</returns>
-	bool IsSurved(void) const { return isSurved_; }
+	bool IsServed(void) const { return isSurved_; }
 
 	/// <summary>
-	/// 提供したアイテムを削除する
+	/// 提供データをリセットする
 	/// </summary>
 	/// <param name=""></param>
-	void DeleteSurvedItem(void);
+	void ResetServeData(void);
 
 private:
 
@@ -83,20 +86,13 @@ private:
 	bool isSurved_;
 
 	//提供済み商品リスト
-	std::vector<Order::OrderData> servedItems_; 
+	Order::OrderData servedItems_;
+
 	//現在のお客の注文内容
 	Order::OrderData currentOrder_;
 
-	Order::DRINK surveDrink_;
-	Order::SWEETS surveSweets_;
-
-	bool surveDrinkLid_;
-
-	/// <summary>
-	/// 提供データをリセットする
-	/// </summary>
-	/// <param name=""></param>
-	void ResetServeData(void);
+	//各注文が提供されたかどうかのフラグ
+	std::vector<bool> isServedItems_; 
 
 	/// <summary>
 	/// 提供するアイテムを設定する
@@ -105,13 +101,27 @@ private:
 	void SurveItem(StageObject& obj);
 
 	/// <summary>
+	/// 提供したアイテムを削除する
+	/// </summary>
+	/// <param name=""></param>
+	void DeleteSurvedItem(void);
+
+	/// <summary>
 	/// 持ち運び可能なオブジェクトのインタラクト処理
 	/// </summary>
 	/// <param name=""></param>
 	void CarryableObjInteract(void);
 
+	/// <summary>
+	/// マシンのインタラクト処理
+	/// </summary>
+	/// <param name="">コーヒーマシンとアイスディスペンサーのインタラクト処理</param>
 	void MachineInteract(void);
 
+	/// <summary>
+	/// 蓋のラックのインタラクト処理
+	/// </summary>
+	/// <param name="">インタラクト中はプレイヤーは操作できない</param>
 	void LidRackInteract(void);
 
 	/// <summary>
@@ -122,6 +132,10 @@ private:
 	void MakeHotCoffee(int i);
 	void MakeIceCoffee(int i);
 
+	/// <summary>
+	///　カップにアイスディスペンサーで氷を入れる処理
+	/// </summary>
+	/// <param name="">dynamic_castでアイスカップの関数を使用</param>
 	void DispenseIce2Cup(void);
 
 	/// <summary>
@@ -130,9 +144,18 @@ private:
 	/// <param name=""></param>
 	void LidFollowCup(void);
 
+	/// <summary>
+	/// ゴミ箱のインタラクト処理
+	/// </summary>
+	/// <param name=""></param>
 	void DustBoxInteract(void);
 
-	bool IsOrderCompleted(const std::vector<Order::OrderData>& served, const Order::OrderData& order);
+	/// <summary>
+	/// オーダー数に応じた数のアイテムを提供しているかどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	bool IsOrderCompleted(void);
 
 	void DrawDebug(void);
 

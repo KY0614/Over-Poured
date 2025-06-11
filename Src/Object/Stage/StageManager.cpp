@@ -26,17 +26,10 @@
 #include "StageManager.h"
 
 #pragma region メモ
-
 //クラスが多すぎるので減らすためにカテゴリ分けしたクラスにしたい
-//例：HotCup,HotCoffee→Itemclass
-
-//ディスペンサーとマシンに重ねて設置できてしまうので要修正
-//（アイスのみ）
+//例：HotCup,HotCoffee,Machine,IceDisoenser→ItemObjectとかMachineObjectとか
 
 //カテゴリ分けしたクラスにする際jsonデータをいじくるか検討中
-
-
-
 #pragma endregion
 
 
@@ -45,32 +38,39 @@ namespace {
 	const std::string COUNTER = "Counter";	//カウンター
 	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
 	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
-	const std::string HOT_CUP_RACK = "Cup_Hot_Rack";	//ホット用ラック
-	const std::string ICE_CUP_RACK = "Cup_Ice_Rack";	//アイス用ラック
-	const std::string CHOCO_SWEETSRACK = "Sweets_Choco_Rack";	//チョコスイーツ用ラック
+	const std::string HOT_CUP_RACK = "Cup_Hot_Rack";		//ホット用ラック
+	const std::string ICE_CUP_RACK = "Cup_Ice_Rack";		//アイス用ラック
+	const std::string CHOCO_SWEETSRACK = "Sweets_Choco_Rack";		//チョコスイーツ用ラック
 	const std::string BERRY_SWEETSRACK = "Sweets_Strawberry_Rack";	//ベリースイーツ用ラック
-	const std::string CUP_WITH_ICE = "Cup_With_Ice";	//アイス用カップ
-	const std::string HOT_COFFEE = "Hot_Coffee";		//ホットコーヒー
-	const std::string ICE_COFFEE = "Ice_Coffee";		//アイスコーヒー
-	const std::string COFFEE_MACHINE = "Coffee_Machine";//コーヒーマシン
-	const std::string CUP_LID_RACK = "Cup_Lid_Rack";	//蓋のラック
-	const std::string CUP_LID = "Cup_Lid";		//蓋
-	const std::string ICE_DISPENSER = "Ice_Dispenser";	//製氷機
-	const std::string DUST_BOX = "Dust_Box";	//ゴミ箱
+	const std::string CHOCO_SWEETS = "Sweets_Choco";		//チョコスイーツ
+	const std::string BERRY_SWEETS = "Sweets_Strawberry";	//ベリースイーツ
+	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
+	const std::string HOT_COFFEE = "Hot_Coffee";			//ホットコーヒー
+	const std::string ICE_COFFEE = "Ice_Coffee";			//アイスコーヒー
+	const std::string COFFEE_MACHINE = "Coffee_Machine";	//コーヒーマシン
+	const std::string CUP_LID_RACK = "Cup_Lid_Rack";		//蓋のラック
+	const std::string CUP_LID = "Cup_Lid";					//蓋
+	const std::string ICE_DISPENSER = "Ice_Dispenser";		//製氷機
+	const std::string DUST_BOX = "Dust_Box";				//ゴミ箱
 }
 
 
 StageManager::StageManager(Player& player):player_(player)
 {
-	isSurved_ = false;
-	surveDrink_ = Order::DRINK::NONE;
-	surveSweets_ = Order::SWEETS::NONE;
+	servedItems_ = {};
+	currentOrder_ = {};
 
-	surveDrinkLid_ = false;
+	objects_.clear();
+	tables_.clear();
+	counter_ = nullptr;
+
+	isSurved_ = false;
+	isServedItems_.clear();
 }
 
 StageManager::~StageManager(void)
 {
+	isServedItems_.clear();
 }
 
 void StageManager::Init(void)
@@ -92,7 +92,7 @@ void StageManager::Init(void)
 	transform_.Update();
 
 	//横のテーブル群(手前)
-	for (int x = 0; x < TABLE_X_NUM; x++)
+	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
 	{
 		VECTOR firstPos = TABLE_POS_BACK;
 		firstPos.x += (x * TABLE_WIDTH);
@@ -102,21 +102,20 @@ void StageManager::Init(void)
 	}
 
 	//縦のテーブル群
-	for (int z = TABLE_X_NUM; z < TABLE_X_NUM + TABLE_Y_NUM; z++)
+	for (int z = TABLE_ROW_FRONT_NUM; z < TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM; z++)
 	{
 		VECTOR firstPos = COLUMN_TABLE_POS;
-		firstPos.z += ((z - TABLE_X_NUM) * TABLE_WIDTH);
+		firstPos.z += ((z - TABLE_ROW_FRONT_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
 	}
 
 	//横のテーブル群(奥側)
-	for (int x = 0; x < 2; x++)
+	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
 	{
 		VECTOR firstPos = TABLE_POS_FRONT;
 		firstPos.x += (x * TABLE_WIDTH);
-		firstPos.z = 190.0f;
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
@@ -130,12 +129,12 @@ void StageManager::Init(void)
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<HotCupRack>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
-	objects_.back()->SetPos(tables_[TABLE_X_NUM + TABLE_Y_NUM - 1]->GetTopCenter());
+	objects_.back()->SetPos(tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter());
 	
 	//アイス用カップのラック
 	objects_.emplace_back(std::make_unique<IceCupRack>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
-	objects_.back()->SetPos(tables_[TABLE_Y_NUM]->GetTopCenter());
+	objects_.back()->SetPos(tables_[TABLE_COLUMN_NUM]->GetTopCenter());
 
 	//チョコスイーツ用のラック
 	objects_.emplace_back(std::make_unique<ChocoSweetsRack>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
@@ -172,8 +171,6 @@ void StageManager::Init(void)
 	objects_.back()->Init();
 	objects_.back()->SetPos(DUST_BOX_POS);
 
-	servedItems_.clear();
-
 #ifdef _DEBUG
 
 	//カウンター前の当たり判定用の球体
@@ -205,6 +202,8 @@ void StageManager::Update(void)
 	{
 		obj->Update();
 	}
+
+	counter_->Update();
 
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)
@@ -263,92 +262,87 @@ void StageManager::Draw(void)
 #endif // _DEBUG
 }
 
+void StageManager::SetCurrentOrder(const Order::OrderData& order)
+{
+	//注文数文の配列を確保し、初期化＆お客の注文内容を受け取る
+	size_t size = static_cast<size_t>(order.num_);
+	isServedItems_.resize(size);
+	for(bool isSuved : isServedItems_)
+	{
+		isSuved = false; // 初期化
+	}
+	currentOrder_ = order;
+}
+
 Order::OrderData StageManager::GetServeData(void)
 {
-	Order::OrderData data = {};
+	return servedItems_;
+}
 
-	data.drink_ = surveDrink_;
-	data.sweets_ = surveSweets_;
-	data.lid_ = surveDrinkLid_;
+void StageManager::ResetServeData(void)
+{
+	//提供データをリセット
+	isSurved_ = false;
+	servedItems_.drink_ = Order::DRINK::NONE;
+	servedItems_.sweets_ = Order::SWEETS::NONE;
+	servedItems_.lid_ = false;
+	isServedItems_.clear();
+	isServedItems_.resize(0);
+}
 
-	return data;
+void StageManager::SurveItem(StageObject& obj)
+{
+	// 商品情報をOrderDataに変換
+	Order::OrderData data;
+	// 例: objのIDや状態からOrderDataをセット
+	if (obj.GetObjectId() == HOT_COFFEE) 
+	{
+		servedItems_.drink_ = Order::DRINK::HOT;
+		servedItems_.lid_ = obj.IsLidOn();
+		isServedItems_.front() = true;
+	}
+	else if (obj.GetObjectId() == ICE_COFFEE) 
+	{
+		servedItems_.drink_ = Order::DRINK::ICE;
+		servedItems_.lid_ = obj.IsLidOn();
+		isServedItems_.front() = true;
+	}
+
+	if (obj.GetObjectId() == CHOCO_SWEETS)
+	{
+		servedItems_.sweets_ = Order::SWEETS::CHOCO;
+		isServedItems_.back() = true;
+	}
+	else if (obj.GetObjectId() == BERRY_SWEETS)
+	{
+		servedItems_.sweets_ = Order::SWEETS::STRAWBERRY;
+		isServedItems_.back() = true;
+	}
+
+	DeleteSurvedItem(); // 提供後はオブジェクトを削除
+
+	// 注文が揃ったか判定
+	if (IsOrderCompleted()) 
+	{
+		isSurved_ = true;
+	}
 }
 
 void StageManager::DeleteSurvedItem(void)
 {
-	// カウンターの球体と当たっているオブジェクトを削除
+	//カウンターの球体と当たっているオブジェクトを削除
 	for (auto it = objects_.begin(); it != objects_.end(); )
 	{
 		if (AsoUtility::IsHitSpheres(
 			(*it)->GetSpherePos(), (*it)->GetSphereRad(),
 			counter_->GetSpherePos(), counter_->GetSphereRad()))
 		{
-			// 必要なら提供処理などをここで呼ぶ
-			ResetServeData(); // 提供データをリセット
-			it = objects_.erase(it); // eraseは次の要素のイテレータを返す
+			it = objects_.erase(it); //eraseは次の要素のイテレータを返す
 		}
 		else
 		{
 			++it;
 		}
-	}
-}
-
-void StageManager::ResetServeData(void)
-{
-	isSurved_ = false;
-	surveDrink_ = Order::DRINK::NONE;
-	surveSweets_ = Order::SWEETS::NONE;
-	surveDrinkLid_ = false;
-}
-
-void StageManager::SurveItem(StageObject& obj)
-{
-	//isSurved_ = true;
-
-	//surveDrinkLid_ = obj.IsLidOn();
-
-	//if (obj.GetObjectId() == HOT_COFFEE)
-	//{
-	//	surveDrink_ = Order::DRINK::HOT;
-	//}
-	//else if (obj.GetObjectId() == ICE_COFFEE)
-	//{
-	//	surveDrink_ = Order::DRINK::ICE;
-	//}
-	//else
-	//{
-	//	surveDrink_ = Order::DRINK::NONE;
-	//}
-
-	// 商品情報をOrderDataに変換
-	Order::OrderData data;
-	// 例: objのIDや状態からOrderDataをセット
-	if (obj.GetObjectId() == HOT_COFFEE) {
-		data.drink_ = Order::DRINK::HOT;
-		data.lid_ = obj.IsLidOn();
-	}
-	else if (obj.GetObjectId() == ICE_COFFEE) {
-		data.drink_ = Order::DRINK::ICE;
-		data.lid_ = obj.IsLidOn();
-	}
-	else if (obj.GetObjectId() == "Sweets_Choco") {
-		data.sweets_ = Order::SWEETS::CHOCO;
-	}
-	else if (obj.GetObjectId() == "Sweets_Strawberry") {
-		data.sweets_ = Order::SWEETS::STRAWBERRY;
-	}
-	// ...他の商品も必要に応じて
-
-	servedItems_.push_back(data);
-	//DeleteSurvedItem();
-
-	// 注文が揃ったか判定
-	if (IsOrderCompleted(servedItems_, currentOrder_)) {
-		isSurved_ = true;
-		// 注文完了処理
-		servedItems_.clear();
-		// 必要ならお客の状態を更新
 	}
 }
 
@@ -366,11 +360,7 @@ void StageManager::CarryableObjInteract(void)
 			if (obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
 			{
 				SurveItem(*obj);
-			}
-			else
-			{
-				//アイテムが設置されていない場合は提供データをリセット
-				ResetServeData();
+				break;
 			}
 		}
 
@@ -391,6 +381,11 @@ void StageManager::CarryableObjInteract(void)
 				counter_->GetSpherePos(), counter_->GetSphereRad()
 			))
 			{
+				auto items = counter_->GetParam().acceptedItems_;
+				//objIdがインタラクト対象物に存在するかどうか
+				bool isAccepted = std::find(items.begin(), items.end(), obj->GetObjectId()) != items.end();
+				if (!isAccepted)continue;	//存在しなかったら処理しない
+
 				obj->ItemPlaced(counter_->GetTopCenter());
 			}
 
@@ -565,7 +560,8 @@ void StageManager::DispenseIce2Cup(void)
 					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
 				//設置されているカップに氷を入れる
-				if (auto iceCup = dynamic_cast<IceCup*>(objects_[i].get())) {
+				if (auto iceCup = dynamic_cast<IceCup*>(objects_[i].get())) 
+				{
 					iceCup->PouredIce();
 				}
 			}
@@ -635,28 +631,17 @@ void StageManager::DustBoxInteract(void)
 	}
 }
 
-bool StageManager::IsOrderCompleted(const std::vector<Order::OrderData>& served, const Order::OrderData& order)
+bool StageManager::IsOrderCompleted(void)
 {
-	bool drinkOk = false;
-	bool sweetsOk = false;
-
-	for (const auto& item : served) {
-		if (order.drink_ != Order::DRINK::NONE && item.drink_ == order.drink_) {
-			drinkOk = true;
-		}
-		if (order.sweets_ != Order::SWEETS::NONE && item.sweets_ == order.sweets_) {
-			sweetsOk = true;
+	for(bool isSurved : isServedItems_)
+	{
+		if (!isSurved)
+		{
+			return false; // 1つでも未提供のアイテムがあればfalse
+			break;
 		}
 	}
-
-	// ドリンクとスイーツ両方必要な場合
-	if (order.drink_ != Order::DRINK::NONE && order.sweets_ != Order::SWEETS::NONE) {
-		return drinkOk && sweetsOk;
-	}
-	// どちらかだけの場合
-	if (order.drink_ != Order::DRINK::NONE) return drinkOk;
-	if (order.sweets_ != Order::SWEETS::NONE) return sweetsOk;
-	return false;
+	return true;
 }
 
 void StageManager::DrawDebug(void)
@@ -670,6 +655,16 @@ void StageManager::DrawDebug(void)
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"size : %d", objects_.size(), line, lineHeight);
+
+	DebugDrawFormat::FormatString(L"currentD,S : %d,%d",
+			currentOrder_.drink_, currentOrder_.sweets_, line, lineHeight);
+
+	DebugDrawFormat::FormatString(L"surevdD,S : %d,%d",
+		servedItems_.drink_, servedItems_.sweets_, line, lineHeight);
+
+	DebugDrawFormat::FormatString(L"boolSize : %d",
+			isServedItems_.size(), line, lineHeight);
+		
 
 	//size_t size = objects_.size();
 	////蓋生成数確認用
@@ -710,14 +705,14 @@ void StageManager::DrawDebug(void)
 			objects_[i]->IsLidOn(), line, lineHeight);
 	}
 
-	for (int i = 0; i < tables_.size(); i++)
-	{
-		DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
-			tables_[i]->GetIsPlaceable(), line, lineHeight);
-	}
+	//for (int i = 0; i < tables_.size(); i++)
+	//{
+	//	DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
+	//		tables_[i]->GetIsPlaceable(), line, lineHeight);
+	//}
 
 	//テーブル番号を表示
-	for (int i = 0; i < TABLE_Y_NUM + TABLE_X_NUM - 1; i++)
+	for (int i = 0; i < TABLE_COLUMN_NUM + TABLE_ROW_FRONT_NUM - 1; i++)
 	{
 		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
 		// 変換成功
@@ -734,7 +729,6 @@ void StageManager::DrawDebug(void)
 			L"%s",
 			StringUtility::StringToWstring(obj->GetObjectId().c_str()).c_str());
 	}
-
 }
 
 void StageManager::UpdateDebugImGui(void)

@@ -46,11 +46,13 @@ void CupLidRack::Interact(const std::string& objId)
 			{
 				param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
 				isActioned_ = true;
+				player_.ChangeState(Player::STATE::STOP);
 			}
 			else
 			{
 				param_.interactTime = 3.0f;
 				isActioned_ = false;
+				player_.ChangeState(Player::STATE::PLAY);
 			}
 		}
 	}
@@ -61,6 +63,7 @@ void CupLidRack::Update(void)
 	if (!isActioned_)
 	{
 		param_.interactTime = 3.0f;
+		player_.ChangeState(Player::STATE::PLAY);
 	}
 	if (param_.interactTime <= 0.0f)
 	{

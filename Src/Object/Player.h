@@ -33,6 +33,7 @@ public:
 	{
 		NONE,
 		PLAY,
+		STOP,
 	};
 
 	//アニメーション種別
@@ -71,13 +72,12 @@ public:
 
 	void SurveItem(void);
 
-	Order::OrderData GetPlayerItem(void) { return data_; }
-
 	bool GetIsHolding(void)const { return isHolding_; }
 	std::string GetHoldItem(void) { return holdItemId_; }
 
-
 	void SetHoldItem(std::string item) { holdItemId_ = item; }
+
+	void ChangeState(STATE state);
 
 	void UpdateDebugImGui(void);
 
@@ -134,9 +134,6 @@ private:
 
 	//フレームごとの移動値
 	VECTOR moveDiff_;
-	
-	//プレイヤーが持っている商品情報(仮機能)
-	Order::OrderData data_;
 
 	bool isHolding_;
 	std::string holdItemId_;
@@ -144,13 +141,14 @@ private:
 	void InitAnimation(void);
 
 	//状態遷移
-	void ChangeState(STATE state);
 	void ChangeStateNone(void);
 	void ChangeStatePlay(void);
+	void ChangeStateStop(void);
 
 	//更新ステップ
 	void UpdateNone(void);
 	void UpdatePlay(void);
+	void UpdateStop(void);
 
 	//描画系
 	void DrawDebug(void);
@@ -158,8 +156,6 @@ private:
 
 	//操作 
 	void ProcessMove(void);
-
-	void ProcessSelect(void);
 
 	//回転
 	void SetGoalRotate(double rotRad);

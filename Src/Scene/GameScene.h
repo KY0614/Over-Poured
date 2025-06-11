@@ -34,7 +34,7 @@ private:
 	std::unique_ptr<SkyDome> skyDome_;
 
 	//ƒvƒŒƒCƒ„[
-	std::shared_ptr<Player> player_;
+	std::unique_ptr<Player> player_;
 
 	//‹q
 	std::unique_ptr<OrderCustomerManager> customer_;

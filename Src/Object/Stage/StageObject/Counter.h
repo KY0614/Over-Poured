@@ -11,8 +11,11 @@ public:
 
 	~Counter(void) = default;
 
+	void Update(void) override;
+
 	void Interact(const std::string& objId) override;
 
 private:
+	std::vector<std::unique_ptr<StageObject>>& objects_;
 };
 

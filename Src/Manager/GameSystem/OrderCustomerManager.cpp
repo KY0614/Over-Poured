@@ -32,7 +32,7 @@ void OrderCustomerManager::Init(void)
 	//生成されている注文内容を参照して種類を決めて生成
 	CreateCustomersByOrders();
 	customerMng_->Init();
-	//customerMng_->InitCustomersPos();
+
 	isServe_ = false;
 }
 
@@ -115,85 +115,123 @@ void OrderCustomerManager::AddCustomerByOrder(void)
 	customerMng_->SetLastCustomerPos();
 }
 
-int OrderCustomerManager::CheckServeAndOrder(Order::OrderData serve)
+int OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 {
 	Order::DRINK serveDrink = serve.drink_;
 	Order::SWEETS serveSweets = serve.sweets_;
 	bool serveDrinkLid = serve.lid_;
+	const auto& order = orderMng_->GetFirstOrder();
 	int score = 0;
 
-	if(orderMng_->GetFirstOrder().num_ == 1)
+	// ドリンク判定
+	if (order.drink_ != Order::DRINK::NONE) 
 	{
-		//飲み物と提供品を比較して加点
-		if (serveDrink == orderMng_->GetFirstOrder().drink_)
+		if (serve.drink_ == order.drink_) 
 		{
 			score += 50;
+			if (serve.lid_) score += 20;
 		}
-		else
+		else 
 		{
 			score -= 50;
 		}
-
-		//飲み物の蓋がされていたら加点
-		if (serveDrinkLid)
-		{
-			score += 20;
-		}
-
-		//注文数が１のときはサブオーダーはないので-50点
-		if (serveSweets != orderMng_->GetFirstOrder().sweets_)
-		{
-			score -= 50;
-		}
-
-		//オーダーの残り制限時間による加点
-		if (orderMng_->GetFirstOrder().time_ > 6.0f)
-		{
-			score += 50;
-		}
-		else if (orderMng_->GetFirstOrder().time_ > 3.0f)
-		{
-			score += 10;
-		}	
 	}
-	else if (orderMng_->GetFirstOrder().num_ == 2)
+	// スイーツ判定
+	if (order.sweets_ != Order::SWEETS::NONE) 
 	{
-		//飲み物と提供品を比較して加点
-		if (serveDrink == orderMng_->GetFirstOrder().drink_)
-		{
-			score += 50;
-		}
-		else
-		{
-			score -= 50;
-		}
-
-		//飲み物の蓋がされていたら加点
-		if (serveDrinkLid)
-		{
-			score += 20;
-		}
-
-		//サブオーダーのスイーツとの比較して加点
-		if (serveSweets == orderMng_->GetFirstOrder().sweets_)
+		if (serve.sweets_ == order.sweets_) 
 		{
 			score += 30;
 		}
-		else
+		else 
 		{
 			score -= 20;
 		}
-
-		//オーダーの残り制限時間による加点
-		if (orderMng_->GetFirstOrder().time_ > 12.0f)
-		{
-			score += 40;
-		}
-		else if (orderMng_->GetFirstOrder().time_ > 6.0f)
-		{
-			score += 20;
-		}		
 	}
+	// 時間ボーナス
+	if (order.num_ == 1) 
+	{
+		if (order.time_ > 6.0f) score += 50;
+		else if (order.time_ > 3.0f) score += 10;
+	}
+	else if (order.num_ == 2) 
+	{
+		if (order.time_ > 12.0f) score += 40;
+		else if (order.time_ > 6.0f) score += 20;
+	}
+
+	//if(orderMng_->GetFirstOrder().num_ == 1)
+	//{
+	//	//飲み物と提供品を比較して加点
+	//	if (serveDrink == orderMng_->GetFirstOrder().drink_)
+	//	{
+	//		score += 50;
+	//	}
+	//	else
+	//	{
+	//		score -= 50;
+	//	}
+
+	//	//飲み物の蓋がされていたら加点
+	//	if (serveDrinkLid)
+	//	{
+	//		score += 20;
+	//	}
+
+	//	//注文数が１のときはサブオーダーはないので-50点
+	//	if (serveSweets != orderMng_->GetFirstOrder().sweets_)
+	//	{
+	//		score -= 50;
+	//	}
+
+	//	//オーダーの残り制限時間による加点
+	//	if (orderMng_->GetFirstOrder().time_ > 6.0f)
+	//	{
+	//		score += 50;
+	//	}
+	//	else if (orderMng_->GetFirstOrder().time_ > 3.0f)
+	//	{
+	//		score += 10;
+	//	}	
+	//}
+	//else if (orderMng_->GetFirstOrder().num_ == 2)
+	//{
+	//	//飲み物と提供品を比較して加点
+	//	if (serveDrink == orderMng_->GetFirstOrder().drink_)
+	//	{
+	//		score += 50;
+	//	}
+	//	else
+	//	{
+	//		score -= 50;
+	//	}
+
+	//	//飲み物の蓋がされていたら加点
+	//	if (serveDrinkLid)
+	//	{
+	//		score += 20;
+	//	}
+
+	//	//サブオーダーのスイーツとの比較して加点
+	//	if (serveSweets == orderMng_->GetFirstOrder().sweets_)
+	//	{
+	//		score += 30;
+	//	}
+	//	else
+	//	{
+	//		score -= 20;
+	//	}
+
+	//	//オーダーの残り制限時間による加点
+	//	if (orderMng_->GetFirstOrder().time_ > 12.0f)
+	//	{
+	//		score += 40;
+	//	}
+	//	else if (orderMng_->GetFirstOrder().time_ > 6.0f)
+	//	{
+	//		score += 20;
+	//	}		
+	//}
 	customerMng_->SetCustomerReacton(score);
 	return score;
 }

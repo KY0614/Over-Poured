@@ -10,7 +10,6 @@
 namespace {
 	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
 	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
-	const std::string ICE_COFFEE = "Ice_Coffee";		//アイスコーヒー
 }
 
 IceDispenser::IceDispenser(const std::string objId, const float width,
@@ -46,7 +45,7 @@ void IceDispenser::Interact(const std::string& objId)
 	for (const auto& obj : objects_)
 	{
 		//アイスカップまたはアイスコーヒー
-		if ((obj->GetObjectId() == ICE_CUP || obj->GetObjectId() == ICE_COFFEE) &&
+		if ((obj->GetObjectId() == ICE_CUP || obj->GetObjectId() == CUP_WITH_ICE) &&
 			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
