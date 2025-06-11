@@ -61,7 +61,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true:提供した　flase:未提供</returns>
-	bool IsServed(void) const { return isSurved_; }
+	bool IsServed(void) const { return isServed_; }
 
 	/// <summary>
 	/// 提供データをリセットする
@@ -83,7 +83,7 @@ private:
 	//カウンター用
 	std::unique_ptr<StageObject> counter_;
 
-	bool isSurved_;
+	bool isServed_;
 
 	//提供済み商品リスト
 	Order::OrderData servedItems_;

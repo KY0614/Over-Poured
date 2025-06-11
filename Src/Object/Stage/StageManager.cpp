@@ -64,7 +64,7 @@ StageManager::StageManager(Player& player):player_(player)
 	tables_.clear();
 	counter_ = nullptr;
 
-	isSurved_ = false;
+	isServed_ = false;
 	isServedItems_.clear();
 }
 
@@ -282,7 +282,7 @@ Order::OrderData StageManager::GetServeData(void)
 void StageManager::ResetServeData(void)
 {
 	//提供データをリセット
-	isSurved_ = false;
+	isServed_ = false;
 	servedItems_.drink_ = Order::DRINK::NONE;
 	servedItems_.sweets_ = Order::SWEETS::NONE;
 	servedItems_.lid_ = false;
@@ -324,7 +324,7 @@ void StageManager::SurveItem(StageObject& obj)
 	// 注文が揃ったか判定
 	if (IsOrderCompleted()) 
 	{
-		isSurved_ = true;
+		isServed_ = true;
 	}
 }
 
@@ -646,7 +646,6 @@ bool StageManager::IsOrderCompleted(void)
 
 void StageManager::DrawDebug(void)
 {
-
 	//DrawSphere3D(objects_[3]->GetSpherePos(),
 	//	objects_[3]->GetSphereRad(), 8, 0xff0000, 0xff0000, true);
 
@@ -665,7 +664,6 @@ void StageManager::DrawDebug(void)
 	DebugDrawFormat::FormatString(L"boolSize : %d",
 			isServedItems_.size(), line, lineHeight);
 		
-
 	//size_t size = objects_.size();
 	////蓋生成数確認用
 	//DebugDrawFormat::FormatString(L"end - 2 : %s",
