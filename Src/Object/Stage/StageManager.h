@@ -52,8 +52,6 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns></returns>
-	Order::OrderData GetServeData(void);
-
 	Order::OrderData GetServeItems(void)const { return servedItems_; }
 
 	/// <summary>
@@ -85,7 +83,7 @@ private:
 
 	bool isServed_;
 
-	//提供済み商品リスト
+	//提供済み商品
 	Order::OrderData servedItems_;
 
 	//現在のお客の注文内容

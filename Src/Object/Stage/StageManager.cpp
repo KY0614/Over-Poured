@@ -274,11 +274,6 @@ void StageManager::SetCurrentOrder(const Order::OrderData& order)
 	currentOrder_ = order;
 }
 
-Order::OrderData StageManager::GetServeData(void)
-{
-	return servedItems_;
-}
-
 void StageManager::ResetServeData(void)
 {
 	//提供データをリセット
@@ -738,6 +733,7 @@ void StageManager::UpdateDebugImGui(void)
 	ImGui::InputFloat("SclX", &sphereTran_.scl.x);
 	ImGui::InputFloat("SclY", &sphereTran_.scl.y);
 	ImGui::InputFloat("SclZ", &sphereTran_.scl.z);
+
 	//角度
 	VECTOR rotDeg = VECTOR();
 	rotDeg.x = AsoUtility::Rad2DegF(sphereTran_.rot.x);
