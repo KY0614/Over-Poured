@@ -66,6 +66,30 @@ StageManager::StageManager(Player& player):player_(player)
 
 	isServed_ = false;
 	isServedItems_.clear();
+
+	//更新処理
+	updateFunc_.emplace(MODE::GAME_3D, std::bind(&StageManager::Update3DGame, this));
+	updateFunc_.emplace(MODE::MACHINE_2D, std::bind(&StageManager::UpdateMachine2D, this));
+	updateFunc_.emplace(MODE::ICE_2D, std::bind(&StageManager::UpdateIce2D, this));
+	updateFunc_.emplace(MODE::LIDRACK_2D, std::bind(&StageManager::UpdateLidRack2D, this));
+
+	//描画処理
+	drawFunc_.emplace(MODE::GAME_3D, std::bind(&StageManager::Draw3DGame, this));
+	drawFunc_.emplace(MODE::MACHINE_2D, std::bind(&StageManager::DrawMachine2D, this));
+	drawFunc_.emplace(MODE::ICE_2D, std::bind(&StageManager::DrawIce2D, this));
+	drawFunc_.emplace(MODE::LIDRACK_2D, std::bind(&StageManager::DrawLidRack2D, this));
+
+	//// Update関数マップ
+	//updateFunc_[MODE::GAME_3D] = std::bind(&StageManager::Update3DGame, this);
+	//drawFunc_[MODE::GAME_3D] = std::bind(&StageManager::Draw3DGame, this);
+
+	//updateFunc_[MODE::MACHINE_2D] = std::bind(&StageManager::UpdateMachine2D, this);
+	//drawFunc_[MODE::MACHINE_2D] = std::bind(&StageManager::DrawMachine2D, this);
+
+	//updateFunc_[MODE::ICE_2D] = std::bind(&StageManager::UpdateIce2D, this);
+	//drawFunc_[MODE::ICE_2D] = std::bind(&StageManager::DrawIce2D, this);
+
+	ChangeMode(MODE::GAME_3D); // 初期モードを3Dゲームに設定
 }
 
 StageManager::~StageManager(void)
@@ -187,47 +211,18 @@ void StageManager::Init(void)
 
 void StageManager::Update(void)
 {
+	//更新ステップ
+	modeUpdate_();
+
 	auto& ins = InputManager::GetInstance();
-
-	auto& pSphere = player_.GetSphere();
-
-	//counter_->Update();
-
-	for (const auto& obj : objects_)
+	if(ins.IsTrgDown(KEY_INPUT_Q))
 	{
-		obj->Update();
+		ChangeMode(MODE::ICE_2D);
 	}
-
-	for (const auto& obj : tables_)
+	if (ins.IsTrgDown(KEY_INPUT_E))
 	{
-		obj->Update();
+		ChangeMode(MODE::GAME_3D);
 	}
-
-	counter_->Update();
-
-	//ラックからカップを取り出す処理
-	for (const auto& obj : objects_)
-	{
-		//プレイヤーが何も持っていないときの処理
-		if (!player_.GetIsHolding() && obj->GetIsInteractable() &&
-			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
-		{
-			obj->PickUp(objects_);
-			break;
-		}
-	}
-
-	//持ち運び可能なオブジェクトのインタラクト処理
-	CarryableObjInteract();
-
-	//マシンとのインタラクト処理
-	MachineInteract();
-
-	//蓋ラックとのインタラクト処理
-	LidRackInteract();
-
-	DustBoxInteract();
 
 #ifdef _DEBUG
 
@@ -235,13 +230,12 @@ void StageManager::Update(void)
 	//UpdateDebugImGui();
 
 #endif // _DEBUG
-
-	transform_.Update();
-	sphereTran_.Update();
 }
 
 void StageManager::Draw(void)
 {
+	modeDraw_(); // 現在のモードに応じた描画関数を呼び出す
+
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
 
@@ -639,6 +633,116 @@ bool StageManager::IsOrderCompleted(void)
 	return true;
 }
 
+
+void StageManager::ChangeMode(MODE mode)
+{
+	mode_ = mode;
+
+	// 関数ポインタ切り替え
+	modeUpdate_ = updateFunc_[mode_];
+	modeDraw_ = drawFunc_[mode_];
+}
+
+void StageManager::ChangeMode3DGame(void)
+{
+	// TODO: ここに3Dゲームモード切り替え処理を書く
+}
+
+void StageManager::ChangeModeMachine2D(void)
+{
+	// TODO: ここに2Dマシンモード切り替え処理を書く
+}
+
+void StageManager::ChangeModeIce2D(void)
+{
+	// TODO: ここに2D製氷機モード切り替え処理を書く
+}
+
+void StageManager::ChangeModeLidRack2D(void)
+{
+	// TODO: ここに2Dリッドラックモード切り替え処理を書く
+}
+
+void StageManager::Update3DGame(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	auto& pSphere = player_.GetSphere();
+
+	for (const auto& obj : objects_)
+	{
+		obj->Update();
+	}
+
+	for (const auto& obj : tables_)
+	{
+		obj->Update();
+	}
+
+	counter_->Update();
+
+	//ラックからカップを取り出す処理
+	for (const auto& obj : objects_)
+	{
+		//プレイヤーが何も持っていないときの処理
+		if (!player_.GetIsHolding() && obj->GetIsInteractable() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			obj->PickUp(objects_);
+			break;
+		}
+	}
+
+	//持ち運び可能なオブジェクトのインタラクト処理
+	CarryableObjInteract();
+
+	//マシンとのインタラクト処理
+	MachineInteract();
+
+	//蓋ラックとのインタラクト処理
+	LidRackInteract();
+
+	DustBoxInteract();
+
+	transform_.Update();
+	sphereTran_.Update();
+}
+
+void StageManager::UpdateMachine2D(void)
+{
+	// TODO: 2Dマシンモードの更新処理
+}
+
+void StageManager::UpdateIce2D(void)
+{
+	// TODO: 2D製氷機モードの更新処理
+}
+
+void StageManager::UpdateLidRack2D(void)
+{
+	// TODO: 2Dリッドラックモードの更新処理
+}
+
+void StageManager::Draw3DGame(void)
+{
+	// TODO: 3Dゲームモードの描画処理
+}
+
+void StageManager::DrawMachine2D(void)
+{
+	// TODO: 2Dマシンモードの描画処理
+}
+
+void StageManager::DrawIce2D(void)
+{
+	// TODO: 2D製氷機モードの描画処理
+}
+
+void StageManager::DrawLidRack2D(void) {
+	// TODO: 2Dリッドラックモードの描画処理
+}
+
 void StageManager::DrawDebug(void)
 {
 	//DrawSphere3D(objects_[3]->GetSpherePos(),
@@ -648,7 +752,7 @@ void StageManager::DrawDebug(void)
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"size : %d", objects_.size(), line, lineHeight);
+	DebugDrawFormat::FormatString(L"mode : %d", mode_, line, lineHeight);
 
 	DebugDrawFormat::FormatString(L"currentD,S : %d,%d",
 			currentOrder_.drink_, currentOrder_.sweets_, line, lineHeight);

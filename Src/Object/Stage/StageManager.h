@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <map>
+#include <functional>
 #include "../Order/Order.h"
 #include "../ActorBase.h"
 
@@ -34,6 +36,13 @@ public:
 	static constexpr VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };	//アイスディスペンサーの座標
 	static constexpr VECTOR LIBS_POS = { 74.0f, 76.0f, -175.0f };		//カップの蓋の座標
 	static constexpr VECTOR DUSTBOX_POS = { 227.0f, 0.0f, -175.0f };	//ゴミ箱の座標
+
+	enum class MODE {
+		GAME_3D,		// 3Dゲームモード
+		MACHINE_2D,		// 2Dマシンモード
+		ICE_2D,			// 2D製氷機モード
+		LIDRACK_2D,		// 2Dリッドラックモード
+	};
 	
 	//コンストラクタ
 	StageManager(Player& player);
@@ -68,6 +77,17 @@ public:
 	void ResetServeData(void);
 
 private:
+
+	//モード管理
+	MODE mode_;
+
+	//状態管理(状態遷移時初期処理)
+	std::map<MODE, std::function<void(void)>> updateFunc_;
+	std::map<MODE, std::function<void(void)>> drawFunc_;
+
+	//状態管理(更新ステップ)
+	std::function<void(void)> modeUpdate_;
+	std::function<void(void)> modeDraw_;
 
 	//プレイヤーの参照
 	Player& player_;
@@ -154,6 +174,25 @@ private:
 	/// <param name=""></param>
 	/// <returns></returns>
 	bool IsOrderCompleted(void);
+
+	//状態遷移
+	void ChangeMode(MODE mode);
+	void ChangeMode3DGame(void);
+	void ChangeModeMachine2D(void);
+	void ChangeModeIce2D(void);
+	void ChangeModeLidRack2D(void);
+
+	//更新ステップ
+	void Update3DGame(void);
+	void UpdateMachine2D(void);
+	void UpdateIce2D(void);
+	void UpdateLidRack2D(void);
+
+	//描画ステップ
+	void Draw3DGame(void);
+	void DrawMachine2D(void);
+	void DrawIce2D(void);
+	void DrawLidRack2D(void);
 
 	void DrawDebug(void);
 

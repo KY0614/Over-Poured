@@ -63,7 +63,7 @@ public:
 	/// ‹q‚ª“®‚¢‚Ä‚¢‚é‚©æ“¾‚·‚é
 	/// </summary>
 	/// <param name=""></param>
-	/// <returns>isMove‚Ì’l‚ğ•Ô‚·</returns>
+	/// <returns>true:“®‚¢‚Ä‚¢‚é@false:~‚Ü‚Á‚Ä‚é</returns>
 	bool GetIsMove(void) { return isMove_; }
 
 	/// <summary>

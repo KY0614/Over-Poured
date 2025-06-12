@@ -72,6 +72,12 @@ void GameScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	Score& scr = Score::GetInstance();
 
+	if (customer_->GetIsMoving())
+	{
+		//Å‰‚Ì‚¨‹q‚Ì’•¶‚ðŽó‚¯Žæ‚é
+		stage_->SetCurrentOrder(customer_->GetOrderData());
+	}
+
 	if(ins.IsTrgDown(KEY_INPUT_T))
 	{
 		stop = !stop;
@@ -138,9 +144,6 @@ void GameScene::Update(void)
 	player_->Update();
 
 	customer_->Update();
-
-	//Å‰‚Ì‚¨‹q‚Ì’•¶‚ðŽó‚¯Žæ‚é
-	stage_->SetCurrentOrder(customer_->GetOrderData());
 }
 
 void GameScene::Draw(void)

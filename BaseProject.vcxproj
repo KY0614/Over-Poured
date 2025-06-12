@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\InteractMachine2D.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\BerrySweetsRack.cpp" />
     <ClCompile Include="Src\FpsCounter.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\ChocoSweetsRack.cpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="Src\Object\Stage\StageObject\Sweets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\InteractMachine2D.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\BerrySweetsRack.h" />
     <ClInclude Include="Src\FpsCounter.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\ChocoSweetsRack.h" />
