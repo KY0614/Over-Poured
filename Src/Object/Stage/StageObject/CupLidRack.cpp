@@ -3,7 +3,6 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Player.h"
-#include "HotCoffee.h"
 #include "CupLidRack.h"
 
 namespace {

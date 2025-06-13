@@ -7,8 +7,8 @@ public:
 	~InteractMachine2D();
 
 	void Init(void);
-	void Update(float deltaTime);
-	void Render();
+	void Update(void);
+	void Draw(void);
 
 private:
 

@@ -12,13 +12,8 @@
 #include "StageObject/RackObject.h"
 #include "StageObject/Table.h"
 #include "StageObject/Machine.h"
-#include "StageObject/HotCup.h"
-#include "StageObject/IceCup.h"
-#include "StageObject/HotCoffee.h"
-#include "StageObject/IceCoffee.h"
 #include "StageObject/CupLidRack.h"
 #include "StageObject/CupLid.h"
-#include "StageObject/Counter.h"
 #include "StageObject/DustBox.h"
 #include "StageObject/IceDispenser.h"	
 #include "StageManager.h"
@@ -406,6 +401,11 @@ void StageManager::MachineInteract(void)
 		{
  			obj->Interact(player_.GetHoldItem());
 		}
+
+		//if(obj->GetMachineState() == StageObject::MACHINE_STATE::ACTIVE)
+		//{
+		//	ChangeMode(MODE::MACHINE_2D); // マシンモードに切り替え
+		//}
 
 		//設置して一定時間経ったらコーヒーを出力する
 		if (obj->GetObjectId() == COFFEE_MACHINE &&
