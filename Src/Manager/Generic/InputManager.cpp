@@ -23,31 +23,28 @@ InputManager& InputManager::GetInstance(void)
 
 void InputManager::Init(void)
 {
-
 	// ゲームで使用したいキーを、
 	// 事前にここで登録しておいてください
-	InputManager::GetInstance().Add(KEY_INPUT_SPACE);
-	InputManager::GetInstance().Add(KEY_INPUT_RETURN);
-	InputManager::GetInstance().Add(KEY_INPUT_N);
-	InputManager::GetInstance().Add(KEY_INPUT_Z);
+	//InputManager::GetInstance().Add(KEY_INPUT_SPACE);
+	//InputManager::GetInstance().Add(KEY_INPUT_RETURN);
+	//InputManager::GetInstance().Add(KEY_INPUT_N);
+	//InputManager::GetInstance().Add(KEY_INPUT_Z);
 
-	InputManager::GetInstance().Add(KEY_INPUT_LEFT);
-	InputManager::GetInstance().Add(KEY_INPUT_RIGHT);
-	InputManager::GetInstance().Add(KEY_INPUT_UP);
-	InputManager::GetInstance().Add(KEY_INPUT_DOWN);
+	//InputManager::GetInstance().Add(KEY_INPUT_LEFT);
+	//InputManager::GetInstance().Add(KEY_INPUT_RIGHT);
+	//InputManager::GetInstance().Add(KEY_INPUT_UP);
+	//InputManager::GetInstance().Add(KEY_INPUT_DOWN);
 
-	InputManager::GetInstance().Add(KEY_INPUT_W);
-	InputManager::GetInstance().Add(KEY_INPUT_A);
-	InputManager::GetInstance().Add(KEY_INPUT_S);
-	InputManager::GetInstance().Add(KEY_INPUT_D);
-	InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);
+	//InputManager::GetInstance().Add(KEY_INPUT_W);
+	//InputManager::GetInstance().Add(KEY_INPUT_A);
+	//InputManager::GetInstance().Add(KEY_INPUT_S);
+	//InputManager::GetInstance().Add(KEY_INPUT_D);
+	//InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);
 
-	InputManager::GetInstance().Add(KEY_INPUT_Q);
-	InputManager::GetInstance().Add(KEY_INPUT_E);
-	InputManager::GetInstance().Add(KEY_INPUT_M);
-	InputManager::GetInstance().Add(KEY_INPUT_T);
-
-
+	//InputManager::GetInstance().Add(KEY_INPUT_Q);
+	//InputManager::GetInstance().Add(KEY_INPUT_E);
+	//InputManager::GetInstance().Add(KEY_INPUT_M);
+	//InputManager::GetInstance().Add(KEY_INPUT_T);
 
 	InputManager::MouseInfo info;
 
@@ -73,15 +70,17 @@ void InputManager::Init(void)
 
 void InputManager::Update(void)
 {
+	// InputクラスのUpdateを呼び出す
+	input_.Update();
 
-	// キーボード検知
-	for (auto& p : keyInfos_)
-	{
-		p.second.keyOld = p.second.keyNew;
-		p.second.keyNew = CheckHitKey(p.second.key);
-		p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
-		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
-	}
+	//// キーボード検知
+	//for (auto& p : keyInfos_)
+	//{
+	//	p.second.keyOld = p.second.keyNew;
+	//	p.second.keyNew = CheckHitKey(p.second.key);
+	//	p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
+	//	p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
+	//}
 
 	// マウス検知
 	mouseInput_ = GetMouseInput();
@@ -369,4 +368,13 @@ bool InputManager::IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const
 	return padInfos_[static_cast<int>(no)].IsTrgUp[static_cast<int>(btn)];
 }
 
+bool InputManager::IsInputTriggered(const std::string& eventcode) const
+{
+	return input_.IsTrigerred(eventcode);
+}
+
+bool InputManager::IsInputPressed(const std::string& eventcode) const
+{
+	return input_.IsPressed(eventcode);
+}
 

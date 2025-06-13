@@ -369,16 +369,22 @@ void Player::ProcessMove(void)
 	//WASDで位置を変える
 	VECTOR dir = AsoUtility::VECTOR_ZERO;
 	movePow_ = AsoUtility::VECTOR_ZERO;
-	if (ins.IsNew(KEY_INPUT_W)) { dir = cameraRot.GetForward();  rotRad = AsoUtility::Deg2RadF(0.0f); }
-	if (ins.IsNew(KEY_INPUT_A)) { dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); }
-	if (ins.IsNew(KEY_INPUT_S)) { dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
-	if (ins.IsNew(KEY_INPUT_D)) { dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f); }
+	if (ins.IsInputPressed("Up")) { dir = cameraRot.GetForward();  rotRad = AsoUtility::Deg2RadF(0.0f); }
+	if (ins.IsInputPressed("Left")) 
+	{
+		dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); 
+	}
+	if (ins.IsInputPressed("Down")) { dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
+	if (ins.IsInputPressed("Right")) 
+	{
+		dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f);
+	}
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{
 		//移動スピード
 		speed_ = SPEED_MOVE;
-		if (ins.IsNew(KEY_INPUT_LSHIFT))
+		if (ins.IsInputPressed("Dash"))
 		{
 			speed_ = SPEED_RUN;
 		}
@@ -392,7 +398,7 @@ void Player::ProcessMove(void)
 		if (IsEndLanding())
 		{
 			//アニメーション
-			if (ins.IsNew(KEY_INPUT_LSHIFT))
+			if (ins.IsInputPressed("Dash"))
 			{
 				//速く走るアニメーション
 				animationController_->Play((int)ANIM_TYPE::FAST_RUN);

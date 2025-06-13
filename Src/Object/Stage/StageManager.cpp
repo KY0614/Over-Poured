@@ -79,16 +79,6 @@ StageManager::StageManager(Player& player):player_(player)
 	drawFunc_.emplace(MODE::ICE_2D, std::bind(&StageManager::DrawIce2D, this));
 	drawFunc_.emplace(MODE::LIDRACK_2D, std::bind(&StageManager::DrawLidRack2D, this));
 
-	//// Update関数マップ
-	//updateFunc_[MODE::GAME_3D] = std::bind(&StageManager::Update3DGame, this);
-	//drawFunc_[MODE::GAME_3D] = std::bind(&StageManager::Draw3DGame, this);
-
-	//updateFunc_[MODE::MACHINE_2D] = std::bind(&StageManager::UpdateMachine2D, this);
-	//drawFunc_[MODE::MACHINE_2D] = std::bind(&StageManager::DrawMachine2D, this);
-
-	//updateFunc_[MODE::ICE_2D] = std::bind(&StageManager::UpdateIce2D, this);
-	//drawFunc_[MODE::ICE_2D] = std::bind(&StageManager::DrawIce2D, this);
-
 	ChangeMode(MODE::GAME_3D); // 初期モードを3Dゲームに設定
 }
 

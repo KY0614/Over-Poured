@@ -1,6 +1,8 @@
 #pragma once
+#include <string>
 #include <map>
 #include <Dxlib.h>
+#include "Input.h"
 #include "../../Common/Vector2.h"
 
 class InputManager
@@ -115,6 +117,12 @@ public:
 	bool IsPadBtnTrgDown(JOYPAD_NO no, JOYPAD_BTN btn) const;
 	bool IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const;
 
+	// InputクラスのIsTrigerredを呼び出す新しいメソッド
+	bool IsInputTriggered(const std::string& eventcode) const;
+
+	// InputクラスのIsPressedを呼び出す新しいメソッド
+	bool IsInputPressed(const std::string& eventcode) const;
+
 private:
 
 	//キー情報
@@ -162,6 +170,9 @@ private:
 
 	//パッド情報
 	JOYPAD_IN_STATE padInfos_[5];
+
+	// Inputクラスのインスタンス
+	Input input_; // Inputクラスのインスタンスを追加
 
 	//デフォルトコンストラクタをprivateにして、
 	//外部から生成できない様にする

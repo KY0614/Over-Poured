@@ -129,7 +129,7 @@ void GameScene::Update(void)
 	//}
 
 	//ƒV[ƒ“‘JˆÚ
-	if (ins.IsTrgDown(KEY_INPUT_RETURN))
+	if (ins.IsInputTriggered("NextScene"))
 	{
 		scr.SetCurrentScore(score_);
 		scr.SaveScore(score_);
