@@ -14,7 +14,7 @@ IceCupRack::IceCupRack(const std::string objId, const float width,
 {
 }
 
-void IceCupRack::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
+void IceCupRack::PickUp(std::string rackName, std::vector<std::unique_ptr<StageObject>>& object)
 {
 	auto& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))

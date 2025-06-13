@@ -2,6 +2,7 @@
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "IceCup.h"
+#include "ItemObject.h"
 
 IceCup::IceCup(const std::string objId, const float width,
 	const float height, const float depth, Player& player) : 

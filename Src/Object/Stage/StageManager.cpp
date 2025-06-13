@@ -8,14 +8,12 @@
 #include "../Common/Sphere.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
+#include "StageObject/ItemObject.h"
+#include "StageObject/RackObject.h"
 #include "StageObject/Table.h"
 #include "StageObject/Machine.h"
 #include "StageObject/HotCup.h"
 #include "StageObject/IceCup.h"
-#include "StageObject/HotCupRack.h"
-#include "StageObject/IceCupRack.h"
-#include "StageObject/ChocoSweetsRack.h"
-#include "StageObject/BerrySweetsRack.h"
 #include "StageObject/HotCoffee.h"
 #include "StageObject/IceCoffee.h"
 #include "StageObject/CupLidRack.h"
@@ -136,27 +134,27 @@ void StageManager::Init(void)
 	}
 
 	//カウンター用テーブル
-	counter_ = std::make_unique<Counter>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
+	counter_ = std::make_unique<Table>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
 	counter_->Init();
 	counter_->SetPos(COUNTER_POS);
 
 	//ホット用カップのラック
-	objects_.emplace_back(std::make_unique<HotCupRack>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter());
 	
 	//アイス用カップのラック
-	objects_.emplace_back(std::make_unique<IceCupRack>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.emplace_back(std::make_unique<RackObject>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[TABLE_COLUMN_NUM]->GetTopCenter());
 
 	//チョコスイーツ用のラック
-	objects_.emplace_back(std::make_unique<ChocoSweetsRack>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.emplace_back(std::make_unique<RackObject>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
 	
 	//ベリースイーツ用のラック
-	objects_.emplace_back(std::make_unique<BerrySweetsRack>(BERRY_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.emplace_back(std::make_unique<RackObject>(BERRY_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init();
 	objects_.back()->SetPos(tables_.back()->GetTopCenter());
 	
@@ -506,7 +504,7 @@ void StageManager::MakeCoffee(void)
 void StageManager::MakeHotCoffee(int i)
 {
 	//設置されているカップをコーヒーに上書きする
-	objects_[i] = std::make_unique<HotCoffee>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
+	objects_[i] = std::make_unique<ItemObject>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
 	objects_[i]->Init();
 	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 	objects_[i]->SetPos(tables_[5]->GetTopCenter());
@@ -515,7 +513,7 @@ void StageManager::MakeHotCoffee(int i)
 void StageManager::MakeIceCoffee(int i)
 {
 	//設置されているカップをコーヒーに上書きする
-	objects_[i] = std::make_unique<IceCoffee>(ICE_COFFEE, 20.0f, 30.0f, 20.0f, player_);
+	objects_[i] = std::make_unique<ItemObject>(ICE_COFFEE, 20.0f, 30.0f, 20.0f, player_);
 	objects_[i]->Init();
 	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 	objects_[i]->SetPos(tables_[5]->GetTopCenter());
@@ -539,7 +537,7 @@ void StageManager::DispenseIce2Cup(void)
 					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
 				//設置されているカップに氷を入れる
-				if (auto iceCup = dynamic_cast<IceCup*>(objects_[i].get())) 
+				if (auto iceCup = dynamic_cast<ItemObject*>(objects_[i].get()))
 				{
 					iceCup->PouredIce();
 				}
@@ -599,7 +597,7 @@ void StageManager::DustBoxInteract(void)
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			if(ins.IsTrgDown(KEY_INPUT_SPACE))
+			if(ins.IsInputTriggered("Interact"))
 			{
 				//ゴミ箱にアイテムを捨てる処理
 				//DiscardHoldObject();
@@ -679,7 +677,7 @@ void StageManager::Update3DGame(void)
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			obj->PickUp(objects_);
+			obj->PickUp(obj->GetObjectId(), objects_);
 			break;
 		}
 	}

@@ -14,7 +14,7 @@ HotCupRack::HotCupRack(const std::string objId, const float width,
 {
 }
 
-void HotCupRack::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
+void HotCupRack::PickUp(std::string rackName, std::vector<std::unique_ptr<StageObject>>& object)
 {
 	auto& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))

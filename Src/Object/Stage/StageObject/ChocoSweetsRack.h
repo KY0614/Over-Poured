@@ -10,7 +10,7 @@ public:
 
 	~ChocoSweetsRack(void) = default;
 
-	void PickUp(std::vector<std::unique_ptr<StageObject>>& object) override;
+	void PickUp(std::string rackName, std::vector<std::unique_ptr<StageObject>>& object) override;
 
 private:
 };

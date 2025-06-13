@@ -11,7 +11,7 @@ BerrySweetsRack::BerrySweetsRack(const std::string objId,
 {
 }
 
-void BerrySweetsRack::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
+void BerrySweetsRack::PickUp(std::string rackName, std::vector<std::unique_ptr<StageObject>>& object)
 {
 	auto& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))

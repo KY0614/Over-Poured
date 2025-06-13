@@ -238,7 +238,7 @@ void StageObject::Interact(const std::string& objId)
 {
 }
 
-void StageObject::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
+void StageObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
 {
 }
 

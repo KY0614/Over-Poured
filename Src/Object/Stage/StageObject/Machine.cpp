@@ -59,7 +59,7 @@ void Machine::Interact(const std::string& objId)
 			//スペースキー押下でマシンの場所にカップを置く
 			if ((player_.GetHoldItem() == items.front().c_str() ||
 				player_.GetHoldItem() == items.back().c_str()) &&
-				ins.IsTrgDown(KEY_INPUT_SPACE))
+				ins.IsInputTriggered("Interact"))
 			{
 				VECTOR cupPos = GetTopCenter();	//マシンの上部中央にカップを置く
 				cupPos.y += obj->GetObjHeight() / 2.0f;	//少し上にずらす

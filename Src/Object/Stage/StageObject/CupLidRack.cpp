@@ -42,7 +42,7 @@ void CupLidRack::Interact(const std::string& objId)
 		{
 			//スペースキーを押下し続けるとゲージがたまっていく
 			if (isHoldingHotCoffee &&
-				ins.IsNew(KEY_INPUT_SPACE))
+				ins.IsInputPressed("Interact"))
 			{
 				param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
 				isActioned_ = true;

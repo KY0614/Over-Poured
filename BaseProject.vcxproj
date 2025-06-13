@@ -19,23 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\StageObject\InteractObject.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\RackObject.cpp" />
+    <ClCompile Include="Src\Object\Stage\StageObject\ItemObject.cpp" />
     <ClCompile Include="Src\Manager\Generic\Input.cpp" />
     <ClCompile Include="Src\Object\Stage\InteractMachine2D.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\BerrySweetsRack.cpp" />
     <ClCompile Include="Src\FpsCounter.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\ChocoSweetsRack.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\IceCoffee.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\IceCupRack.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceDispenser.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\DustBox.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\Counter.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\CupLid.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\CupLidRack.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\HotCupRack.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\HotCoffee.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\IceCup.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\Machine.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\HotCup.cpp" />
     <ClCompile Include="Src\Object\Common\Cube.cpp" />
     <ClCompile Include="Src\Object\Common\Sphere.cpp" />
     <ClCompile Include="Src\Manager\GameSystem\OrderCustomerManager.cpp" />
@@ -85,26 +79,19 @@
     <ClCompile Include="Src\Object\Stage\StageObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObjectLibrary.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\Sweets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\StageObject\InteractObject.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\RackObject.h" />
+    <ClInclude Include="Src\Object\Stage\StageObject\ItemObject.h" />
     <ClInclude Include="Src\Manager\Generic\Input.h" />
     <ClInclude Include="Src\Object\Stage\InteractMachine2D.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\BerrySweetsRack.h" />
     <ClInclude Include="Src\FpsCounter.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\ChocoSweetsRack.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\IceCoffee.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\IceCupRack.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceDispenser.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\DustBox.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\Counter.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\CupLid.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\CupLidRack.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\HotCupRack.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\HotCoffee.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\IceCup.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\Machine.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\HotCup.h" />
     <ClInclude Include="Src\Object\Common\Cube.h" />
     <ClInclude Include="Src\Object\Common\Sphere.h" />
     <ClInclude Include="Src\Libs\nlohmann\adl_serializer.hpp" />
@@ -201,7 +188,6 @@
     <ClInclude Include="Src\Object\Stage\StageObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObjectLibrary.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\Table.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\Sweets.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

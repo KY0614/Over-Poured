@@ -11,7 +11,7 @@ ChocoSweetsRack::ChocoSweetsRack(const std::string objId,
 {
 }
 
-void ChocoSweetsRack::PickUp(std::vector<std::unique_ptr<StageObject>>& object)
+void ChocoSweetsRack::PickUp(std::string rackName, std::vector<std::unique_ptr<StageObject>>& object)
 {
 	auto& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))

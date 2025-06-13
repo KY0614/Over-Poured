@@ -196,7 +196,7 @@ public:
 	/// オブジェクトを取り出す処理
 	/// </summary>
 	/// <param name="object"></param>
-	virtual void PickUp(std::vector<std::unique_ptr<StageObject>>& object);
+	virtual void PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object);
 
 protected:
 
