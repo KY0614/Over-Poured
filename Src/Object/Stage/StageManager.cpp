@@ -16,6 +16,7 @@
 #include "StageObject/CupLid.h"
 #include "StageObject/DustBox.h"
 #include "StageObject/IceDispenser.h"	
+#include "Interact2D.h"	
 #include "StageManager.h"
 
 #pragma region メモ
@@ -60,19 +61,14 @@ StageManager::StageManager(Player& player):player_(player)
 	isServed_ = false;
 	isServedItems_.clear();
 
-	//更新処理
-	updateFunc_.emplace(MODE::GAME_3D, std::bind(&StageManager::Update3DGame, this));
-	updateFunc_.emplace(MODE::MACHINE_2D, std::bind(&StageManager::UpdateMachine2D, this));
-	updateFunc_.emplace(MODE::ICE_2D, std::bind(&StageManager::UpdateIce2D, this));
-	updateFunc_.emplace(MODE::LIDRACK_2D, std::bind(&StageManager::UpdateLidRack2D, this));
+	mode_ = MODE::GAME_3D; // 初期モードを3Dゲームに設定
 
-	//描画処理
-	drawFunc_.emplace(MODE::GAME_3D, std::bind(&StageManager::Draw3DGame, this));
-	drawFunc_.emplace(MODE::MACHINE_2D, std::bind(&StageManager::DrawMachine2D, this));
-	drawFunc_.emplace(MODE::ICE_2D, std::bind(&StageManager::DrawIce2D, this));
-	drawFunc_.emplace(MODE::LIDRACK_2D, std::bind(&StageManager::DrawLidRack2D, this));
+	//状態管理
+	stateChanges_.emplace(MODE::GAME_3D, std::bind(&StageManager::ChangeMode3DGame, this));
+	stateChanges_.emplace(MODE::MACHINE_2D, std::bind(&StageManager::ChangeModeMachine2D, this));
+	stateChanges_.emplace(MODE::ICE_2D, std::bind(&StageManager::ChangeModeIce2D, this));
+	stateChanges_.emplace(MODE::LIDRACK_2D, std::bind(&StageManager::ChangeModeLidRack2D, this));
 
-	ChangeMode(MODE::GAME_3D); // 初期モードを3Dゲームに設定
 }
 
 StageManager::~StageManager(void)
@@ -178,6 +174,11 @@ void StageManager::Init(void)
 	objects_.back()->Init();
 	objects_.back()->SetPos(DUST_BOX_POS);
 
+	interact2D_ = std::make_unique<Interact2D>();
+	interact2D_->Init(); // 2Dインタラクト用の初期化
+
+	ChangeMode(MODE::GAME_3D); // 初期モードを3Dゲームに設定
+
 #ifdef _DEBUG
 
 	//カウンター前の当たり判定用の球体
@@ -197,13 +198,17 @@ void StageManager::Update(void)
 	//更新ステップ
 	modeUpdate_();
 
+	interact2D_->Update(); // 2Dインタラクトの更新
+
 	auto& ins = InputManager::GetInstance();
 	if(ins.IsTrgDown(KEY_INPUT_Q))
 	{
-		ChangeMode(MODE::ICE_2D);
+		interact2D_->ChangeMode(Interact2D::MODE::MACHINE_2D);
+		ChangeMode(MODE::MACHINE_2D);
 	}
 	if (ins.IsTrgDown(KEY_INPUT_E))
 	{
+		interact2D_->ChangeMode(Interact2D::MODE::GAME_3D);
 		ChangeMode(MODE::GAME_3D);
 	}
 
@@ -233,6 +238,8 @@ void StageManager::Draw(void)
 	{
 		obj->Draw();
 	}
+
+	interact2D_->Draw(); // 2Dインタラクトの描画
 
 #ifdef _DEBUG
 	DrawDebug();
@@ -626,29 +633,36 @@ void StageManager::ChangeMode(MODE mode)
 {
 	mode_ = mode;
 
-	// 関数ポインタ切り替え
-	modeUpdate_ = updateFunc_[mode_];
-	modeDraw_ = drawFunc_[mode_];
+	//// 関数ポインタ切り替え
+	//modeUpdate_ = updateFunc_[mode_];
+	//modeDraw_ = drawFunc_[mode_];
+
+	//各状態遷移の初期処理
+	stateChanges_[mode_]();
 }
 
 void StageManager::ChangeMode3DGame(void)
 {
-	// TODO: ここに3Dゲームモード切り替え処理を書く
+	modeUpdate_ = std::bind(&StageManager::Update3DGame, this);
+	modeDraw_ = std::bind(&StageManager::Draw3DGame, this);
 }
 
 void StageManager::ChangeModeMachine2D(void)
 {
-	// TODO: ここに2Dマシンモード切り替え処理を書く
+	modeUpdate_ = std::bind(&StageManager::UpdateMachine2D, this);
+	modeDraw_ = std::bind(&StageManager::DrawMachine2D, this);
 }
 
 void StageManager::ChangeModeIce2D(void)
 {
-	// TODO: ここに2D製氷機モード切り替え処理を書く
+	modeUpdate_ = std::bind(&StageManager::UpdateIce2D, this);
+	modeDraw_ = std::bind(&StageManager::DrawIce2D, this);
 }
 
 void StageManager::ChangeModeLidRack2D(void)
 {
-	// TODO: ここに2Dリッドラックモード切り替え処理を書く
+	modeUpdate_ = std::bind(&StageManager::UpdateLidRack2D, this);
+	modeDraw_ = std::bind(&StageManager::DrawLidRack2D, this);
 }
 
 void StageManager::Update3DGame(void)

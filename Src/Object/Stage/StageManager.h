@@ -8,6 +8,7 @@
 
 class StageObject;
 class Player;
+class Interact2D;
 
 class StageManager : public ActorBase
 {
@@ -54,6 +55,10 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
+	/// <summary>
+	/// 現在の先頭のお客の注文を設定する
+	/// </summary>
+	/// <param name="order">先頭のお客の注文</param>
 	void SetCurrentOrder(const Order::OrderData& order);
 
 	/// <summary>
@@ -82,6 +87,9 @@ private:
 	MODE mode_;
 
 	//状態管理(状態遷移時初期処理)
+	std::map<MODE, std::function<void(void)>> stateChanges_;
+
+	//状態管理
 	std::map<MODE, std::function<void(void)>> updateFunc_;
 	std::map<MODE, std::function<void(void)>> drawFunc_;
 
@@ -100,6 +108,8 @@ private:
 
 	//カウンター用
 	std::unique_ptr<StageObject> counter_;
+
+	std::unique_ptr<Interact2D> interact2D_;	//2Dインタラクト用
 
 	bool isServed_;
 

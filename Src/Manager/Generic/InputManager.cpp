@@ -41,10 +41,8 @@ void InputManager::Init(void)
 	//InputManager::GetInstance().Add(KEY_INPUT_D);
 	//InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);
 
-	//InputManager::GetInstance().Add(KEY_INPUT_Q);
-	//InputManager::GetInstance().Add(KEY_INPUT_E);
-	//InputManager::GetInstance().Add(KEY_INPUT_M);
-	//InputManager::GetInstance().Add(KEY_INPUT_T);
+	InputManager::GetInstance().Add(KEY_INPUT_Q);
+	InputManager::GetInstance().Add(KEY_INPUT_E);
 
 	InputManager::MouseInfo info;
 
@@ -73,14 +71,14 @@ void InputManager::Update(void)
 	// InputクラスのUpdateを呼び出す
 	input_.Update();
 
-	//// キーボード検知
-	//for (auto& p : keyInfos_)
-	//{
-	//	p.second.keyOld = p.second.keyNew;
-	//	p.second.keyNew = CheckHitKey(p.second.key);
-	//	p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
-	//	p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
-	//}
+	// キーボード検知(いらなくなる予定）
+	for (auto& p : keyInfos_)
+	{
+		p.second.keyOld = p.second.keyNew;
+		p.second.keyNew = CheckHitKey(p.second.key);
+		p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
+		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
+	}
 
 	// マウス検知
 	mouseInput_ = GetMouseInput();
