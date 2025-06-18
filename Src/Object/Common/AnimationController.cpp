@@ -19,10 +19,10 @@ AnimationController::AnimationController(int modelId)
 
 AnimationController::~AnimationController(void)
 {
-	for (const auto& anim : animations_)
-	{
-		MV1DeleteModel(anim.second.model);
-	}
+	//for (const auto& anim : animations_)
+	//{
+	//	MV1DeleteModel(anim.second.model);
+	//}
 }
 
 void AnimationController::Add(int type, const std::string& path, float speed)

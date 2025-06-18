@@ -9,6 +9,7 @@
 class StageObject;
 class Player;
 class Interact2D;
+class AnimationController;
 
 class StageManager : public ActorBase
 {
@@ -37,6 +38,15 @@ public:
 	static constexpr VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };	//アイスディスペンサーの座標
 	static constexpr VECTOR LIBS_POS = { 74.0f, 76.0f, -175.0f };		//カップの蓋の座標
 	static constexpr VECTOR DUSTBOX_POS = { 227.0f, 0.0f, -175.0f };	//ゴミ箱の座標
+
+	//アニメーション種別
+	enum class ANIM_TYPE
+	{
+		CREATE,
+		IDLE,
+		PAYING,
+		
+	};
 
 	enum class MODE {
 		GAME_3D,		// 3Dゲームモード
@@ -83,6 +93,9 @@ public:
 
 private:
 
+	//アニメーション
+	std::unique_ptr<AnimationController> animationController_;
+
 	//モード管理
 	MODE mode_;
 
@@ -121,6 +134,8 @@ private:
 
 	//各注文が提供されたかどうかのフラグ
 	std::vector<bool> isServedItems_; 
+
+	void InitAnimation(void);
 
 	/// <summary>
 	/// 提供するアイテムを設定する

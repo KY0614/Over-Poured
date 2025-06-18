@@ -19,6 +19,8 @@ public:
 		FOOT_SMOKE,
 
 		STAGE,
+		COUNTER,
+		REGISTER,
 		CUSTOMER,
 	};
 

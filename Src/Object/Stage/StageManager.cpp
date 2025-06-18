@@ -6,6 +6,7 @@
 #include "../Manager/Generic/InputManager.h"
 #include "../Player.h"
 #include "../Common/Sphere.h"
+#include "../Common/AnimationController.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
 #include "StageObject/ItemObject.h"
@@ -69,6 +70,7 @@ StageManager::StageManager(Player& player):player_(player)
 	stateChanges_.emplace(MODE::ICE_2D, std::bind(&StageManager::ChangeModeIce2D, this));
 	stateChanges_.emplace(MODE::LIDRACK_2D, std::bind(&StageManager::ChangeModeLidRack2D, this));
 
+	animationController_ = nullptr;
 }
 
 StageManager::~StageManager(void)
@@ -81,7 +83,7 @@ void StageManager::Init(void)
 	//モデル制御の基本情報
 	transform_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::STAGE));
+			ResourceManager::SRC::REGISTER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
 	transform_.pos = AsoUtility::VECTOR_ZERO;
 	transform_.quaRot = Quaternion::Euler(
@@ -93,6 +95,8 @@ void StageManager::Init(void)
 	transform_.quaRotLocal = Quaternion();
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
+
+	InitAnimation(); // アニメーションの初期化
 
 	//横のテーブル群(手前)
 	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
@@ -198,18 +202,29 @@ void StageManager::Update(void)
 	//更新ステップ
 	modeUpdate_();
 
+	animationController_->Update();
+
 	interact2D_->Update(); // 2Dインタラクトの更新
+
+	if (animationController_->IsEnd())
+	{
+		//アニメーションが終わったらマシンモードに切り替え
+		animationController_->Play((int)ANIM_TYPE::IDLE);
+	}
 
 	auto& ins = InputManager::GetInstance();
 	if(ins.IsTrgDown(KEY_INPUT_Q))
 	{
-		interact2D_->ChangeMode(Interact2D::MODE::MACHINE_2D);
-		ChangeMode(MODE::MACHINE_2D);
+		//interact2D_->ChangeMode(Interact2D::MODE::MACHINE_2D);
+		//ChangeMode(MODE::MACHINE_2D);
+		//走るアニメーション
+		animationController_->Play((int)ANIM_TYPE::CREATE,false);
 	}
 	if (ins.IsTrgDown(KEY_INPUT_E))
 	{
-		interact2D_->ChangeMode(Interact2D::MODE::GAME_3D);
-		ChangeMode(MODE::GAME_3D);
+		//interact2D_->ChangeMode(Interact2D::MODE::GAME_3D);
+		//ChangeMode(MODE::GAME_3D);
+		animationController_->Play((int)ANIM_TYPE::PAYING, false);
 	}
 
 #ifdef _DEBUG
@@ -267,6 +282,17 @@ void StageManager::ResetServeData(void)
 	servedItems_.lid_ = false;
 	isServedItems_.clear();
 	isServedItems_.resize(0);
+}
+
+void StageManager::InitAnimation(void)
+{
+	std::string path = Application::PATH_MODEL + "Stage/";
+	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
+
+	animationController_->Add((int)ANIM_TYPE::CREATE, path + "create_register.mv1", 30.0f);
+
+	animationController_->Add((int)ANIM_TYPE::PAYING, path + "paying.mv1", 30.0f);
+	animationController_->Play((int)ANIM_TYPE::IDLE);
 }
 
 void StageManager::SurveItem(StageObject& obj)
