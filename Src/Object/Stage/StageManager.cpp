@@ -284,6 +284,11 @@ void StageManager::ResetServeData(void)
 	isServedItems_.resize(0);
 }
 
+Transform StageManager::GetCounterTran(void) const
+{
+	return counter_->GetTransform(); 
+}
+
 void StageManager::InitAnimation(void)
 {
 	std::string path = Application::PATH_MODEL + "Stage/";
@@ -697,17 +702,22 @@ void StageManager::Update3DGame(void)
 
 	auto& pSphere = player_.GetSphere();
 
-	for (const auto& obj : objects_)
-	{
-		obj->Update();
-	}
+	//for (const auto& obj : objects_)
+	//{
+	//	obj->Update();
+	//}
 
-	for (const auto& obj : tables_)
-	{
-		obj->Update();
-	}
+	//for (const auto& obj : tables_)
+	//{
+	//	obj->Update();
+	//}
 
-	counter_->Update();
+	//counter_->Update();
+
+	tables_[0]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
+	tables_[1]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
+	tables_[0]->UpdateDebugImGui(); // テーブルの更新処理（例として最初のテーブルを更新）
+	tables_[1]->UpdateDebugImGui2(); // テーブルの更新処理（例として最初のテーブルを更新）
 
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)

@@ -10,8 +10,8 @@
 #include"../Object/Customer/CustomerBase.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
-#include "../Object/Stage/StageObjectLibrary.h"
 #include "../Object/Stage/StageManager.h"
+#include "../Object/Stage/StageObject.h"
 #include"../Object/Order/OrderManager.h"
 #include "../Object/Player.h"
 #include "../Object/Score.h"
@@ -46,7 +46,7 @@ void GameScene::Init(void)
 	stage_->Init();
 
 	//ステージのコライダーを追加
-	player_->AddCollider(stage_->GetTransform().collider);
+	player_->AddCollider(stage_->GetCounterTran().collider);
 
 	//スカイドーム
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());

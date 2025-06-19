@@ -124,7 +124,6 @@ private:
 
 	//カプセル
 	std::unique_ptr<Capsule> capsule_;
-	std::unique_ptr<Capsule> capsule2_;
 	std::unique_ptr<Sphere> sphere_;
 
 	//足煙エフェクト

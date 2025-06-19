@@ -91,6 +91,8 @@ public:
 	/// <param name=""></param>
 	void ResetServeData(void);
 
+	Transform GetCounterTran(void) const;
+
 private:
 
 	//アニメーション

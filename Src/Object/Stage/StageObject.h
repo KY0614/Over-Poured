@@ -198,6 +198,15 @@ public:
 	/// <param name="object"></param>
 	virtual void PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object);
 
+
+	/// <summary>
+	/// 座標や拡大率を調整する用のGUI
+	/// </summary>
+	/// <param name=""></param>
+	void UpdateDebugImGui(void);
+
+	void UpdateDebugImGui2(void);
+
 protected:
 
 	//オブジェクトのパラメータ
@@ -243,10 +252,5 @@ private:
 	//相対座標を回転させてワールド座標で取得する
 	VECTOR GetRotPos(const VECTOR& localPos) const;
 
-	/// <summary>
-	/// 座標や拡大率を調整する用のGUI
-	/// </summary>
-	/// <param name=""></param>
-	void UpdateDebugImGui(void);
 };
 

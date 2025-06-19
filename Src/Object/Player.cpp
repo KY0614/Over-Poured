@@ -57,15 +57,9 @@ void Player::Init(void)
 
 	//カプセルコライダ
 	capsule_ = std::make_unique<Capsule>(transform_);
-	capsule_->SetLocalPosTop({ 0.0f, 20.0f, 0.0f });
+	capsule_->SetLocalPosTop({ 0.0f, 70.0f, 0.0f });
 	capsule_->SetLocalPosDown({ 0.0f, -10.0f, 0.0f });
 	capsule_->SetRadius(20.0f);
-	
-	////オブジェクト用コライダ
-	//capsule2_ = std::make_unique<Capsule>(transform_);
-	//capsule2_->SetLocalPosTop({ 0.0f, 80.0f, 50.0f });
-	//capsule2_->SetLocalPosDown({ 0.0f, 0.0f, 50.0f });
-	//capsule2_->SetRadius(30.0f);
 	
 	//オブジェクト用コライダ
 	sphere_ = std::make_unique<Sphere>(transform_);
@@ -122,8 +116,7 @@ void Player::Draw(void)
 {
 	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
 
-	//capsule_->Draw();
-	//capsule2_->Draw();
+	capsule_->Draw();
 	//sphere_->Draw();
 
 	//モデルの描画

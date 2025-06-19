@@ -192,10 +192,10 @@ void Camera::ProcessRot(void)
 	//VECTOR axisDeg = AsoUtility::VECTOR_ZERO;
 	float rotPow = 1.0f * DX_PI_F / 180.0f;
 	//‰ñ“]ˆ—
-	if (ins.IsNew(KEY_INPUT_UP)) { angles_.x += rotPow; }
-	if (ins.IsNew(KEY_INPUT_DOWN)) { angles_.x -= rotPow; }
-	if (ins.IsNew(KEY_INPUT_LEFT)) { angles_.y -= rotPow; }
-	if (ins.IsNew(KEY_INPUT_RIGHT)) { angles_.y += rotPow; }
+	if (ins.IsInputPressed("CameraUp")) { angles_.x += rotPow; }
+	if (ins.IsInputPressed("CameraDown")) { angles_.x -= rotPow; }
+	if (ins.IsInputPressed("CameraLeft")) { angles_.y -= rotPow; }
+	if (ins.IsInputPressed("CameraRight")) { angles_.y += rotPow; }
 
 	//xŽ²‰ñ“]‚Ì§ŒÀiã‚Í‚S‚O“xA‰º‚Í‚P‚T“xj
 	if (angles_.x > LIMIT_X_UP_RAD)

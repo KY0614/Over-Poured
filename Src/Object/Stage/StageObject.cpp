@@ -1,5 +1,6 @@
 #include "../Libs/ImGui/imgui.h"
 #include "../../Common/DebugDrawFormat.h"
+#include "../Manager/Generic/ResourceManager.h"
 #include "../Common/Sphere.h"
 #include "../Common/Cube.h"
 #include "../../Utility/AsoUtility.h"
@@ -28,9 +29,34 @@ StageObject::~StageObject(void)
 
 void StageObject::Init(void)
 {
+	//作成するオブジェクトのパラメータをjsonファイルから読み込む
 	object_ = StageObjectLibrary::LoadData(objId_);
-
 	param_ = object_.second;
+
+	if(objId_ == "Counter")
+	{
+		//モデルの基本設定
+		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
+			ResourceManager::SRC::COUNTER));
+		transform_.scl = AsoUtility::VECTOR_ONE;
+		transform_.pos = { 0.0f, 0.0f, 0.0f };
+		transform_.quaRot = Quaternion();
+		transform_.quaRotLocal =
+			Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
+		transform_.MakeCollider(Collider::TYPE::STAGE);
+	}
+	else if (objId_ == "Table")
+	{
+		//モデルの基本設定
+		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
+			ResourceManager::SRC::TABLE));
+		transform_.scl = { 0.9f, 0.9f, 0.9f };
+		transform_.pos = { 0.0f, 0.0f, 0.0f };
+		transform_.quaRot = Quaternion();
+		transform_.quaRotLocal =
+			Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
+		transform_.MakeCollider(Collider::TYPE::STAGE);
+	}
 
 	cube_ = std::make_unique<Cube>(transform_);
 
@@ -155,19 +181,10 @@ void StageObject::Draw(void)
 	}
 	else
 	{
-		//Zバッファを有効にする
-		SetUseZBuffer3D(true);
-
-		//Zバッファへの書き込みを有効にする
-		SetWriteZBuffer3D(true);
+		retCol.a = 128;
 
 		cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
 
-		//Zバッファを有効にする
-		SetUseZBuffer3D(false);
-
-		//Zバッファへの書き込みを有効にする
-		SetWriteZBuffer3D(false);
 	}
 
 	//DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
@@ -195,6 +212,9 @@ void StageObject::Draw(void)
 	//	DebugDrawFormat::FormatStringRight(L"produce : %s", StringUtility::StringToWstring(produce).c_str(), line, lineHeight);
 	//}
 #endif // _DEBUG
+
+	//モデルの描画
+	MV1DrawModel(transform_.modelId);
 
 }
 
@@ -278,10 +298,32 @@ void StageObject::UpdateDebugImGui(void)
 	ImGui::SliderFloat("PosZ", &transform_.pos.z, -300.0f, 1000.0f);	
 	
 	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Scale", &width_);
-	ImGui::SliderFloat("w", &width_, -300.0f, 500.0f);
-	ImGui::SliderFloat("h", &height_, -300.0f, 500.0f);
-	ImGui::SliderFloat("d", &depth_, -300.0f, 1000.0f);
+	ImGui::InputFloat3("Scale", &transform_.scl.x);
+	ImGui::SliderFloat("w", &transform_.scl.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("h", &transform_.scl.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("d", &transform_.scl.z, 0.0f, 1.0f);
+	//終了処理
+	ImGui::End();
+}
+
+void StageObject::UpdateDebugImGui2(void)
+{
+	//ウィンドウタイトル&開始処理
+	ImGui::Begin("2");
+
+	//位置
+	ImGui::Text("position");
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Pos", &transform_.pos.x);
+	ImGui::SliderFloat("PosX", &transform_.pos.x, -300.0f, 500.0f);
+	ImGui::SliderFloat("PosY", &transform_.pos.y, -300.0f, 500.0f);
+	ImGui::SliderFloat("PosZ", &transform_.pos.z, -300.0f, 1000.0f);
+
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Scale", &transform_.scl.x);
+	ImGui::SliderFloat("w", &transform_.scl.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("h", &transform_.scl.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("d", &transform_.scl.z, 0.0f, 1.0f);
 	//終了処理
 	ImGui::End();
 }

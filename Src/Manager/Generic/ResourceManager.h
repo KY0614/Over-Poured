@@ -20,6 +20,7 @@ public:
 
 		STAGE,
 		COUNTER,
+		TABLE,
 		REGISTER,
 		CUSTOMER,
 	};
