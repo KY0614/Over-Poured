@@ -1,4 +1,6 @@
 #include <DxLib.h>
+#include <unordered_map>
+#include <map>
 #include "../../Application.h"
 #include "Resource.h"
 #include "ResourceManager.h"
@@ -64,6 +66,24 @@ int ResourceManager::LoadModelDuplicate(SRC src)
 	res.duplicateModelIds_.push_back(duId);
 
 	return duId;
+}
+
+ResourceManager::SRC ResourceManager::StringToSRC(const std::string& name)
+{
+	static const std::unordered_map<std::string, SRC> map = {
+		{ "Counter", SRC::COUNTER },
+		{ "Table",   SRC::TABLE },
+		//{ "cup",     SRC::CUP },
+		//{ "lid",     SRC::LID },
+		// ...新しい要素はここに追加
+	};
+
+	auto it = map.find(name);
+	if (it != map.end()) {
+		return it->second;
+	}
+
+	return SRC::NONE; // 不正な名前が来たときのデフォルト対応
 }
 
 void ResourceManager::InitTitle(void)
@@ -138,7 +158,7 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::COUNTER, std::move(res));
 
 	//テーブル
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/table.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/table_bounds.mv1");
 	resourcesMap_.emplace(SRC::TABLE, std::move(res));
 
 	//レジスター

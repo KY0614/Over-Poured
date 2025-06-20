@@ -22,7 +22,7 @@ public:
 	static constexpr int TABLE_ROW_FRONT_NUM = 5;	//テーブルの数
 	static constexpr int TABLE_ROW_BACK_NUM = 2;	//テーブルの数
 
-	static constexpr float TABLE_WIDTH = 95.0f;	//テーブルの横幅
+	static constexpr float TABLE_WIDTH = 94.0f;	//テーブルの横幅
 
 	//座標
 
@@ -92,6 +92,7 @@ public:
 	void ResetServeData(void);
 
 	Transform GetCounterTran(void) const;
+	Transform GetTableTran(int index) const;
 
 private:
 

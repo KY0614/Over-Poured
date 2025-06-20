@@ -57,7 +57,7 @@ void Player::Init(void)
 
 	//カプセルコライダ
 	capsule_ = std::make_unique<Capsule>(transform_);
-	capsule_->SetLocalPosTop({ 0.0f, 70.0f, 0.0f });
+	capsule_->SetLocalPosTop({ 0.0f, 90.0f, 0.0f });
 	capsule_->SetLocalPosDown({ 0.0f, -10.0f, 0.0f });
 	capsule_->SetRadius(20.0f);
 	
@@ -97,6 +97,7 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
+
 	transform_.pos.y = 30.0f;
 
 	//更新ステップ
@@ -505,6 +506,7 @@ void Player::CollisionCapsule(void)
 				{
 					//法線の方向にちょっとだけ移動させる
 					movedPos_ = VAdd(movedPos_, VScale(hit.Normal, 1.0f));
+					movedPos_.y = 30.0f;
 					//カプセルも一緒に移動させる
 					trans.pos = movedPos_;
 					trans.Update();

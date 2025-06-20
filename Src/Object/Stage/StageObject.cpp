@@ -33,30 +33,17 @@ void StageObject::Init(void)
 	object_ = StageObjectLibrary::LoadData(objId_);
 	param_ = object_.second;
 
-	if(objId_ == "Counter")
-	{
-		//モデルの基本設定
-		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::COUNTER));
-		transform_.scl = AsoUtility::VECTOR_ONE;
-		transform_.pos = { 0.0f, 0.0f, 0.0f };
-		transform_.quaRot = Quaternion();
-		transform_.quaRotLocal =
-			Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
-		transform_.MakeCollider(Collider::TYPE::STAGE);
-	}
-	else if (objId_ == "Table")
-	{
-		//モデルの基本設定
-		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::TABLE));
-		transform_.scl = { 0.9f, 0.9f, 0.9f };
-		transform_.pos = { 0.0f, 0.0f, 0.0f };
-		transform_.quaRot = Quaternion();
-		transform_.quaRotLocal =
-			Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
-		transform_.MakeCollider(Collider::TYPE::STAGE);
-	}
+	// 文字列をSRCに変換してモデル設定
+	ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(objId_);
+
+	//モデルの基本設定
+	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
+	transform_.scl = AsoUtility::VECTOR_ONE;
+	transform_.pos = { 0.0f, 0.0f, 0.0f };
+	transform_.quaRot = Quaternion();
+	transform_.quaRotLocal =
+		Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
+	transform_.MakeCollider(Collider::TYPE::STAGE);
 
 	cube_ = std::make_unique<Cube>(transform_);
 
@@ -75,8 +62,8 @@ void StageObject::Init(void)
 	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
 	sphere_->SetRadius(rad_);
 
-	if(objId_ == "Table" || objId_ == "Counter")sphere_->SetLocalPos({0.0f, height_, 0.0f});
-	if(objId_ == "Dust_Box")sphere_->SetLocalPos({0.0f, height_ + sphere_->GetRadius(), 0.0f});
+	if (objId_ == "Table" || objId_ == "Counter")sphere_->SetLocalPos({ 0.0f, height_, 0.0f });
+	if (objId_ == "Dust_Box")sphere_->SetLocalPos({ 0.0f, height_ + sphere_->GetRadius(), 0.0f });
 
 	itemState_ = ITEM_STATE::PLACED;
 	machineState_ = MACHINE_STATE::INACTIVE;
@@ -224,6 +211,11 @@ void StageObject::SetPos(VECTOR pos)
 	sphereTran_.pos = pos;
 }
 
+void StageObject::SetQuaRotY(const float localRotY)
+{
+	transform_.quaRot = Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(localRotY), 0.0f });
+}
+
 VECTOR StageObject::GetSpherePos(void) const
 {
 	return sphere_->GetPos();
@@ -276,12 +268,6 @@ void StageObject::UpdateInActive(void)
 
 void StageObject::UpdateActive(void)
 {
-}
-
-VECTOR StageObject::GetRotPos(const VECTOR& localPos) const
-{
-	VECTOR localRotPos = follow_.quaRot.PosAxis(localPos);
-	return VAdd(follow_.pos, localRotPos);
 }
 
 void StageObject::UpdateDebugImGui(void)

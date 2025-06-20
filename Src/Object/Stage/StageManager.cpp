@@ -106,6 +106,7 @@ void StageManager::Init(void)
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_,objects_));
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
+		tables_.back()->SetQuaRotY(180.0f);
 	}
 
 	//縦のテーブル群
@@ -116,6 +117,7 @@ void StageManager::Init(void)
 		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
+		tables_.back()->SetQuaRotY(-90.0f);
 	}
 
 	//横のテーブル群(奥側)
@@ -287,6 +289,12 @@ void StageManager::ResetServeData(void)
 Transform StageManager::GetCounterTran(void) const
 {
 	return counter_->GetTransform(); 
+}
+
+Transform StageManager::GetTableTran(int index) const
+{
+	if (index > tables_.size())return Transform(); // 範囲外のインデックスは無視
+	return tables_[index]->GetTransform();
 }
 
 void StageManager::InitAnimation(void)
@@ -702,22 +710,22 @@ void StageManager::Update3DGame(void)
 
 	auto& pSphere = player_.GetSphere();
 
-	//for (const auto& obj : objects_)
-	//{
-	//	obj->Update();
-	//}
+	for (const auto& obj : objects_)
+	{
+		obj->Update();
+	}
 
-	//for (const auto& obj : tables_)
-	//{
-	//	obj->Update();
-	//}
+	for (const auto& obj : tables_)
+	{
+		obj->Update();
+	}
 
-	//counter_->Update();
+	counter_->Update();
 
-	tables_[0]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
-	tables_[1]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
-	tables_[0]->UpdateDebugImGui(); // テーブルの更新処理（例として最初のテーブルを更新）
-	tables_[1]->UpdateDebugImGui2(); // テーブルの更新処理（例として最初のテーブルを更新）
+	//tables_[0]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
+	//tables_[1]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
+	//tables_[0]->UpdateDebugImGui(); // テーブルの更新処理（例として最初のテーブルを更新）
+	//tables_[1]->UpdateDebugImGui2(); // テーブルの更新処理（例として最初のテーブルを更新）
 
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)

@@ -44,6 +44,12 @@ public:
 	/// <param name="pos">設定座標</param>
 	void SetPos(VECTOR pos);
 
+	/// <summary>
+	/// 初期の回転を設定する(入れるときはEuler角で設定する)
+	/// </summary>
+	/// <param name="pos">回転</param>
+	void SetQuaRotY(const float localRotY);
+
 	void SetInteractTime(const float time) { param_.interactTime = time; }
 
 	void IsNotActioned(void) { isActioned_ = false; }
@@ -214,8 +220,6 @@ protected:
 
 	Player& player_;
 
-	Transform follow_;
-
 	//仮モデルの立方体
 	std::unique_ptr<Cube> cube_;
 	float width_;	//横幅
@@ -248,9 +252,6 @@ private:
 
 	ITEM_STATE itemState_;
 	MACHINE_STATE machineState_;
-
-	//相対座標を回転させてワールド座標で取得する
-	VECTOR GetRotPos(const VECTOR& localPos) const;
 
 };
 

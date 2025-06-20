@@ -47,6 +47,11 @@ void GameScene::Init(void)
 
 	//ステージのコライダーを追加
 	player_->AddCollider(stage_->GetCounterTran().collider);
+	int tableNum = 10;
+	for(int i = 0; i < tableNum; ++i)
+	{
+		player_->AddCollider(stage_->GetTableTran(i).collider);
+	}
 
 	//スカイドーム
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
