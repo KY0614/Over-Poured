@@ -34,12 +34,13 @@ void StageObject::Init(void)
 	param_ = object_.second;
 
 	// •¶š—ñ‚ğSRC‚É•ÏŠ·‚µ‚Äƒ‚ƒfƒ‹İ’è
+	//ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(param_.id_);
 	ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(objId_);
 
 	//ƒ‚ƒfƒ‹‚ÌŠî–{İ’è
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
 	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = { 0.0f, 0.0f, 0.0f };
+	//transform_.pos = { 0.0f, 0.0f, 0.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, 0.0f, 0.0f });

@@ -73,9 +73,13 @@ ResourceManager::SRC ResourceManager::StringToSRC(const std::string& name)
 	static const std::unordered_map<std::string, SRC> map = {
 		{ "Counter", SRC::COUNTER },
 		{ "Table",   SRC::TABLE },
-		//{ "cup",     SRC::CUP },
+		{ "Sweets_Choco_Rack",  SRC::CHOCO_RACK },
+		{ "Sweets_Choco",		SRC::SWEETS_CHOCO },
+		{ "Sweets_Strawberry_Rack",   SRC::BERRY_RACK },
+		{ "Sweets_Strawberry",   SRC::SWEETS_BERRY },
+		{ "Coffee_Machine",   SRC::COFFEE_MACHINE },
 		//{ "lid",     SRC::LID },
-		// ...新しい要素はここに追加
+		// 新しい要素はここに追加
 	};
 
 	auto it = map.find(name);
@@ -108,10 +112,6 @@ void ResourceManager::InitTitle(void)
 	//スカイドーム
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "SkyDome/SkyDome.mv1");
 	resourcesMap_.emplace(SRC::SKY_DOME, std::move(res));
-
-	//足煙
-	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Smoke/Smoke.efkefc");
-	resourcesMap_.emplace(SRC::FOOT_SMOKE, std::move(res));
 }
 
 void ResourceManager::InitMovie(void)
@@ -164,6 +164,30 @@ void ResourceManager::InitGame(void)
 	//レジスター
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/register.mv1");
 	resourcesMap_.emplace(SRC::REGISTER, std::move(res));
+
+	//チョコ用ラック
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/chocoRack.mv1");
+	resourcesMap_.emplace(SRC::CHOCO_RACK, std::move(res));
+
+	//スイーツ(チョコ)
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/sweets_choco.mv1");
+	resourcesMap_.emplace(SRC::SWEETS_CHOCO, std::move(res));
+
+	//ベリー用ラック
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/berryRack.mv1");
+	resourcesMap_.emplace(SRC::BERRY_RACK, std::move(res));
+
+	//スイーツ（ベリー）
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/sweets_berry.mv1");
+	resourcesMap_.emplace(SRC::SWEETS_BERRY, std::move(res));
+
+	//スイーツショーケース
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/sweets_case.mv1");
+	resourcesMap_.emplace(SRC::SWEETS_CASE, std::move(res));
+
+	//コーヒーマシン
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/coffee_machine.mv1");
+	resourcesMap_.emplace(SRC::COFFEE_MACHINE, std::move(res));
 
 	//仮客
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/Model.mv1");

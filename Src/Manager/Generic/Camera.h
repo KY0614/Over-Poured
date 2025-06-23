@@ -124,7 +124,5 @@ private:
 	void SetBeforeDrawTopFixed(void);
 	void SetBeforeDrawFollow(void);
 	void SetBeforeDrawFree(void);
-
-	void UpdateDebugImGui(void);
 };
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <DxLib.h>
 #include <memory>
 #include <chrono>
 
@@ -75,6 +76,8 @@ private:
 	// デルタタイム
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
+
+	VECTOR lightDir_;
 	
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
@@ -93,4 +96,5 @@ private:
 	// フェード
 	void Fade(void);
 
+	void UpdateDebugImGui(void);
 };

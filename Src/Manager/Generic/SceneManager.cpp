@@ -1,6 +1,7 @@
 #include <chrono>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
+#include "../../Libs/ImGui/imgui.h"
 #include "../../Common/Fader.h"
 #include "../../Scene/TitleScene.h"
 #include "../../Scene/MovieScene.h"
@@ -47,6 +48,8 @@ void SceneManager::Init(void)
 	//デルタタイム
 	preTime_ = std::chrono::system_clock::now();
 
+	lightDir_ = { 0.0f, -0.5f, 0.3f };
+
 	//3D用の設定
 	Init3D();
 
@@ -75,7 +78,7 @@ void SceneManager::Init3D(void)
 	
 	//ライトの設定
 	//ChangeLightTypeDir({ 0.3f, -0.7f, 0.8f });
-	ChangeLightTypeDir({ 0.0f, -0.7f, 0.3f });
+	ChangeLightTypeDir(lightDir_);
 
 	//フォグ設定
 	//SetFogEnable(true);
@@ -86,7 +89,7 @@ void SceneManager::Init3D(void)
 
 void SceneManager::Update(void)
 {
-
+	ChangeLightTypeDir(lightDir_);
 	if (scene_ == nullptr)
 	{
 		return;
@@ -111,6 +114,7 @@ void SceneManager::Update(void)
 	//カメラ更新
 	camera_->Update();
 
+	UpdateDebugImGui();
 }
 
 void SceneManager::Draw(void)
@@ -281,4 +285,30 @@ void SceneManager::Fade(void)
 
 }
 
+void SceneManager::UpdateDebugImGui(void)
+{
+	//ウィンドウタイトル&開始処理
+	ImGui::Begin("SceneManager:Light");
+	////角度
+	//VECTOR rotDeg = VECTOR();
+	//rotDeg.x = AsoUtility::Rad2DegF(angles_.x);
+	//rotDeg.y = AsoUtility::Rad2DegF(angles_.y);
+	//rotDeg.z = AsoUtility::Rad2DegF(angles_.z);
+	//ImGui::Text("angle(deg)");
+	//ImGui::SliderFloat("RotX", &rotDeg.x, -300.0f, 360.0f);
+	//ImGui::SliderFloat("RotY", &rotDeg.y, -300.0f, 360.0f);
+	//ImGui::SliderFloat("RotZ", &rotDeg.z, -300.0f, 360.0f);
+	//angles_.x = AsoUtility::Deg2RadF(rotDeg.x);
+	//angles_.y = AsoUtility::Deg2RadF(rotDeg.y);
+	//angles_.z = AsoUtility::Deg2RadF(rotDeg.z);
+	//位置
+	ImGui::Text("dir");
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Pos", &lightDir_.x);
+	ImGui::SliderFloat("PosX", &lightDir_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("PosY", &lightDir_.y, -10.0f, 10.0f);
+	ImGui::SliderFloat("PosZ", &lightDir_.z, -10.0f, 10.0f);
 
+	//終了処理
+	ImGui::End();
+}

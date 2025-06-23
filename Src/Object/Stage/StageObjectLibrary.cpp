@@ -23,7 +23,6 @@ StageObjectLibrary::LoadData(const std::string& objName)
 
     obj.id_ = value.value("id", "");
     obj.name_ = value.value("name", "");
-    obj.modelFile_ = value.value("model", "");
     obj.placeable_ = value.value("placeable", false);
     obj.carryable_ = value.value("carryable", false);
     obj.interactable_ = value.value("interactable", false);

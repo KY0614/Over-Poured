@@ -30,7 +30,8 @@ public:
 	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 190.0f };	//テーブルの座標
 	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };	//列テーブルの座標
 	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };			//カウンターの座標
-	static constexpr VECTOR DUST_BOX_POS = { 320.0f, 0.0f, -173.0f };		//カウンターの座標
+	static constexpr VECTOR CASE_POS = { -57.0f, 0.0f, 190.0f };			//ショーケースの座標
+	static constexpr VECTOR DUST_BOX_POS = { 320.0f, 0.0f, -173.0f };		//ゴミ箱の座標
 
 	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };	//コーヒーマシンの座標
 	static constexpr VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };	//ホット用カップの座標
@@ -93,11 +94,14 @@ public:
 
 	Transform GetCounterTran(void) const;
 	Transform GetTableTran(int index) const;
+	Transform GetShowCase(void) const;
 
 private:
 
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
+
+	Transform caseTran_;
 
 	//モード管理
 	MODE mode_;
@@ -124,6 +128,7 @@ private:
 
 	//カウンター用
 	std::unique_ptr<StageObject> counter_;
+	std::unique_ptr<StageObject> case_;
 
 	std::unique_ptr<Interact2D> interact2D_;	//2Dインタラクト用
 

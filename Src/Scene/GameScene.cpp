@@ -52,6 +52,7 @@ void GameScene::Init(void)
 	{
 		player_->AddCollider(stage_->GetTableTran(i).collider);
 	}
+	player_->AddCollider(stage_->GetShowCase().collider);
 
 	//スカイドーム
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());
@@ -67,6 +68,7 @@ void GameScene::Init(void)
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
 	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
+	//mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 
 	//タイマーの設定
 	timer_ = MAX_TIME;

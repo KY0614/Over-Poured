@@ -20,14 +20,6 @@
 #include "Interact2D.h"	
 #include "StageManager.h"
 
-#pragma region メモ
-//クラスが多すぎるので減らすためにカテゴリ分けしたクラスにしたい
-//例：HotCup,HotCoffee,Machine,IceDisoenser→ItemObjectとかMachineObjectとか
-
-//カテゴリ分けしたクラスにする際jsonデータをいじくるか検討中
-#pragma endregion
-
-
 namespace {
 	const std::string TABLE = "Table";		//テーブル
 	const std::string COUNTER = "Counter";	//カウンター
@@ -81,6 +73,19 @@ StageManager::~StageManager(void)
 void StageManager::Init(void)
 {
 	//モデル制御の基本情報
+	caseTran_.SetModel(
+		ResourceManager::GetInstance().LoadModelDuplicate(
+			ResourceManager::SRC::SWEETS_CASE));
+	caseTran_.scl = AsoUtility::VECTOR_ONE;
+	caseTran_.pos = CASE_POS;
+	caseTran_.quaRot = Quaternion::Euler(
+		0.0f,0.0f,0.0f);
+
+	caseTran_.quaRotLocal = Quaternion();
+	caseTran_.MakeCollider(Collider::TYPE::STAGE);
+	caseTran_.Update();
+
+	//モデル制御の基本情報
 	transform_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::REGISTER));
@@ -124,8 +129,8 @@ void StageManager::Init(void)
 	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
 	{
 		VECTOR firstPos = TABLE_POS_FRONT;
-		firstPos.x += (x * TABLE_WIDTH);
-		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
+		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH + 20.0f, 76.0f, 60.0f, player_, objects_));
 		tables_.back()->Init();
 		tables_.back()->SetPos(firstPos);
 	}
@@ -164,9 +169,9 @@ void StageManager::Init(void)
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
 		 player_,objects_));
 	objects_.back()->Init();
-	VECTOR pos = AsoUtility::VECTOR_ZERO;
-	pos = tables_.front()->GetTopCenter();
+	VECTOR pos = tables_.front()->GetTopCenter();
 	objects_.back()->SetPos(tables_[5]->GetTopCenter());
+	objects_.back()->SetQuaRotY(-90.0f);
 
 	//アイスディスペンサー
 	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
@@ -232,7 +237,7 @@ void StageManager::Update(void)
 #ifdef _DEBUG
 
 	//ImGuiの操作を行う
-	//UpdateDebugImGui();
+	UpdateDebugImGui();
 
 #endif // _DEBUG
 }
@@ -243,6 +248,7 @@ void StageManager::Draw(void)
 
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
+	MV1DrawModel(caseTran_.modelId);
 
 	for (const auto& table : tables_)
 	{
@@ -295,6 +301,11 @@ Transform StageManager::GetTableTran(int index) const
 {
 	if (index > tables_.size())return Transform(); // 範囲外のインデックスは無視
 	return tables_[index]->GetTransform();
+}
+
+Transform StageManager::GetShowCase(void) const
+{
+	return caseTran_;
 }
 
 void StageManager::InitAnimation(void)
@@ -722,11 +733,6 @@ void StageManager::Update3DGame(void)
 
 	counter_->Update();
 
-	//tables_[0]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
-	//tables_[1]->Update(); // テーブルの更新処理（例として最初のテーブルを更新）
-	//tables_[0]->UpdateDebugImGui(); // テーブルの更新処理（例として最初のテーブルを更新）
-	//tables_[1]->UpdateDebugImGui2(); // テーブルの更新処理（例として最初のテーブルを更新）
-
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)
 	{
@@ -752,6 +758,7 @@ void StageManager::Update3DGame(void)
 	DustBoxInteract();
 
 	transform_.Update();
+	caseTran_.Update();
 	sphereTran_.Update();
 }
 
@@ -877,33 +884,33 @@ void StageManager::DrawDebug(void)
 void StageManager::UpdateDebugImGui(void)
 {
 	//ウィンドウタイトル&開始処理
-	ImGui::Begin("Player:Circle");
-	//大きさ
-	ImGui::Text("scale");
-	ImGui::InputFloat("SclX", &sphereTran_.scl.x);
-	ImGui::InputFloat("SclY", &sphereTran_.scl.y);
-	ImGui::InputFloat("SclZ", &sphereTran_.scl.z);
+	ImGui::Begin("case");
+	////大きさ
+	//ImGui::Text("scale");
+	//ImGui::InputFloat("SclX", &sphereTran_.scl.x);
+	//ImGui::InputFloat("SclY", &sphereTran_.scl.y);
+	//ImGui::InputFloat("SclZ", &sphereTran_.scl.z);
 
 	//角度
-	VECTOR rotDeg = VECTOR();
-	rotDeg.x = AsoUtility::Rad2DegF(sphereTran_.rot.x);
-	rotDeg.y = AsoUtility::Rad2DegF(sphereTran_.rot.y);
-	rotDeg.z = AsoUtility::Rad2DegF(sphereTran_.rot.z);
-	ImGui::Text("angle(deg)");
-	ImGui::SliderFloat("RotX", &rotDeg.x, 0.0f, 360.0f);
-	ImGui::SliderFloat("RotY", &rotDeg.y, 0.0f, 360.0f);
-	ImGui::SliderFloat("RotZ", &rotDeg.z, 0.0f, 360.0f);
-	sphereTran_.rot.x = AsoUtility::Deg2RadF(rotDeg.x);
-	sphereTran_.rot.y = AsoUtility::Deg2RadF(rotDeg.y);
-	sphereTran_.rot.z = AsoUtility::Deg2RadF(rotDeg.z);
+	//VECTOR rotDeg = VECTOR();
+	//rotDeg.x = AsoUtility::Rad2DegF(sphereTran_.rot.x);
+	//rotDeg.y = AsoUtility::Rad2DegF(sphereTran_.rot.y);
+	//rotDeg.z = AsoUtility::Rad2DegF(sphereTran_.rot.z);
+	//ImGui::Text("angle(deg)");
+	//ImGui::SliderFloat("RotX", &rotDeg.x, 0.0f, 360.0f);
+	//ImGui::SliderFloat("RotY", &rotDeg.y, 0.0f, 360.0f);
+	//ImGui::SliderFloat("RotZ", &rotDeg.z, 0.0f, 360.0f);
+	//sphereTran_.rot.x = AsoUtility::Deg2RadF(rotDeg.x);
+	//sphereTran_.rot.y = AsoUtility::Deg2RadF(rotDeg.y);
+	//sphereTran_.rot.z = AsoUtility::Deg2RadF(rotDeg.z);
 
 	//位置
 	ImGui::Text("position");
 	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &sphereTran_.pos.x);
-	ImGui::SliderFloat("PosX", &sphereTran_.pos.x, 0.0f, 360.0f);
-	ImGui::SliderFloat("PosY", &sphereTran_.pos.y, 0.0f, 360.0f);
-	ImGui::SliderFloat("PosZ", &sphereTran_.pos.z, 0.0f, 1000.0f);
+	ImGui::InputFloat3("Pos", &caseTran_.pos.x);
+	ImGui::SliderFloat("PosX", &caseTran_.pos.x, -500.0f, 500.0f);
+	ImGui::SliderFloat("PosY", &caseTran_.pos.y, 0.0f, 500.0f);
+	ImGui::SliderFloat("PosZ", &caseTran_.pos.z, -500.0f, 500.0f);
 
 	//終了処理
 	ImGui::End();
