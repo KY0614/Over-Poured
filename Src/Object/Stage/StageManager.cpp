@@ -237,7 +237,7 @@ void StageManager::Update(void)
 #ifdef _DEBUG
 
 	//ImGuiの操作を行う
-	UpdateDebugImGui();
+	//UpdateDebugImGui();
 
 #endif // _DEBUG
 }
@@ -265,7 +265,7 @@ void StageManager::Draw(void)
 	interact2D_->Draw(); // 2Dインタラクトの描画
 
 #ifdef _DEBUG
-	DrawDebug();
+	//DrawDebug();
 #endif // _DEBUG
 }
 
