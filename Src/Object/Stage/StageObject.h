@@ -253,5 +253,5 @@ private:
 	ITEM_STATE itemState_;
 	MACHINE_STATE machineState_;
 
+	void DrawDebug(void);
 };
-
