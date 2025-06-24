@@ -28,7 +28,7 @@ void DustBox::Interact(const std::string& objId)
 	int coffeeIndex = -1;
 	for (int i = 0; i < objects_.size(); ++i)
 	{
-		if ((objects_[i]->GetObjectId() == HOT_COFFEE || objects_[i]->GetObjectId() == ICE_COFFEE) &&
+		if ((objects_[i]->GetParam().id_ == HOT_COFFEE || objects_[i]->GetParam().id_ == ICE_COFFEE) &&
 			objects_[i]->GetItemState() == StageObject::ITEM_STATE::HOLD)
 		{
 			coffeeIndex = i;
@@ -59,7 +59,7 @@ void DustBox::Interact(const std::string& objId)
 		// 通常のオブジェクト削除
 		for (auto it = objects_.begin(); it != objects_.end(); ++it)
 		{
-			if ((*it)->GetObjectId() == heldItem &&
+			if ((*it)->GetParam().id_ == heldItem &&
 				(*it)->GetItemState() == StageObject::ITEM_STATE::HOLD)
 			{
 				objects_.erase(it);

@@ -27,7 +27,7 @@ StageObjectLibrary::LoadData(const std::string& objName)
     obj.carryable_ = value.value("carryable", false);
     obj.interactable_ = value.value("interactable", false);
     obj.interactType_ = value.value("type", "");
-    obj.interactTime = value.value("interactTime", 0.0f);
+    obj.interactTime_ = value.value("interactTime", 0.0f);
     obj.category_ = value.value("type", "");
 
     if (value.contains("acceptedItems"))

@@ -23,14 +23,14 @@ void CupLidRack::Interact(const std::string& objId)
 	//objIdがインタラクト対象物に存在するかどうか
 	bool isAccepted = std::find(items.begin(), items.end(), objId) != items.end();
 	if (!isAccepted)return;	//存在しなかったら処理しない
-	if (param_.interactTime <= 0.0f)return;
+	if (param_.interactTime_ <= 0.0f)return;
 
 	auto& ins = InputManager::GetInstance();
 	for (const auto& obj : objects_)
 	{
 		//コーヒー以外のオブジェクトは判定しない
-		if (obj->GetObjectId() != HOT_COFFEE && 
-			obj->GetObjectId() != ICE_COFFEE) continue;
+		if (obj->GetParam().id_ != HOT_COFFEE && 
+			obj->GetParam().id_ != ICE_COFFEE) continue;
 		//既に蓋されているコーヒーは判定しない
 		if (obj->IsLidOn())continue;
 		
@@ -43,13 +43,13 @@ void CupLidRack::Interact(const std::string& objId)
 			if (isHoldingHotCoffee &&
 				ins.IsInputPressed("Interact"))
 			{
-				param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
+				param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 				isActioned_ = true;
 				player_.ChangeState(Player::STATE::STOP);
 			}
 			else
 			{
-				param_.interactTime = 3.0f;
+				param_.interactTime_ = 3.0f;
 				isActioned_ = false;
 				player_.ChangeState(Player::STATE::PLAY);
 			}
@@ -61,10 +61,10 @@ void CupLidRack::Update(void)
 {
 	if (!isActioned_)
 	{
-		param_.interactTime = 3.0f;
+		param_.interactTime_ = 3.0f;
 		player_.ChangeState(Player::STATE::PLAY);
 	}
-	if (param_.interactTime <= 0.0f)
+	if (param_.interactTime_ <= 0.0f)
 	{
 		isActioned_ = false;
 	}
@@ -81,7 +81,7 @@ void CupLidRack::Draw(void)
 	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
 	// 変換成功
 	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-		L"蓋をする %2.f", param_.interactTime);
+		L"蓋をする %2.f", param_.interactTime_);
 	
 	StageObject::Draw();
 }

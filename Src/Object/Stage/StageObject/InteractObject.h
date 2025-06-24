@@ -27,7 +27,5 @@ private:
 	void IceDispenser(void);
 	void CoffeeMachine(void);
 	void CupLidRack(void);
-
-	void SetProduceTime(float time) { param_.interactTime = time; }
 };
 

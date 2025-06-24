@@ -24,6 +24,6 @@ private:
 	//
 	std::vector<std::unique_ptr<StageObject>>& objects_;
 
-	void SetProduceTime(float time) { param_.interactTime = time; }
+	void SetProduceTime(float time) { param_.interactTime_ = time; }
 };
 

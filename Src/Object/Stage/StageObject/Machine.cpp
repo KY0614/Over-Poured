@@ -34,10 +34,10 @@ void Machine::Interact(const std::string& objId)
 	for (const auto& obj : objects_)
 	{
 		// ホットカップまたはホットコーヒー
-		if ((obj->GetObjectId() == HOT_CUP ||
-			obj->GetObjectId() == HOT_COFFEE ||
-			obj->GetObjectId() == CUP_WITH_ICE ||
-			obj->GetObjectId() == ICE_COFFEE) &&
+		if ((obj->GetParam().id_ == HOT_CUP ||
+			obj->GetParam().id_ == HOT_COFFEE ||
+			obj->GetParam().id_ == CUP_WITH_ICE ||
+			obj->GetParam().id_ == ICE_COFFEE) &&
 			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
@@ -51,7 +51,7 @@ void Machine::Interact(const std::string& objId)
 	for (const auto& obj : objects_)
 	{
 		//カップ以外のオブジェクトは判定しない
-		if (obj->GetObjectId() != HOT_CUP && obj->GetObjectId() != CUP_WITH_ICE) continue;
+		if (obj->GetParam().id_ != HOT_CUP && obj->GetParam().id_ != CUP_WITH_ICE) continue;
 
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
@@ -72,19 +72,19 @@ void Machine::Interact(const std::string& objId)
 
 void Machine::UpdateInActive(void)
 {
-	SetProduceTime(COFFEE_PRODUCES_TIME);
+	SetInteractTime(COFFEE_PRODUCES_TIME);
 }
 
 void Machine::UpdateActive(void)
 {
-	param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
+	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
-		if (obj->GetObjectId() != HOT_CUP &&
-			obj->GetObjectId() != CUP_WITH_ICE )continue;
+		if (obj->GetParam().id_ != HOT_CUP &&
+			obj->GetParam().id_ != CUP_WITH_ICE )continue;
 
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
@@ -96,7 +96,7 @@ void Machine::UpdateActive(void)
 	}
 
 	//PLACED状態のカップがなければ非アクティブにする
-	if (!hasPlacedCup || param_.interactTime <= 0.0f)
+	if (!hasPlacedCup || param_.interactTime_ <= 0.0f)
 	{
 		ChangeMachineState(MACHINE_STATE::INACTIVE);
 		return;
@@ -111,7 +111,7 @@ void Machine::Draw(void)
 	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
 	// 変換成功
 	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-		L"コーヒーができるまで %2.f", param_.interactTime);
+		L"コーヒーができるまで %2.f", param_.interactTime_);
 
 	//DebugDrawFormat::FormatStringRight(L"iteractTime %2.f", param_.interactTime, line, lineHeight);
 	StageObject::Draw();

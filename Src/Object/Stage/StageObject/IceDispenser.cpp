@@ -27,7 +27,7 @@ void IceDispenser::Draw(void)
 	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
 	// 変換成功
 	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-		L"氷をいれるまで %2.f", param_.interactTime);
+		L"氷をいれるまで %2.f", param_.interactTime_);
 
 	StageObject::Draw();
 }
@@ -45,7 +45,7 @@ void IceDispenser::Interact(const std::string& objId)
 	for (const auto& obj : objects_)
 	{
 		//アイスカップまたはアイスコーヒー
-		if ((obj->GetObjectId() == ICE_CUP || obj->GetObjectId() == CUP_WITH_ICE) &&
+		if ((obj->GetParam().id_ == ICE_CUP || obj->GetParam().id_ == CUP_WITH_ICE) &&
 			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
@@ -59,7 +59,7 @@ void IceDispenser::Interact(const std::string& objId)
 	for (const auto& obj : objects_)
 	{
 		//アイス用カップ以外のオブジェクトは判定しない
-		if (obj->GetObjectId() != ICE_CUP) continue;
+		if (obj->GetParam().id_ != ICE_CUP) continue;
 
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
@@ -79,18 +79,18 @@ void IceDispenser::Interact(const std::string& objId)
 
 void IceDispenser::UpdateInActive(void)
 {
-	SetProduceTime(COFFEE_PRODUCES_TIME);
+	SetInteractTime(COFFEE_PRODUCES_TIME);
 }
 
 void IceDispenser::UpdateActive(void)
 {
-	param_.interactTime -= SceneManager::GetInstance().GetDeltaTime();
+	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
-		if (obj->GetObjectId() != ICE_CUP)continue;
+		if (obj->GetParam().id_ != ICE_CUP)continue;
 
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
@@ -115,7 +115,7 @@ void IceDispenser::UpdateActive(void)
 	}
 
 	//インタラクト時間が過ぎたら非アクティブにする
-	if (param_.interactTime <= 0.0f)
+	if (param_.interactTime_ <= 0.0f)
 	{
 		ChangeMachineState(MACHINE_STATE::INACTIVE);
 		return;

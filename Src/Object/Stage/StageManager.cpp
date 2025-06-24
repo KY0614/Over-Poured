@@ -324,25 +324,25 @@ void StageManager::SurveItem(StageObject& obj)
 	// 商品情報をOrderDataに変換
 	Order::OrderData data;
 	// 例: objのIDや状態からOrderDataをセット
-	if (obj.GetObjectId() == HOT_COFFEE) 
+	if (obj.GetParam().id_ == HOT_COFFEE)
 	{
 		servedItems_.drink_ = Order::DRINK::HOT;
 		servedItems_.lid_ = obj.IsLidOn();
 		isServedItems_.front() = true;
 	}
-	else if (obj.GetObjectId() == ICE_COFFEE) 
+	else if (obj.GetParam().id_ == ICE_COFFEE)
 	{
 		servedItems_.drink_ = Order::DRINK::ICE;
 		servedItems_.lid_ = obj.IsLidOn();
 		isServedItems_.front() = true;
 	}
 
-	if (obj.GetObjectId() == CHOCO_SWEETS)
+	if (obj.GetParam().id_ == CHOCO_SWEETS)
 	{
 		servedItems_.sweets_ = Order::SWEETS::CHOCO;
 		isServedItems_.back() = true;
 	}
-	else if (obj.GetObjectId() == BERRY_SWEETS)
+	else if (obj.GetParam().id_ == BERRY_SWEETS)
 	{
 		servedItems_.sweets_ = Order::SWEETS::STRAWBERRY;
 		isServedItems_.back() = true;
@@ -394,7 +394,7 @@ void StageManager::CarryableObjInteract(void)
 		}
 
 		//プレイヤーが何も持っていないときの処理
-		if (!player_.GetIsHolding() && obj->GetIsCarryable() &&
+		if (!player_.GetIsHolding() && obj->GetParam().carryable_ &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
@@ -412,7 +412,7 @@ void StageManager::CarryableObjInteract(void)
 			{
 				auto items = counter_->GetParam().acceptedItems_;
 				//objIdがインタラクト対象物に存在するかどうか
-				bool isAccepted = std::find(items.begin(), items.end(), obj->GetObjectId()) != items.end();
+				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
 				if (!isAccepted)continue;	//存在しなかったら処理しない
 
 				obj->ItemPlaced(counter_->GetTopCenter());
@@ -421,7 +421,7 @@ void StageManager::CarryableObjInteract(void)
 			for (const auto& table : tables_)
 			{
 				//設置可能なテーブルの上にアイテムを設置する処理
-				if (table->GetIsPlaceable() &&
+				if (table->GetParam().placeable_ &&
 					AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 						table->GetSpherePos(), table->GetSphereRad()
 					))
@@ -449,7 +449,7 @@ void StageManager::MachineInteract(void)
 	//マシンとカップの処理
 	for (const auto& obj : objects_)
 	{
-		if (obj->GetObjectId() != COFFEE_MACHINE)continue;
+		if (obj->GetParam().id_ != COFFEE_MACHINE)continue;
 
 		//持っているアイテムをマシンに設置する処理
 		if (player_.GetIsHolding() &&
@@ -465,8 +465,8 @@ void StageManager::MachineInteract(void)
 		//}
 
 		//設置して一定時間経ったらコーヒーを出力する
-		if (obj->GetObjectId() == COFFEE_MACHINE &&
-			obj->GetInteractTime() <= 0.0f)
+		if (obj->GetParam().id_ == COFFEE_MACHINE &&
+			obj->GetParam().interactTime_ <= 0.0f)
 		{
 			MakeCoffee();
 			break;
@@ -476,7 +476,7 @@ void StageManager::MachineInteract(void)
 	//ディスペンサーとカップの処理
 	for (const auto& obj : objects_)
 	{
-		if (obj->GetObjectId() != ICE_DISPENSER)continue;
+		if (obj->GetParam().id_ != ICE_DISPENSER)continue;
 
 		//持っているアイテムをマシンに設置する処理
 		if (player_.GetIsHolding() &&
@@ -487,7 +487,7 @@ void StageManager::MachineInteract(void)
 		}
 
 		//設置して一定時間経ったら氷入りカップを出力する
-		if (obj->GetInteractTime() <= 0.0f)
+		if (obj->GetParam().interactTime_ <= 0.0f)
 		{
 			DispenseIce2Cup();
 			break;
@@ -501,7 +501,7 @@ void StageManager::LidRackInteract(void)
 	//コーヒーと蓋の処理
 	for (const auto& obj : objects_)
 	{
-		if (obj->GetObjectId() != CUP_LID_RACK)continue;
+		if (obj->GetParam().id_ != CUP_LID_RACK)continue;
 
 		//持っているコーヒーに蓋をつける処理
 		if (player_.GetIsHolding() &&
@@ -518,7 +518,7 @@ void StageManager::LidRackInteract(void)
 		}
 
 		//インタラクトし続けて一定時間経ったら蓋をする
-		if (obj->GetInteractTime() <= 0.0f)
+		if (obj->GetParam().interactTime_ <= 0.0f)
 		{
 			LidFollowCup();
 			break;
@@ -531,20 +531,20 @@ void StageManager::MakeCoffee(void)
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//ホット用カップ以外のオブジェクトは判定しない
-		if (objects_[i]->GetObjectId() != HOT_CUP &&
-			objects_[i]->GetObjectId() != CUP_WITH_ICE) continue;
+		if (objects_[i]->GetParam().id_ != HOT_CUP &&
+			objects_[i]->GetParam().id_ != CUP_WITH_ICE) continue;
 
 		for (const auto& machine : objects_)
 		{
 			//マシンの判定だけさせたい
-			if (machine->GetObjectId() != COFFEE_MACHINE)continue;
+			if (machine->GetParam().id_ != COFFEE_MACHINE)continue;
 
 			//マシンの球体と設置されているカップだけ処理する
 			if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
 				AsoUtility::IsHitSpheres(machine->GetPos(), machine->GetSphereRad(),
 					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 			{
-				if(objects_[i]->GetObjectId() == HOT_CUP)
+				if(objects_[i]->GetParam().id_ == HOT_CUP)
 				{
 					MakeHotCoffee(i);
 					return; // ホットコーヒーを作ったら処理を終了
@@ -562,9 +562,9 @@ void StageManager::MakeHotCoffee(int i)
 {
 	//設置されているカップをコーヒーに上書きする
 	objects_[i] = std::make_unique<ItemObject>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
+	objects_[i]->SetPos(tables_[5]->GetTopCenter());
 	objects_[i]->Init();
 	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-	objects_[i]->SetPos(tables_[5]->GetTopCenter());
 }
 
 void StageManager::MakeIceCoffee(int i)
@@ -581,12 +581,12 @@ void StageManager::DispenseIce2Cup(void)
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//アイス用カップ以外のオブジェクトは判定しない
-		if (objects_[i]->GetObjectId() != ICE_CUP) continue;
+		if (objects_[i]->GetParam().id_ != ICE_CUP) continue;
 
 		for (const auto& machine : objects_)
 		{
 			//ディスペンサーの判定だけさせたい
-			if (machine->GetObjectId() != ICE_DISPENSER)continue;
+			if (machine->GetParam().id_ != ICE_DISPENSER)continue;
 
 			//マシンの球体と設置されているカップだけ処理する
 			if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
@@ -609,8 +609,8 @@ void StageManager::LidFollowCup(void)
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//コーヒー以外のオブジェクトは判定しない
-		if (objects_[i]->GetObjectId() != HOT_COFFEE &&
-			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
+		if (objects_[i]->GetParam().id_ != HOT_COFFEE &&
+			objects_[i]->GetParam().id_ != ICE_COFFEE) continue;
 
 		//既に蓋が乗っているカップは判定しない
 		if (objects_[i]->IsLidOn())continue;
@@ -618,7 +618,7 @@ void StageManager::LidFollowCup(void)
 		for (const auto& lid : objects_)
 		{
 			//蓋の判定だけさせたい
-			if (lid->GetObjectId() != CUP_LID_RACK)continue;
+			if (lid->GetParam().id_ != CUP_LID_RACK)continue;
 
 			//蓋の球体と当たっているカップだけ処理する
 			if (AsoUtility::IsHitSpheres(lid->GetPos(), lid->GetSphereRad(),
@@ -647,7 +647,7 @@ void StageManager::DustBoxInteract(void)
 	// ゴミ箱の処理
 	for (const auto& obj : objects_)
 	{
-		if (obj->GetObjectId() != DUST_BOX) continue;
+		if (obj->GetParam().id_ != DUST_BOX) continue;
 
 		// プレイヤーが持っているアイテムをゴミ箱に近づけている場合
 		if (player_.GetIsHolding() &&
@@ -737,11 +737,11 @@ void StageManager::Update3DGame(void)
 	for (const auto& obj : objects_)
 	{
 		//プレイヤーが何も持っていないときの処理
-		if (!player_.GetIsHolding() && obj->GetIsInteractable() &&
+		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			obj->PickUp(obj->GetObjectId(), objects_);
+			obj->PickUp(obj->GetParam().id_, objects_);
 			break;
 		}
 	}
@@ -848,8 +848,8 @@ void StageManager::DrawDebug(void)
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//コーヒー以外のオブジェクトは判定しない
-		if (objects_[i]->GetObjectId() != HOT_COFFEE &&
-			objects_[i]->GetObjectId() != ICE_COFFEE) continue;
+		if (objects_[i]->GetParam().id_ != HOT_COFFEE &&
+			objects_[i]->GetParam().id_ != ICE_COFFEE) continue;
 
 		DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
 			objects_[i]->IsLidOn(), line, lineHeight);
@@ -868,7 +868,7 @@ void StageManager::DrawDebug(void)
 		// 変換成功
 		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
 			L"%s : %d",
-			StringUtility::StringToWstring(tables_[i]->GetObjectId().c_str()).c_str(), i);
+			StringUtility::StringToWstring(tables_[i]->GetParam().id_.c_str()).c_str(), i);
 	}
 
 	for (const auto& obj : objects_)
@@ -877,7 +877,7 @@ void StageManager::DrawDebug(void)
 		// 変換成功
 		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
 			L"%s",
-			StringUtility::StringToWstring(obj->GetObjectId().c_str()).c_str());
+			StringUtility::StringToWstring(obj->GetParam().id_.c_str()).c_str());
 	}
 }
 

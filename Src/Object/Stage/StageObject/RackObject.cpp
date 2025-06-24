@@ -20,7 +20,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 		object.emplace_back(std::make_unique<ItemObject>("Hot_Cup", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->SetPos(player_.GetSphere().GetPos());
 		object.back()->Init();
-		player_.SetHoldItem(object.back()->GetObjectId());
+		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
 	}
@@ -30,7 +30,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 		object.emplace_back(std::make_unique<ItemObject>("Ice_Cup", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->SetPos(player_.GetSphere().GetPos());
 		object.back()->Init();
-		player_.SetHoldItem(object.back()->GetObjectId());
+		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
 	}
@@ -41,7 +41,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 		object.emplace_back(std::make_unique<ItemObject>("Sweets_Strawberry", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->SetPos(player_.GetSphere().GetPos());
 		object.back()->Init();
-		player_.SetHoldItem(object.back()->GetObjectId());
+		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
 	}
@@ -52,7 +52,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 		object.emplace_back(std::make_unique<ItemObject>("Sweets_Choco", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->SetPos(player_.GetSphere().GetPos());
 		object.back()->Init();
-		player_.SetHoldItem(object.back()->GetObjectId());
+		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
 	}

@@ -16,7 +16,7 @@ void ItemObject::ItemCarry(void)
     // ホット用カップ固有のインタラクションロジック
     if (ins.IsInputTriggered("Interact") && GetItemState() == ITEM_STATE::PLACED)
     {
-        player_.SetHoldItem(GetObjectId());
+        player_.SetHoldItem(param_.id_);
         ChangeItemState(ITEM_STATE::HOLD);
         isActioned_ = true;
     }

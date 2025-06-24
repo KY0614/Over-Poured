@@ -16,7 +16,7 @@ public:
         bool interactable_ = false;         //プレイヤーがアクション可能か
 
         std::string interactType_;          //"place", "machine", "serve", "charge", など動作タイプ（任意）
-        float interactTime = 0.0f;          //インタラクトにかかる時間（例：注ぐ時間）
+        float interactTime_ = 0.0f;          //インタラクトにかかる時間（例：注ぐ時間）
 
         std::vector<std::string> acceptedItems_;   //インタラクト対象にできるアイテム（例：コップだけなど）
         std::vector<std::string> produces_;        //対象アイテムを受け取った後、渡すアイテム
