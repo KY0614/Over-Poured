@@ -32,7 +32,7 @@ public:
 
 	~StageObject(void);
 
-	virtual void Init(void)override;
+	virtual void Init(VECTOR pos);
 	virtual void Update(void)override;
 	virtual void Draw(void)override;
 
@@ -206,6 +206,7 @@ protected:
 
 	std::string objId_;
 	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
+
 private:
 
 	ITEM_STATE itemState_;

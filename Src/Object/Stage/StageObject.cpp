@@ -27,7 +27,7 @@ StageObject::~StageObject(void)
 {
 }
 
-void StageObject::Init(void)
+void StageObject::Init(VECTOR pos)
 {
 	//作成するオブジェクトのパラメータをjsonファイルから読み込む
 	object_ = StageObjectLibrary::LoadData(objId_);
@@ -40,7 +40,7 @@ void StageObject::Init(void)
 	//モデルの基本設定
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
 	transform_.scl = AsoUtility::VECTOR_ONE;
-	//transform_.pos = { 0.0f, 0.0f, 0.0f };
+	transform_.pos = pos;
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
@@ -70,19 +70,6 @@ void StageObject::Init(void)
 	machineState_ = MACHINE_STATE::INACTIVE;
 
 	transform_.Update();
-
-#ifdef _DEBUG
-
-	//当たり判定用の球体
-	sphereTran_.Update();
-
-	sphereTran_.scl = AsoUtility::VECTOR_ONE;
-	sphereTran_.pos = { 221.0f, 0.0f, 139.0f };
-	sphereTran_.quaRot = Quaternion();
-	sphereTran_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
-
-#endif // _DEBUG
 }
 
 void StageObject::Update(void)
@@ -142,13 +129,11 @@ void StageObject::Draw(void)
 void StageObject::SetPos(VECTOR pos)
 {
 	transform_.pos = pos;
-	sphereTran_.pos = pos;
 }
 
 void StageObject::SetScale(VECTOR scale)
 {
 	transform_.scl = scale;
-	sphereTran_.scl = scale;
 }
 
 void StageObject::SetQuaRotY(const float localRotY)
@@ -300,7 +285,6 @@ void StageObject::DrawDebug(void)
 
 	}
 
-	//DrawSphere3D(sphereTran_.pos , rad_, 8, col, col, false);
 	sphere_->Draw(col);
 
 	int line = 3;	//行

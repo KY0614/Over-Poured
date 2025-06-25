@@ -16,14 +16,13 @@ Table::Table(const std::string objId, const float width,
 void Table::Update(void)
 {
 	StageObject::Update();
-	//当たり判定用の球体をテーブルの高さと合わせる
-	sphereTran_.pos.y = height_;
-
+	//テーブルの上にオブジェクトが置かれていないかどうか
 	for (const auto& obj : objects_)
 	{
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			sphereTran_.pos, rad_) && obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
+			GetSpherePos(), GetSphereRad()) && obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
 		{
+			//置かれている場合は、置けない状態にする
 			param_.placeable_ = false;
 			break;
 		}

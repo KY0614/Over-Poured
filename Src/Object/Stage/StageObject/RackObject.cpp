@@ -18,8 +18,8 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	if (rackName == "Cup_Hot_Rack" && ins.IsInputTriggered("Interact"))
 	{
 		object.emplace_back(std::make_unique<ItemObject>("Hot_Cup", 40.0f, 30.0f, 40.0f, player_));
-		object.back()->SetPos(player_.GetSphere().GetPos());
-		object.back()->Init();
+		//object.back()->SetPos(player_.GetSphere().GetPos());
+		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
@@ -28,8 +28,8 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	if (rackName == "Cup_Ice_Rack" && ins.IsInputTriggered("Interact"))
 	{
 		object.emplace_back(std::make_unique<ItemObject>("Ice_Cup", 40.0f, 30.0f, 40.0f, player_));
-		object.back()->SetPos(player_.GetSphere().GetPos());
-		object.back()->Init();
+		//object.back()->SetPos(player_.GetSphere().GetPos());
+		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
@@ -39,8 +39,8 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	{
 		//スイーツを取り出す
 		object.emplace_back(std::make_unique<ItemObject>("Sweets_Strawberry", 40.0f, 30.0f, 40.0f, player_));
-		object.back()->SetPos(player_.GetSphere().GetPos());
-		object.back()->Init();
+		//object.back()->SetPos(player_.GetSphere().GetPos());
+		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;
@@ -50,8 +50,8 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	{
 		//スイーツを取り出す
 		object.emplace_back(std::make_unique<ItemObject>("Sweets_Choco", 40.0f, 30.0f, 40.0f, player_));
-		object.back()->SetPos(player_.GetSphere().GetPos());
-		object.back()->Init();
+		//object.back()->SetPos(player_.GetSphere().GetPos());
+		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
 		isActioned_ = true;

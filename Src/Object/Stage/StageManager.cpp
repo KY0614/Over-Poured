@@ -109,8 +109,8 @@ void StageManager::Init(void)
 		VECTOR firstPos = TABLE_POS_BACK;
 		firstPos.x += (x * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_,objects_));
-		tables_.back()->Init();
-		tables_.back()->SetPos(firstPos);
+		tables_.back()->Init(firstPos);
+		//tables_.back()->SetPos(firstPos);
 		tables_.back()->SetQuaRotY(180.0f);
 	}
 
@@ -120,8 +120,8 @@ void StageManager::Init(void)
 		VECTOR firstPos = COLUMN_TABLE_POS;
 		firstPos.z += ((z - TABLE_ROW_FRONT_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
-		tables_.back()->Init();
-		tables_.back()->SetPos(firstPos);
+		tables_.back()->Init(firstPos);
+		//tables_.back()->SetPos(firstPos);
 		tables_.back()->SetQuaRotY(-90.0f);
 	}
 
@@ -131,59 +131,66 @@ void StageManager::Init(void)
 		VECTOR firstPos = TABLE_POS_FRONT;
 		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH + 20.0f, 76.0f, 60.0f, player_, objects_));
-		tables_.back()->Init();
-		tables_.back()->SetPos(firstPos);
+		tables_.back()->Init(firstPos);
+		//tables_.back()->SetPos(firstPos);
 	}
 
 	//カウンター用テーブル
 	counter_ = std::make_unique<Table>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
-	counter_->Init();
-	counter_->SetPos(COUNTER_POS);
+	counter_->Init(COUNTER_POS);
+	//counter_->SetPos(COUNTER_POS);
+
+	VECTOR pos = tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
 
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init();
-	objects_.back()->SetPos(tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter());
+	objects_.back()->Init(pos);
+	//objects_.back()->SetPos(tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter());
 	
 	//アイス用カップのラック
+	pos = tables_[TABLE_COLUMN_NUM]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<RackObject>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init();
-	objects_.back()->SetPos(tables_[TABLE_COLUMN_NUM]->GetTopCenter());
+	objects_.back()->Init(pos);
+	//objects_.back()->SetPos(tables_[TABLE_COLUMN_NUM]->GetTopCenter());
 
 	//チョコスイーツ用のラック
+	pos = tables_[tables_.size() - 2]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<RackObject>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init();
-	objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
+	objects_.back()->Init(pos);
+	//objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
 	
 	//ベリースイーツ用のラック
+	pos = tables_.back()->GetTopCenter();
 	objects_.emplace_back(std::make_unique<RackObject>(BERRY_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init();
-	objects_.back()->SetPos(tables_.back()->GetTopCenter());
+	objects_.back()->Init(pos);
+	//objects_.back()->SetPos(tables_.back()->GetTopCenter());
 	
 	//カップ用の蓋
+	pos = tables_[2]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID_RACK, 60.0f, 20.0f, 60.0f, player_,objects_));
-	objects_.back()->Init();
-	objects_.back()->SetPos(tables_[2]->GetTopCenter());
+	objects_.back()->Init(pos);
+	//objects_.back()->SetPos(tables_[2]->GetTopCenter());
 
 	//コーヒーマシン
+	pos = tables_[5]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
 		 player_,objects_));
-	objects_.back()->Init();
-	VECTOR pos = tables_.front()->GetTopCenter();
-	objects_.back()->SetPos(tables_[5]->GetTopCenter());
+	objects_.back()->Init(pos);
+	//objects_.back()->SetPos(tables_[5]->GetTopCenter());
 	objects_.back()->SetQuaRotY(-90.0f);
 
 	//アイスディスペンサー
+	pos = tables_[4]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
-	objects_.back()->Init();
+	objects_.back()->Init(pos);
 	objects_.back()->SetPos(tables_[4]->GetTopCenter());
 
 	//ゴミ箱
 	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
-	objects_.back()->Init();
-	objects_.back()->SetPos(DUST_BOX_POS);
+	objects_.back()->Init(DUST_BOX_POS);
+	//objects_.back()->SetPos(DUST_BOX_POS);
 
 	interact2D_ = std::make_unique<Interact2D>();
 	interact2D_->Init(); // 2Dインタラクト用の初期化
@@ -562,8 +569,8 @@ void StageManager::MakeHotCoffee(int i)
 {
 	//設置されているカップをコーヒーに上書きする
 	objects_[i] = std::make_unique<ItemObject>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
-	objects_[i]->SetPos(tables_[5]->GetTopCenter());
-	objects_[i]->Init();
+	//objects_[i]->SetPos(tables_[5]->GetTopCenter());
+	objects_[i]->Init(tables_[5]->GetTopCenter());
 	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 }
 
@@ -571,9 +578,9 @@ void StageManager::MakeIceCoffee(int i)
 {
 	//設置されているカップをコーヒーに上書きする
 	objects_[i] = std::make_unique<ItemObject>(ICE_COFFEE, 20.0f, 30.0f, 20.0f, player_);
-	objects_[i]->Init();
+	objects_[i]->Init(tables_[5]->GetTopCenter());
 	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-	objects_[i]->SetPos(tables_[5]->GetTopCenter());
+	//objects_[i]->SetPos(tables_[5]->GetTopCenter());
 }
 
 void StageManager::DispenseIce2Cup(void)
@@ -629,7 +636,7 @@ void StageManager::LidFollowCup(void)
 
 				//蓋を生成＆追従させる
 				objects_.emplace_back(std::make_unique<CupLid>(CUP_LID, 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
-				objects_.back()->Init();
+				objects_.back()->Init(AsoUtility::VECTOR_ZERO);
 				objects_.back()->Update();
 				isCreate = true;
 				break;
