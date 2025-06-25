@@ -1,5 +1,5 @@
 #include "../../Player.h"
-#include "CupLid.h"
+#include "FollowingObject.h"
 #include "DustBox.h"
 
 namespace {
@@ -44,7 +44,7 @@ void DustBox::Interact(const std::string& objId)
 		{
 			// dynamic_cast‚ÅCupLidŒ^‚É•ÏŠ·‚µAeQÆ‚ğ”äŠr
 			//ŠW‚ğíœ‚·‚é
-			CupLid* lid = dynamic_cast<CupLid*>(objects_[i].get());
+			FollowingObject* lid = dynamic_cast<FollowingObject*>(objects_[i].get());
 			if (lid && &(lid->GetCoffee()) == objects_[coffeeIndex].get())
 			{
 				objects_.erase(objects_.begin() + i);

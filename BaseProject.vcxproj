@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\StageObject\FollowingObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\InteractObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\RackObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\ItemObject.cpp" />
@@ -27,7 +28,6 @@
     <ClCompile Include="Src\FpsCounter.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceDispenser.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\DustBox.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\CupLid.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\CupLidRack.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\Machine.cpp" />
     <ClCompile Include="Src\Object\Common\Cube.cpp" />
@@ -81,6 +81,7 @@
     <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\StageObject\FollowingObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\InteractObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\RackObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\ItemObject.h" />
@@ -89,7 +90,6 @@
     <ClInclude Include="Src\FpsCounter.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceDispenser.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\DustBox.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\CupLid.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\CupLidRack.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\Machine.h" />
     <ClInclude Include="Src\Object\Common\Cube.h" />

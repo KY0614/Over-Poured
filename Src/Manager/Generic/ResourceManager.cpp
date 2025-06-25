@@ -84,7 +84,9 @@ ResourceManager::SRC ResourceManager::StringToSRC(const std::string& name)
 		{ "Ice_Cup",		SRC::ICECUP },
 		{ "Cup_Ice_Rack",	SRC::ICECUP_RACK },
 		{ "Ice_Coffee",		SRC::ICECOFFEE },
-		{ "Cup_Lid_Rack",		SRC::CUPLID_RACK },
+		{ "Cup_Lid_Rack",	SRC::CUPLID_RACK },
+		{ "Hot_Cup_Lid",		SRC::HOTCUP_LID },
+		{ "Ice_Cup_Lid",		SRC::ICECUP_LID },
 		//{ "lid",     SRC::LID },
 		// 新しい要素はここに追加
 	};
@@ -223,6 +225,14 @@ void ResourceManager::InitGame(void)
 	//カップの蓋のラック
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/cuplidRack.mv1");
 	resourcesMap_.emplace(SRC::CUPLID_RACK, std::move(res));
+
+	//カップの蓋(ホット）
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/hotcupLid.mv1");
+	resourcesMap_.emplace(SRC::HOTCUP_LID, std::move(res));
+
+	//カップの蓋(アイス）
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/icecupLid.mv1");
+	resourcesMap_.emplace(SRC::ICECUP_LID, std::move(res));
 
 	//仮客
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/Model.mv1");

@@ -11,10 +11,10 @@
 #include "StageObject.h"
 #include "StageObject/ItemObject.h"
 #include "StageObject/RackObject.h"
+#include "StageObject/FollowingObject.h"
 #include "StageObject/Table.h"
 #include "StageObject/Machine.h"
 #include "StageObject/CupLidRack.h"
-#include "StageObject/CupLid.h"
 #include "StageObject/DustBox.h"
 #include "StageObject/IceDispenser.h"	
 #include "Interact2D.h"	
@@ -627,7 +627,7 @@ void StageManager::LidFollowCup(void)
 				objects_[i]->PutOnTheLid();
 
 				//ŠW‚ğ¶¬•’Ç]‚³‚¹‚é
-				objects_.emplace_back(std::make_unique<CupLid>(CUP_LID, 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
+				objects_.emplace_back(std::make_unique<FollowingObject>(CUP_LID, 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
 				objects_.back()->Init(AsoUtility::VECTOR_ZERO);
 				objects_.back()->Update();
 				isCreate = true;
