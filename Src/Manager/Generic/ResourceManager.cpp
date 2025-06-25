@@ -76,11 +76,15 @@ ResourceManager::SRC ResourceManager::StringToSRC(const std::string& name)
 		{ "Sweets_Choco_Rack",  SRC::CHOCO_RACK },
 		{ "Sweets_Choco",		SRC::SWEETS_CHOCO },
 		{ "Sweets_Strawberry_Rack",   SRC::BERRY_RACK },
-		{ "Sweets_Strawberry",   SRC::SWEETS_BERRY },
+		{ "Sweets_Strawberry",  SRC::SWEETS_BERRY },
 		{ "Coffee_Machine",   SRC::COFFEE_MACHINE },
 		{ "Hot_Cup",		SRC::HOTCUP },
 		{ "Cup_Hot_Rack",   SRC::HOTCUP_RACK },
-		{ "Hot_Coffee",   SRC::HOTCOFFEE },
+		{ "Hot_Coffee",		SRC::HOTCOFFEE },
+		{ "Ice_Cup",		SRC::ICECUP },
+		{ "Cup_Ice_Rack",	SRC::ICECUP_RACK },
+		{ "Ice_Coffee",		SRC::ICECOFFEE },
+		{ "Cup_Lid_Rack",		SRC::CUPLID_RACK },
 		//{ "lid",     SRC::LID },
 		// 新しい要素はここに追加
 	};
@@ -203,6 +207,22 @@ void ResourceManager::InitGame(void)
 	//ホット用カップのラック
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/hotcupRack.mv1");
 	resourcesMap_.emplace(SRC::HOTCUP_RACK, std::move(res));
+
+	//アイス用カップ
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/icecup.mv1");
+	resourcesMap_.emplace(SRC::ICECUP, std::move(res));
+
+	//アイスコーヒー
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/icecoffee.mv1");
+	resourcesMap_.emplace(SRC::ICECOFFEE, std::move(res));
+
+	//アイス用カップのラック
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/icecupRack.mv1");
+	resourcesMap_.emplace(SRC::ICECUP_RACK, std::move(res));
+
+	//カップの蓋のラック
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/cuplidRack.mv1");
+	resourcesMap_.emplace(SRC::CUPLID_RACK, std::move(res));
 
 	//仮客
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/Model.mv1");

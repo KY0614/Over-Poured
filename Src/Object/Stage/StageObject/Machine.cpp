@@ -62,11 +62,11 @@ void Machine::Interact(const std::string& objId)
 				player_.GetHoldItem() == items.back().c_str()) &&
 				ins.IsInputTriggered("Interact"))
 			{
-				VECTOR cupPos = GetTransform().pos;	//マシンの上部中央にカップを置く
-				VECTOR scl = { 0.5f,0.5f,0.5f };
-				cupPos.y += 15.0f;	//少し上にずらす
-				cupPos.x += 17.0f;	//少し右にずらす
-				obj->SetScale(scl);
+				//マシンの上に乗るようにカップを配置する
+				VECTOR cupPos = GetTransform().pos;	
+				cupPos.y += MACHINE_OFSET_Y;	//少し上にずらす
+				cupPos.x += MACHINE_OFSET_X;	//少し右にずらす
+
 				obj->ItemPlaced(cupPos);
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}

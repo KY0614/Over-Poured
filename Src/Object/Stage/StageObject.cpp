@@ -285,7 +285,7 @@ void StageObject::DrawDebug(void)
 
 	}
 
-	sphere_->Draw(col);
+	//sphere_->Draw(col);
 
 	int line = 3;	//s
 	int lineHeight = 30;	//s

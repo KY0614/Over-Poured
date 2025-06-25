@@ -145,6 +145,7 @@ void StageManager::Init(void)
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init(pos);
+	objects_.back()->SetQuaRotY(-90.0f);
 	//objects_.back()->SetPos(tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter());
 	
 	//アイス用カップのラック
@@ -231,7 +232,8 @@ void StageManager::Update(void)
 	{
 		//interact2D_->ChangeMode(Interact2D::MODE::MACHINE_2D);
 		//ChangeMode(MODE::MACHINE_2D);
-		//走るアニメーション
+		
+		//生成アニメーション
 		animationController_->Play((int)ANIM_TYPE::CREATE,false);
 	}
 	if (ins.IsTrgDown(KEY_INPUT_E))
@@ -466,16 +468,11 @@ void StageManager::MachineInteract(void)
  			obj->Interact(player_.GetHoldItem());
 		}
 
-		//if(obj->GetMachineState() == StageObject::MACHINE_STATE::ACTIVE)
-		//{
-		//	ChangeMode(MODE::MACHINE_2D); // マシンモードに切り替え
-		//}
-
 		//設置して一定時間経ったらコーヒーを出力する
 		if (obj->GetParam().id_ == COFFEE_MACHINE &&
 			obj->GetParam().interactTime_ <= 0.0f)
 		{
-			MakeCoffee();
+			ProduceCoffee();
 			break;
 		}
 	}
@@ -533,7 +530,7 @@ void StageManager::LidRackInteract(void)
 	}
 }
 
-void StageManager::MakeCoffee(void)
+void StageManager::ProduceCoffee(void)
 {
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
@@ -553,11 +550,11 @@ void StageManager::MakeCoffee(void)
 			{
 				if(objects_[i]->GetParam().id_ == HOT_CUP)
 				{
-					MakeHotCoffee(i);
+					MakeCoffee(i,machine->GetTransform().pos, HOT_COFFEE);
 					return; // ホットコーヒーを作ったら処理を終了
 				}
 				else {
-					MakeIceCoffee(i);
+					MakeCoffee(i, machine->GetTransform().pos, ICE_COFFEE);
 					return; // アイスコーヒーを作ったら処理を終了
 				}
 			}
@@ -565,22 +562,17 @@ void StageManager::MakeCoffee(void)
 	}
 }
 
-void StageManager::MakeHotCoffee(int i)
+void StageManager::MakeCoffee(int index, VECTOR pos, std::string objName)
 {
 	//設置されているカップをコーヒーに上書きする
-	objects_[i] = std::make_unique<ItemObject>(HOT_COFFEE, 20.0f, 30.0f, 20.0f, player_);
-	//objects_[i]->SetPos(tables_[5]->GetTopCenter());
-	objects_[i]->Init(tables_[5]->GetTopCenter());
-	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-}
+	objects_[index] = std::make_unique<ItemObject>(objName, 20.0f, 30.0f, 20.0f, player_);
 
-void StageManager::MakeIceCoffee(int i)
-{
-	//設置されているカップをコーヒーに上書きする
-	objects_[i] = std::make_unique<ItemObject>(ICE_COFFEE, 20.0f, 30.0f, 20.0f, player_);
-	objects_[i]->Init(tables_[5]->GetTopCenter());
-	objects_[i]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-	//objects_[i]->SetPos(tables_[5]->GetTopCenter());
+	//マシンの上に乗るようにカップを配置する
+	VECTOR cupPos = pos;
+	cupPos.y += StageObject::MACHINE_OFSET_Y;	//少し上にずらす
+	cupPos.x += StageObject::MACHINE_OFSET_X;	//少し右にずらす
+	objects_[index]->Init(cupPos);
+	objects_[index]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 }
 
 void StageManager::DispenseIce2Cup(void)

@@ -20,7 +20,7 @@ StageObjectLibrary::LoadData(const std::string& objName)
     //jsonオブジェクトから、objNameオブジェクトを取得
     const auto& value = data[objName];
     ObjectParams obj;
-
+    
     obj.id_ = value.value("id", "");
     obj.name_ = value.value("name", "");
     obj.placeable_ = value.value("placeable", false);

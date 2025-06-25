@@ -1,3 +1,5 @@
+#include "../../../Common/DebugDrawFormat.h"
+#include "../../../Utility/AsoUtility.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
@@ -41,6 +43,16 @@ void ItemObject::PouredIce(void)
     object_ = StageObjectLibrary::LoadData(objId_);
     param_ = object_.second;
     return;
+}
+
+void ItemObject::Draw(void)
+{
+    int line = 3;	//çs
+    int lineHeight = 30;	//çs
+
+    DebugDrawFormat::FormatStringRight(L"isIce : %d", isIced_, line, lineHeight);
+
+    StageObject::Draw();
 }
 
 void ItemObject::UpdatePlaced(void)

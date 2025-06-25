@@ -18,6 +18,8 @@ public:
 
 	bool IsIce(void)const { return isIced_; }
 
+	void Draw(void) override;
+
 private:
 
 	bool isIced_;

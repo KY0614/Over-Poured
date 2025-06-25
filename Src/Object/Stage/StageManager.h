@@ -28,7 +28,7 @@ public:
 
 	static constexpr VECTOR TABLE_POS_BACK = { -140.0f, 0.0f, -175.0f };	//テーブルの座標
 	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 190.0f };	//テーブルの座標
-	static constexpr VECTOR COLUMN_TABLE_POS = { -222.0f, 0.0f, -98.0f };	//列テーブルの座標
+	static constexpr VECTOR COLUMN_TABLE_POS = { -250.0f, 0.0f, -98.0f };	//列テーブルの座標
 	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };			//カウンターの座標
 	static constexpr VECTOR CASE_POS = { -57.0f, 0.0f, 190.0f };			//ショーケースの座標
 	static constexpr VECTOR DUST_BOX_POS = { 320.0f, 0.0f, -173.0f };		//ゴミ箱の座標
@@ -176,12 +176,18 @@ private:
 	void LidRackInteract(void);
 
 	/// <summary>
-	/// ホットコーヒーを作る
+	/// コーヒーを生成する処理
 	/// </summary>
-	/// <param name="">マシンとホット用カップだけ処理し、カップの場所にコーヒー生成</param>
-	void MakeCoffee(void);
-	void MakeHotCoffee(int i);
-	void MakeIceCoffee(int i);
+	/// <param name="">マシンに設置されているカップに対して行う処理/param>
+	void ProduceCoffee(void);
+
+	/// <summary>
+	/// コーヒーを作る処理
+	/// </summary>
+	/// <param name="index">配列番号（カップをコーヒーに上書きするので）</param>
+	/// <param name="pos">生成する座標</param>
+	/// <param name="objName">作るコーヒーのパラメータ名（ホットかアイス)</param>
+	void MakeCoffee(int index,VECTOR pos,std::string objName);
 
 	/// <summary>
 	///　カップにアイスディスペンサーで氷を入れる処理
