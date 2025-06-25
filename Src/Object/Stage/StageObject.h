@@ -44,6 +44,8 @@ public:
 	/// <param name="pos">設定座標</param>
 	void SetPos(VECTOR pos);
 
+	void SetScale(VECTOR scale);
+
 	/// <summary>
 	/// 初期の回転を設定する(入れるときはEuler角で設定する)
 	/// </summary>
@@ -88,50 +90,6 @@ public:
 	float GetObjHeight(void)const { return height_; }
 
 	StageObjectLibrary::ObjectParams GetParam(void)const { return param_; }
-
-	/// <summary>
-	/// 持ち運び可能のオブジェクトかどうか
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>true:持ち運び可能、false:不可能</returns>
-	//bool GetIsCarryable(void)const { return param_.carryable_; }
-
-	/// <summary>
-	/// 設置可能オブジェクトかどうか
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>true:設置可能、false:不可能</returns>
-	//bool GetIsPlaceable(void)const { return param_.placeable_; }
-
-	/// <summary>
-	/// プレイヤーがアクション可能なオブジェクトかどうか
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>true:アクション可能、false:不可能</returns>
-	//bool GetIsInteractable(void)const { return param_.interactable_; }
-
-	/// <summary>
-	/// インタラクトタイプ（動作タイプ）を取得する
-	/// </summary>
-	/// <param name="">オブジェクトのパラメータ</param>
-	/// <returns>インタラクトタイプ</returns>
-	//std::string GetInteractType(void)const { return param_.interactType_; }
-
-	/// <summary>
-	/// インタラクト時間を取得する
-	/// </summary>
-	/// <param name="">オブジェクトのパラメータ</param>
-	/// <returns>インタラクト時間</returns>
-	//float GetInteractTime(void)const { return param_.interactTime; }
-
-	/// <summary>
-	/// オブジェクトのIDを取得する
-	/// </summary>
-	/// <param name="">オブジェクトのパラメータ</param>
-	/// <returns>ID</returns>
-	//std::string GetObjectId(void)const { return param_.id_; }
-
-	//std::string GetObjCategory(void)const { return param_.category_; }
 
 	/// <summary>
 	/// アイテムオブジェクトの状態を取得

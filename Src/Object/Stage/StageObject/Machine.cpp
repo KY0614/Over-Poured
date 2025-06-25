@@ -1,3 +1,4 @@
+#include "../Libs/ImGui/imgui.h"
 #include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
@@ -61,8 +62,11 @@ void Machine::Interact(const std::string& objId)
 				player_.GetHoldItem() == items.back().c_str()) &&
 				ins.IsInputTriggered("Interact"))
 			{
-				VECTOR cupPos = GetTopCenter();	//マシンの上部中央にカップを置く
-				cupPos.y += obj->GetObjHeight() / 2.0f;	//少し上にずらす
+				VECTOR cupPos = GetTransform().pos;	//マシンの上部中央にカップを置く
+				VECTOR scl = { 0.5f,0.5f,0.5f };
+				cupPos.y += 15.0f;	//少し上にずらす
+				cupPos.x += 17.0f;	//少し右にずらす
+				obj->SetScale(scl);
 				obj->ItemPlaced(cupPos);
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}
@@ -113,6 +117,5 @@ void Machine::Draw(void)
 	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
 		L"コーヒーができるまで %2.f", param_.interactTime_);
 
-	//DebugDrawFormat::FormatStringRight(L"iteractTime %2.f", param_.interactTime, line, lineHeight);
 	StageObject::Draw();
 }

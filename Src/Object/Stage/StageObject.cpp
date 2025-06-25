@@ -145,6 +145,12 @@ void StageObject::SetPos(VECTOR pos)
 	sphereTran_.pos = pos;
 }
 
+void StageObject::SetScale(VECTOR scale)
+{
+	transform_.scl = scale;
+	sphereTran_.scl = scale;
+}
+
 void StageObject::SetQuaRotY(const float localRotY)
 {
 	transform_.quaRot = Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(localRotY), 0.0f });

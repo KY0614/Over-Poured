@@ -117,7 +117,7 @@ void Player::Draw(void)
 {
 	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
 
-	capsule_->Draw();
+	//capsule_->Draw();
 	//sphere_->Draw();
 
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
