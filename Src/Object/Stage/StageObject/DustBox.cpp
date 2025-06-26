@@ -45,11 +45,12 @@ void DustBox::Interact(const std::string& objId)
 			// dynamic_castでCupLid型に変換し、親参照を比較
 			//蓋を削除する
 			FollowingObject* lid = dynamic_cast<FollowingObject*>(objects_[i].get());
-			if (lid && &(lid->GetCoffee()) == objects_[coffeeIndex].get())
+			if (lid && &(lid->GetFollowedObj()) == objects_[coffeeIndex].get())
 			{
 				objects_.erase(objects_.begin() + i);
-				break;
+				continue; // 蓋を削除した後、次のループへ
 			}
+			++i;
 		}
 		// コーヒー本体も削除
 		objects_.erase(objects_.begin() + coffeeIndex);

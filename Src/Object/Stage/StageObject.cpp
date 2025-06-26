@@ -118,7 +118,7 @@ void StageObject::Update(void)
 void StageObject::Draw(void)
 {
 #ifdef _DEBUG
-	DrawDebug();
+	//DrawDebug();
 #endif // _DEBUG
 
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ

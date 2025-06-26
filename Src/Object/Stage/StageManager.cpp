@@ -573,6 +573,23 @@ void StageManager::MakeCoffee(int index, VECTOR pos, std::string objName)
 	cupPos.x += StageObject::MACHINE_OFSET_X;	//少し右にずらす
 	objects_[index]->Init(cupPos);
 	objects_[index]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
+
+	//アイスコーヒーの場合は氷を削除しておく
+	if (objName == ICE_COFFEE)
+	{
+		// 氷のインデックスを探す
+		for (int i = 0; i < objects_.size(); ++i)
+		{	
+			//氷を削除する
+			FollowingObject* ice = dynamic_cast<FollowingObject*>(objects_[i].get());
+			if (ice && &(ice->GetFollowedObj()) == objects_[index].get())
+			{
+				objects_.erase(objects_.begin() + i);
+				continue; // 蓋を削除した後、次のループへ
+			}
+			++i;
+		}
+	}
 }
 
 void StageManager::DispenseIce2Cup(void)
@@ -596,6 +613,12 @@ void StageManager::DispenseIce2Cup(void)
 				if (auto iceCup = dynamic_cast<ItemObject*>(objects_[i].get()))
 				{
 					iceCup->PouredIce();
+
+					//氷を生成＆追従させる
+					objects_.emplace_back(std::make_unique<FollowingObject>("Ice", 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
+					objects_.back()->Init(AsoUtility::VECTOR_ZERO);
+					objects_.back()->Update();
+					break;
 				}
 			}
 		}
@@ -724,8 +747,8 @@ void StageManager::Update3DGame(void)
 	{
 		obj->Update();
 	}
-
-	for (const auto& obj : tables_)
+ 
+	for (const auto& obj : tables_)                 
 	{
 		obj->Update();
 	}

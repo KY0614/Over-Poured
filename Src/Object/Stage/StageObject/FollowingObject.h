@@ -15,9 +15,10 @@ public:
 
 	void Update(void)override;
 
-	StageObject& GetCoffee(void) const { return followObj_; }
+	StageObject& GetFollowedObj(void) const { return followObj_; }
 
 private:
+
 
 	StageObject& followObj_;
 };
