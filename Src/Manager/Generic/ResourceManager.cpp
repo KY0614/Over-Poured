@@ -81,6 +81,7 @@ ResourceManager::SRC ResourceManager::StringToSRC(const std::string& name)
 		{ "Hot_Cup",		SRC::HOTCUP },
 		{ "Cup_Hot_Rack",   SRC::HOTCUP_RACK },
 		{ "Hot_Coffee",		SRC::HOTCOFFEE },
+		{ "Ice_Dispenser",			SRC::ICEDISPENSER },
 		{ "Ice",			SRC::ICE },
 		{ "Ice_Cup",		SRC::ICECUP },
 		{ "Cup_Ice_Rack",	SRC::ICECUP_RACK },
@@ -222,6 +223,10 @@ void ResourceManager::InitGame(void)
 	//アイス用カップのラック
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/icecupRack.mv1");
 	resourcesMap_.emplace(SRC::ICECUP_RACK, std::move(res));
+
+	//製氷機
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/icedispenser.mv1");
+	resourcesMap_.emplace(SRC::ICEDISPENSER, std::move(res));
 
 	//氷
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/ice.mv1");

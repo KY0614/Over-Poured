@@ -185,7 +185,8 @@ void StageManager::Init(void)
 	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
 	objects_.back()->Init(pos);
-	objects_.back()->SetPos(tables_[4]->GetTopCenter());
+	objects_.back()->SetQuaRotY(-180.0f);
+	//objects_.back()->SetPos(tables_[4]->GetTopCenter());
 
 	//ÉSÉ~î†
 	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,

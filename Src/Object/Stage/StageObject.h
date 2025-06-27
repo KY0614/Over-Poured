@@ -14,6 +14,7 @@ class StageObject : public ActorBase
 public:
 	//マシンのY座標オフセット(マシンの上に置くようにしたいため)
 	static constexpr float MACHINE_OFSET_X = 15.0f;	
+	static constexpr float DISPENSER_OFSET_X = 15.0f;	
 	static constexpr float MACHINE_OFSET_Y = 16.0f;	
 
 	//アイテムオブジェクトの状態

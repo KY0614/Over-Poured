@@ -68,9 +68,11 @@ void IceDispenser::Interact(const std::string& objId)
 			if (player_.GetHoldItem() == items.front().c_str() &&
 				ins.IsInputTriggered("Interact"))
 			{
-				VECTOR cupPos = GetTopCenter();	//マシンの上部中央にカップを置く
-				cupPos.y += obj->GetObjHeight() / 2.0f;	//少し上にずらす
-				obj->ItemPlaced(GetPos());
+				//マシンの上に乗るようにカップを配置する
+				VECTOR cupPos = GetTransform().pos;
+				cupPos.z += DISPENSER_OFSET_X;	//少し上にずらす
+				cupPos.y += MACHINE_OFSET_Y;	//少し上にずらす
+				obj->ItemPlaced(cupPos);
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}
 		}
