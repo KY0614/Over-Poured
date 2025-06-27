@@ -95,6 +95,7 @@ public:
 	Transform GetCounterTran(void) const;
 	Transform GetTableTran(int index) const;
 	Transform GetShowCase(void) const;
+	Transform GetDustBox(void) const;
 
 private:
 
@@ -102,6 +103,7 @@ private:
 	std::unique_ptr<AnimationController> animationController_;
 
 	Transform caseTran_;
+	Transform dustBoxTran_;
 
 	//ÉÇÅ[Éhä«óù
 	MODE mode_;

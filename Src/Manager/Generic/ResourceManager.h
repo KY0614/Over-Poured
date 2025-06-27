@@ -41,6 +41,8 @@ public:
 		ICECUP_LID,
 		CUPLID_RACK,
 
+		DUSTBOX,
+
 		CUSTOMER,
 	};
 

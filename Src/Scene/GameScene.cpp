@@ -53,6 +53,7 @@ void GameScene::Init(void)
 		player_->AddCollider(stage_->GetTableTran(i).collider);
 	}
 	player_->AddCollider(stage_->GetShowCase().collider);
+	player_->AddCollider(stage_->GetDustBox().collider);
 
 	//スカイドーム
 	skyDome_ = std::make_unique<SkyDome>(player_->GetTransform());

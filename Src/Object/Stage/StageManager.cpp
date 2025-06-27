@@ -192,25 +192,14 @@ void StageManager::Init(void)
 	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
 	objects_.back()->Init(DUST_BOX_POS);
-	//objects_.back()->SetPos(DUST_BOX_POS);
+	objects_.back()->SetQuaRotY(-180.0f);
+	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
 
 	interact2D_ = std::make_unique<Interact2D>();
 	interact2D_->Init(); // 2Dインタラクト用の初期化
 
 	ChangeMode(MODE::GAME_3D); // 初期モードを3Dゲームに設定
 
-#ifdef _DEBUG
-
-	//カウンター前の当たり判定用の球体
-	sphereTran_.Update();
-
-	sphereTran_.scl = AsoUtility::VECTOR_ONE;
-	sphereTran_.pos = { 221.0f, 0.0f, 271.0f };
-	sphereTran_.quaRot = Quaternion();
-	sphereTran_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
-
-#endif // _DEBUG
 }
 
 void StageManager::Update(void)
@@ -316,6 +305,11 @@ Transform StageManager::GetTableTran(int index) const
 Transform StageManager::GetShowCase(void) const
 {
 	return caseTran_;
+}
+
+Transform StageManager::GetDustBox(void) const
+{
+	return dustBoxTran_;
 }
 
 void StageManager::InitAnimation(void)
@@ -782,7 +776,6 @@ void StageManager::Update3DGame(void)
 
 	transform_.Update();
 	caseTran_.Update();
-	sphereTran_.Update();
 }
 
 void StageManager::UpdateMachine2D(void)
