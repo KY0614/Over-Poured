@@ -15,7 +15,7 @@ int WINAPI WinMain(
 	_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-
+	
 	// ÉÅÉÇÉäÉäÅ[ÉNåüèo
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
