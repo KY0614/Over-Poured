@@ -158,13 +158,33 @@
     "acceptedItems":["Hot_Coffee","Ice_Coffee"],
     "produces": ["Hot_Coffee_With_Lid","Ice_Coffee_With_Lid"]
     },
-    "Cup_Lid": {
-    "id": "Cup_Lid",
-    "type": "item",
-    "name": "CupLid",
-    "interactable": true,
+    "Hot_Cup_Lid": {
+    "id": "Hot_Cup_Lid",
+    "type": "follow",
+    "name": "HotCupLid",
+    "interactable": false,
     "placeable": false,
     "carryable": false,
+    "acceptedItems":[],
+    "produces": []
+    },
+    "Ice_Cup_Lid": {
+    "id": "Ice_Cup_Lid",
+    "type": "follow",
+    "name": "IceCupLid",
+    "interactable": false,
+    "placeable": false,
+    "carryable": false,
+    "acceptedItems":[],
+    "produces": []
+    },
+    "Ice": {
+    "id": "Ice",
+    "type": "follow",
+    "name": "Ice",
+    "interactable": false,
+    "placeable": true,
+    "carryable": true,
     "acceptedItems":[],
     "produces": []
     },
@@ -175,7 +195,7 @@
     "interactable": true,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco"],
+    "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco","Hot_Cup_Lid","Ice_Cup_Lid","Ice"],
     "produces": []
     }
 }

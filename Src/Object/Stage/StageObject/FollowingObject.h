@@ -19,7 +19,6 @@ public:
 
 private:
 
-
 	StageObject& followObj_;
 };
 

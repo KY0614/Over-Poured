@@ -13,40 +13,12 @@ FollowingObject::FollowingObject(const std::string objId,
 
 void FollowingObject::Init(VECTOR pos)
 {
+	StageObject::Init(pos);
 
-	std::string followObj = "";
-	if (followObj_.GetParam().id_ == "Hot_Coffee")
-	{
-		followObj = "Hot_Cup_Lid";
-	}
-	else if (followObj_.GetParam().id_ == "Ice_Coffee")
-	{
-		followObj = "Ice_Cup_Lid";
-	}
-	else if (followObj_.GetParam().id_ == "Cup_With_Ice")
-	{
-		followObj = "Ice";
-	}
-
-	// 文字列をSRCに変換してモデル設定
-	ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(followObj);
-
-	//モデルの基本設定
-	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
-	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = pos;
-	transform_.quaRot = Quaternion();
-	transform_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
-	transform_.MakeCollider(Collider::TYPE::STAGE);
-
+	//テーブルとオブジェクトの判定の邪魔にならないように
 	rad_ = 0.0f;
-
-	sphere_ = std::make_unique<Sphere>(transform_);
-	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
+	sphere_->SetLocalPos({0.0f,30.0f,0.0f});
 	sphere_->SetRadius(rad_);
-
-	transform_.Update();
 }
 
 void FollowingObject::Update(void)

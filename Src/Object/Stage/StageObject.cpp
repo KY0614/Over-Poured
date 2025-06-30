@@ -60,7 +60,7 @@ void StageObject::Init(VECTOR pos)
 	if (objId_ == "Ice_Coffee")drink_ = Order::DRINK::ICE;
 
 	sphere_ = std::make_unique<Sphere>(transform_);
-	sphere_->SetLocalPos({ 0.0f, 0.0f, 0.0f });
+	sphere_->SetLocalPos(AsoUtility::VECTOR_ZERO);
 	sphere_->SetRadius(rad_);
 
 	if (objId_ == "Table" || objId_ == "Counter")sphere_->SetLocalPos({ 0.0f, height_, 0.0f });

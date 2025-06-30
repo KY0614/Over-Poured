@@ -36,7 +36,8 @@ namespace {
 	const std::string ICE_COFFEE = "Ice_Coffee";			//アイスコーヒー
 	const std::string COFFEE_MACHINE = "Coffee_Machine";	//コーヒーマシン
 	const std::string CUP_LID_RACK = "Cup_Lid_Rack";		//蓋のラック
-	const std::string CUP_LID = "Cup_Lid";					//蓋
+	const std::string HOTCUP_LID = "Hot_Cup_Lid";					//蓋（ホット）
+	const std::string ICECUP_LID = "Ice_Cup_Lid";					//蓋
 	const std::string ICE_DISPENSER = "Ice_Dispenser";		//製氷機
 	const std::string DUST_BOX = "Dust_Box";				//ゴミ箱
 }
@@ -132,13 +133,11 @@ void StageManager::Init(void)
 		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH + 20.0f, 76.0f, 60.0f, player_, objects_));
 		tables_.back()->Init(firstPos);
-		//tables_.back()->SetPos(firstPos);
 	}
 
 	//カウンター用テーブル
 	counter_ = std::make_unique<Table>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
 	counter_->Init(COUNTER_POS);
-	//counter_->SetPos(COUNTER_POS);
 
 	VECTOR pos = tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
 
@@ -146,38 +145,32 @@ void StageManager::Init(void)
 	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init(pos);
 	objects_.back()->SetQuaRotY(-90.0f);
-	//objects_.back()->SetPos(tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter());
 	
 	//アイス用カップのラック
 	pos = tables_[TABLE_COLUMN_NUM]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<RackObject>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init(pos);
-	//objects_.back()->SetPos(tables_[TABLE_COLUMN_NUM]->GetTopCenter());
-
+	
 	//チョコスイーツ用のラック
 	pos = tables_[tables_.size() - 2]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<RackObject>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init(pos);
-	//objects_.back()->SetPos(tables_[tables_.size() - 2]->GetTopCenter());
 	
 	//ベリースイーツ用のラック
 	pos = tables_.back()->GetTopCenter();
 	objects_.emplace_back(std::make_unique<RackObject>(BERRY_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init(pos);
-	//objects_.back()->SetPos(tables_.back()->GetTopCenter());
 	
 	//カップ用の蓋
 	pos = tables_[2]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID_RACK, 60.0f, 20.0f, 60.0f, player_,objects_));
 	objects_.back()->Init(pos);
-	//objects_.back()->SetPos(tables_[2]->GetTopCenter());
 
 	//コーヒーマシン
 	pos = tables_[5]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
 		 player_,objects_));
 	objects_.back()->Init(pos);
-	//objects_.back()->SetPos(tables_[5]->GetTopCenter());
 	objects_.back()->SetQuaRotY(-90.0f);
 
 	//アイスディスペンサー
@@ -186,7 +179,6 @@ void StageManager::Init(void)
 		 player_,objects_));
 	objects_.back()->Init(pos);
 	objects_.back()->SetQuaRotY(-180.0f);
-	//objects_.back()->SetPos(tables_[4]->GetTopCenter());
 
 	//ゴミ箱
 	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
@@ -264,7 +256,7 @@ void StageManager::Draw(void)
 	interact2D_->Draw(); // 2Dインタラクトの描画
 
 #ifdef _DEBUG
-	//DrawDebug();
+	DrawDebug();
 #endif // _DEBUG
 }
 
@@ -358,6 +350,7 @@ void StageManager::SurveItem(StageObject& obj)
 	if (IsOrderCompleted()) 
 	{
 		isServed_ = true;
+		animationController_->Play((int)ANIM_TYPE::PAYING, false);
 	}
 }
 
@@ -370,7 +363,23 @@ void StageManager::DeleteSurvedItem(void)
 			(*it)->GetSpherePos(), (*it)->GetSphereRad(),
 			counter_->GetSpherePos(), counter_->GetSphereRad()))
 		{
-			it = objects_.erase(it); //eraseは次の要素のイテレータを返す
+			StageObject* target = it->get(); //今から削除する親オブジェクトを記録
+			if (target->IsLidOn())
+			{
+				//追従している蓋をすべて削除
+				for (int i = 0; i < objects_.size(); )
+				{
+					FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
+					if (follower && &(follower->GetFollowedObj()) == target)
+					{
+						objects_.erase(objects_.begin() + i);
+						continue;
+					}
+					++i;
+				}
+			}
+			it = objects_.erase(it);
+
 		}
 		else
 		{
@@ -559,32 +568,36 @@ void StageManager::ProduceCoffee(void)
 
 void StageManager::MakeCoffee(int index, VECTOR pos, std::string objName)
 {
+	//アイスコーヒーを生成する場合は氷を先に削除しておく
+	if (objName == ICE_COFFEE)
+	{
+		//氷入りカップの場合は氷も削除
+		ItemObject* cupWithIce = dynamic_cast<ItemObject*>(objects_[index].get());
+		if (cupWithIce->IsIce())
+		{
+			//蓋のインデックスを探す
+			for (int i = 0; i < objects_.size(); ++i)
+			{
+				//dynamic_castでFollowingObject型に変換し、親参照を比較
+				//蓋を削除する
+				FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
+				if (follower && &(follower->GetFollowedObj()) == objects_[index].get())
+				{
+					objects_.erase(objects_.begin() + i);
+					continue; // eraseしたのでiは進めず次のループへ
+				}
+			}
+		}
+	}
+
 	//設置されているカップをコーヒーに上書きする
 	objects_[index] = std::make_unique<ItemObject>(objName, 20.0f, 30.0f, 20.0f, player_);
-
 	//マシンの上に乗るようにカップを配置する
 	VECTOR cupPos = pos;
 	cupPos.y += StageObject::MACHINE_OFSET_Y;	//少し上にずらす
 	cupPos.x += StageObject::MACHINE_OFSET_X;	//少し右にずらす
 	objects_[index]->Init(cupPos);
 	objects_[index]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
-
-	//アイスコーヒーの場合は氷を削除しておく
-	if (objName == ICE_COFFEE)
-	{
-		// 氷のインデックスを探す
-		for (int i = 0; i < objects_.size(); ++i)
-		{	
-			//氷を削除する
-			FollowingObject* ice = dynamic_cast<FollowingObject*>(objects_[i].get());
-			if (ice && &(ice->GetFollowedObj()) == objects_[index].get())
-			{
-				objects_.erase(objects_.begin() + i);
-				continue; // 蓋を削除した後、次のループへ
-			}
-			++i;
-		}
-	}
 }
 
 void StageManager::DispenseIce2Cup(void)
@@ -643,9 +656,11 @@ void StageManager::LidFollowCup(void)
 			{
 				//コーヒーオブジェクトに蓋をする
 				objects_[i]->PutOnTheLid();
-
+				std::string lidType = "";
+				if(objects_[i]->GetParam().id_ == HOT_COFFEE)lidType = HOTCUP_LID;
+				else if (objects_[i]->GetParam().id_ == ICE_COFFEE)lidType = ICECUP_LID;
 				//蓋を生成＆追従させる
-				objects_.emplace_back(std::make_unique<FollowingObject>(CUP_LID, 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
+				objects_.emplace_back(std::make_unique<FollowingObject>(lidType, 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
 				objects_.back()->Init(AsoUtility::VECTOR_ZERO);
 				objects_.back()->Update();
 				isCreate = true;
@@ -674,7 +689,6 @@ void StageManager::DustBoxInteract(void)
 			if(ins.IsInputTriggered("Interact"))
 			{
 				//ゴミ箱にアイテムを捨てる処理
-				//DiscardHoldObject();
 				obj->Interact(player_.GetHoldItem());
 			}
 			break;
@@ -699,10 +713,6 @@ bool StageManager::IsOrderCompleted(void)
 void StageManager::ChangeMode(MODE mode)
 {
 	mode_ = mode;
-
-	//// 関数ポインタ切り替え
-	//modeUpdate_ = updateFunc_[mode_];
-	//modeDraw_ = drawFunc_[mode_];
 
 	//各状態遷移の初期処理
 	stateChanges_[mode_]();
@@ -821,16 +831,32 @@ void StageManager::DrawDebug(void)
 	int lineHeight = 30;	//行
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"mode : %d", mode_, line, lineHeight);
+	//DebugDrawFormat::FormatString(L"mode : %d", mode_, line, lineHeight);
 
-	DebugDrawFormat::FormatString(L"currentD,S : %d,%d",
-			currentOrder_.drink_, currentOrder_.sweets_, line, lineHeight);
+	//DebugDrawFormat::FormatString(L"currentD,S : %d,%d",
+	//		currentOrder_.drink_, currentOrder_.sweets_, line, lineHeight);
 
-	DebugDrawFormat::FormatString(L"surevdD,S : %d,%d",
-		servedItems_.drink_, servedItems_.sweets_, line, lineHeight);
+	//DebugDrawFormat::FormatString(L"surevdD,S : %d,%d",
+	//	servedItems_.drink_, servedItems_.sweets_, line, lineHeight);
 
-	DebugDrawFormat::FormatString(L"boolSize : %d",
-			isServedItems_.size(), line, lineHeight);
+	//DebugDrawFormat::FormatString(L"boolSize : %d",
+	//		isServedItems_.size(), line, lineHeight);
+		
+	DebugDrawFormat::FormatString(L"back   : %s",
+		StringUtility::StringToWstring(objects_.back()->GetParam().id_).c_str(), line, lineHeight);
+	
+	int size = static_cast<int>(objects_.size());
+	DebugDrawFormat::FormatString(L"back -1  : %s",
+		StringUtility::StringToWstring(objects_[size -2]->GetParam().id_).c_str(), line, lineHeight);
+		
+	DebugDrawFormat::FormatString(L"back -2  : %s",
+		StringUtility::StringToWstring(objects_[size -3]->GetParam().id_).c_str(), line, lineHeight);
+		
+	DebugDrawFormat::FormatString(L"back -3  : %s",
+		StringUtility::StringToWstring(objects_[size -4]->GetParam().id_).c_str(), line, lineHeight);	
+		
+	DebugDrawFormat::FormatString(L"back -4  : %s",
+		StringUtility::StringToWstring(objects_[size -5]->GetParam().id_).c_str(), line, lineHeight);
 		
 	//size_t size = objects_.size();
 	////蓋生成数確認用
