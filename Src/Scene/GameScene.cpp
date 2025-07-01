@@ -166,7 +166,7 @@ void GameScene::Draw(void)
 	//skyDome_->Draw();
 
 	stage_->Draw();
-	
+
 	player_->Draw();
 
 	customer_->Draw();

@@ -11,9 +11,14 @@ public:
     virtual void Init(void) = 0;
     virtual void Update(void) = 0;
     virtual void Draw(void) = 0;
-    virtual bool IsActive() const = 0;
+    //virtual bool IsActive() const = 0;
+
+    void SetPos(const VECTOR pos) { pos_ = pos; }
+	void SetAlpha(const float alpha) { alpha_ = alpha; }
+    void SetActive(const bool isActive) { isActive_ = isActive; }
 
 protected:
+
     //UI‰æ‘œƒnƒ“ƒhƒ‹
     int uiImg_;
 

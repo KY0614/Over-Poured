@@ -363,10 +363,10 @@ void Player::ProcessMove(void)
 	//WASD‚ÅˆÊ’u‚ð•Ï‚¦‚é
 	VECTOR dir = AsoUtility::VECTOR_ZERO;
 	movePow_ = AsoUtility::VECTOR_ZERO;
-	if (ins.IsInputPressed("Up")) dir = cameraRot.GetForward();  rotRad = AsoUtility::Deg2RadF(0.0f); 
-	if (ins.IsInputPressed("Left")) dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); 
-	if (ins.IsInputPressed("Down")) dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); 
-	if (ins.IsInputPressed("Right")) dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f);
+	if (ins.IsInputPressed("Up")) { dir = cameraRot.GetForward();  rotRad = AsoUtility::Deg2RadF(0.0f); }
+	if (ins.IsInputPressed("Left")){ dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); }
+	if (ins.IsInputPressed("Down")){ dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
+	if (ins.IsInputPressed("Right")){dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f);	}
 
 	//if (ins.IsInputPressed("Up"))	dir.z += 1.0f;
 	//if (ins.IsInputPressed("Down")) dir.z -= 1.0f;

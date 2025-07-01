@@ -249,6 +249,22 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/dustbox.mv1");
 	resourcesMap_.emplace(SRC::DUSTBOX, std::move(res));
 
+	//ÉQÅ[ÉWUI
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "bar_green.png");
+	resourcesMap_.emplace(SRC::UI_BAR, std::move(res));
+
+	//ÉQÅ[ÉWâeUI
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "bar_shadow.png");
+	resourcesMap_.emplace(SRC::UI_BARSHADOW, std::move(res));
+
+	//ÉQÅ[ÉWUI
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleExpGage.png");
+	resourcesMap_.emplace(SRC::UI_CIRCLE, std::move(res));
+
+	//ÉQÅ[ÉWâeUI
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleGage.png");
+	resourcesMap_.emplace(SRC::UI_CIRCLESHADOW, std::move(res));
+
 	//âºãq
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/Model.mv1");
 	resourcesMap_.emplace(SRC::CUSTOMER, std::move(res));
