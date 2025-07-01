@@ -191,11 +191,6 @@ void StageManager::Init(void)
 	interact2D_ = std::make_unique<Interact2D>();
 	interact2D_->Init(); // 2Dインタラクト用の初期化
 
-	ui_ = std::make_unique<GaugeUI>(false,15.0f);
-	ui_->SetIsCircle(true); // 円形ゲージに設定
-	ui_->Init();
-	ui_->SetPos({0.0f,50.0f,0.0f}); // UIの位置を設定
-
 	ChangeMode(MODE::GAME_3D); // 初期モードを3Dゲームに設定
 }
 
@@ -203,7 +198,6 @@ void StageManager::Update(void)
 {
 	//更新ステップ
 	modeUpdate_();
-	ui_->Update(); // UIの更新
 	animationController_->Update();
 
 	interact2D_->Update(); // 2Dインタラクトの更新
@@ -259,9 +253,8 @@ void StageManager::Draw(void)
 	}
 
 	//interact2D_->Draw(); // 2Dインタラクトの描画
-	ui_->Draw(); // UIの描画
 #ifdef _DEBUG
-	DrawDebug();
+	//DrawDebug();
 #endif // _DEBUG
 }
 

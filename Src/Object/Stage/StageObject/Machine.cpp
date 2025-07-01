@@ -6,6 +6,7 @@
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../Object/Stage/StageManager.h"
+#include "../../UI/GaugeUI.h"
 #include "Machine.h"
 
 namespace {
@@ -68,6 +69,7 @@ void Machine::Interact(const std::string& objId)
 				cupPos.x += MACHINE_OFSET_X;	//少し右にずらす
 
 				obj->ItemPlaced(cupPos);
+				gaugeUI_->SetActive(true);
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}
 		}
@@ -77,11 +79,34 @@ void Machine::Interact(const std::string& objId)
 void Machine::UpdateInActive(void)
 {
 	SetInteractTime(COFFEE_PRODUCES_TIME);
+
+	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
+	bool hasPlacedCup = false;
+	for (const auto& obj : objects_)
+	{
+		if (obj->GetParam().id_ != HOT_COFFEE &&
+			obj->GetParam().id_ != ICE_COFFEE)continue;
+
+		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+			GetSpherePos(), GetSphereRad()) &&
+			obj->GetItemState() == ITEM_STATE::PLACED)
+		{
+			hasPlacedCup = true;
+			break;
+		}
+	}
+
+	if(!hasPlacedCup)
+	{
+		gaugeUI_->Reset();
+	}
 }
 
 void Machine::UpdateActive(void)
 {
 	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
+
+	gaugeUI_->Update();
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
@@ -107,15 +132,28 @@ void Machine::UpdateActive(void)
 	}
 }
 
+void Machine::Init(VECTOR pos)
+{
+	StageObject::Init(pos);
+
+	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
+	gaugeUI_->Init();
+	VECTOR uiPos = transform_.pos;
+	uiPos.y += 130.0f;	//UIの位置を調整
+	gaugeUI_->SetPos(uiPos); // UIの位置を設定
+}
+
 void Machine::Draw(void)
 {
-	int line = 3;	//行
-	int lineHeight = 30;	//行
+	//int line = 3;	//行
+	//int lineHeight = 30;	//行
 
-	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	// 変換成功
-	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-		L"コーヒーができるまで %2.f", param_.interactTime_);
+	//VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
+	//// 変換成功
+	//DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
+	//	L"コーヒーができるまで %2.f", param_.interactTime_);
+
+	gaugeUI_->Draw();	//ゲージUIを描画
 
 	StageObject::Draw();
 }

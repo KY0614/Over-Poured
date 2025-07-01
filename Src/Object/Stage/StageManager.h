@@ -10,7 +10,6 @@ class StageObject;
 class Player;
 class Interact2D;
 class AnimationController;
-class GaugeUI;
 
 class StageManager : public ActorBase
 {
@@ -132,8 +131,6 @@ private:
 	//カウンター用
 	std::unique_ptr<StageObject> counter_;
 	std::unique_ptr<StageObject> case_;
-
-	std::unique_ptr<GaugeUI> ui_;	//UI
 
 	std::unique_ptr<Interact2D> interact2D_;	//2Dインタラクト用
 

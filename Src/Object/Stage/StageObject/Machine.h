@@ -1,6 +1,8 @@
 #pragma once
 #include "../StageObject.h"
 
+class GaugeUI;
+
 class Machine : public StageObject
 {
 public:
@@ -12,6 +14,7 @@ public:
 		std::vector<std::unique_ptr<StageObject>>& object);
 	~Machine(void) = default;
 
+	void Init(VECTOR pos) override;
 	void Draw(void) override;
 
 	void Interact(const std::string& objId) override;
@@ -23,5 +26,7 @@ private:
 
 	//
 	std::vector<std::unique_ptr<StageObject>>& objects_;
+
+	std::unique_ptr<GaugeUI> gaugeUI_;
 };
 

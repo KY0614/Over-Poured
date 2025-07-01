@@ -7,7 +7,9 @@ GaugeUI::GaugeUI(bool isCircle, float activeTime):
 	activeTime_(activeTime), isCircle_(isCircle), currentTime_(0.0f)
 {
 	shadowImg_ = -1;
-	isActive_ = true;
+	circleImg_ = -1;
+	cShadowImg_ = -1;
+	isActive_ = false;
     alpha_ = 1.0f;
 } 
 
@@ -22,11 +24,15 @@ void GaugeUI::Init(void)
     if (!isCircle_) return;
     circleImg_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::UI_CIRCLE).handleId_;
+
+    cShadowImg_ = ResourceManager::GetInstance().Load(
+        ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
+
 }
 
 void GaugeUI::Update(void)
 {
-	if (!isActive_) return;
+	if (!isActive_)return;
 
 	currentTime_ += SceneManager::GetInstance().GetDeltaTime();
 	if (currentTime_ >= activeTime_) {
@@ -56,6 +62,8 @@ void GaugeUI::Draw(void)
 
 void GaugeUI::Reset(void)
 {
+    currentTime_ = 0.0f;         // ゲージの進捗をリセット（ゼロ）
+    isActive_ = false;        // 非表示・非アクティブに
 }
 
 void GaugeUI::DrawCircleGauge(float progress)
@@ -90,13 +98,11 @@ void GaugeUI::DrawCircleGauge(float progress)
         verts.push_back(v);
     }
 
-    // 背景の影は常にフル表示
-    DrawBillboard3D(pos_, 40.0f, 40.0f, 1.0f,0.0f, shadowImg_, false);
-
     // 扇型を描画
     for (int i = 1; i < (int)verts.size() - 1; ++i) 
     {
         VERTEX3D tri[3] = { verts[i], verts[i + 1], verts[0] };
+        DrawPolygon3D(tri, 2, shadowImg_,true);
         DrawPolygon3D(tri, 2,circleImg_,true);
     }
 }

@@ -18,8 +18,9 @@ public:
     void Reset(void);
 
 private:
-	int shadowImg_; // ‰e‚Ì‰æ‘œID
-	int circleImg_; // ‰~Œ`‚Ì‰æ‘œID
+	int shadowImg_;		// ‰e‚Ì‰æ‘œID
+	int circleImg_;		// ‰~Œ`‚Ì‰æ‘œID
+	int cShadowImg_;	// ‰~Œ`‚Ì‰e‰æ‘œID
 
     float activeTime_;  //Å‘å•\¦ŠÔ
     float currentTime_; // Œo‰ßŠÔ
