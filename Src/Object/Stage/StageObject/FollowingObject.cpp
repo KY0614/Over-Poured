@@ -11,9 +11,9 @@ FollowingObject::FollowingObject(const std::string objId,
 {
 }
 
-void FollowingObject::Init(VECTOR pos)
+void FollowingObject::Init(VECTOR pos, float rotY)
 {
-	StageObject::Init(pos);
+	StageObject::Init(pos, rotY);
 
 	//テーブルとオブジェクトの判定の邪魔にならないように
 	rad_ = 0.0f;

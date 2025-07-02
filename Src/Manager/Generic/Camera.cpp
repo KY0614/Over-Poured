@@ -1,6 +1,7 @@
 #include <math.h>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
+#include "../../Libs/ImGui/imgui.h"
 #include "../../Utility/AsoUtility.h"
 #include "../Generic/InputManager.h"
 #include "../../Object/Common/Transform.h"
@@ -68,7 +69,7 @@ void Camera::SetBeforeDraw(void)
 	//DXライブラリのカメラとEffekseerのカメラを同期する。
 	Effekseer_Sync3DSetting();
 
-	//UpdateDebugImGui();
+	UpdateDebugImGui();
 }
 
 void Camera::Draw(void)
@@ -205,7 +206,6 @@ void Camera::ProcessRot(void)
 	{
 		angles_.x = -LIMIT_X_DW_RAD;
 	}
-
 }
 
 void Camera::SetBeforeDrawFixedPoint(void)
@@ -231,4 +231,29 @@ void Camera::SetBeforeDrawFree(void)
 {
 	//カメラ操作
 	ProcessRot();
+}
+
+void Camera::UpdateDebugImGui(void)
+{
+	//ウィンドウタイトル&開始処理
+	ImGui::Begin("Camera");
+
+	//位置
+	ImGui::Text("position");
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Pos", &pos_.x);
+	ImGui::SliderFloat("PosX", &pos_.x, -500.0f, 1000.0f);
+	ImGui::SliderFloat("PosY", &pos_.y, -500.0f, 1000.0f);
+	ImGui::SliderFloat("PosZ", &pos_.z, -500.0f, 1000.0f);
+
+	//位置
+	ImGui::Text("target");
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("target", &targetPos_.x);
+	ImGui::SliderFloat("targetX", &targetPos_.x, -500.0f, 1000.0f);
+	ImGui::SliderFloat("targetY", &targetPos_.y, -500.0f, 1000.0f);
+	ImGui::SliderFloat("targetZ", &targetPos_.z, -500.0f, 1000.0f);
+
+	//終了処理
+	ImGui::End();
 }

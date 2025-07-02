@@ -18,27 +18,26 @@ public:
 	//オブジェクト関連
 
 	//テーブル関連
-	static constexpr int TABLE_COLUMN_NUM = 3;		//テーブルの数
-	static constexpr int TABLE_ROW_FRONT_NUM = 5;	//テーブルの数
-	static constexpr int TABLE_ROW_BACK_NUM = 2;	//テーブルの数
+	static constexpr int TABLE_COLUMN_NUM = 4;		//テーブルの数
+	static constexpr int TABLE_ROW_BACK_NUM = 4;	//テーブルの数
+	static constexpr int TABLE_ROW_FRONT_NUM = 2;	//テーブルの数
 
-	static constexpr float TABLE_WIDTH = 94.0f;	//テーブルの横幅
+	static constexpr float TABLE_WIDTH = 92.5f;	//テーブルの横幅
 
 	//座標
 
-	static constexpr VECTOR TABLE_POS_BACK = { -140.0f, 0.0f, -175.0f };	//テーブルの座標
-	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 190.0f };	//テーブルの座標
-	static constexpr VECTOR COLUMN_TABLE_POS = { -250.0f, 0.0f, -98.0f };	//列テーブルの座標
+	static constexpr VECTOR TABLE_POS_BACK = { -150.0f, 0.0f, -270.0f };	//テーブルの座標(手前側）
+	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 190.0f };	//テーブルの座標（奥側）
+	static constexpr VECTOR COLUMN_TABLE_LEFT_POS = { -250.0f, 0.0f, -192.0f };		//列（左）テーブルの座標
+	static constexpr VECTOR COLUMN_TABLE__RIGHT_POS = { 320.0f, 0.0f, -192.0f };	//列(右）テーブルの座標
 	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };			//カウンターの座標
 	static constexpr VECTOR CASE_POS = { -57.0f, 0.0f, 190.0f };			//ショーケースの座標
-	static constexpr VECTOR DUST_BOX_POS = { 320.0f, 0.0f, -173.0f };		//ゴミ箱の座標
 
 	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };	//コーヒーマシンの座標
 	static constexpr VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };	//ホット用カップの座標
 	static constexpr VECTOR CUPICE_POS = { 45.0f, 76.0f, -175.0f };		//アイス用カップの座標
 	static constexpr VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };	//アイスディスペンサーの座標
-	static constexpr VECTOR LIBS_POS = { 74.0f, 76.0f, -175.0f };		//カップの蓋の座標
-	static constexpr VECTOR DUSTBOX_POS = { 227.0f, 0.0f, -175.0f };	//ゴミ箱の座標
+	static constexpr VECTOR DUSTBOX_POS = { 240.0f, 0.0f, -270.0f };	//ゴミ箱の座標
 
 	//アニメーション種別
 	enum class ANIM_TYPE
@@ -91,6 +90,8 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	void ResetServeData(void);
+
+	int GetTableNum(void) const { return static_cast<int>(tables_.size()); }
 
 	Transform GetCounterTran(void) const;
 	Transform GetTableTran(int index) const;

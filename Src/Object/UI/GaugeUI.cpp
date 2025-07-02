@@ -1,5 +1,6 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/Generic/SceneManager.h"
+#include "../../Manager/Generic/Camera.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "GaugeUI.h"
 
@@ -11,19 +12,25 @@ GaugeUI::GaugeUI(bool isCircle, float activeTime):
 	cShadowImg_ = -1;
 	isActive_ = false;
     alpha_ = 1.0f;
+
+    width_ = 0.0f;
+    height_ = 0.0f;
 } 
 
 void GaugeUI::Init(void)
 {
-	uiImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::UI_BAR).handleId_;
+    uiImg_ = ResourceManager::GetInstance().Load(
+        ResourceManager::SRC::UI_BAR).handleId_;
 
-	shadowImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::UI_BARSHADOW).handleId_;
+    shadowImg_ = ResourceManager::GetInstance().Load(
+        ResourceManager::SRC::UI_BARSHADOW).handleId_;
+
+    width_ = 100.0f;    // 長方形ゲージの幅
+    height_ = 20.0f;    // 長方形ゲージの高さ
 
     if (!isCircle_) return;
     circleImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::UI_CIRCLE).handleId_;
+        ResourceManager::SRC::UI_CIRCLE).handleId_;
 
     cShadowImg_ = ResourceManager::GetInstance().Load(
         ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
@@ -35,7 +42,8 @@ void GaugeUI::Update(void)
 	if (!isActive_)return;
 
 	currentTime_ += SceneManager::GetInstance().GetDeltaTime();
-	if (currentTime_ >= activeTime_) {
+	if (currentTime_ >= activeTime_) 
+    {
 		currentTime_ = activeTime_;
 	}
 }
@@ -102,21 +110,46 @@ void GaugeUI::DrawCircleGauge(float progress)
     for (int i = 1; i < (int)verts.size() - 1; ++i) 
     {
         VERTEX3D tri[3] = { verts[i], verts[i + 1], verts[0] };
-        DrawPolygon3D(tri, 2, shadowImg_,true);
+        DrawPolygon3D(tri, 2, cShadowImg_,true);
         DrawPolygon3D(tri, 2,circleImg_,true);
     }
 }
 
 void GaugeUI::DrawRectGauge(float progress)
 {
-    const float width = 100.0f;
-    const float height = 20.0f;
+    const float width = width_;
+    const float height = height_;
     float drawWidth = width * progress;
 
     COLOR_U8 dif = GetColorU8(255, 255, 255, 255);
     COLOR_U8 spec = GetColorU8(0, 0, 0, 0);
     auto MakeQuad = [&](float drawWidth, int texHandle) {
         VERTEX3D verts[6];
+
+        //// カメラの情報取得
+        //VECTOR cameraPos = SceneManager::GetInstance().GetCamera().lock()->GetPos();
+        //VECTOR look = VNorm(VSub(pos_, cameraPos)); // カメラ→UIの方向
+
+        //VECTOR up = VGet(0, 1.0f, 0);
+        //VECTOR right = VNorm(VCross(up, look));
+        //up = VNorm(VCross(look, right));
+
+        //// 長さ調整
+        //right = VScale(right, drawWidth);              // ゲージの幅分だけ右方向
+        //VECTOR halfUp = VScale(up, height * 0.5f); // 上下半分
+
+        //// 頂点計算（左上・右上・左下・右下）
+        //VECTOR leftBottom = VSub(pos_, halfUp);                // 左下
+        //VECTOR leftTop = VAdd(pos_, halfUp);                // 左上
+        //VECTOR rightBottom = VAdd(leftBottom, right);          // 右下
+        //VECTOR rightTop = VAdd(leftTop, right);             // 右上
+
+        //verts[0] = { leftTop,    look, dif, spec, 0.0f, 0.0f };
+        //verts[1] = { rightTop,   look, dif, spec, 1.0f, 0.0f };
+        //verts[2] = { leftBottom, look, dif, spec, 0.0f, 1.0f };
+        //verts[3] = verts[2];
+        //verts[4] = verts[1];
+        //verts[5] = { rightBottom, look, dif, spec, 1.0f, 1.0f };
 
         VERTEX3D v0 = {
             VGet(-width / 2, height / 2, 0),

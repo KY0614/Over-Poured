@@ -27,15 +27,15 @@ StageObject::~StageObject(void)
 {
 }
 
-void StageObject::Init(VECTOR pos)
+void StageObject::Init(VECTOR pos,float rotY)
 {
 	//作成するオブジェクトのパラメータをjsonファイルから読み込む
 	object_ = StageObjectLibrary::LoadData(objId_);
 	param_ = object_.second;
 
 	// 文字列をSRCに変換してモデル設定
-	//ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(param_.id_);
-	ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(objId_);
+	ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(param_.id_);
+	//ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(objId_);
 
 	//モデルの基本設定
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
@@ -43,7 +43,7 @@ void StageObject::Init(VECTOR pos)
 	transform_.pos = pos;
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
+		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(rotY), 0.0f });
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 
 	cube_ = std::make_unique<Cube>(transform_);
@@ -176,6 +176,10 @@ void StageObject::Interact(const std::string& objId)
 }
 
 void StageObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
+{
+}
+
+void StageObject::AddStock(int addStockNum)
 {
 }
 

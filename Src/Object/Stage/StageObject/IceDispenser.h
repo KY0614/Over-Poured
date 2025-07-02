@@ -1,16 +1,20 @@
 #pragma once
 #include "../StageObject.h"
 
+class GaugeUI;
+
 class IceDispenser : public StageObject
 {
 public:
 
-	static constexpr float COFFEE_PRODUCES_TIME = 3.0f;
+	static constexpr float ICE_PRODUCES_TIME = 3.0f;
 
 	IceDispenser(const std::string objId, const float width,
 		const float height, const float depth, Player& player,
 		std::vector<std::unique_ptr<StageObject>>& object);
 	~IceDispenser(void) = default;
+
+	void Init(VECTOR pos, float rotY = 0.0f)override;
 
 	void Draw(void) override;
 
@@ -24,6 +28,6 @@ private:
 	//
 	std::vector<std::unique_ptr<StageObject>>& objects_;
 
-	//void SetProduceTime(float time) { param_.interactTime_ = time; }
+	std::unique_ptr<GaugeUI> gaugeUI_;
 };
 

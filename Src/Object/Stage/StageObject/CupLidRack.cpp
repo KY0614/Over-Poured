@@ -3,6 +3,7 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Player.h"
+#include "../../UI/GaugeUI.h"
 #include "CupLidRack.h"
 
 namespace {
@@ -46,27 +47,43 @@ void CupLidRack::Interact(const std::string& objId)
 				param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 				isActioned_ = true;
 				player_.ChangeState(Player::STATE::STOP);
+ 				gaugeUI_->SetActive(true);
 			}
 			else
 			{
-				param_.interactTime_ = 3.0f;
+				SetInteractTime(LID_PRODUCES_TIME);
 				isActioned_ = false;
 				player_.ChangeState(Player::STATE::PLAY);
+				gaugeUI_->Reset();
 			}
 		}
 	}
+}
+
+void CupLidRack::Init(VECTOR pos, float rotY)
+{
+	StageObject::Init(pos,rotY);
+
+	gaugeUI_ = std::make_unique<GaugeUI>(false, LID_PRODUCES_TIME);
+	gaugeUI_->Init();
+	VECTOR uiPos = transform_.pos;
+	uiPos.y += 50.0f;	//UIの位置を調整
+	gaugeUI_->SetPos(uiPos); // UIの位置を設定
 }
 
 void CupLidRack::Update(void)
 {
 	if (!isActioned_)
 	{
-		param_.interactTime_ = 3.0f;
+		SetInteractTime(LID_PRODUCES_TIME);
 		player_.ChangeState(Player::STATE::PLAY);
 	}
+		gaugeUI_->Update();
+	
 	if (param_.interactTime_ <= 0.0f)
 	{
 		isActioned_ = false;
+		gaugeUI_->Reset();
 	}
 
 	transform_.Update();
@@ -74,14 +91,17 @@ void CupLidRack::Update(void)
 
 void CupLidRack::Draw(void)
 {
-	int line = 4;	//行
-	int lineHeight = 30;	//行
-	//DebugDrawFormat::FormatStringRight(L"LidTime %2.f", param_.interactTime, line, lineHeight);
-	
-	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	// 変換成功
-	DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-		L"蓋をする %2.f", param_.interactTime_);
-	
+	//int line = 4;	//行
+	//int lineHeight = 30;	//行
+	////DebugDrawFormat::FormatStringRight(L"LidTime %2.f", param_.interactTime, line, lineHeight);
+	//
+	//VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
+	//// 変換成功
+	//DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
+	//	L"蓋をする %2.f", param_.interactTime_);
+
 	StageObject::Draw();
+
+	gaugeUI_->Draw();
+
 }

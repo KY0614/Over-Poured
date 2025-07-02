@@ -17,5 +17,11 @@ public:
 	void Draw(void) override;
 
 private:
+	//メニューの文字列リスト
+	std::vector<std::wstring> selectList_;
+
+	int currentIdx_;
+
+	void DebugDraw(void);
 };
 

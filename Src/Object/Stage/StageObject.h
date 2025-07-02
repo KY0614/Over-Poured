@@ -36,7 +36,7 @@ public:
 
 	~StageObject(void);
 
-	virtual void Init(VECTOR pos);
+	virtual void Init(VECTOR pos,float rotY = 0.0f);
 	virtual void Update(void)override;
 	virtual void Draw(void)override;
 
@@ -137,6 +137,13 @@ public:
 	/// <returns>true:乗っている、false:乗っていない</returns>
 	bool IsLidOn(void) const { return isLid_; }
 
+	/// <summary>
+	/// ラックに在庫があるかどうか
+	/// </summary>
+	/// <param name="">在庫がないときはfalseを返す</param>
+	/// <returns>ture:ある　false:ない</returns>
+	bool GetHasStock(void) const { return hasStock_; }
+
 	Order::DRINK GetDrinkType(void) const { return drink_; }
 	Order::SWEETS GetSweetsType(void) const { return sweets_; }
 
@@ -166,6 +173,7 @@ public:
 	/// <param name="object"></param>
 	virtual void PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object);
 
+	virtual void AddStock(int addStockNum);
 
 	/// <summary>
 	/// 座標や拡大率を調整する用のGUI
@@ -191,13 +199,23 @@ protected:
 	//当たり判定用球体
 	std::unique_ptr<Sphere> sphere_;
 
-	float rad_;		//半径
+	//当たり判定用球体の半径
+	float rad_;
 
-	//
+	//プレイヤーがアクションを行ったかどうか
 	bool isActioned_;	
 
 	//蓋をしているかどうか(コーヒー以外のオブジェクトはfalse）
 	bool isLid_;
+
+	//ラック用------------------------
+	
+	//オブジェクトの残り個数
+	int stockCnt_;
+
+	bool hasStock_;
+
+	//--------------------------------
 
 	Order::DRINK drink_;
 	Order::SWEETS sweets_;

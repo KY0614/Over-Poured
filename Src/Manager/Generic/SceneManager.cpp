@@ -114,7 +114,7 @@ void SceneManager::Update(void)
 	//ƒJƒƒ‰XV
 	camera_->Update();
 
-	UpdateDebugImGui();
+	//UpdateDebugImGui();
 }
 
 void SceneManager::Draw(void)

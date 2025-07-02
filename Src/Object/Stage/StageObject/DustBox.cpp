@@ -40,20 +40,23 @@ void DustBox::Interact(const std::string& objId)
 		}
 	}
 	
-	//氷入りカップの場合は氷も削除
-	ItemObject* cupWithIce = dynamic_cast<ItemObject*>(objects_[coffeeIndex].get());
-	if (cupWithIce->IsIce())
+	if (coffeeIndex != -1)
 	{
-		//蓋のインデックスを探す
-		for (int i = 0; i < objects_.size(); ++i)
+		//氷入りカップの場合は氷も削除
+		ItemObject* cupWithIce = dynamic_cast<ItemObject*>(objects_[coffeeIndex].get());
+		if (cupWithIce->IsIce())
 		{
-			//dynamic_castでFollowingObject型に変換し、親参照を比較
-			//蓋を削除する
-			FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
-			if (follower && &(follower->GetFollowedObj()) == objects_[coffeeIndex].get())
+			//蓋のインデックスを探す
+			for (int i = 0; i < objects_.size(); ++i)
 			{
-				objects_.erase(objects_.begin() + i);
-				continue; // eraseしたのでiは進めず次のループへ
+				//dynamic_castでFollowingObject型に変換し、親参照を比較
+				//蓋を削除する
+				FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
+				if (follower && &(follower->GetFollowedObj()) == objects_[coffeeIndex].get())
+				{
+					objects_.erase(objects_.begin() + i);
+					continue; // eraseしたのでiは進めず次のループへ
+				}
 			}
 		}
 	}

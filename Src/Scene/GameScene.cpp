@@ -47,7 +47,7 @@ void GameScene::Init(void)
 
 	//ステージのコライダーを追加
 	player_->AddCollider(stage_->GetCounterTran().collider);
-	int tableNum = 10;
+	int tableNum = stage_->GetTableNum();
 	for(int i = 0; i < tableNum; ++i)
 	{
 		player_->AddCollider(stage_->GetTableTran(i).collider);
@@ -97,21 +97,6 @@ void GameScene::Update(void)
 	}
 
 #ifdef _DEBUG
-
-	//VECTOR spPos = { 221.0f, 0.0f, 139.0f };
-	//float r = 30.0f;
-	//if (!customer_->GetIsMoving() &&
-	//	AsoUtility::IsHitSpheres(spPos, r, player_->GetCapsule().GetPosDown(), 20))
-	//{
-	//	if (ins.IsTrgDown(KEY_INPUT_SPACE))
-	//	{
-	//		//score_ += customer_->CheckServeAndOrder(stage_->GetServeData());
-	//		//stage_->ResetServeData();
-	//		//player_->SurveItem();
-	//		//score_ += customer_->CheckServeAndOrder(player_->GetPlayerItem());
-	//		//customer_->IsServe();
-	//	}
-	//}
 
 	if (stage_->IsServed())
 	{

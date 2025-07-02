@@ -1,9 +1,12 @@
 #pragma once
 #include "../StageObject.h"
 
+class GaugeUI;
+
 class CupLidRack : public StageObject
 {
 public:
+	static constexpr float LID_PRODUCES_TIME = 3.0f;
 
 	CupLidRack(const std::string objId, const float width,
 		const float height, const float depth, Player& player,
@@ -13,11 +16,15 @@ public:
 
 	void Interact(const std::string& objId) override;
 
+	void Init(VECTOR pos, float rotY = 0.0f)override;
 	void Update(void)override;
 	void Draw(void)override;
 
 private:
 
 	std::vector<std::unique_ptr<StageObject>>& objects_;
+
+	//ÉQÅ[ÉWÇÃUI
+	std::unique_ptr<GaugeUI> gaugeUI_;
 };
 

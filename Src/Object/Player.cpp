@@ -45,7 +45,7 @@ void Player::Init(void)
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::CUSTOMER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = { 0.0f, 30.0f, 0.0f };
+	transform_.pos = { -60.0f, 30.0f, 0.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
@@ -363,77 +363,77 @@ void Player::ProcessMove(void)
 	//WASDで位置を変える
 	VECTOR dir = AsoUtility::VECTOR_ZERO;
 	movePow_ = AsoUtility::VECTOR_ZERO;
-	if (ins.IsInputPressed("Up")) { dir = cameraRot.GetForward();  rotRad = AsoUtility::Deg2RadF(0.0f); }
-	if (ins.IsInputPressed("Left")){ dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); }
-	if (ins.IsInputPressed("Down")){ dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
-	if (ins.IsInputPressed("Right")){dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f);	}
+	//if (ins.IsInputPressed("Up")) { dir = cameraRot.GetForward();  rotRad = AsoUtility::Deg2RadF(0.0f); }
+	//if (ins.IsInputPressed("Left")){ dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); }
+	//if (ins.IsInputPressed("Down")){ dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
+	//if (ins.IsInputPressed("Right")){dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f);	}
 
-	//if (ins.IsInputPressed("Up"))	dir.z += 1.0f;
-	//if (ins.IsInputPressed("Down")) dir.z -= 1.0f;
-	//if (ins.IsInputPressed("Right"))dir.x += 1.0f;
-	//if (ins.IsInputPressed("Left")) dir.x -= 1.0f;
+	if (ins.IsInputPressed("Up"))	dir.z += 1.0f;
+	if (ins.IsInputPressed("Down")) dir.z -= 1.0f;
+	if (ins.IsInputPressed("Right"))dir.x += 1.0f;
+	if (ins.IsInputPressed("Left")) dir.x -= 1.0f;
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{
-		//移動スピード
-		speed_ = SPEED_MOVE;
-		if (ins.IsInputPressed("Dash"))
-		{
-			speed_ = SPEED_RUN;
-		}
-
-		//dir = VNorm(dir); //方向を正規化
-
-		//// カメラのY軸角度だけ取得（XZ平面の回転だけで十分）
-		//float camYRad = mainCamera->GetQuaRot().y; // ←ここはカメラのY軸回転角（ラジアン）
-
-		//// 回転行列を使って入力ベクトルを回す（XZ平面）
-		//float sinY = sinf(camYRad);
-		//float cosY = cosf(camYRad);
-		//VECTOR worldDir = VGet(
-		//	dir.x * cosY - dir.z * sinY,
-		//	0.0f,
-		//	dir.x * sinY + dir.z * cosY
-		//);
-
-		//// 移動速度の設定
-		//speed_ = ins.IsInputPressed("Dash") ? SPEED_RUN : SPEED_MOVE;
-		//moveDir_ = worldDir;
-		//movePow_ = VScale(worldDir, speed_);
-
-		//// プレイヤーの向きを移動方向に合わせる
-		//double rotRad = atan2(worldDir.x, worldDir.z); // ラジアン
-		//SetGoalRotate(rotRad);
-
-		//// アニメーション（ジャンプ中は切り替えない）
-		//if (IsEndLanding())
+		////移動スピード
+		//speed_ = SPEED_MOVE;
+		//if (ins.IsInputPressed("Dash"))
 		//{
-		//	if (speed_ == SPEED_RUN)
-		//		animationController_->Play((int)ANIM_TYPE::FAST_RUN);
-		//	else
-		//		animationController_->Play((int)ANIM_TYPE::RUN);
+		//	speed_ = SPEED_RUN;
 		//}
 
-		//移動量
-		movePow_ = VScale(dir, speed_);
+		dir = VNorm(dir); //方向を正規化
 
-		//回転処理
+		// カメラのY軸角度だけ取得（XZ平面の回転だけで十分）
+		float camYRad = mainCamera->GetQuaRot().y; // ←ここはカメラのY軸回転角（ラジアン）
+
+		// 回転行列を使って入力ベクトルを回す（XZ平面）
+		float sinY = sinf(camYRad);
+		float cosY = cosf(camYRad);
+		VECTOR worldDir = VGet(
+			dir.x * cosY - dir.z * sinY,
+			0.0f,
+			dir.x * sinY + dir.z * cosY
+		);
+
+		// 移動速度の設定
+		speed_ = ins.IsInputPressed("Dash") ? SPEED_RUN : SPEED_MOVE;
+		moveDir_ = worldDir;
+		movePow_ = VScale(worldDir, speed_);
+
+		// プレイヤーの向きを移動方向に合わせる
+		double rotRad = atan2(worldDir.x, worldDir.z); // ラジアン
 		SetGoalRotate(rotRad);
 
+		// アニメーション（ジャンプ中は切り替えない）
 		if (IsEndLanding())
 		{
-			//アニメーション
-			if (ins.IsInputPressed("Dash"))
-			{
-				//速く走るアニメーション
+			if (speed_ == SPEED_RUN)
 				animationController_->Play((int)ANIM_TYPE::FAST_RUN);
-			}
 			else
-			{
-				//走るアニメーション
 				animationController_->Play((int)ANIM_TYPE::RUN);
-			}
 		}
+
+		////移動量
+		//movePow_ = VScale(dir, speed_);
+
+		////回転処理
+		//SetGoalRotate(rotRad);
+
+		//if (IsEndLanding())
+		//{
+		//	//アニメーション
+		//	if (ins.IsInputPressed("Dash"))
+		//	{
+		//		//速く走るアニメーション
+		//		animationController_->Play((int)ANIM_TYPE::FAST_RUN);
+		//	}
+		//	else
+		//	{
+		//		//走るアニメーション
+		//		animationController_->Play((int)ANIM_TYPE::RUN);
+		//	}
+		//}
 	}
 	else
 	{

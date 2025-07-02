@@ -46,6 +46,7 @@
     "interactable": true,
     "placeable": false,
     "carryable": false,
+    "interactTime": 3.0,
     "acceptedItems":[],
     "produces": ["Sweets_Choco"]
     },
@@ -56,6 +57,7 @@
     "interactable": true,
     "placeable": false,
     "carryable": false,
+    "interactTime": 3.0,
     "acceptedItems":[],
     "produces": ["Sweets_Strawberry"]
     },
@@ -114,6 +116,7 @@
     "interactable": true,
     "placeable": false,
     "carryable": false,
+    "interactTime": 3.0,
     "acceptedItems":[],
     "produces": ["Hot_Cup"]
     },
@@ -124,6 +127,7 @@
     "interactable": true,
     "placeable": false,
     "carryable": false,
+    "interactTime": 3.0,
     "acceptedItems":[],
     "produces": ["Ice_Cup"]
     },

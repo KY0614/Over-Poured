@@ -106,29 +106,53 @@ void StageManager::Init(void)
 	InitAnimation(); // アニメーションの初期化
 
 	//横のテーブル群(手前)
-	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
+	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
 	{
 		VECTOR firstPos = TABLE_POS_BACK;
 		firstPos.x += (x * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_,objects_));
-		tables_.back()->Init(firstPos);
-		//tables_.back()->SetPos(firstPos);
-		tables_.back()->SetQuaRotY(180.0f);
+		tables_.back()->Init(firstPos, 180.0f);
 	}
 
-	//縦のテーブル群
-	for (int z = TABLE_ROW_FRONT_NUM; z < TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM; z++)
+	//縦のテーブル群(左側）
+	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
 	{
-		VECTOR firstPos = COLUMN_TABLE_POS;
-		firstPos.z += ((z - TABLE_ROW_FRONT_NUM) * TABLE_WIDTH);
+		VECTOR firstPos = COLUMN_TABLE_LEFT_POS;
+		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
-		tables_.back()->Init(firstPos);
-		//tables_.back()->SetPos(firstPos);
-		tables_.back()->SetQuaRotY(-90.0f);
+		tables_.back()->Init(firstPos, -90.0f);
+	}
+
+	//縦のテーブル群(右側）
+	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
+	{
+		VECTOR firstPos = COLUMN_TABLE__RIGHT_POS;
+		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
+		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
+		tables_.back()->Init(firstPos, 90.0f);
+	}
+
+	//真ん中のテーブル群
+	for (int i = 0; i < 2; ++i)
+	{
+		VECTOR pos = { -20.0f,0.0f,-100.0f };
+		pos.x += i * 90.0f;
+		//奥側のテーブル２つ
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
+		tables_.back()->Init(pos, 0.0f);
+	}
+	for (int i = 0; i < 2; ++i)
+	{
+		VECTOR pos = { -20.0f,0.0f,-100.0f };
+		pos.x += i * 90.0f;
+		pos.z += 60.0f;
+		//手前側のテーブル２つ
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
+		tables_.back()->Init(pos, 180.0f);
 	}
 
 	//横のテーブル群(奥側)
-	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
+	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
 	{
 		VECTOR firstPos = TABLE_POS_FRONT;
 		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
@@ -140,12 +164,11 @@ void StageManager::Init(void)
 	counter_ = std::make_unique<Table>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
 	counter_->Init(COUNTER_POS);
 
-	VECTOR pos = tables_[TABLE_ROW_FRONT_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
+	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
 
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init(pos);
-	objects_.back()->SetQuaRotY(-90.0f);
+	objects_.back()->Init(pos, -90.0f);
 	
 	//アイス用カップのラック
 	pos = tables_[TABLE_COLUMN_NUM]->GetTopCenter();
@@ -171,21 +194,19 @@ void StageManager::Init(void)
 	pos = tables_[5]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
 		 player_,objects_));
-	objects_.back()->Init(pos);
-	objects_.back()->SetQuaRotY(-90.0f);
+	objects_.back()->Init(pos,-90.0f);
 
 	//アイスディスペンサー
-	pos = tables_[4]->GetTopCenter();
+	pos = tables_[10]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
-	objects_.back()->Init(pos);
-	objects_.back()->SetQuaRotY(-180.0f);
+	objects_.back()->Init(pos,90.0f);
 
 	//ゴミ箱
 	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
-	objects_.back()->Init(DUST_BOX_POS);
-	objects_.back()->SetQuaRotY(-180.0f);
+	objects_.back()->Init(DUSTBOX_POS, -180.0f);
+	objects_.back()->SetScale({ 1.0f,0.8f,1.0f });
 	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
 
 	interact2D_ = std::make_unique<Interact2D>();
@@ -202,11 +223,15 @@ void StageManager::Update(void)
 
 	interact2D_->Update(); // 2Dインタラクトの更新
 
-	if (animationController_->IsEnd())
-	{
-		//アニメーションが終わったらマシンモードに切り替え
-		animationController_->Play((int)ANIM_TYPE::IDLE);
-	}
+	//if (animationController_->IsEnd() && animationController_->)
+	//{
+	//	//アニメーションが終わったらマシンモードに切り替え
+	//	animationController_->Play((int)ANIM_TYPE::IDLE);
+	//}
+	//else {
+	//	//生成アニメーション
+	//	animationController_->Play((int)ANIM_TYPE::CREATE);
+	//}
 
 	auto& ins = InputManager::GetInstance();
 	if(ins.IsTrgDown(KEY_INPUT_Q))
@@ -761,6 +786,16 @@ void StageManager::Update3DGame(void)
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)
 	{
+		//ラックに在庫がないときの処理
+		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
+			!obj->GetHasStock() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			obj->AddStock(3);
+			break;
+		}
+
 		//プレイヤーが何も持っていないときの処理
 		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
@@ -840,22 +875,22 @@ void StageManager::DrawDebug(void)
 	//DebugDrawFormat::FormatString(L"boolSize : %d",
 	//		isServedItems_.size(), line, lineHeight);
 		
-	DebugDrawFormat::FormatString(L"back   : %s",
-		StringUtility::StringToWstring(objects_.back()->GetParam().id_).c_str(), line, lineHeight);
-	
-	int size = static_cast<int>(objects_.size());
-	DebugDrawFormat::FormatString(L"back -1  : %s",
-		StringUtility::StringToWstring(objects_[size -2]->GetParam().id_).c_str(), line, lineHeight);
-		
-	DebugDrawFormat::FormatString(L"back -2  : %s",
-		StringUtility::StringToWstring(objects_[size -3]->GetParam().id_).c_str(), line, lineHeight);
-		
-	DebugDrawFormat::FormatString(L"back -3  : %s",
-		StringUtility::StringToWstring(objects_[size -4]->GetParam().id_).c_str(), line, lineHeight);	
-		
-	DebugDrawFormat::FormatString(L"back -4  : %s",
-		StringUtility::StringToWstring(objects_[size -5]->GetParam().id_).c_str(), line, lineHeight);
-		
+	//DebugDrawFormat::FormatString(L"back   : %s",
+	//	StringUtility::StringToWstring(objects_.back()->GetParam().id_).c_str(), line, lineHeight);
+	//
+	//int size = static_cast<int>(objects_.size());
+	//DebugDrawFormat::FormatString(L"back -1  : %s",
+	//	StringUtility::StringToWstring(objects_[size -2]->GetParam().id_).c_str(), line, lineHeight);
+	//	
+	//DebugDrawFormat::FormatString(L"back -2  : %s",
+	//	StringUtility::StringToWstring(objects_[size -3]->GetParam().id_).c_str(), line, lineHeight);
+	//	
+	//DebugDrawFormat::FormatString(L"back -3  : %s",
+	//	StringUtility::StringToWstring(objects_[size -4]->GetParam().id_).c_str(), line, lineHeight);	
+	//	
+	//DebugDrawFormat::FormatString(L"back -4  : %s",
+	//	StringUtility::StringToWstring(objects_[size -5]->GetParam().id_).c_str(), line, lineHeight);
+	//	
 	//size_t size = objects_.size();
 	////蓋生成数確認用
 	//DebugDrawFormat::FormatString(L"end - 2 : %s",
@@ -902,7 +937,7 @@ void StageManager::DrawDebug(void)
 	//}
 
 	//テーブル番号を表示
-	for (int i = 0; i < TABLE_COLUMN_NUM + TABLE_ROW_FRONT_NUM - 1; i++)
+	for (int i = 0; i < (TABLE_COLUMN_NUM * 2) + TABLE_ROW_BACK_NUM; i++)
 	{
 		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
 		// 変換成功

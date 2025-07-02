@@ -132,9 +132,9 @@ void Machine::UpdateActive(void)
 	}
 }
 
-void Machine::Init(VECTOR pos)
+void Machine::Init(VECTOR pos, float rotY)
 {
-	StageObject::Init(pos);
+	StageObject::Init(pos,rotY);
 
 	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
 	gaugeUI_->Init();
@@ -153,7 +153,8 @@ void Machine::Draw(void)
 	//DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
 	//	L"ÉRÅ[ÉqÅ[Ç™Ç≈Ç´ÇÈÇ‹Ç≈ %2.f", param_.interactTime_);
 
+	StageObject::Draw();
+
 	gaugeUI_->Draw();	//ÉQÅ[ÉWUIÇï`âÊ
 
-	StageObject::Draw();
 }

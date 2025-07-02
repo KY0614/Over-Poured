@@ -166,7 +166,7 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::STAGE, std::move(res));
 
 	//カウンター
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/counter.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/counter_B.mv1");
 	resourcesMap_.emplace(SRC::COUNTER, std::move(res));
 
 	//テーブル

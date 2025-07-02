@@ -15,7 +15,9 @@ public:
 
 	void SetActiveTime(const float time) { activeTime_ = time; }
 	void SetIsCircle(const bool flag) { isCircle_ = flag; }
-    void Reset(void);
+	void SetUISize(const float width, const float height) { width_ = width; height_ = height; }
+
+	void Reset(void);
 
 private:
 	int shadowImg_;		// 影の画像ID
@@ -25,6 +27,9 @@ private:
     float activeTime_;  //最大表示時間
     float currentTime_; // 経過時間
     bool isCircle_;     // true: 円形, false: 長方形
+
+	float width_;  // UIの幅
+	float height_; // UIの高さ
 
 	void DrawCircleGauge(float progress);
 	void DrawRectGauge(float progress);
