@@ -145,6 +145,7 @@ void RackObject::Init(VECTOR pos, float rotY)
 
 	//srcTypeが設定されているなら、余計な処理をしない
 	if (srcType != ResourceManager::SRC::NONE)return;
+
 	//設定されていなかったらカップモデルを設定する
 	if (param_.id_ == "Cup_Hot_Rack")
 	{
