@@ -178,19 +178,19 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::REGISTER, std::move(res));
 
 	//チョコ用ラック
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/chocoRack.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/SweetsRack.mv1");
 	resourcesMap_.emplace(SRC::CHOCO_RACK, std::move(res));
 
 	//スイーツ(チョコ)
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/sweets_choco.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/ChocoSweets.mv1");
 	resourcesMap_.emplace(SRC::SWEETS_CHOCO, std::move(res));
 
 	//ベリー用ラック
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/berryRack.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/SweetsRack.mv1");
 	resourcesMap_.emplace(SRC::BERRY_RACK, std::move(res));
 
 	//スイーツ（ベリー）
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/sweets_berry.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/BerrySweets.mv1");
 	resourcesMap_.emplace(SRC::SWEETS_BERRY, std::move(res));
 
 	//スイーツショーケース

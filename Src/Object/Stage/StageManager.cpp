@@ -263,7 +263,7 @@ void StageManager::Draw(void)
 
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
 	MV1DrawModel(transform_.modelId);
-	MV1DrawModel(caseTran_.modelId);
+	//MV1DrawModel(caseTran_.modelId);
 
 	for (const auto& table : tables_)
 	{
@@ -792,7 +792,16 @@ void StageManager::Update3DGame(void)
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
-			obj->AddStock(3);
+			if(obj->GetParam().id_ == HOT_CUP_RACK || 
+				obj->GetParam().id_ == ICE_CUP_RACK)
+			{
+				obj->AddStock(StageObject::CUP_STOCK_MAX);
+			}
+			else if (obj->GetParam().id_ == BERRY_SWEETSRACK ||
+				obj->GetParam().id_ == CHOCO_SWEETSRACK)
+			{
+				obj->AddStock(StageObject::SWEETS_STOCK_MAX);
+			}
 			break;
 		}
 

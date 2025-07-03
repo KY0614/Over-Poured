@@ -17,6 +17,19 @@ public:
 	static constexpr float DISPENSER_OFSET_X = 15.0f;	
 	static constexpr float MACHINE_OFSET_Y = 16.0f;	
 
+	//ラックの最大在庫数
+	static constexpr int SWEETS_STOCK_MAX = 4;	//スイーツのラックの最大在庫数
+	static constexpr int CUP_STOCK_MAX = 5;		//カップのラックの最大在庫数
+
+	//スイーツの追加間隔
+	static constexpr float SWEETS_ADD_INTERVAL = 0.7f;	
+
+	static constexpr float SWEETS_HALF_WIDTH = 18.0f;
+	static constexpr float SWEETS_HEIGHT_OFFSET = 12.0f;
+	static constexpr float SWEETS_Z_FRONT_OFFSET = 2.0f;
+	static constexpr float SWEETS_Z_BACK_OFFSET = -19.0f;
+	static constexpr float SWEETS_ROT_X = 40.0f;
+
 	//アイテムオブジェクトの状態
 	enum class ITEM_STATE {
 		NONE,
@@ -209,10 +222,8 @@ protected:
 	bool isLid_;
 
 	//ラック用------------------------
-	
-	//オブジェクトの残り個数
-	int stockCnt_;
 
+	//ラックに在庫があるかどうか
 	bool hasStock_;
 
 	//--------------------------------

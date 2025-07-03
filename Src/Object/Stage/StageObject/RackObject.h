@@ -7,8 +7,6 @@ class RackObject : public StageObject
 {
 public:
 
-	static constexpr int RACK_STOCK_MAX = 3;
-
 	RackObject(const std::string objId, const float width,
 		const float height, const float depth, Player& player);
 
@@ -26,7 +24,16 @@ public:
 
 private:
 
+	//オブジェクトの残り個数
+	int sweetsStockCnt_;	//スイーツ用
+	int cupsStockCnt_;		//カップ用
+
+	float addInterval_;	//追加される間隔
+
 	//ゲージのUI
 	std::unique_ptr<GaugeUI> gaugeUI_;
+
+	Transform sweetsOfRack_[SWEETS_STOCK_MAX];
+	Transform cupesOfRack_[SWEETS_STOCK_MAX];
 };
 
