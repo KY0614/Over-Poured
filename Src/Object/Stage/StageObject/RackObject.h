@@ -34,6 +34,6 @@ private:
 	std::unique_ptr<GaugeUI> gaugeUI_;
 
 	Transform sweetsOfRack_[SWEETS_STOCK_MAX];
-	Transform cupesOfRack_[SWEETS_STOCK_MAX];
+	Transform cupesOfRack_[CUP_STOCK_MAX];
 };
 

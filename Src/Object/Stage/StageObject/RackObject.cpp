@@ -13,8 +13,8 @@ RackObject::RackObject(const std::string objId,
 	const float depth, Player& player) :
 	StageObject(objId, width, height, depth, player)
 {
-	sweetsStockCnt_ = SWEETS_STOCK_MAX;
-	cupsStockCnt_ = CUP_STOCK_MAX;
+	sweetsStockCnt_ = 0;
+	cupsStockCnt_ = 0;
 	hasStock_ = true;
 }
 
@@ -118,29 +118,35 @@ void RackObject::Init(VECTOR pos, float rotY)
 	if(param_.id_ == "Sweets_Strawberry_Rack")
 	{
 		srcType = ResourceManager::SRC::SWEETS_BERRY; // デフォルトのラックIDを設定
+		sweetsStockCnt_ = SWEETS_STOCK_MAX;
 	}
 	else if(param_.id_ == "Sweets_Choco_Rack")
 	{
 		srcType = ResourceManager::SRC::SWEETS_CHOCO; // チョコレートラックIDを設定
+		sweetsStockCnt_ = SWEETS_STOCK_MAX;
 	}
-	// 各スイーツの基準座標からのオフセットを配列で定義
-	const VECTOR offsets[] = {
-		{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET},
-		{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET},
-		{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
-		{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET}
-	};
 
-	for(int i = 0; i < sweetsStockCnt_; ++i)
+	if (sweetsStockCnt_ != 0)
 	{
-		//モデルの基本設定
-		sweetsOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
-		sweetsOfRack_[i].scl = AsoUtility::VECTOR_ONE;
-		sweetsOfRack_[i].pos = VAdd(pos,offsets[i]);
-		sweetsOfRack_[i].quaRot = Quaternion();
-		sweetsOfRack_[i].quaRotLocal =
-			Quaternion::Euler({ AsoUtility::Deg2RadF(SWEETS_ROT_X), 0.0f, 0.0f });
-		transform_.MakeCollider(Collider::TYPE::STAGE);
+		// 各スイーツの基準座標からのオフセットを配列で定義
+		const VECTOR sweetsOffsets[] = {
+			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
+			{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
+			{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET},
+			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET}
+		};
+
+		for (int i = 0; i < sweetsStockCnt_; ++i)
+		{
+			//モデルの基本設定
+			sweetsOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
+			sweetsOfRack_[i].scl = AsoUtility::VECTOR_ONE;
+			sweetsOfRack_[i].pos = VAdd(pos, sweetsOffsets[i]);
+			sweetsOfRack_[i].quaRot = Quaternion();
+			sweetsOfRack_[i].quaRotLocal =
+				Quaternion::Euler({ AsoUtility::Deg2RadF(SWEETS_ROT_X), 0.0f, 0.0f });
+			transform_.MakeCollider(Collider::TYPE::STAGE);
+		}
 	}
 
 	//srcTypeが設定されているなら、余計な処理をしない
@@ -150,24 +156,37 @@ void RackObject::Init(VECTOR pos, float rotY)
 	if (param_.id_ == "Cup_Hot_Rack")
 	{
 		srcType = ResourceManager::SRC::HOTCUP; // ホットカップラックIDを設定
+		cupsStockCnt_ = CUP_STOCK_MAX;
 	}
 	else if (param_.id_ == "Cup_Ice_Rack")
 	{
 		srcType = ResourceManager::SRC::ICECUP; // アイスカップラックIDを設定
+		cupsStockCnt_ = CUP_STOCK_MAX;
 	}
 
-	for (auto& cups : cupesOfRack_)
+	if (cupsStockCnt_ != 0)
 	{
-		//モデルの基本設定
-		cups.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
-		cups.scl = AsoUtility::VECTOR_ONE;
-		cups.pos = pos;
-		cups.quaRot = Quaternion();
-		cups.quaRotLocal =
-			Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(rotY), 0.0f });
-		transform_.MakeCollider(Collider::TYPE::STAGE);
-	}
+		// 各スイーツの基準座標からのオフセットを配列で定義
+		const VECTOR cupOffsets[] = {
+			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
+			{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
+			{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET},
+			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET},
+			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET}
+		};
 
+		for (int i = 0; i < cupsStockCnt_; ++i)
+		{
+			//モデルの基本設定
+			cupesOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
+			cupesOfRack_[i].scl = AsoUtility::VECTOR_ONE;
+			cupesOfRack_[i].pos = VAdd(pos, cupOffsets[i]);
+			cupesOfRack_[i].quaRot = Quaternion();
+			cupesOfRack_[i].quaRotLocal =
+				Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
+			transform_.MakeCollider(Collider::TYPE::STAGE);
+		}
+	}
 }
 
 void RackObject::Update(void)
