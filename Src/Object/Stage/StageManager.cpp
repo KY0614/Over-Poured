@@ -166,15 +166,14 @@ void StageManager::Init(void)
 	counter_->Init(COUNTER_POS);
 
 	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
-
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
 	objects_.back()->Init(pos, -90.0f);
 	
 	//アイス用カップのラック
-	pos = tables_[TABLE_COLUMN_NUM]->GetTopCenter();
+	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM -1]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<RackObject>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init(pos);
+	objects_.back()->Init(pos,90.0f);
 	
 	//チョコスイーツ用のラック
 	pos = tables_[tables_.size() - 2]->GetTopCenter();
@@ -196,16 +195,22 @@ void StageManager::Init(void)
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
 		 player_,objects_));
 	objects_.back()->Init(pos,90.0f);
-	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
+	//コーヒーマシン２個目
+	pos = tables_[MAX_TABLE_NUM - 4]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
 		 player_,objects_));
-	objects_.back()->Init(pos,-90.0f);
+	objects_.back()->Init(pos,90.0f);
 
 	//アイスディスペンサー
-	pos = tables_[10]->GetTopCenter();
+	pos = tables_[MAX_TABLE_NUM - 3]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
-	objects_.back()->Init(pos,90.0f);
+	objects_.back()->Init(pos,-90.0f);
+	//アイスディスペンサー２個目
+	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
+		 player_,objects_));
+	objects_.back()->Init(pos,-90.0f);
 
 	//ゴミ箱
 	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
@@ -228,15 +233,12 @@ void StageManager::Update(void)
 
 	interact2D_->Update(); // 2Dインタラクトの更新
 
-	//if (animationController_->IsEnd() && animationController_->)
-	//{
-	//	//アニメーションが終わったらマシンモードに切り替え
-	//	animationController_->Play((int)ANIM_TYPE::IDLE);
-	//}
-	//else {
-	//	//生成アニメーション
-	//	animationController_->Play((int)ANIM_TYPE::CREATE);
-	//}
+	if (animationController_->IsEnd())
+	{
+		//アニメーションが終わったらマシンモードに切り替え
+		animationController_->Play((int)ANIM_TYPE::IDLE);
+	}
+
 
 	auto& ins = InputManager::GetInstance();
 	if(ins.IsTrgDown(KEY_INPUT_Q))
@@ -378,7 +380,7 @@ void StageManager::SurveItem(StageObject& obj)
 	if (IsOrderCompleted()) 
 	{
 		isServed_ = true;
-		animationController_->Play((int)ANIM_TYPE::PAYING, false);
+		animationController_->Play((int)ANIM_TYPE::PAYING,false);
 	}
 }
 
@@ -582,11 +584,11 @@ void StageManager::ProduceCoffee(void)
 			{
 				if(objects_[i]->GetParam().id_ == HOT_CUP)
 				{
-					MakeCoffee(i,machine->GetTransform().pos, HOT_COFFEE);
+					MakeCoffee(i,*machine, HOT_COFFEE);
 					return; // ホットコーヒーを作ったら処理を終了
 				}
 				else {
-					MakeCoffee(i, machine->GetTransform().pos, ICE_COFFEE);
+					MakeCoffee(i, *machine, ICE_COFFEE);
 					return; // アイスコーヒーを作ったら処理を終了
 				}
 			}
@@ -594,7 +596,7 @@ void StageManager::ProduceCoffee(void)
 	}
 }
 
-void StageManager::MakeCoffee(int index, VECTOR pos, std::string objName)
+void StageManager::MakeCoffee(int index, StageObject& obj, std::string objName)
 {
 	//アイスコーヒーを生成する場合は氷を先に削除しておく
 	if (objName == ICE_COFFEE)
@@ -621,13 +623,15 @@ void StageManager::MakeCoffee(int index, VECTOR pos, std::string objName)
 	//設置されているカップをコーヒーに上書きする
 	objects_[index] = std::make_unique<ItemObject>(objName, 20.0f, 30.0f, 20.0f, player_);
 	//マシンの上に乗るようにカップを配置する
-	VECTOR cupPos = pos;
-	cupPos = VAdd(cupPos, { 0.0f,StageObject::MACHINE_OFSET_Y ,StageObject::MACHINE_OFSET_Z });
+	VECTOR cupPos = obj.GetTransform().pos;
+	cupPos = VAdd(cupPos,
+		{ 0.0f,StageObject::MACHINE_OFSET_Y ,StageObject::MACHINE_OFSET_Z });
 
 	//マシンの回転に合わせてカップの位置を調整
-	VECTOR rotPos = AsoUtility::RotXZPos(GetTransform().pos, cupPos,
-		Quaternion::ToEuler(GetTransform().quaRotLocal).y);
-	objects_[index]->Init(cupPos);
+	VECTOR rotPos = AsoUtility::RotXZPos(obj.GetTransform().pos, cupPos,
+		Quaternion::ToEuler(obj.GetTransform().quaRotLocal).y);
+
+	objects_[index]->Init(rotPos);
 	objects_[index]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 }
 
@@ -954,7 +958,7 @@ void StageManager::DrawDebug(void)
 	//}
 
 	//テーブル番号を表示
-	for (int i = 0; i < (TABLE_COLUMN_NUM * 2) + TABLE_ROW_BACK_NUM; i++)
+	for (int i = 0; i < (int)tables_.size(); i++)
 	{
 		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
 		// 変換成功

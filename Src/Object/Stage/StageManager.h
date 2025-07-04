@@ -18,11 +18,11 @@ public:
 	//オブジェクト関連
 
 	//テーブル関連
-	static constexpr int TABLE_COLUMN_NUM = 4;		//テーブルの数
+	static constexpr int TABLE_COLUMN_NUM = 4;		//横側のテーブルの数（１列）
 	static constexpr int TABLE_ROW_BACK_NUM = 4;	//手前側のテーブルの数
 	static constexpr int TABLE_ROW_FRONT_NUM = 2;	//奥側のテーブルの数
 	static constexpr int TABLE_CENTER_NUM = 4;	//テーブルの数
-	static constexpr int MAX_TABLE_NUM = 14;	//テーブルの数
+	static constexpr int MAX_TABLE_NUM = 16;	//テーブルの数
 
 	static constexpr float TABLE_WIDTH = 92.5f;	//テーブルの横幅
 
@@ -193,7 +193,7 @@ private:
 	/// <param name="index">配列番号（カップをコーヒーに上書きするので）</param>
 	/// <param name="pos">生成する座標</param>
 	/// <param name="objName">作るコーヒーのパラメータ名（ホットかアイス)</param>
-	void MakeCoffee(int index,VECTOR pos,std::string objName);
+	void MakeCoffee(int index,StageObject& obj,std::string objName);
 
 	/// <summary>
 	///　カップにアイスディスペンサーで氷を入れる処理
