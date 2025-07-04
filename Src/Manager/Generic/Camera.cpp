@@ -242,17 +242,17 @@ void Camera::UpdateDebugImGui(void)
 	ImGui::Text("position");
 	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
 	ImGui::InputFloat3("Pos", &pos_.x);
-	ImGui::SliderFloat("PosX", &pos_.x, -500.0f, 1000.0f);
-	ImGui::SliderFloat("PosY", &pos_.y, -500.0f, 1000.0f);
-	ImGui::SliderFloat("PosZ", &pos_.z, -500.0f, 1000.0f);
+	ImGui::SliderFloat("PosX", &pos_.x, -800.0f, 1000.0f);
+	ImGui::SliderFloat("PosY", &pos_.y, -800.0f, 1000.0f);
+	ImGui::SliderFloat("PosZ", &pos_.z, -800.0f, 1000.0f);
 
 	//位置
 	ImGui::Text("target");
 	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
 	ImGui::InputFloat3("target", &targetPos_.x);
-	ImGui::SliderFloat("targetX", &targetPos_.x, -500.0f, 1000.0f);
-	ImGui::SliderFloat("targetY", &targetPos_.y, -500.0f, 1000.0f);
-	ImGui::SliderFloat("targetZ", &targetPos_.z, -500.0f, 1000.0f);
+	ImGui::SliderFloat("targetX", &targetPos_.x, -800.0f, 1000.0f);
+	ImGui::SliderFloat("targetY", &targetPos_.y, -800.0f, 1000.0f);
+	ImGui::SliderFloat("targetZ", &targetPos_.z, -800.0f, 1000.0f);
 
 	//終了処理
 	ImGui::End();

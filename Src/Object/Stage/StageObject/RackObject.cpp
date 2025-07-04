@@ -13,8 +13,8 @@ RackObject::RackObject(const std::string objId,
 	const float depth, Player& player) :
 	StageObject(objId, width, height, depth, player)
 {
-	sweetsStockCnt_ = 0;
-	cupsStockCnt_ = 0;
+	sweetsStockCnt_ = SWEETS_STOCK_MAX;
+	cupsStockCnt_ = CUP_STOCK_MAX;
 	hasStock_ = true;
 }
 
@@ -115,18 +115,16 @@ void RackObject::Init(VECTOR pos, float rotY)
 
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
-	if(param_.id_ == "Sweets_Strawberry_Rack")
+	if (param_.id_ == "Sweets_Strawberry_Rack")
 	{
 		srcType = ResourceManager::SRC::SWEETS_BERRY; // デフォルトのラックIDを設定
-		sweetsStockCnt_ = SWEETS_STOCK_MAX;
 	}
-	else if(param_.id_ == "Sweets_Choco_Rack")
+	else if (param_.id_ == "Sweets_Choco_Rack")
 	{
 		srcType = ResourceManager::SRC::SWEETS_CHOCO; // チョコレートラックIDを設定
-		sweetsStockCnt_ = SWEETS_STOCK_MAX;
 	}
 
-	if (sweetsStockCnt_ != 0)
+	if (srcType != ResourceManager::SRC::NONE)
 	{
 		// 各スイーツの基準座標からのオフセットを配列で定義
 		const VECTOR sweetsOffsets[] = {
@@ -141,52 +139,50 @@ void RackObject::Init(VECTOR pos, float rotY)
 			//モデルの基本設定
 			sweetsOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
 			sweetsOfRack_[i].scl = AsoUtility::VECTOR_ONE;
-			sweetsOfRack_[i].pos = VAdd(pos, sweetsOffsets[i]);
+			VECTOR sweetsPos = VAdd(pos, sweetsOffsets[i]);
+			sweetsOfRack_[i].pos = AsoUtility::RotXZPos(transform_.pos, sweetsPos, rotY);
 			sweetsOfRack_[i].quaRot = Quaternion();
 			sweetsOfRack_[i].quaRotLocal =
-				Quaternion::Euler({ AsoUtility::Deg2RadF(SWEETS_ROT_X), 0.0f, 0.0f });
-			transform_.MakeCollider(Collider::TYPE::STAGE);
+				Quaternion::Euler({ AsoUtility::Deg2RadF(SWEETS_ROT_X),AsoUtility::Deg2RadF(rotY), 0.0f });
 		}
 	}
 
-	//srcTypeが設定されているなら、余計な処理をしない
 	if (srcType != ResourceManager::SRC::NONE)return;
 
 	//設定されていなかったらカップモデルを設定する
 	if (param_.id_ == "Cup_Hot_Rack")
 	{
 		srcType = ResourceManager::SRC::HOTCUP; // ホットカップラックIDを設定
-		cupsStockCnt_ = CUP_STOCK_MAX;
 	}
 	else if (param_.id_ == "Cup_Ice_Rack")
 	{
 		srcType = ResourceManager::SRC::ICECUP; // アイスカップラックIDを設定
-		cupsStockCnt_ = CUP_STOCK_MAX;
 	}
 
-	if (cupsStockCnt_ != 0)
+	// 各カップの基準座標からのオフセットを配列で定義
+	float cupHeightOffset = 8.0f;
+	const VECTOR cupOffsets[] = {
+		{CUPS_HALF_WIDTH,  CUPS_HEIGHT_OFFSET,  CUPS_Z_OFFSET},
+		{-CUPS_HALF_WIDTH, CUPS_HEIGHT_OFFSET,  CUPS_Z_OFFSET},
+		//2段目のカップ
+		{CUPS_HALF_WIDTH,  CUPS_HEIGHT_OFFSET + cupHeightOffset,  CUPS_Z_OFFSET},
+		{-CUPS_HALF_WIDTH, CUPS_HEIGHT_OFFSET + cupHeightOffset,  CUPS_Z_OFFSET},
+		//3段目のカップ								倍ずらす
+		{CUPS_HALF_WIDTH,  CUPS_HEIGHT_OFFSET + (cupHeightOffset * 2.0f),  CUPS_Z_OFFSET}
+	};
+
+	for (int i = 0; i < cupsStockCnt_; ++i)
 	{
-		// 各スイーツの基準座標からのオフセットを配列で定義
-		const VECTOR cupOffsets[] = {
-			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
-			{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
-			{-SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET},
-			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET},
-			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET,  SWEETS_Z_FRONT_OFFSET}
-		};
-
-		for (int i = 0; i < cupsStockCnt_; ++i)
-		{
-			//モデルの基本設定
-			cupesOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
-			cupesOfRack_[i].scl = AsoUtility::VECTOR_ONE;
-			cupesOfRack_[i].pos = VAdd(pos, cupOffsets[i]);
-			cupesOfRack_[i].quaRot = Quaternion();
-			cupesOfRack_[i].quaRotLocal =
-				Quaternion::Euler({ 0.0f, 0.0f, 0.0f });
-			transform_.MakeCollider(Collider::TYPE::STAGE);
-		}
+		//モデルの基本設定
+		cupesOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
+		cupesOfRack_[i].scl = AsoUtility::VECTOR_ONE;
+		VECTOR cupsPos = VAdd(pos, cupOffsets[i]);
+		cupesOfRack_[i].pos = AsoUtility::RotXZPos(transform_.pos, cupsPos, AsoUtility::Deg2RadF(rotY));
+		cupesOfRack_[i].quaRot = Quaternion();
+		cupesOfRack_[i].quaRotLocal =
+			Quaternion::Euler({ AsoUtility::Deg2RadF(180.0f), AsoUtility::Deg2RadF(rotY), 0.0f });
 	}
+
 }
 
 void RackObject::Update(void)
@@ -222,10 +218,10 @@ void RackObject::Draw(void)
 
 	StageObject::Draw();
 
-	for(auto& cups : cupesOfRack_)
+	for (int i = 0; i < cupsStockCnt_; ++i)
 	{
 		//モデルの描画
-		MV1DrawModel(cups.modelId);
+		MV1DrawModel(cupesOfRack_[i].modelId);
 	}
 
 	for (int i = 0; i < sweetsStockCnt_; ++i)

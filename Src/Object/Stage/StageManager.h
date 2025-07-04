@@ -19,17 +19,20 @@ public:
 
 	//テーブル関連
 	static constexpr int TABLE_COLUMN_NUM = 4;		//テーブルの数
-	static constexpr int TABLE_ROW_BACK_NUM = 4;	//テーブルの数
-	static constexpr int TABLE_ROW_FRONT_NUM = 2;	//テーブルの数
+	static constexpr int TABLE_ROW_BACK_NUM = 4;	//手前側のテーブルの数
+	static constexpr int TABLE_ROW_FRONT_NUM = 2;	//奥側のテーブルの数
+	static constexpr int TABLE_CENTER_NUM = 4;	//テーブルの数
+	static constexpr int MAX_TABLE_NUM = 14;	//テーブルの数
 
 	static constexpr float TABLE_WIDTH = 92.5f;	//テーブルの横幅
 
 	//座標
 
 	static constexpr VECTOR TABLE_POS_BACK = { -150.0f, 0.0f, -270.0f };	//テーブルの座標(手前側）
-	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 190.0f };	//テーブルの座標（奥側）
+	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 180.0f };	//テーブルの座標（奥側）
 	static constexpr VECTOR COLUMN_TABLE_LEFT_POS = { -250.0f, 0.0f, -192.0f };		//列（左）テーブルの座標
-	static constexpr VECTOR COLUMN_TABLE__RIGHT_POS = { 320.0f, 0.0f, -192.0f };	//列(右）テーブルの座標
+	static constexpr VECTOR COLUMN_TABLE_RIGHT_POS = { 320.0f, 0.0f, -192.0f };	//列(右）テーブルの座標
+	static constexpr VECTOR CENTER_TABLE_POS = { -20.0f,0.0f,-100.0f };	//列(右）テーブルの座標
 	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };			//カウンターの座標
 	static constexpr VECTOR CASE_POS = { -57.0f, 0.0f, 190.0f };			//ショーケースの座標
 

@@ -105,10 +105,11 @@ void StageManager::Init(void)
 
 	InitAnimation(); // アニメーションの初期化
 
+	VECTOR firstPos = {};
 	//横のテーブル群(手前)
 	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
 	{
-		VECTOR firstPos = TABLE_POS_BACK;
+		firstPos = TABLE_POS_BACK;
 		firstPos.x += (x * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_,objects_));
 		tables_.back()->Init(firstPos, 180.0f);
@@ -117,44 +118,44 @@ void StageManager::Init(void)
 	//縦のテーブル群(左側）
 	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
 	{
-		VECTOR firstPos = COLUMN_TABLE_LEFT_POS;
+		firstPos = COLUMN_TABLE_LEFT_POS;
 		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
 		tables_.back()->Init(firstPos, -90.0f);
 	}
-
+	
 	//縦のテーブル群(右側）
 	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
 	{
-		VECTOR firstPos = COLUMN_TABLE__RIGHT_POS;
+		firstPos = COLUMN_TABLE_RIGHT_POS;
 		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
 		tables_.back()->Init(firstPos, 90.0f);
 	}
 
 	//真ん中のテーブル群
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
 	{
-		VECTOR pos = { -20.0f,0.0f,-100.0f };
-		pos.x += i * 90.0f;
+		firstPos = CENTER_TABLE_POS;
+		firstPos.x += i * 90.0f;
 		//奥側のテーブル２つ
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
-		tables_.back()->Init(pos, 0.0f);
+		tables_.back()->Init(firstPos, 0.0f);
 	}
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
 	{
-		VECTOR pos = { -20.0f,0.0f,-100.0f };
-		pos.x += i * 90.0f;
-		pos.z += 60.0f;
+		firstPos = CENTER_TABLE_POS;
+		firstPos.x += i * 90.0f;
+		firstPos.z += 60.0f;
 		//手前側のテーブル２つ
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
-		tables_.back()->Init(pos, 180.0f);
+		tables_.back()->Init(firstPos, 180.0f);
 	}
 
-	//横のテーブル群(奥側)
+	//ケースのテーブル群(奥側)
 	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
 	{
-		VECTOR firstPos = TABLE_POS_FRONT;
+		firstPos = TABLE_POS_FRONT;
 		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
 		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH + 20.0f, 76.0f, 60.0f, player_, objects_));
 		tables_.back()->Init(firstPos);
@@ -191,7 +192,11 @@ void StageManager::Init(void)
 	objects_.back()->Init(pos);
 
 	//コーヒーマシン
-	pos = tables_[5]->GetTopCenter();
+	pos = tables_[MAX_TABLE_NUM - 2]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
+		 player_,objects_));
+	objects_.back()->Init(pos,90.0f);
+	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
 		 player_,objects_));
 	objects_.back()->Init(pos,-90.0f);
@@ -263,7 +268,7 @@ void StageManager::Draw(void)
 
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
-	//MV1DrawModel(caseTran_.modelId);
+	MV1DrawModel(caseTran_.modelId);
 
 	for (const auto& table : tables_)
 	{
@@ -617,8 +622,11 @@ void StageManager::MakeCoffee(int index, VECTOR pos, std::string objName)
 	objects_[index] = std::make_unique<ItemObject>(objName, 20.0f, 30.0f, 20.0f, player_);
 	//マシンの上に乗るようにカップを配置する
 	VECTOR cupPos = pos;
-	cupPos.y += StageObject::MACHINE_OFSET_Y;	//少し上にずらす
-	cupPos.x += StageObject::MACHINE_OFSET_X;	//少し右にずらす
+	cupPos = VAdd(cupPos, { 0.0f,StageObject::MACHINE_OFSET_Y ,StageObject::MACHINE_OFSET_Z });
+
+	//マシンの回転に合わせてカップの位置を調整
+	VECTOR rotPos = AsoUtility::RotXZPos(GetTransform().pos, cupPos,
+		Quaternion::ToEuler(GetTransform().quaRotLocal).y);
 	objects_[index]->Init(cupPos);
 	objects_[index]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 }

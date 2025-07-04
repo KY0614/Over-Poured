@@ -13,8 +13,8 @@ class StageObject : public ActorBase
 {
 public:
 	//マシンのY座標オフセット(マシンの上に置くようにしたいため)
-	static constexpr float MACHINE_OFSET_X = 15.0f;	
-	static constexpr float DISPENSER_OFSET_X = 15.0f;	
+	static constexpr float MACHINE_OFSET_Z = 15.0f;	
+	static constexpr float DISPENSER_OFSET_Z = 17.0f;	
 	static constexpr float MACHINE_OFSET_Y = 16.0f;	
 
 	//ラックの最大在庫数
@@ -29,6 +29,10 @@ public:
 	static constexpr float SWEETS_Z_FRONT_OFFSET = 2.0f;
 	static constexpr float SWEETS_Z_BACK_OFFSET = -19.0f;
 	static constexpr float SWEETS_ROT_X = 40.0f;
+
+	static constexpr float CUPS_HALF_WIDTH = 15.0f;
+	static constexpr float CUPS_HEIGHT_OFFSET = 35.0f;
+	static constexpr float CUPS_Z_OFFSET = 0.0f;
 
 	//アイテムオブジェクトの状態
 	enum class ITEM_STATE {

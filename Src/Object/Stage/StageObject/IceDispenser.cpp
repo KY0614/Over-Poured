@@ -83,11 +83,16 @@ void IceDispenser::Interact(const std::string& objId)
 			if (player_.GetHoldItem() == items.front().c_str() &&
 				ins.IsInputTriggered("Interact"))
 			{
+
 				//マシンの上に乗るようにカップを配置する
 				VECTOR cupPos = GetTransform().pos;
-				cupPos.z += DISPENSER_OFSET_X;	//少し上にずらす
-				cupPos.y += MACHINE_OFSET_Y;	//少し上にずらす
-				obj->ItemPlaced(cupPos);
+				cupPos = VAdd(cupPos, { 0.0f,MACHINE_OFSET_Y ,DISPENSER_OFSET_Z });
+
+				//マシンの回転に合わせてカップの位置を調整
+				VECTOR rotPos = AsoUtility::RotXZPos(GetTransform().pos, cupPos,
+					Quaternion::ToEuler(GetTransform().quaRotLocal).y);
+
+				obj->ItemPlaced(rotPos);
 				gaugeUI_->SetActive(true);
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}
