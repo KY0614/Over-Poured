@@ -10,6 +10,7 @@ ItemObject::ItemObject(const std::string objId,
 	const float depth, Player& player) :
 	StageObject(objId, width, height, depth, player)
 {
+	isIced_ = false;   
 }
 
 void ItemObject::ItemCarry(void)

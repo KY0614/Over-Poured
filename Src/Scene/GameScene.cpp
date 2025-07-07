@@ -68,8 +68,8 @@ void GameScene::Init(void)
 
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
-	//mainCamera->ChangeMode(Camera::MODE::FOLLOW);
-	mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
+	mainCamera->ChangeMode(Camera::MODE::FOLLOW);
+	//mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 
 	//タイマーの設定
 	timer_ = MAX_TIME;

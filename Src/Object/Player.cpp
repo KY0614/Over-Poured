@@ -32,6 +32,8 @@ Player::Player(void)
 	gravHitPosUp_ = AsoUtility::VECTOR_ZERO;
 
 	isHolding_ = false;
+	holdItemId_ = "";
+	chestFrmNo_ = 0;
 }
 
 Player::~Player(void)
@@ -55,6 +57,10 @@ void Player::Init(void)
 	imgShadow_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::PLAYER_SHADOW).handleId_;
 
+
+	chestFrmNo_ = MV1SearchFrame(transform_.modelId, L"mixamorig:Hips");
+	chestPos_ = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
+
 	//カプセルコライダ
 	capsule_ = std::make_unique<Capsule>(transform_);
 	capsule_->SetLocalPosTop({ 0.0f, 90.0f, 0.0f });
@@ -63,9 +69,8 @@ void Player::Init(void)
 	
 	//オブジェクト用コライダ
 	sphere_ = std::make_unique<Sphere>(transform_);
-	sphere_->SetLocalPos({ 0.0f, 60.0f, 50.0f });
+	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 50.0f });
 	sphere_->SetRadius(20.0f);
-	
 
 	//足煙エフェクト
 	effectSmokeResId_ = ResourceManager::GetInstance().Load(
@@ -97,7 +102,8 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
-
+	chestPos_ = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
+	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 50.0f });
 	transform_.pos.y = 30.0f;
 
 	//更新ステップ
@@ -118,7 +124,7 @@ void Player::Draw(void)
 	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
 
 	//capsule_->Draw();
-	//sphere_->Draw();
+	sphere_->Draw();
 
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
@@ -184,7 +190,7 @@ void Player::InitAnimation(void)
 	std::string path = Application::PATH_MODEL + "Player/";
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
 	animationController_->Add((int)ANIM_TYPE::IDLE, path + "Idle.mv1", 30.0f);
-	animationController_->Add((int)ANIM_TYPE::RUN, path + "Walk.mv1", 30.0f);
+	animationController_->Add((int)ANIM_TYPE::WALK, path + "Walk.mv1", 30.0f);
 	animationController_->Add((int)ANIM_TYPE::IDLE_HOLD, path + "Idle_Hold.mv1", 30.0f);
 	animationController_->Add((int)ANIM_TYPE::WALK_HOLD, path + "Walk_Hold.mv1", 30.0f);
 
@@ -247,17 +253,17 @@ void Player::UpdateStop(void)
 {
 	//ストップというよりインタラクト中という感じ
 	//インタラクト用のアニメーションをさせたい
-
+	animationController_->Play((int)ANIM_TYPE::IDLE_HOLD);
 }
 
 void Player::DrawDebug(void)
 {
 
 	SetFontSize(24);
-	int line = 0;
+	int line = 5;
 	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
 
-	//DebugDrawFormat::FormatStringRight(L"提供品 : %d, %d", data_.drink_, data_.sweets_,line);
+	DebugDrawFormat::FormatStringRight(L"chestPos : %0.2f", chestPos_.y,line);
 	SetFontSize(16);
 
 }
@@ -408,9 +414,14 @@ void Player::ProcessMove(void)
 		if (IsEndLanding())
 		{
 			if (speed_ == SPEED_RUN)
+			{
 				animationController_->Play((int)ANIM_TYPE::RUN);
-			else
+			}
+			else 
+			{
 				animationController_->Play((int)ANIM_TYPE::WALK);
+				if (isHolding_)animationController_->Play((int)ANIM_TYPE::WALK_HOLD);
+			}
 		}
 
 		////移動量
@@ -436,9 +447,13 @@ void Player::ProcessMove(void)
 	}
 	else
 	{
-		if (IsEndLanding())
+		if (IsEndLanding() && !isHolding_)
 		{
 			animationController_->Play((int)ANIM_TYPE::IDLE);
+		}
+		else if (IsEndLanding() && isHolding_)
+		{
+			animationController_->Play((int)ANIM_TYPE::IDLE_HOLD);
 		}
 	}
 

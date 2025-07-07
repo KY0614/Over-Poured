@@ -135,8 +135,14 @@ private:
 	//フレームごとの移動値
 	VECTOR moveDiff_;
 
+	//プレイヤーがオブジェクトを持っているかどうか
 	bool isHolding_;
+
+	//持っているアイテムのID
 	std::string holdItemId_;
+
+	int chestFrmNo_;
+	VECTOR chestPos_;
 
 	void InitAnimation(void);
 

@@ -12,6 +12,7 @@ public:
 	//コンストラクタ
 	//球体をつけるオブジェクトを指定する
 	Sphere(const Transform& parent);
+	Sphere(const VECTOR& parentPos, const Transform& parent);
 	Sphere(const Sphere& base, const Transform& parent);
 
 	//デストラクタ
@@ -26,6 +27,8 @@ public:
 
 	//親Transformからの相対位置をセット
 	void SetLocalPos(const VECTOR& pos) { localPos_ = pos; }
+
+	void SetPos(const VECTOR& pos) { localPos_ = pos; }
 
 	//ワールド座標を取得
 	VECTOR GetPos(void) const { return GetRotPos(localPos_); }
@@ -50,6 +53,8 @@ private:
 
 	//親Transformからの相対位置
 	VECTOR localPos_;
+
+	VECTOR parentPos_;
 
 	//半径
 	float radius_;
