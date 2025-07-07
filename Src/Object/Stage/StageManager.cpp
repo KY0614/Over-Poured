@@ -202,12 +202,12 @@ void StageManager::Init(void)
 	objects_.back()->Init(pos,90.0f);
 
 	//アイスディスペンサー
-	pos = tables_[MAX_TABLE_NUM - 3]->GetTopCenter();
+	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
 	objects_.back()->Init(pos,-90.0f);
 	//アイスディスペンサー２個目
-	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
+	pos = tables_[MAX_TABLE_NUM - 3]->GetTopCenter();
 	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
 	objects_.back()->Init(pos,-90.0f);
@@ -490,44 +490,63 @@ void StageManager::MachineInteract(void)
 	auto& pSphere = player_.GetSphere();
 
 	//マシンとカップの処理
-	for (const auto& obj : objects_)
+	for (size_t i = 0; i < objects_.size(); ++i)
 	{
-		if (obj->GetParam().id_ != COFFEE_MACHINE)continue;
-
+		//コーヒーマシンの判定だけさせたい
+		if (objects_[i]->GetParam().id_ != COFFEE_MACHINE)continue;
 		//持っているアイテムをマシンに設置する処理
 		if (player_.GetIsHolding() &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
+				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 		{
- 			obj->Interact(player_.GetHoldItem());
-		}
-
-		//設置して一定時間経ったらコーヒーを出力する
-		if (obj->GetParam().id_ == COFFEE_MACHINE &&
-			obj->GetParam().interactTime_ <= 0.0f)
-		{
-			ProduceCoffee();
-			break;
-		}
-	}
-
-	//ディスペンサーとカップの処理
-	for (const auto& obj : objects_)
-	{
-		if (obj->GetParam().id_ != ICE_DISPENSER)continue;
-
-		//持っているアイテムをマシンに設置する処理
-		if (player_.GetIsHolding() &&
-			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
-		{
-			obj->Interact(player_.GetHoldItem());
+			objects_[i]->Interact(player_.GetHoldItem());
 		}
 
 		//設置して一定時間経ったら氷入りカップを出力する
-		if (obj->GetParam().interactTime_ <= 0.0f)
+		if (objects_[i]->GetParam().interactTime_ <= 0.0f)
 		{
-			DispenseIce2Cup();
+			ProduceCoffee(i);
+			break;
+		}
+	}
+	//for (const auto& obj : objects_)
+	//{
+	//	if (obj->GetParam().id_ != COFFEE_MACHINE)continue;
+
+	//	//持っているアイテムをマシンに設置する処理
+	//	if (player_.GetIsHolding() &&
+	//		AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+	//			obj->GetSpherePos(), obj->GetSphereRad()))
+	//	{
+ //			obj->Interact(player_.GetHoldItem());
+	//	}
+
+	//	//設置して一定時間経ったらコーヒーを出力する
+	//	if (obj->GetParam().id_ == COFFEE_MACHINE &&
+	//		obj->GetParam().interactTime_ <= 0.0f)
+	//	{
+	//		ProduceCoffee();
+	//		break;
+	//	}
+	//}
+
+	//ディスペンサーとカップの処理
+	for (size_t i = 0; i < objects_.size(); ++i)
+	{
+		//ディスペンサーの判定だけさせたい
+		if (objects_[i]->GetParam().id_ != ICE_DISPENSER)continue;
+		//持っているアイテムをマシンに設置する処理
+		if (player_.GetIsHolding() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+		{
+			objects_[i]->Interact(player_.GetHoldItem());
+		}
+
+		//設置して一定時間経ったら氷入りカップを出力する
+		if (objects_[i]->GetParam().interactTime_ <= 0.0f)
+		{
+			DispenseIce2Cup(i);
 			break;
 		}
 	}
@@ -564,35 +583,36 @@ void StageManager::LidRackInteract(void)
 	}
 }
 
-void StageManager::ProduceCoffee(void)
+void StageManager::ProduceCoffee(int index)
 {
+	//コーヒーマシン以外のオブジェクトは判定しない
+	if (objects_[index]->GetParam().id_ != COFFEE_MACHINE) return;
+	const auto& machine = objects_[index];
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//ホット用カップ以外のオブジェクトは判定しない
 		if (objects_[i]->GetParam().id_ != HOT_CUP &&
 			objects_[i]->GetParam().id_ != CUP_WITH_ICE) continue;
 
-		for (const auto& machine : objects_)
-		{
-			//マシンの判定だけさせたい
-			if (machine->GetParam().id_ != COFFEE_MACHINE)continue;
+		//マシンの判定だけさせたい
+		if (machine->GetParam().id_ != COFFEE_MACHINE)continue;
 
-			//マシンの球体と設置されているカップだけ処理する
-			if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
-				AsoUtility::IsHitSpheres(machine->GetPos(), machine->GetSphereRad(),
-					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+		//マシンの球体と設置されているカップだけ処理する
+		if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
+			AsoUtility::IsHitSpheres(machine->GetPos(), machine->GetSphereRad(),
+				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+		{
+			if (objects_[i]->GetParam().id_ == HOT_CUP)
 			{
-				if(objects_[i]->GetParam().id_ == HOT_CUP)
-				{
-					MakeCoffee(i,*machine, HOT_COFFEE);
-					return; // ホットコーヒーを作ったら処理を終了
-				}
-				else {
-					MakeCoffee(i, *machine, ICE_COFFEE);
-					return; // アイスコーヒーを作ったら処理を終了
-				}
+				MakeCoffee(i, *machine, HOT_COFFEE);
+				return; // ホットコーヒーを作ったら処理を終了
+			}
+			else {
+				MakeCoffee(i, *machine, ICE_COFFEE);
+				return; // アイスコーヒーを作ったら処理を終了
 			}
 		}
+
 	}
 }
 
@@ -635,34 +655,32 @@ void StageManager::MakeCoffee(int index, StageObject& obj, std::string objName)
 	objects_[index]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 }
 
-void StageManager::DispenseIce2Cup(void)
+void StageManager::DispenseIce2Cup(int index)
 {
+	//ディスペンサー以外のオブジェクトは判定しない
+	if (objects_[index]->GetParam().id_ != ICE_DISPENSER) return;
+	const auto& dispenser = objects_[index];
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
-		//アイス用カップ以外のオブジェクトは判定しない
-		if (objects_[i]->GetParam().id_ != ICE_CUP) continue;
+		//ディスペンサーの判定だけさせたい
+		if (objects_[index]->GetParam().id_ != ICE_DISPENSER)continue;
 
-		for (const auto& machine : objects_)
+		//マシンの球体と設置されているカップだけ処理する
+		if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
+			AsoUtility::IsHitSpheres(
+				dispenser->GetPos(), dispenser->GetSphereRad(),
+				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
 		{
-			//ディスペンサーの判定だけさせたい
-			if (machine->GetParam().id_ != ICE_DISPENSER)continue;
-
-			//マシンの球体と設置されているカップだけ処理する
-			if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
-				AsoUtility::IsHitSpheres(machine->GetPos(), machine->GetSphereRad(),
-					objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+			//設置されているカップに氷を入れる
+			if (auto iceCup = dynamic_cast<ItemObject*>(objects_[i].get()))
 			{
-				//設置されているカップに氷を入れる
-				if (auto iceCup = dynamic_cast<ItemObject*>(objects_[i].get()))
-				{
-					iceCup->PouredIce();
+				iceCup->PouredIce();
 
-					//氷を生成＆追従させる
-					objects_.emplace_back(std::make_unique<FollowingObject>("Ice", 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
-					objects_.back()->Init(AsoUtility::VECTOR_ZERO);
-					objects_.back()->Update();
-					break;
-				}
+				//氷を生成＆追従させる
+				objects_.emplace_back(std::make_unique<FollowingObject>("Ice", 23.0f, 5.0f, 23.0f, player_, *objects_[i]));
+				objects_.back()->Init(AsoUtility::VECTOR_ZERO);
+				objects_.back()->Update();
+				break;
 			}
 		}
 	}
@@ -941,14 +959,26 @@ void StageManager::DrawDebug(void)
 	//		obj->IsActioned() , line, lineHeight);
 	//}
 
+	//for (size_t i = 0; i < objects_.size(); ++i)
+	//{
+	//	//コーヒー以外のオブジェクトは判定しない
+	//	if (objects_[i]->GetParam().id_ != HOT_COFFEE &&
+	//		objects_[i]->GetParam().id_ != ICE_COFFEE) continue;
+
+	//	DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
+	//		objects_[i]->IsLidOn(), line, lineHeight);
+	//}
+
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
-		//コーヒー以外のオブジェクトは判定しない
-		if (objects_[i]->GetParam().id_ != HOT_COFFEE &&
-			objects_[i]->GetParam().id_ != ICE_COFFEE) continue;
+		//ディスペンサーの状態
+		if (objects_[i]->GetParam().id_ != ICE_DISPENSER) continue;
 
-		DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
-			objects_[i]->IsLidOn(), line, lineHeight);
+		DebugDrawFormat::FormatString(L"ice_dis%d  : %d",i,
+			objects_[i]->GetMachineState(), line, lineHeight);
+
+		DebugDrawFormat::FormatString(L"ice_dis%d  : %0.2f",i,
+			objects_[i]->GetParam().interactTime_, line, lineHeight);
 	}
 
 	//for (int i = 0; i < tables_.size(); i++)
@@ -958,23 +988,23 @@ void StageManager::DrawDebug(void)
 	//}
 
 	//テーブル番号を表示
-	for (int i = 0; i < (int)tables_.size(); i++)
-	{
-		VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
-		// 変換成功
-		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
-			L"%s : %d",
-			StringUtility::StringToWstring(tables_[i]->GetParam().id_.c_str()).c_str(), i);
-	}
+	//for (int i = 0; i < (int)tables_.size(); i++)
+	//{
+	//	VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
+	//	// 変換成功
+	//	DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+	//		L"%s : %d",
+	//		StringUtility::StringToWstring(tables_[i]->GetParam().id_.c_str()).c_str(), i);
+	//}
 
-	for (const auto& obj : objects_)
-	{
-		VECTOR screenPos = ConvWorldPosToScreenPos(obj->GetTransform().pos);
-		// 変換成功
-		DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
-			L"%s",
-			StringUtility::StringToWstring(obj->GetParam().id_.c_str()).c_str());
-	}
+	//for (const auto& obj : objects_)
+	//{
+	//	VECTOR screenPos = ConvWorldPosToScreenPos(obj->GetTransform().pos);
+	//	// 変換成功
+	//	DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
+	//		L"%s",
+	//		StringUtility::StringToWstring(obj->GetParam().id_.c_str()).c_str());
+	//}
 }
 
 void StageManager::UpdateDebugImGui(void)

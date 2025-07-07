@@ -128,6 +128,7 @@ void IceDispenser::UpdateInActive(void)
 void IceDispenser::UpdateActive(void)
 {
 	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
+
 	gaugeUI_->Update();
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
@@ -138,28 +139,16 @@ void IceDispenser::UpdateActive(void)
 
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
-			obj->GetItemState() == ITEM_STATE::PLACED)
+			obj->GetItemState() == ITEM_STATE::PLACED &&
+			param_.interactTime_ >= 0.0f)
 		{
 			hasPlacedCup = true;
 			break;
 		}
-		//else if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-		//	GetSpherePos(), GetSphereRad()) &&
-		//	obj->GetItemState() != ITEM_STATE::PLACED)
-		//{
-		//	break;	//PLACED状態のカップがなければループを抜ける
-		//}
 	}
 
 	//PLACED状態のカップがなければ非アクティブにする
 	if (!hasPlacedCup)
-	{
-		ChangeMachineState(MACHINE_STATE::INACTIVE);
-		return;
-	}
-
-	//インタラクト時間が過ぎたら非アクティブにする
-	if (param_.interactTime_ <= 0.0f)
 	{
 		ChangeMachineState(MACHINE_STATE::INACTIVE);
 		return;

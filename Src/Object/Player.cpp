@@ -43,8 +43,8 @@ void Player::Init(void)
 
 	//ÉÇÉfÉãÇÃäÓñ{ê›íË
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
-		ResourceManager::SRC::CUSTOMER));
-	transform_.scl = AsoUtility::VECTOR_ONE;
+		ResourceManager::SRC::PLAYER));
+	transform_.scl = {0.7f,0.7f,0.7f};
 	transform_.pos = { -60.0f, 30.0f, 0.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
@@ -183,11 +183,10 @@ void Player::InitAnimation(void)
 
 	std::string path = Application::PATH_MODEL + "Player/";
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
-	animationController_->Add((int)ANIM_TYPE::IDLE, path + "Idle.mv1", 20.0f);
-	animationController_->Add((int)ANIM_TYPE::RUN, path + "Run.mv1", 20.0f);
-	animationController_->Add((int)ANIM_TYPE::FAST_RUN, path + "FastRun.mv1", 20.0f);
-	animationController_->Add((int)ANIM_TYPE::JUMP, path + "Jump.mv1", 60.0f);
-	animationController_->Add((int)ANIM_TYPE::FALLING, path + "Falling.mv1", 80.0f);
+	animationController_->Add((int)ANIM_TYPE::IDLE, path + "Idle.mv1", 30.0f);
+	animationController_->Add((int)ANIM_TYPE::RUN, path + "Walk.mv1", 30.0f);
+	animationController_->Add((int)ANIM_TYPE::IDLE_HOLD, path + "Idle_Hold.mv1", 30.0f);
+	animationController_->Add((int)ANIM_TYPE::WALK_HOLD, path + "Walk_Hold.mv1", 30.0f);
 
 	animationController_->Play((int)ANIM_TYPE::IDLE);
 }
@@ -409,9 +408,9 @@ void Player::ProcessMove(void)
 		if (IsEndLanding())
 		{
 			if (speed_ == SPEED_RUN)
-				animationController_->Play((int)ANIM_TYPE::FAST_RUN);
-			else
 				animationController_->Play((int)ANIM_TYPE::RUN);
+			else
+				animationController_->Play((int)ANIM_TYPE::WALK);
 		}
 
 		////à⁄ìÆó 

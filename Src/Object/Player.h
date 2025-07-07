@@ -40,10 +40,11 @@ public:
 	enum class ANIM_TYPE
 	{
 		IDLE,
+		WALK,
 		RUN,
-		FAST_RUN,
+		IDLE_HOLD,
+		WALK_HOLD,
 		JUMP,
-		FALLING
 	};
 
 	//コンストラクタ

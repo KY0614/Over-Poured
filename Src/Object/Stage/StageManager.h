@@ -185,7 +185,7 @@ private:
 	/// コーヒーを生成する処理
 	/// </summary>
 	/// <param name="">マシンに設置されているカップに対して行う処理/param>
-	void ProduceCoffee(void);
+	void ProduceCoffee(int index);
 
 	/// <summary>
 	/// コーヒーを作る処理
@@ -196,10 +196,10 @@ private:
 	void MakeCoffee(int index,StageObject& obj,std::string objName);
 
 	/// <summary>
-	///　カップにアイスディスペンサーで氷を入れる処理
+	/// カップにアイスディスペンサーで氷を入れる処理
 	/// </summary>
-	/// <param name="">dynamic_castでアイスカップの関数を使用</param>
-	void DispenseIce2Cup(void);
+	/// <param name="index">指定するアイスディスペンサーの要素番号</param>
+	void DispenseIce2Cup(int index);
 
 	/// <summary>
 	/// コーヒーに蓋をつける
