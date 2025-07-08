@@ -6,6 +6,8 @@ class ResultScene : public SceneBase
 {
 public:
 
+	static constexpr int ADD_SCORE_SPEED = 8;
+
 	// コンストラクタ
 	ResultScene(void);
 
@@ -17,5 +19,7 @@ public:
 	void Draw(void) override;
 
 private:
+
+	int currentScr_;
 };
 

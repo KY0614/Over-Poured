@@ -7,6 +7,7 @@
 
 ResultScene::ResultScene(void)
 {
+	currentScr_ = 0;
 }
 
 ResultScene::~ResultScene(void)
@@ -20,6 +21,15 @@ void ResultScene::Init(void)
 
 void ResultScene::Update(void)
 {
+	auto& scr = Score::GetInstance();
+	if (currentScr_ >= scr.GetCurrentScore())
+	{
+		currentScr_ = scr.GetCurrentScore();
+	}
+	else 
+	{
+		currentScr_ += ADD_SCORE_SPEED;
+	}
 	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsInputTriggered("NextScene"))
@@ -39,7 +49,7 @@ void ResultScene::Draw(void)
 	int line = 1;	//行
 	int lineHeight = 40;	//行
 	SetFontSize(24);
-	DebugDrawFormat::FormatString(L"今回のスコア : ￥%d", scr.GetCurrentScore(),line,lineHeight);
+	DebugDrawFormat::FormatStringRight(L"今回のスコア : ￥%d      ", currentScr_,line,lineHeight);
 	DebugDrawFormat::FormatString(L"全プレイヤーの総スコア : ￥%d", scr.GetAggregateScore(),line,lineHeight);
 	for (int i = 0; i < Score::RANKING_NUM; ++i) {
 		DebugDrawFormat::FormatString(L"%d 位 : ￥%d", i + 1, scr.GetRankingScore(i), line, lineHeight);
