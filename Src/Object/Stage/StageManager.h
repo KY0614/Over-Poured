@@ -8,7 +8,6 @@
 
 class StageObject;
 class Player;
-class Interact2D;
 class AnimationController;
 
 class StageManager : public ActorBase
@@ -49,13 +48,6 @@ public:
 		IDLE,
 		PAYING,
 		
-	};
-
-	enum class MODE {
-		GAME_3D,		// 3Dゲームモード
-		MACHINE_2D,		// 2Dマシンモード
-		ICE_2D,			// 2D製氷機モード
-		LIDRACK_2D,		// 2Dリッドラックモード
 	};
 	
 	//コンストラクタ
@@ -109,20 +101,6 @@ private:
 	Transform caseTran_;
 	Transform dustBoxTran_;
 
-	//モード管理
-	MODE mode_;
-
-	//状態管理(状態遷移時初期処理)
-	std::map<MODE, std::function<void(void)>> stateChanges_;
-
-	//状態管理
-	std::map<MODE, std::function<void(void)>> updateFunc_;
-	std::map<MODE, std::function<void(void)>> drawFunc_;
-
-	//状態管理(更新ステップ)
-	std::function<void(void)> modeUpdate_;
-	std::function<void(void)> modeDraw_;
-
 	//プレイヤーの参照
 	Player& player_;
 
@@ -136,8 +114,6 @@ private:
 	std::unique_ptr<StageObject> counter_;
 	std::unique_ptr<StageObject> case_;
 
-	std::unique_ptr<Interact2D> interact2D_;	//2Dインタラクト用
-
 	bool isServed_;
 
 	//提供済み商品
@@ -148,6 +124,16 @@ private:
 
 	//各注文が提供されたかどうかのフラグ
 	std::vector<bool> isServedItems_; 
+
+	struct Location {
+		std::string name_;//メッシュ名
+		VECTOR pos_;	//座標
+		VECTOR angle_;	//角度
+	};
+	std::vector<Location> locationData_;
+	std::vector<int> models_;
+
+	void LoadLocationData(void);
 
 	void InitAnimation(void);
 
@@ -219,25 +205,6 @@ private:
 	/// <param name=""></param>
 	/// <returns></returns>
 	bool IsOrderCompleted(void);
-
-	//状態遷移
-	void ChangeMode(MODE mode);
-	void ChangeMode3DGame(void);
-	void ChangeModeMachine2D(void);
-	void ChangeModeIce2D(void);
-	void ChangeModeLidRack2D(void);
-
-	//更新ステップ
-	void Update3DGame(void);
-	void UpdateMachine2D(void);
-	void UpdateIce2D(void);
-	void UpdateLidRack2D(void);
-
-	//描画ステップ
-	void Draw3DGame(void);
-	void DrawMachine2D(void);
-	void DrawIce2D(void);
-	void DrawLidRack2D(void);
 
 	void DrawDebug(void);
 

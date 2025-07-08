@@ -121,10 +121,6 @@ void Player::Update(void)
 
 void Player::Draw(void)
 {
-	//DrawSphere3D(sphereTran_.pos, 30, 8, 0xffff00, 0xffff00, false);
-
-	//capsule_->Draw();
-	sphere_->Draw();
 
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
@@ -133,7 +129,7 @@ void Player::Draw(void)
 	DrawShadow();
 
 	//デバッグ用描画
-	DrawDebug();
+	//DrawDebug();
 
 }
 
@@ -191,6 +187,7 @@ void Player::InitAnimation(void)
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
 	animationController_->Add((int)ANIM_TYPE::IDLE, path + "Idle.mv1", 30.0f);
 	animationController_->Add((int)ANIM_TYPE::WALK, path + "Walk.mv1", 30.0f);
+	animationController_->Add((int)ANIM_TYPE::RUN, path + "Walk.mv1", 30.0f);
 	animationController_->Add((int)ANIM_TYPE::IDLE_HOLD, path + "Idle_Hold.mv1", 30.0f);
 	animationController_->Add((int)ANIM_TYPE::WALK_HOLD, path + "Walk_Hold.mv1", 30.0f);
 

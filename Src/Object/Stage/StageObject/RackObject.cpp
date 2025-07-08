@@ -1,3 +1,4 @@
+#include "../../../Common/DebugDrawFormat.h"
 #include "../../../Manager/Generic/SceneManager.h"
 #include "../../../Manager/Generic/InputManager.h"
 #include "../../../Manager/Generic/ResourceManager.h"
@@ -16,6 +17,7 @@ RackObject::RackObject(const std::string objId,
 	sweetsStockCnt_ = SWEETS_STOCK_MAX;
 	cupsStockCnt_ = CUP_STOCK_MAX;
 	hasStock_ = true;
+	addInterval_ = 0.0f;
 }
 
 void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
@@ -78,14 +80,6 @@ void RackObject::AddStock(int addStockNum)
 	
 	auto& ins = InputManager::GetInstance();
 
-	if(sweetsStockCnt_ >= SWEETS_STOCK_MAX &&
-		cupsStockCnt_ >= CUP_STOCK_MAX)
-	{
-		hasStock_ = true;
-		gaugeUI_->Reset();
-		return;
-	}
-
 	if (ins.IsInputPressed("Interact"))
 	{
 		gaugeUI_->SetActive(true);
@@ -93,11 +87,39 @@ void RackObject::AddStock(int addStockNum)
 		gaugeUI_->Update();
 	}
 
-	if (addInterval_ > SWEETS_ADD_INTERVAL)
+	if(GetParam().id_ == "Sweets_Strawberry_Rack" ||
+		GetParam().id_ == "Sweets_Choco_Rack")
 	{
-		addInterval_ = 0.0f;
-		sweetsStockCnt_++;
-		cupsStockCnt_++;
+		//スイーツの在庫を追加
+		if (addInterval_ > ADD_INTERVAL)
+		{
+			addInterval_ = 0.0f;
+			sweetsStockCnt_++;
+		}
+		//スイーツの在庫が最大に達したら、在庫ありに設定
+		if (sweetsStockCnt_ >= SWEETS_STOCK_MAX)
+		{
+			hasStock_ = true;
+			gaugeUI_->Reset();
+			return;
+		}
+	}
+	else if(GetParam().id_ == "Cup_Hot_Rack" ||
+			GetParam().id_ == "Cup_Ice_Rack")
+	{
+		//カップの在庫を追加
+		if (addInterval_ > ADD_INTERVAL)
+		{
+			addInterval_ = 0.0f;
+			cupsStockCnt_++;
+		}
+		//カップの在庫が最大に達したら、在庫ありに設定
+		if (cupsStockCnt_ >= CUP_STOCK_MAX)
+		{
+			hasStock_ = true;
+			gaugeUI_->Reset();
+			return;
+		}
 	}
 }
 
@@ -105,27 +127,30 @@ void RackObject::Init(VECTOR pos, float rotY)
 {
 	StageObject::Init(pos, rotY);
 
-	//UIの初期化
-	gaugeUI_ = std::make_unique<GaugeUI>(false, SWEETS_ADD_INTERVAL * SWEETS_STOCK_MAX);
-	gaugeUI_->Init();
-	gaugeUI_->SetUISize(50.0f, 10.0f);
-	VECTOR uiPos = transform_.pos;
-	uiPos.y -= 30.0f;	//UIの位置を調整
-	gaugeUI_->SetPos(uiPos); // UIの位置を設定
-
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
 	if (param_.id_ == "Sweets_Strawberry_Rack")
 	{
 		srcType = ResourceManager::SRC::SWEETS_BERRY; // デフォルトのラックIDを設定
+		cupsStockCnt_ = 0;
 	}
 	else if (param_.id_ == "Sweets_Choco_Rack")
 	{
 		srcType = ResourceManager::SRC::SWEETS_CHOCO; // チョコレートラックIDを設定
+		cupsStockCnt_ = 0;
 	}
 
 	if (srcType != ResourceManager::SRC::NONE)
 	{
+
+		//スイーツ用UIの初期化
+		gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * SWEETS_STOCK_MAX);
+		gaugeUI_->Init();
+		gaugeUI_->SetUISize(50.0f, 10.0f);
+		VECTOR uiPos = transform_.pos;
+		uiPos.y -= UI_OFFSET_Y;	//UIの位置を調整
+		gaugeUI_->SetPos(uiPos); // UIの位置を設定
+
 		// 各スイーツの基準座標からのオフセットを配列で定義
 		const VECTOR sweetsOffsets[] = {
 			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
@@ -149,14 +174,24 @@ void RackObject::Init(VECTOR pos, float rotY)
 
 	if (srcType != ResourceManager::SRC::NONE)return;
 
+	//カップ用UIの初期化
+	gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * CUP_STOCK_MAX);
+	gaugeUI_->Init();
+	gaugeUI_->SetUISize(70.0f, 30.0f);
+	VECTOR uiPos = transform_.pos;
+	uiPos.y -= UI_OFFSET_Y;	//UIの位置を調整
+	gaugeUI_->SetPos(uiPos); // UIの位置を設定
+
 	//設定されていなかったらカップモデルを設定する
 	if (param_.id_ == "Cup_Hot_Rack")
 	{
 		srcType = ResourceManager::SRC::HOTCUP; // ホットカップラックIDを設定
+		sweetsStockCnt_ = 0;
 	}
 	else if (param_.id_ == "Cup_Ice_Rack")
 	{
 		srcType = ResourceManager::SRC::ICECUP; // アイスカップラックIDを設定
+		sweetsStockCnt_ = 0;
 	}
 
 	// 各カップの基準座標からのオフセットを配列で定義
@@ -187,7 +222,7 @@ void RackObject::Init(VECTOR pos, float rotY)
 
 void RackObject::Update(void)
 {
-	if(sweetsStockCnt_ <= 0 || cupsStockCnt_ <= 0)
+	if(sweetsStockCnt_ <= 0 && cupsStockCnt_ <= 0)
 	{
 		hasStock_ = false;
 	}
@@ -207,9 +242,8 @@ void RackObject::Update(void)
 
 void RackObject::Draw(void)
 {
-	//int line = 3;	//行
-	//int lineHeight = 30;	//行
-
+	int line = 3;	//行
+	int lineHeight = 30;	//行
 	//VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
 	//// 変換成功
 	//DrawFormatString(static_cast<int>(screenPos.x) - 30,

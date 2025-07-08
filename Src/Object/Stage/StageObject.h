@@ -21,8 +21,8 @@ public:
 	static constexpr int SWEETS_STOCK_MAX = 4;	//スイーツのラックの最大在庫数
 	static constexpr int CUP_STOCK_MAX = 5;		//カップのラックの最大在庫数
 
-	//スイーツの追加間隔
-	static constexpr float SWEETS_ADD_INTERVAL = 0.7f;	
+	//追加間隔
+	static constexpr float ADD_INTERVAL = 0.7f;	
 
 	static constexpr float SWEETS_HALF_WIDTH = 18.0f;
 	static constexpr float SWEETS_HEIGHT_OFFSET = 12.0f;

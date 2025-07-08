@@ -35,7 +35,6 @@ void StageObject::Init(VECTOR pos,float rotY)
 
 	// •¶š—ñ‚ğSRC‚É•ÏŠ·‚µ‚Äƒ‚ƒfƒ‹İ’è
 	ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(param_.id_);
-	//ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(objId_);
 
 	//ƒ‚ƒfƒ‹‚ÌŠî–{İ’è
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));

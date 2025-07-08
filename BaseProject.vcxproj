@@ -25,7 +25,6 @@
     <ClCompile Include="Src\Object\Stage\StageObject\RackObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\ItemObject.cpp" />
     <ClCompile Include="Src\Manager\Generic\Input.cpp" />
-    <ClCompile Include="Src\Object\Stage\Interact2D.cpp" />
     <ClCompile Include="Src\FpsCounter.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\IceDispenser.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\DustBox.cpp" />
@@ -89,7 +88,6 @@
     <ClInclude Include="Src\Object\Stage\StageObject\RackObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\ItemObject.h" />
     <ClInclude Include="Src\Manager\Generic\Input.h" />
-    <ClInclude Include="Src\Object\Stage\Interact2D.h" />
     <ClInclude Include="Src\FpsCounter.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\IceDispenser.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\DustBox.h" />

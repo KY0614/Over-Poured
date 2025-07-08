@@ -7,6 +7,8 @@ class RackObject : public StageObject
 {
 public:
 
+	static constexpr float UI_OFFSET_Y = 30.0f;
+
 	RackObject(const std::string objId, const float width,
 		const float height, const float depth, Player& player);
 
