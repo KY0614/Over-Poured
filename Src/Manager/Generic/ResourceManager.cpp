@@ -90,7 +90,6 @@ ResourceManager::SRC ResourceManager::StringToSRC(const std::string& name)
 		{ "Hot_Cup_Lid",		SRC::HOTCUP_LID },
 		{ "Ice_Cup_Lid",		SRC::ICECUP_LID },
 		{ "Dust_Box",		SRC::DUSTBOX },
-		//{ "lid",     SRC::LID },
 		// êVÇµÇ¢óvëfÇÕÇ±Ç±Ç…í«â¡
 	};
 
@@ -140,7 +139,6 @@ void ResourceManager::InitTutorial(void)
 
 void ResourceManager::InitGame(void)
 {
-	//êÑèßÇµÇ‹ÇπÇÒÇ™ÅAÇ«Ç§ÇµÇƒÇ‡égÇ¢ÇΩÇ¢ï˚ÇÕ
 	using RES = Resource;
 	using RES_T = RES::TYPE;
 	static std::string PATH_IMG = Application::PATH_IMAGE;
@@ -272,6 +270,34 @@ void ResourceManager::InitGame(void)
 
 void ResourceManager::InitResult(void)
 {
+	using RES = Resource;
+	using RES_T = RES::TYPE;
+	static std::string PATH_IMG = Application::PATH_IMAGE;
+	static std::string PATH_MDL = Application::PATH_MODEL;
+	static std::string PATH_EFF = Application::PATH_EFFECT;
+
+	std::unique_ptr<Resource> res;
+
+	//â~ÅiC)
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Circle_C.png");
+	resourcesMap_.emplace(SRC::RANK_C, std::move(res));
+
+	//â~ÅiB)
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Circle_B.png");
+	resourcesMap_.emplace(SRC::RANK_B, std::move(res));
+
+	//â~ÅiA)
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Circle_A.png");
+	resourcesMap_.emplace(SRC::RANK_A, std::move(res));
+
+	//â~ÅiS)
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Circle_S.png");
+	resourcesMap_.emplace(SRC::RANK_S, std::move(res));
+
+	//ÉQÅ[ÉWâeUI
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleGage.png");
+	resourcesMap_.emplace(SRC::UI_CIRCLESHADOW, std::move(res));
+
 }
 
 ResourceManager::ResourceManager(void)

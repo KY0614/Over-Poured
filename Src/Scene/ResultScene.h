@@ -2,11 +2,11 @@
 #include <memory>
 #include "SceneBase.h"
 
+class Score;
+
 class ResultScene : public SceneBase
 {
 public:
-
-	static constexpr int ADD_SCORE_SPEED = 8;
 
 	// コンストラクタ
 	ResultScene(void);
@@ -20,6 +20,8 @@ public:
 
 private:
 
-	int currentScr_;
+	std::unique_ptr<Score> score_;
+
+	void DebugDraw(void);
 };
 

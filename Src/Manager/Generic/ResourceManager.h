@@ -47,6 +47,11 @@ public:
 		UI_CIRCLE,
 		UI_CIRCLESHADOW,
 
+		RANK_C,
+		RANK_B,
+		RANK_A,
+		RANK_S,
+
 		CUSTOMER,
 	};
 

@@ -14,7 +14,7 @@
 #include "../Object/Stage/StageObject.h"
 #include"../Object/Order/OrderManager.h"
 #include "../Object/Player.h"
-#include "../Object/Score.h"
+#include "../Manager/GameSystem//ScoreManager.h"
 #include "../Object/SkyDome.h"
 #include "GameScene.h"
 namespace {
@@ -78,7 +78,7 @@ void GameScene::Init(void)
 void GameScene::Update(void)
 {
 	InputManager& ins = InputManager::GetInstance();
-	Score& scr = Score::GetInstance();
+	ScoreManager& scr = ScoreManager::GetInstance();
 
 	if (customer_->GetIsMoving())
 	{
@@ -86,9 +86,10 @@ void GameScene::Update(void)
 		stage_->SetCurrentOrder(customer_->GetOrderData());
 	}
 
-	if(ins.IsTrgDown(KEY_INPUT_T))
+	if(ins.IsInputTriggered("pause"))
 	{
-		stop = !stop;
+		//stop = !stop;
+		score_ += 100;
 	}
 
 	if(stop)

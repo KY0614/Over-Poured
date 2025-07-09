@@ -243,6 +243,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SceneManager::SCENE_ID::RESULT:
 		scene_ = std::make_unique<ResultScene>();
+		resM.InitResult();
 		break;
 	default:
 		break;

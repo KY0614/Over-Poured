@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\Easing.cpp" />
+    <ClCompile Include="Src\Object\Score.cpp" />
     <ClCompile Include="Src\Object\UI\GaugeUI.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\FollowingObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\InteractObject.cpp" />
@@ -48,7 +50,7 @@
     <ClCompile Include="Src\Libs\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Src\Libs\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Src\Libs\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Src\Object\Score.cpp" />
+    <ClCompile Include="Src\Manager\GameSystem\ScoreManager.cpp" />
     <ClCompile Include="Src\Scene\ResultScene.cpp" />
     <ClCompile Include="Src\Scene\MovieScene.cpp" />
     <ClCompile Include="Src\Scene\SelectScene.cpp" />
@@ -82,6 +84,8 @@
     <ClCompile Include="Src\Object\UI\UIBase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\Easing.h" />
+    <ClInclude Include="Src\Object\Score.h" />
     <ClInclude Include="Src\Object\UI\GaugeUI.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\FollowingObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\InteractObject.h" />
@@ -158,7 +162,7 @@
     <ClInclude Include="Src\Libs\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Src\Libs\ImGui\imstb_textedit.h" />
     <ClInclude Include="Src\Libs\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Src\Object\Score.h" />
+    <ClInclude Include="Src\Manager\GameSystem\ScoreManager.h" />
     <ClInclude Include="Src\Scene\ResultScene.h" />
     <ClInclude Include="Src\Scene\MovieScene.h" />
     <ClInclude Include="Src\Scene\SelectScene.h" />
