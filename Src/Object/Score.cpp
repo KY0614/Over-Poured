@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include "../Application.h"
 #include "../Common/DebugDrawFormat.h"
 #include "../Manager/Generic/SceneManager.h"
@@ -10,12 +11,14 @@
 Score::Score(void)
 {
 	currentScr_ = 0;
+	totalScr_ = 0;
 	highLightIdx_ = -1;
+	currentRankIdx_ = -1;
 
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
 	{
 		slideX_[i] = 0.0f;
-		slideTime_[i] = 0.0f;
+		slideXTime_[i] = 0.0f;
 		isMove_[i] = false;
 	}
 
@@ -25,10 +28,14 @@ Score::Score(void)
 	}
 
 	blinkTime_ = 0.0f;
+	gaugeTime_ = 0.0f;
+	slideY_ = 0.0f;
+	slideYTime_ = 0.0f;
 
 	circleShadowImg_ = -1;
 	state_ = STATE::PLAY_SCORE;
 	rank_ = RANK::MAX;
+	phase_ = TOTALSCR_PHASE::COUNT_UP;
 
 	stateChange_.emplace(STATE::PLAY_SCORE, std::bind(&Score::ChangePlayScore, this));
 	stateChange_.emplace(STATE::TOTAL_SCORE, std::bind(&Score::ChangeTotalScore, this));
@@ -58,9 +65,9 @@ void Score::Init(void)
 			highLightIdx_ = i;
 		}
 	}
-
+	slideY_ = START_SLIDE_Y;
 	isMove_[0] = true;
-
+	currentRankIdx_ = 0;
 	rank_ = GetRankFromScore(scr.GetCurrentScore());
 
 	ChangeState(STATE::PLAY_SCORE);
@@ -114,44 +121,23 @@ void Score::UpdatePlayScore(void)
 	{
 		currentScr_ += ADD_SCORE_SPEED;
 	}
-	CalcPercentFromRank();
-	//for (int i = 0; i < (int)GetRankFromScore(scr.GetCurrentScore()) + 1; ++i)
-	//{
-	//	if (currentScr_ <= rankData_[i].startVal_)
-	//	{
-	//		rankData_[i].currentRate_ = 0.0f;
-	//	}
-	//	else if (currentScr_ >= rankData_[i].endVal_)
-	//	{
-	//		rankData_[i].currentRate_ = 1.0f;
-	//	}
-	//	else
-	//	{
-	//		rankData_[i].currentRate_ =
-	//			(float)(currentScr_ - rankData_[i].startVal_) /
-	//			(rankData_[i].endVal_ - rankData_[i].startVal_);
-	//	}
 
-	//	// イージング：easeOutCubic
-	//	float t = rankData_[i].currentRate_;
-	//	float eased = 1.0f - powf(1.0f - t, 3.0f);
-	//	rankData_[i].displayedRate_ += (eased - rankData_[i].displayedRate_) * 0.2f; // 滑らかに追従
-	//}
+	CalcPercentFromRank();
 
 	//イージングをかけて移動させる
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
 	{
 		if (!isMove_[i])break;
 		//移動中
-		slideTime_[i] += SceneManager::GetInstance().GetDeltaTime() * 0.5f;
+		slideXTime_[i] += SceneManager::GetInstance().GetDeltaTime() * 0.5f;
 		slideX_[i] = Easing::CubicOut(
-			slideTime_[i], SLIDE_MAX_TIME, START_SLIDE_X, END_SLIDE_X);
+			slideXTime_[i], SLIDE_MAX_TIME, START_SLIDE_X, END_SLIDE_X);
 
 		//移動座標が終了座標を超えそうになったら移動終了
 		if (slideX_[i] > END_SLIDE_X)
 		{
 			slideX_[i] = END_SLIDE_X;
-			slideTime_[i] = SLIDE_MAX_TIME;
+			slideXTime_[i] = SLIDE_MAX_TIME;
 		}
 	}
 	//ディレイを付けるため、
@@ -168,13 +154,89 @@ void Score::UpdatePlayScore(void)
 	//今回のスコアがランクインしていたら点滅させる
 	if (highLightIdx_ != -1)
 	{
-		blinkTime_ += SceneManager::GetInstance().GetDeltaTime() * 0.5f;
+		blinkTime_ += SceneManager::GetInstance().GetDeltaTime() * BLINK_SPEED;
 	}
 }
 
 void Score::UpdateTotalScore(void)
 {
-	//シーン遷移
+	auto& scr = ScoreManager::GetInstance();
+	////今回のスコアまで０から加算する
+	//if (totalScr_ >= scr.GetAggregateScore() - currentScr_)
+	//{
+	//	totalScr_ = scr.GetAggregateScore() - currentScr_;
+	//}
+	//else
+	//{
+	//	totalScr_ += ADD_TOTALSCORE_SPEED;
+	//}
+
+	switch (phase_)
+	{
+	case TOTALSCR_PHASE::COUNT_UP:
+		//総スコアまで加算する（今回のスコアを引いた分）
+		if (totalScr_ >= scr.GetAggregateScore() - currentScr_)
+		{
+			totalScr_ = scr.GetAggregateScore() - currentScr_;
+			phase_ = TOTALSCR_PHASE::SHOW_CURRENT;
+		}
+		else
+		{
+			totalScr_ += ADD_TOTALSCORE_SPEED;
+		}
+		break;
+
+	case TOTALSCR_PHASE::SHOW_CURRENT:
+		//移動中
+		slideYTime_ += SceneManager::GetInstance().GetDeltaTime() * 0.5f;
+		slideY_ = Easing::CubicOut(
+			slideYTime_, SLIDE_MAX_TIME, START_SLIDE_Y, END_SLIDE_Y);
+
+		//移動座標が終了座標を超えそうになったら移動終了
+		if (slideY_ < END_SLIDE_Y)
+		{
+			slideY_ = END_SLIDE_Y;
+			slideYTime_ = 0.0f;
+			phase_ = TOTALSCR_PHASE::MOVE_TO_TOTAL;
+		}
+
+		break;
+
+	case TOTALSCR_PHASE::MOVE_TO_TOTAL:
+		//移動中
+		slideYTime_ += SceneManager::GetInstance().GetDeltaTime() * 0.5f;
+		slideY_ = Easing::BackIn(
+			slideYTime_, SLIDE_MAX_TIME, END_SLIDE_Y, 320.0f,0.0f);
+
+		//移動座標が終了座標を超えそうになったら移動終了
+		if (slideY_ < 320.0f)
+		{
+			slideY_ = 320.0f;
+			slideYTime_ = 0.0f;
+			phase_ = TOTALSCR_PHASE::MERGE;
+		}
+		break;
+
+	case TOTALSCR_PHASE::MERGE:
+		slideY_ = -100.0f;
+		//今回のスコアを加算する
+		if (totalScr_ >= scr.GetAggregateScore())
+		{
+			totalScr_ = scr.GetAggregateScore();
+			phase_ = TOTALSCR_PHASE::FINISH;
+		}
+		else
+		{
+			totalScr_ += ADD_CURRENT_SPEED;
+		}
+		break;
+
+	case TOTALSCR_PHASE::FINISH:
+		// 入力受付 or 他の演出へ遷移
+		break;
+	}
+
+	//シーン遷移 
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsInputTriggered("Interact"))
 	{
@@ -197,26 +259,52 @@ void Score::DrawPlayScore(void)
 	DebugDrawFormat::FormatStringRight(L"今回のスコア : ￥%d      ",
 		currentScr_, line, lineHeight);
 
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y/2,
-		1.0f, 0.0f, circleShadowImg_,
+	DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + 320,
+		Application::SCREEN_SIZE_Y/2 - 80,
+		2.0f, 0.0f, circleShadowImg_,
 		true, false);
 
-	for (int i = (int)rank_ + 1; i >= 0; --i)
+	for (int i = 0; i < static_cast<int>(rank_) + 1; ++i)
 	{
-		// DrawCircleGauge の仕様に合わせて 0.0?100.0 に変換
-		double percent = std::clamp(rankData_[i].displayedRate_, 0.0f, 1.0f) * 100.0;
-		
 		// DrawCircleGaugeを使った描画
 		DrawCircleGauge(
-			Application::SCREEN_SIZE_X / 2,
-			Application::SCREEN_SIZE_Y / 2,
-			rankData_[i].displayedRate_,
+			Application::SCREEN_SIZE_X / 2 + 320,
+			Application::SCREEN_SIZE_Y / 2 - 80,
+			rankData_[i].displayedRate_ * 100.0f,
 			rankData_[i].gaugeImg_,
 			0.0f,
-			1.0f,
+			2.0f,
 			false,false
 		);
+	}
+	if (rankData_[(int)rank_].isFull_)
+	{
+		switch (rank_)
+		{
+		case Score::RANK::C:
+			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
+				Application::SCREEN_SIZE_Y / 2 - 80, L"C",
+				0xFFFFFF);
+			break;
+		case Score::RANK::B:
+			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
+				Application::SCREEN_SIZE_Y / 2 - 80, L"B",
+				0xFFFFFF);
+			break;
+		case Score::RANK::A:
+			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
+				Application::SCREEN_SIZE_Y / 2 - 80, L"A",
+				0xFFFFFF);
+			break;
+		case Score::RANK::S:
+			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
+				Application::SCREEN_SIZE_Y / 2 - 80, L"S",
+				0xFFFFFF);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	DrawFormatString(END_SLIDE_X, 180, 0xFFFFFF,
@@ -243,9 +331,17 @@ void Score::DrawTotalScore(void)
 	int line = 1;	//行
 	int lineHeight = 40;	//行
 
-	SetFontSize(24);
-	DebugDrawFormat::FormatString(L"全プレイヤーの総スコア : ￥%d",
-		scr.GetAggregateScore(), line, lineHeight);
+	SetFontSize(24);		
+	DrawFormatString(Application::SCREEN_SIZE_X / 2 - 200,
+			Application::SCREEN_SIZE_Y / 2,
+			0xFFFFFF, L"全プレイヤーの総スコア : ￥ % d", totalScr_);
+	
+	if (phase_ >= TOTALSCR_PHASE::SHOW_CURRENT && phase_ < TOTALSCR_PHASE::MERGE)
+	{
+		DrawFormatString(Application::SCREEN_SIZE_X / 2 - 200, slideY_, 0xFFFFFF,
+			L"今回のスコア : ￥%d", currentScr_);
+	}
+
 	SetFontSize(16);
 
 #endif // _DEBUG
@@ -256,39 +352,81 @@ void Score::CalcPercentFromRank(void)
 {
 	auto& scr = ScoreManager::GetInstance();
 	int score = scr.GetCurrentScore();
-	RANK currentRank = GetRankFromScore(score);
+	//現在のランクをインデックスとして保持
+	int rankIdx = static_cast<int>(rank_);
 
-	for (int i = 0; i < (int)currentRank + 1; ++i)
+	//
+	for (int i = 0; i <= currentRankIdx_; ++i)
 	{
-		if (score <= rankData_[i].startVal_)
+		auto& data = rankData_[i];
+		int prevIdx = 0;
+		if (i > 0)prevIdx = i - 1;
+		//現在のランクより低いランクの処理
+		if (i < rankIdx)
 		{
-			rankData_[i].currentRate_ = 0.0f;
-		}
-		else if (score >= rankData_[i].endVal_)
+			if (data.isFull_)continue;
+			//達成済みなのでゲージは満タン
+			data.currentRate_ = 1.0f;
+			
+			//前のランクゲージが既に満タンで今回も満タンの場合、
+			//ゲージの始まりのほうの速度を早くしておきたい
+			if (rankData_[prevIdx].isFull_)
+			{
+				//ゲージをイージングをかけて滑らかに増やしていく
+				gaugeTime_ += SceneManager::GetInstance().GetDeltaTime();
+				data.displayedRate_ = Easing::Linear(
+					gaugeTime_, MAX_GAUGE_TIME,
+					0.0f, data.currentRate_);
+			}
+			else 
+			{
+				//ゲージをイージングをかけて滑らかに増やしていく
+				gaugeTime_ += SceneManager::GetInstance().GetDeltaTime() * FIRST_GAUGE_SPEED;
+				//ゲージをイージングをかけて滑らかに増やしていく
+				data.displayedRate_ = Easing::CubicIn(
+					gaugeTime_, MAX_GAUGE_TIME,
+					0.0f, data.currentRate_);
+			}
+			// イージング終了判定
+			if (rankData_[i].displayedRate_ > rankData_[i].currentRate_)
+			{
+				data.displayedRate_ = data.currentRate_;
+				currentRankIdx_++;		//次のランクへ
+				gaugeTime_ = 0.0f;      //リセット
+				data.isFull_ = true;
+			}
+		}//現在のランクの処理
+		else if (i == currentRankIdx_)
 		{
-			rankData_[i].currentRate_ = 1.0f;
-		}
-		else
-		{
-			rankData_[i].currentRate_ =
-				((float)(score) /
-					rankData_[i].endVal_ - rankData_[i].startVal_) * 100.0f;
-		}
+			if (data.isFull_)break;
+			//スコアを現在のランクの範囲を比例計算する（後で100をかけてパーセントにする）
+			rankData_[i].currentRate_ = (
+				static_cast<float>(score - rankData_[rankIdx].startVal_) /
+			static_cast<float>(rankData_[rankIdx].endVal_ - rankData_[rankIdx].startVal_));
 
-		// イージング：easeOutCubic
-		float t = rankData_[i].currentRate_;
-		float eased = 1.0f - powf(1.0f - t, 3.0f);
-		rankData_[i].displayedRate_ += (eased - rankData_[i].displayedRate_) * 0.2f; // 滑らかに追従
+			//ゲージをイージングをかけて滑らかに増やしていく
+			gaugeTime_ += SceneManager::GetInstance().GetDeltaTime() * CURRENT_GAUGE_SPEED;
+			data.displayedRate_ = Easing::CubicOut(
+				gaugeTime_, MAX_GAUGE_TIME,
+				0.0f, data.currentRate_);
+
+			//イージング終了判定
+			if (rankData_[i].displayedRate_ >= rankData_[i].currentRate_)
+			{
+				data.displayedRate_ = data.currentRate_;
+				gaugeTime_ = 0.0f;      //リセット
+				data.isFull_ = true;
+			}
+		}
 	}
 }
 
 Score::RANK Score::GetRankFromScore(int score)
 {
 	if (score <= RANK_C_MAX) return RANK::C;
-	if (score > RANK_C_MAX) return RANK::B;
-	if (score > RANK_B_MAX) return RANK::A;
-	if (score > RANK_A_MAX) return RANK::S;
-	if (score > RANK_S_MAX) return RANK::S;
+	else if (score < RANK_A_MIN) return RANK::B;
+	else if (score < RANK_S_MIN) return RANK::A;
+	else return RANK::S;
 }
 
 void Score::InitRankInfo(void)
@@ -300,7 +438,6 @@ void Score::InitRankInfo(void)
 	rankData_[0].endVal_ = RANK_C_MAX;
 	rankData_[0].currentRate_ = 0.0f;
 	rankData_[0].displayedRate_ = 0.0f;
-	rankData_[0].pos_ = { 0,0 };
 
 	rankData_[1].gaugeImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANK_B).handleId_;
@@ -308,7 +445,6 @@ void Score::InitRankInfo(void)
 	rankData_[1].endVal_ = RANK_B_MAX;
 	rankData_[1].currentRate_ = 0.0f;
 	rankData_[1].displayedRate_ = 0.0f;
-	rankData_[1].pos_ = { 0,0 };
 
 	rankData_[2].gaugeImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANK_A).handleId_;
@@ -316,7 +452,6 @@ void Score::InitRankInfo(void)
 	rankData_[2].endVal_ = RANK_A_MAX;
 	rankData_[2].currentRate_ = 0.0f;
 	rankData_[2].displayedRate_ = 0.0f;
-	rankData_[2].pos_ = { 0,0 };
 
 	rankData_[3].gaugeImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANK_S).handleId_;
@@ -324,5 +459,4 @@ void Score::InitRankInfo(void)
 	rankData_[3].endVal_ = RANK_S_MAX;
 	rankData_[3].currentRate_ = 0.0f;
 	rankData_[3].displayedRate_ = 0.0f;
-	rankData_[3].pos_ = { 0,0 };
 }
