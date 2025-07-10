@@ -813,7 +813,6 @@ void StageManager::DrawDebug(void)
 	int lineHeight = 30;	//çs
 	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
 	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"pos : %0.2f", locationData_[7].pos_.x, line, lineHeight);
 	//DebugDrawFormat::FormatString(L"mode : %d", mode_, line, lineHeight);
 
 	//DebugDrawFormat::FormatString(L"currentD,S : %d,%d",

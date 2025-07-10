@@ -10,26 +10,27 @@ public:
 	static constexpr int TIME_MAX = 59;
 	static constexpr int TIME_MIN = 0;
 
-	//フォントサイズ初期値
-	static constexpr int TIME_FONT_SIZE = 50;
-
 	//タイマー背景サイズ
 	static constexpr float TIMER_BACK_RATE = 0.8f;
 	static constexpr int TIMER_BACK_SIZE_X = 298 * TIMER_BACK_RATE;
 	static constexpr int TIMER_BACK_SIZE_Y = 168 * TIMER_BACK_RATE;
 
-	static constexpr int MARGIN_SIZE = 30;
+	//数字の間隔
+	static constexpr int MARGIN_SIZE = 60;
+	static constexpr int MARGIN_SIZE_COLON = 10; // コロン部分のマージン
 
 	//数字大きさ
 	static constexpr float NUM_RATE = 0.75f;
 
 	//数字描画数
-	static constexpr int NUM_CNT = 2;
+	static constexpr int NUM_CNT = 4;
 
 	//数字の描画位置
 	static constexpr int NUM_POS_X[NUM_CNT] = {
-		Application::SCREEN_SIZE_X / 2 - MARGIN_SIZE,
+		Application::SCREEN_SIZE_X / 2 - (MARGIN_SIZE * 2) + MARGIN_SIZE_COLON,
+		Application::SCREEN_SIZE_X / 2 - MARGIN_SIZE + MARGIN_SIZE_COLON,
 		Application::SCREEN_SIZE_X / 2 + MARGIN_SIZE,
+		Application::SCREEN_SIZE_X / 2 + (MARGIN_SIZE * 2),
 	};
 	static constexpr int NUM_POS_Y = 64;
 

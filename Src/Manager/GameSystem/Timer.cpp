@@ -8,10 +8,7 @@ Timer::Timer(void)
 	cnt_ = 0;
 	isEnd_ = false;
 
-	std::string time = "c‚è" + std::to_string(minute_) + ":" + std::to_string(second_);
-	int len = (int)strlen(time.c_str());
-
-	pos_.x = Application::SCREEN_SIZE_X / 2.0f;
+	pos_.x = (float)Application::SCREEN_SIZE_X / 2;
 	pos_.y = 0.0f;
 	pos_.z = 0.0f;
 
@@ -47,7 +44,12 @@ void Timer::Draw()
 	//	imgTimerBack_,
 	//	true);
 
-	int num[NUM_CNT] = { second_ / 10 % 10, second_ % 10 };
+	int num[NUM_CNT] = {
+		minute_ / 10,       // •ª‚Ì\‚ÌˆÊ
+		minute_ % 10,       // •ª‚Ìˆê‚ÌˆÊ
+		second_ / 10,       // •b‚Ì\‚ÌˆÊ
+		second_ % 10        // •b‚Ìˆê‚ÌˆÊ
+	};
 
 	//•b”‚Ì•`‰æ
 	for (int i = 0; i < NUM_CNT; i++) {
