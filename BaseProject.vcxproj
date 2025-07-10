@@ -82,6 +82,7 @@
     <ClCompile Include="Src\Object\Stage\StageObjectLibrary.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\Table.cpp" />
     <ClCompile Include="Src\Object\UI\UIBase.cpp" />
+    <ClCompile Include="Src\Manager\GameSystem\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Common\Easing.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Src\Object\Stage\StageObjectLibrary.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\Table.h" />
     <ClInclude Include="Src\Object\UI\UIBase.h" />
+    <ClInclude Include="Src\Manager\GameSystem\Timer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

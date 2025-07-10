@@ -8,6 +8,10 @@ class ResourceManager
 {
 
 public:
+	static constexpr int NUMBER_NUM_X = 5;
+	static constexpr int NUMBER_NUM_Y = 2;
+	static constexpr int NUMBER_SIZE_X = 71;
+	static constexpr int NUMBER_SIZE_Y = 100;
 
 	// ÉäÉ\Å[ÉXñº
 	enum class SRC
@@ -51,6 +55,8 @@ public:
 		RANK_B,
 		RANK_A,
 		RANK_S,
+
+		TIMER_NUMBER,
 
 		CUSTOMER,
 	};

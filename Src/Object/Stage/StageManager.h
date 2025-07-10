@@ -125,16 +125,6 @@ private:
 	//各注文が提供されたかどうかのフラグ
 	std::vector<bool> isServedItems_; 
 
-	struct Location {
-		std::string name_;//メッシュ名
-		VECTOR pos_;	//座標
-		VECTOR angle_;	//角度
-	};
-	std::vector<Location> locationData_;
-	std::vector<int> models_;
-
-	void LoadLocationData(void);
-
 	void InitAnimation(void);
 
 	/// <summary>

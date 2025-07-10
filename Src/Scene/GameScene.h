@@ -7,6 +7,7 @@ class SkyDome;
 class Player;
 class OrderManager;
 class OrderCustomerManager;
+class Timer;
 
 class GameScene : public SceneBase
 {
@@ -39,7 +40,10 @@ private:
 	//客
 	std::unique_ptr<OrderCustomerManager> customer_;
 
-	float timer_;
+	//タイマー
+	std::unique_ptr<Timer> timer_;
+
+	float time_;
 
 	int score_;
 

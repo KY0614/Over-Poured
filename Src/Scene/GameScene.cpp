@@ -1,5 +1,4 @@
 #include <DxLib.h>
-#include <math.h>
 #include "../Application.h"
 #include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
@@ -7,6 +6,7 @@
 #include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/InputManager.h"
 #include"../Manager/GameSystem/OrderCustomerManager.h"
+#include"../Manager/GameSystem/Timer.h"
 #include"../Object/Customer/CustomerBase.h"
 #include "../Object/Common/Capsule.h"
 #include "../Object/Common/Collider.h"
@@ -27,8 +27,9 @@ GameScene::GameScene(void)
 	skyDome_ = nullptr;
 	stage_ = nullptr;
 	customer_ = nullptr;
+	timer_ = nullptr;
 	score_ = 0;
-	timer_ = 0.0f;
+	time_ = 0.0f;
 }
 
 GameScene::~GameScene(void)
@@ -63,6 +64,9 @@ void GameScene::Init(void)
 	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
 
+	//タイマー
+	timer_ = std::make_unique<Timer>();
+
 	//最初のお客の注文を受け取る
 	stage_->SetCurrentOrder(customer_->GetOrderData());
 
@@ -72,7 +76,7 @@ void GameScene::Init(void)
 	//mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 
 	//タイマーの設定
-	timer_ = MAX_TIME;
+	time_ = MAX_TIME;
 }
 
 void GameScene::Update(void)
@@ -94,7 +98,7 @@ void GameScene::Update(void)
 
 	if(stop)
 	{
-		timer_ -= SceneManager::GetInstance().GetDeltaTime();
+		time_ -= SceneManager::GetInstance().GetDeltaTime();
 	}
 
 #ifdef _DEBUG
@@ -138,6 +142,8 @@ void GameScene::Update(void)
 	player_->Update();
 
 	customer_->Update();
+
+	timer_->Update();
 }
 
 void GameScene::Draw(void)
@@ -156,6 +162,8 @@ void GameScene::Draw(void)
 	player_->Draw();
 
 	customer_->Draw();
+
+	timer_->Draw();
 }
 
 void GameScene::DebugDraw(void)
@@ -192,8 +200,8 @@ void GameScene::DebugDraw(void)
 
 	//左上から
 	//DebugDrawFormat::FormatString(L"                                     time : %2.f", timer_, line);
-	int width = GetDrawStringWidth(L"time : %2.f", timer_);
-	DrawFormatString(Application::SCREEN_SIZE_X / 2 - width /2, 0, 0xffffff, L"time : %2.f秒", timer_);
+	int width = GetDrawStringWidth(L"time : %2.f", time_);
+	DrawFormatString(Application::SCREEN_SIZE_X / 2 - width /2, 0, 0xffffff, L"time : %2.f秒", time_);
 	DrawFormatString(Application::SCREEN_SIZE_X / 2 - width / 2, 32, 0xffffff, L"score : ￥%d", score_);
 	//DebugDrawFormat::FormatStringRight(L"score : %d", score_, line, lineHeight);
 

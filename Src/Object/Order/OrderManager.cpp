@@ -31,51 +31,51 @@ void OrderManager::FirstOrderUpdate(void)
 
 void OrderManager::Draw(void)
 {
-#ifdef _DEBUG
-
-	auto orders = orders_.front()->GetOrder();
-
-	//注文に合わせて四角の色を変える
-	int startX = DebugDrawFormat::GetFormatSize(L"注文 : %d,%d", orders.drink_, orders.sweets_);
-	startX = startX * 1.5;//フォントサイズが1.5倍なので
-	int scale = 25;
-	int endX = startX + scale;
-	int startY = 30;
-	int endY = startY + scale;
-	int drinkCol = GetColor(0, 0, 0);
-
-	if (orders.drink_ == Order::DRINK::HOT)
-	{
-		drinkCol = GetColor(255, 0, 0);
-	}
-	else
-	{
-		drinkCol = GetColor(0, 255, 255);
-	}
-	//飲み物用
-	DrawBox(startX, startY, endX, endY, drinkCol, true);
-
-	int foodCol = GetColor(0, 0, 0);
-	switch (orders.sweets_)
-	{
-	case Order::SWEETS::NONE:
-		foodCol = GetColor(0, 0, 0);
-		break;
-
-	case Order::SWEETS::CHOCO:
-		foodCol = GetColor(132, 98, 68);
-		break;
-
-	case Order::SWEETS::STRAWBERRY:
-		foodCol = GetColor(255, 198, 244);
-		break;
-	default:
-		break;
-	}
-
-	//食べ物用
-	DrawBox(endX + scale, startY, endX + (scale * 2), endY, foodCol, true);
-#endif // _DEBUG
+//#ifdef _DEBUG
+//
+//	auto orders = orders_.front()->GetOrder();
+//
+//	//注文に合わせて四角の色を変える
+//	int startX = DebugDrawFormat::GetFormatSize(L"注文 : %d,%d", orders.drink_, orders.sweets_);
+//	startX = startX * 1.5;//フォントサイズが1.5倍なので
+//	int scale = 25;
+//	int endX = startX + scale;
+//	int startY = 30;
+//	int endY = startY + scale;
+//	int drinkCol = GetColor(0, 0, 0);
+//
+//	if (orders.drink_ == Order::DRINK::HOT)
+//	{
+//		drinkCol = GetColor(255, 0, 0);
+//	}
+//	else
+//	{
+//		drinkCol = GetColor(0, 255, 255);
+//	}
+//	//飲み物用
+//	DrawBox(startX, startY, endX, endY, drinkCol, true);
+//
+//	int foodCol = GetColor(0, 0, 0);
+//	switch (orders.sweets_)
+//	{
+//	case Order::SWEETS::NONE:
+//		foodCol = GetColor(0, 0, 0);
+//		break;
+//
+//	case Order::SWEETS::CHOCO:
+//		foodCol = GetColor(132, 98, 68);
+//		break;
+//
+//	case Order::SWEETS::STRAWBERRY:
+//		foodCol = GetColor(255, 198, 244);
+//		break;
+//	default:
+//		break;
+//	}
+//
+//	//食べ物用
+//	DrawBox(endX + scale, startY, endX + (scale * 2), endY, foodCol, true);
+//#endif // _DEBUG
 }
 
 void OrderManager::InitOrder(void)

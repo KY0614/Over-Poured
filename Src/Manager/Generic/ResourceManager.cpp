@@ -263,6 +263,12 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleGage.png");
 	resourcesMap_.emplace(SRC::UI_CIRCLESHADOW, std::move(res));
 
+	//タイマー用の数字
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Number.png",
+		NUMBER_NUM_X, NUMBER_NUM_Y, NUMBER_SIZE_X, NUMBER_SIZE_Y);
+	resourcesMap_.emplace(SRC::TIMER_NUMBER, std::move(res));
+
+
 	//仮客
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/Model.mv1");
 	resourcesMap_.emplace(SRC::CUSTOMER, std::move(res));

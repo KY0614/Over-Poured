@@ -59,24 +59,6 @@ StageManager::StageManager(Player& player):player_(player)
 
 	animationController_ = nullptr;
 
-	LoadLocationData(); // ロケーションデータの読み込み
-
-	int protH = MV1LoadModel(L"Data/model.mv1");
-	models_.resize(locationData_.size());
-	
-	for(int i = 0; i < locationData_.size();++i)
-	{
-			models_[i]= MV1DuplicateModel(protH);
-			const auto& pos = locationData_[i].pos_;
-			const auto& angle = locationData_[i].angle_;
-			constexpr float scale = 0.1f;
-			MV1SetScale(models_[i], VGet(scale, scale, scale));
-			MV1SetRotationXYZ(models_[i],
-				VGet(AsoUtility::Deg2RadF(angle.x),
-					AsoUtility::Deg2RadF(angle.y),
-					AsoUtility::Deg2RadF(angle.z)));
-			MV1SetPosition(models_[i], pos);
-	}
 }
 
 StageManager::~StageManager(void)
@@ -344,21 +326,6 @@ void StageManager::Draw(void)
 	{
 		obj->Draw();
 	}
-	//auto camera = SceneManager::GetInstance().GetCamera().lock();
-	//SetupCamera_Perspective(DX_PI_F / 3.0f); // カメラの設定を行う
-	//SetCameraPositionAndTarget_UpVecY(camera->GetPos(),
-	//	AsoUtility::DIR_U);
-	//SetCameraPositionAndAngle(camera->GetPos(), 0,0,0);
-
-	for (const auto& model : models_)
-	{
-		MV1DrawModel(model); 
-	}
-
-	//for(const auto& loc : locationData_)
-	//{
-	//	DrawSphere3D(loc.pos_, 10.0f,8, 0xff0000,0xff0000,false); // ロケーションデータの描画
-	//}
 
 #ifdef _DEBUG
 	DrawDebug();
@@ -407,29 +374,6 @@ Transform StageManager::GetShowCase(void) const
 Transform StageManager::GetDustBox(void) const
 {
 	return dustBoxTran_;
-}
-
-void StageManager::LoadLocationData(void)
-{
-	struct Header {
-		char signature[4]; // "LOC1"
-		float version; // バージョン番号
-		int count; // オブジェクトの数	
-	};
-	Header header = {};
-	auto fHandle = FileRead_open(L"Data/location.dat");
-	FileRead_read(&header, sizeof(header), fHandle);
-	locationData_.resize(header.count);
-	for (auto& location : locationData_)
-	{
-		uint8_t nameSize = 0;
-		FileRead_read(&nameSize, sizeof(nameSize), fHandle);
-		location.name_.resize(nameSize);
-		FileRead_read(location.name_.data(), location.name_.size(), fHandle);
-		FileRead_read(&location.pos_, sizeof(location.pos_), fHandle);
-		FileRead_read(&location.angle_, sizeof(location.angle_), fHandle);
-	}
-	FileRead_close(fHandle);
 }
 
 void StageManager::InitAnimation(void)

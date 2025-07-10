@@ -323,10 +323,10 @@ void OrderCustomerManager::DebugDraw(void)
 	pos2.x += 30.0f;
 	VECTOR screenPos2 = ConvWorldPosToScreenPos(pos2);
 
-	// 変換成功
+	//お客の位置に注文を出す
 	DrawFormatString(static_cast<int>(screenPos.x), static_cast<int>(screenPos.y), GetColor(255, 255, 255),
 		L"注文 : %d,%d",
-		orderMng_->GetFirstOrder().drink_, orderMng_->GetFirstOrder().sweets_);	// 変換成功
+		orderMng_->GetFirstOrder().drink_, orderMng_->GetFirstOrder().sweets_);
 	DrawFormatString(static_cast<int>(screenPos2.x), static_cast<int>(screenPos2.y), GetColor(255, 255, 255),
 		L"注文制限時間 : % 2.f",
 		orderMng_->GetFirstOrder().time_);
@@ -336,11 +336,6 @@ void OrderCustomerManager::DebugDraw(void)
 	auto orders = orderMng_->GetFirstOrder();
 
 	//注文に合わせて四角の色を変える
-	//int startX = DebugDrawFormat::GetFormatSize(L"注文 : %d,%d", orders.drink_, orders.sweets_);
-	//startX = startX * 1.5;//フォントサイズが1.5倍なので
-	//int endX = startX + scale;
-	//int startY = 30;
-	//int endY = startY + scale;
 	int drinkCol = GetColor(0, 0, 0);
 
 	//表示ベース位置（Yはちょっと上にオフセット）
@@ -387,16 +382,16 @@ void OrderCustomerManager::DebugDraw(void)
 
 #ifdef _DEBUG
 
-	int line = 1;	//行
-	int lineHeight = 30;	//行
+	//int line = 1;	//行
+	//int lineHeight = 30;	//行
 
-	SetFontSize(24);
-	DebugDrawFormat::FormatString(L"注文 : %d,%d", orderMng_->GetFirstOrder().drink_, orderMng_->GetFirstOrder().sweets_, line, lineHeight);
-	DebugDrawFormat::FormatString(L"注文制限時間 : %2.f", orderMng_->GetFirstOrder().time_, line, lineHeight);
-	DebugDrawFormat::FormatString(L"%d個目", orderMng_->GetCount(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"%d人", customerMng_->GetCustomerNum(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"isServe : %d", isServe_, line, lineHeight);
-	SetFontSize(16);
+	//SetFontSize(24);
+	//DebugDrawFormat::FormatString(L"注文 : %d,%d", orderMng_->GetFirstOrder().drink_, orderMng_->GetFirstOrder().sweets_, line, lineHeight);
+	//DebugDrawFormat::FormatString(L"注文制限時間 : %2.f", orderMng_->GetFirstOrder().time_, line, lineHeight);
+	//DebugDrawFormat::FormatString(L"%d個目", orderMng_->GetCount(), line, lineHeight);
+	//DebugDrawFormat::FormatString(L"%d人", customerMng_->GetCustomerNum(), line, lineHeight);
+	//DebugDrawFormat::FormatString(L"isServe : %d", isServe_, line, lineHeight);
+	//SetFontSize(16);
 
 #endif // _DEBUG
 }
