@@ -2,14 +2,13 @@
 #include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Libs/ImGui/imgui.h"
-#include "../../Manager/Generic/SceneManager.h"
-#include "../../Manager/Generic/Camera.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "../../Manager/Generic/InputManager.h"
 #include "../Player.h"
 #include "../Common/Sphere.h"
 #include "../Common/AnimationController.h"
 #include "StageObjectLibrary.h"
+#include "StageObject/Furnitures.h"
 #include "StageObject.h"
 #include "StageObject/ItemObject.h"
 #include "StageObject/RackObject.h"
@@ -58,7 +57,6 @@ StageManager::StageManager(Player& player):player_(player)
 	isServedItems_.clear();
 
 	animationController_ = nullptr;
-
 }
 
 StageManager::~StageManager(void)
@@ -98,6 +96,9 @@ void StageManager::Init(void)
 	transform_.Update();
 
 	InitAnimation(); // アニメーションの初期化
+
+	funitures_ = std::make_unique<Furnitures>();
+	funitures_->Init();
 
 	VECTOR firstPos = {};
 	//横のテーブル群(手前)
@@ -209,8 +210,7 @@ void StageManager::Init(void)
 	//ゴミ箱
 	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
 		 player_,objects_));
-	objects_.back()->Init(DUSTBOX_POS, -180.0f);
-	objects_.back()->SetScale({ 1.0f,0.8f,1.0f });
+	objects_.back()->Init(DUSTBOX_POS, -180.0f, { 1.0f,0.8f,1.0f });
 	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
 
 }
@@ -228,16 +228,11 @@ void StageManager::Update(void)
 	auto& ins = InputManager::GetInstance();
 	if(ins.IsTrgDown(KEY_INPUT_Q))
 	{
-		//interact2D_->ChangeMode(Interact2D::MODE::MACHINE_2D);
-		//ChangeMode(MODE::MACHINE_2D);
-		
 		//生成アニメーション
 		animationController_->Play((int)ANIM_TYPE::CREATE,false);
 	}
 	if (ins.IsTrgDown(KEY_INPUT_E))
 	{
-		//interact2D_->ChangeMode(Interact2D::MODE::GAME_3D);
-		//ChangeMode(MODE::GAME_3D);
 		animationController_->Play((int)ANIM_TYPE::PAYING, false);
 	}
 
@@ -254,6 +249,7 @@ void StageManager::Update(void)
 	}
 
 	counter_->Update();
+	funitures_->Update();
 
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)
@@ -300,6 +296,7 @@ void StageManager::Update(void)
 
 	transform_.Update();
 	caseTran_.Update();
+	furnitureTran_.Update();
 
 #ifdef _DEBUG
 
@@ -314,6 +311,8 @@ void StageManager::Draw(void)
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
 	MV1DrawModel(caseTran_.modelId);
+	MV1DrawModel(furnitureTran_.modelId);
+	funitures_->Draw();
 
 	for (const auto& table : tables_)
 	{
@@ -328,7 +327,7 @@ void StageManager::Draw(void)
 	}
 
 #ifdef _DEBUG
-	DrawDebug();
+	//DrawDebug();
 #endif // _DEBUG
 }
 

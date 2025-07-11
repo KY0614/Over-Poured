@@ -7,6 +7,7 @@
 #include "../ActorBase.h"
 
 class StageObject;
+class Furnitures;
 class Player;
 class AnimationController;
 
@@ -98,6 +99,7 @@ private:
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
 
+	Transform furnitureTran_;
 	Transform caseTran_;
 	Transform dustBoxTran_;
 
@@ -113,6 +115,8 @@ private:
 	//カウンター用
 	std::unique_ptr<StageObject> counter_;
 	std::unique_ptr<StageObject> case_;
+
+	std::unique_ptr<Furnitures> funitures_;
 
 	bool isServed_;
 

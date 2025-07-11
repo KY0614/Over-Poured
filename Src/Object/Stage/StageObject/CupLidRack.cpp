@@ -60,9 +60,9 @@ void CupLidRack::Interact(const std::string& objId)
 	}
 }
 
-void CupLidRack::Init(VECTOR pos, float rotY)
+void CupLidRack::Init(VECTOR pos, float rotY, VECTOR scale)
 {
-	StageObject::Init(pos,rotY);
+	StageObject::Init(pos,rotY, scale);
 
 	gaugeUI_ = std::make_unique<GaugeUI>(false, LID_PRODUCES_TIME);
 	gaugeUI_->Init();

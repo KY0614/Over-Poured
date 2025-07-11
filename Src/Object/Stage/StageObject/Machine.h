@@ -14,7 +14,7 @@ public:
 		std::vector<std::unique_ptr<StageObject>>& object);
 	~Machine(void) = default;
 
-	void Init(VECTOR pos, float rotY = 0.0f) override;
+	void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = { 1.0f,1.0f,1.0f }) override;
 	void Draw(void) override;
 
 	void Interact(const std::string& objId) override;

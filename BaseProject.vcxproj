@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\StageObject\Furnitures.cpp" />
     <ClCompile Include="Src\Common\Easing.cpp" />
     <ClCompile Include="Src\Object\Score.cpp" />
     <ClCompile Include="Src\Object\UI\GaugeUI.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\FollowingObject.cpp" />
-    <ClCompile Include="Src\Object\Stage\StageObject\InteractObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\RackObject.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\ItemObject.cpp" />
     <ClCompile Include="Src\Manager\Generic\Input.cpp" />
@@ -51,6 +51,10 @@
     <ClCompile Include="Src\Libs\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Src\Libs\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Src\Manager\GameSystem\ScoreManager.cpp" />
+    <ClCompile Include="Src\Renderer\ModelMaterial.cpp" />
+    <ClCompile Include="Src\Renderer\ModelRenderer.cpp" />
+    <ClCompile Include="Src\Renderer\PixelMaterial.cpp" />
+    <ClCompile Include="Src\Renderer\PixelRenderer.cpp" />
     <ClCompile Include="Src\Scene\ResultScene.cpp" />
     <ClCompile Include="Src\Scene\MovieScene.cpp" />
     <ClCompile Include="Src\Scene\SelectScene.cpp" />
@@ -85,11 +89,11 @@
     <ClCompile Include="Src\Manager\GameSystem\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\StageObject\Furnitures.h" />
     <ClInclude Include="Src\Common\Easing.h" />
     <ClInclude Include="Src\Object\Score.h" />
     <ClInclude Include="Src\Object\UI\GaugeUI.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\FollowingObject.h" />
-    <ClInclude Include="Src\Object\Stage\StageObject\InteractObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\RackObject.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\ItemObject.h" />
     <ClInclude Include="Src\Manager\Generic\Input.h" />
@@ -164,6 +168,10 @@
     <ClInclude Include="Src\Libs\ImGui\imstb_textedit.h" />
     <ClInclude Include="Src\Libs\ImGui\imstb_truetype.h" />
     <ClInclude Include="Src\Manager\GameSystem\ScoreManager.h" />
+    <ClInclude Include="Src\Renderer\ModelMaterial.h" />
+    <ClInclude Include="Src\Renderer\ModelRenderer.h" />
+    <ClInclude Include="Src\Renderer\PixelMaterial.h" />
+    <ClInclude Include="Src\Renderer\PixelRenderer.h" />
     <ClInclude Include="Src\Scene\ResultScene.h" />
     <ClInclude Include="Src\Scene\MovieScene.h" />
     <ClInclude Include="Src\Scene\SelectScene.h" />
@@ -196,6 +204,25 @@
     <ClInclude Include="Src\Object\Stage\StageObject\Table.h" />
     <ClInclude Include="Src\Object\UI\UIBase.h" />
     <ClInclude Include="Src\Manager\GameSystem\Timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Shader\Common\Pixel\PixelShader2DHeader.hlsli" />
+    <None Include="Src\Shader\Common\Pixel\PixelShader3DHeader.hlsli" />
+    <None Include="Src\Shader\Common\VertexToPixelHeader.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\CommonShader3DHeader.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\VertexInput.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\VertexInputType.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\VertexShader3DHeader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Src\Shader\Model\StdModelPS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Data/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\Model\StdModelVS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Data/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

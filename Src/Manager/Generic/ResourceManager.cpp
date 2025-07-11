@@ -159,9 +159,25 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Smoke/Smoke.efkefc");
 	resourcesMap_.emplace(SRC::FOOT_SMOKE, std::move(res));
 
-	//仮ステージ
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/kari_stage.mv1");
-	resourcesMap_.emplace(SRC::STAGE, std::move(res));
+	//家具：床
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/floor.mv1");
+	resourcesMap_.emplace(SRC::FLOOR, std::move(res));
+
+	//家具：植木鉢
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/plant.mv1");
+	resourcesMap_.emplace(SRC::PLANT, std::move(res));
+
+	//家具：棚
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/shelves.mv1");
+	resourcesMap_.emplace(SRC::SHELVES, std::move(res));
+
+	//家具：棚
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/shelves_front.mv1");
+	resourcesMap_.emplace(SRC::SHELVES_FRONT, std::move(res));
+
+	//家具：机ら
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/desk.mv1");
+	resourcesMap_.emplace(SRC::DESK, std::move(res));
 
 	//カウンター
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/counter_B.mv1");

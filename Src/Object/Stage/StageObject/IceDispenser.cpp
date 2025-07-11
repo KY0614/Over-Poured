@@ -20,9 +20,9 @@ IceDispenser::IceDispenser(const std::string objId, const float width,
 {
 }
 
-void IceDispenser::Init(VECTOR pos, float rotY)
+void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
 {
-	StageObject::Init(pos, rotY);
+	StageObject::Init(pos, rotY,scale);
 
 	gaugeUI_ = std::make_unique<GaugeUI>(false, ICE_PRODUCES_TIME);
 	gaugeUI_->Init();

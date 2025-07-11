@@ -135,9 +135,9 @@ void Machine::UpdateActive(void)
 	}
 }
 
-void Machine::Init(VECTOR pos, float rotY)
+void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 {
-	StageObject::Init(pos,rotY);
+	StageObject::Init(pos, rotY, scale);
 
 	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
 	gaugeUI_->Init();

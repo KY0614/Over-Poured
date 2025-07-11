@@ -27,7 +27,7 @@ StageObject::~StageObject(void)
 {
 }
 
-void StageObject::Init(VECTOR pos,float rotY)
+void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 {
 	//作成するオブジェクトのパラメータをjsonファイルから読み込む
 	object_ = StageObjectLibrary::LoadData(objId_);
@@ -38,7 +38,7 @@ void StageObject::Init(VECTOR pos,float rotY)
 
 	//モデルの基本設定
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
-	transform_.scl = AsoUtility::VECTOR_ONE;
+	transform_.scl = scale;
 	transform_.pos = pos;
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =

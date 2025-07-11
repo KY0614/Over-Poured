@@ -123,9 +123,9 @@ void RackObject::AddStock(int addStockNum)
 	}
 }
 
-void RackObject::Init(VECTOR pos, float rotY)
+void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 {
-	StageObject::Init(pos, rotY);
+	StageObject::Init(pos, rotY, scale);
 
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
@@ -142,7 +142,6 @@ void RackObject::Init(VECTOR pos, float rotY)
 
 	if (srcType != ResourceManager::SRC::NONE)
 	{
-
 		//スイーツ用UIの初期化
 		gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * SWEETS_STOCK_MAX);
 		gaugeUI_->Init();
@@ -165,10 +164,12 @@ void RackObject::Init(VECTOR pos, float rotY)
 			sweetsOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
 			sweetsOfRack_[i].scl = AsoUtility::VECTOR_ONE;
 			VECTOR sweetsPos = VAdd(pos, sweetsOffsets[i]);
-			sweetsOfRack_[i].pos = AsoUtility::RotXZPos(transform_.pos, sweetsPos, rotY);
+			VECTOR rotPos = AsoUtility::RotXZPos(transform_.pos, sweetsPos, AsoUtility::Deg2RadF(rotY));
+			sweetsOfRack_[i].pos = rotPos;
 			sweetsOfRack_[i].quaRot = Quaternion();
 			sweetsOfRack_[i].quaRotLocal =
 				Quaternion::Euler({ AsoUtility::Deg2RadF(SWEETS_ROT_X),AsoUtility::Deg2RadF(rotY), 0.0f });
+			sweetsOfRack_[i].Update();
 		}
 	}
 
@@ -212,12 +213,13 @@ void RackObject::Init(VECTOR pos, float rotY)
 		cupesOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
 		cupesOfRack_[i].scl = AsoUtility::VECTOR_ONE;
 		VECTOR cupsPos = VAdd(pos, cupOffsets[i]);
-		cupesOfRack_[i].pos = AsoUtility::RotXZPos(transform_.pos, cupsPos, AsoUtility::Deg2RadF(rotY));
+		VECTOR rotPos = AsoUtility::RotXZPos(transform_.pos, cupsPos, AsoUtility::Deg2RadF(rotY));
+		cupesOfRack_[i].pos = rotPos;
 		cupesOfRack_[i].quaRot = Quaternion();
 		cupesOfRack_[i].quaRotLocal =
 			Quaternion::Euler({ AsoUtility::Deg2RadF(180.0f), AsoUtility::Deg2RadF(rotY), 0.0f });
+		cupesOfRack_[i].Update();
 	}
-
 }
 
 void RackObject::Update(void)
@@ -244,11 +246,6 @@ void RackObject::Draw(void)
 {
 	int line = 3;	//行
 	int lineHeight = 30;	//行
-	//VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	//// 変換成功
-	//DrawFormatString(static_cast<int>(screenPos.x) - 30,
-	//	static_cast<int>(screenPos.y) - 100, GetColor(255, 255, 255),
-	//	L"在庫 %d", sweetsStockCnt_);
 
 	StageObject::Draw();
 

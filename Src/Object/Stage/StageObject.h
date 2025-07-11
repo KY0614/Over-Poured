@@ -53,7 +53,7 @@ public:
 
 	~StageObject(void);
 
-	virtual void Init(VECTOR pos,float rotY = 0.0f);
+	virtual void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = {1.0f,1.0f,1.0f});
 	virtual void Update(void)override;
 	virtual void Draw(void)override;
 
