@@ -1,5 +1,8 @@
 #pragma once
+#include <memory>
 #include <string>
+
+class FpsControl;
 
 class Application
 {
@@ -58,6 +61,8 @@ private:
 
 	//解放失敗
 	bool isReleaseFail_;
+
+	std::unique_ptr<FpsControl> fps_;
 
 	//デフォルトコンストラクタをprivateにして、
 	//外部から生成できない様にする

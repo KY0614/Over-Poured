@@ -4,7 +4,7 @@
 #include "Manager/Generic/InputManager.h"
 #include "Manager/Generic/ResourceManager.h"
 #include "Manager/Generic/SceneManager.h"
-#include "FpsCounter.h"
+#include "FpsControl.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -63,6 +63,8 @@ void Application::Init(void)
 	//シーン管理初期化
 	SceneManager::CreateInstance();
 
+	fps_ = std::make_unique<FpsControl>();
+	fps_->Init();
 }
 
 void Application::Run(void)
@@ -72,13 +74,14 @@ void Application::Run(void)
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& imGuiWrapper = ImGuiWrapper::GetInstance();
 
-	// グローバルまたはクラスメンバで
-	FpsCounter fpsCounter;
-
 	//ゲームループ
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
-		fpsCounter.Update();
+
+		//フレームレート更新
+		//1/60秒経過していないなら再ループ
+		if (!fps_->UpdateFrameRate())continue;
+
 		inputManager.Update();
 		imGuiWrapper.Update();
 		sceneManager.Update();
@@ -87,7 +90,9 @@ void Application::Run(void)
 
 		RenderVertex();
 		imGuiWrapper.Draw();
-		fpsCounter.Draw(0, 0); // 左上に表示
+
+		fps_->CalcFrameRate();	//フレームレート計算
+		fps_->DrawFrameRate();	//フレームレート描画
 
 		ScreenFlip();
 
@@ -130,6 +135,7 @@ Application::Application(void)
 {
 	isInitFail_ = false;
 	isReleaseFail_ = false;
+	fps_ = nullptr;
 }
 
 void Application::InitEffekseer(void)
