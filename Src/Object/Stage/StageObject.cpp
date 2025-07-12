@@ -44,8 +44,7 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(rotY), 0.0f });
 	transform_.MakeCollider(Collider::TYPE::STAGE);
-
-	cube_ = std::make_unique<Cube>(transform_);
+	transform_.Update();
 
 	rad_ = 30.0f;
 
@@ -68,7 +67,16 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 	itemState_ = ITEM_STATE::PLACED;
 	machineState_ = MACHINE_STATE::INACTIVE;
 
-	transform_.Update();
+	if (objId_ != "Table")return;
+	//ƒ‚ƒfƒ‹‚ÌŠî–{Ý’è
+	colTran_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
+	ResourceManager::SRC::TABLE_COL));
+	colTran_.scl = transform_.scl;
+	colTran_.pos = transform_.pos;
+	colTran_.quaRot = transform_.quaRot;
+	colTran_.quaRotLocal = transform_.quaRotLocal;
+	colTran_.MakeCollider(Collider::TYPE::STAGE);
+	colTran_.Update();
 }
 
 void StageObject::Update(void)
@@ -108,7 +116,7 @@ void StageObject::Update(void)
 	default:
 		break;
 	}
-
+	colTran_.Update();
 	transform_.Update();
 
 	//UpdateDebugImGui();
@@ -275,18 +283,18 @@ void StageObject::DrawDebug(void)
 	retCol.b = col & 0xFF;
 	retCol.a = 255;
 
-	if (objId_ == "Coffee_Machine" || objId_ == "Ice_Dispenser")
-	{
-		retCol.a = 128;
-		cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
-	}
-	else
-	{
-		retCol.a = 128;
+	//if (objId_ == "Coffee_Machine" || objId_ == "Ice_Dispenser")
+	//{
+	//	retCol.a = 128;
+	//	cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
+	//}
+	//else
+	//{
+	//	retCol.a = 128;
 
-		cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
+	//	cube_->MakeBox(transform_.pos, width_, height_, depth_, retCol);
 
-	}
+	//}
 
 	//sphere_->Draw(col);
 

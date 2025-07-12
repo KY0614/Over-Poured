@@ -1,4 +1,5 @@
 #include "../Manager/Generic/InputManager.h"
+#include "../Manager/Generic/ResourceManager.h"
 #include "../Utility/AsoUtility.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
@@ -10,12 +11,12 @@ Table::Table(const std::string objId, const float width,
 	std::vector<std::unique_ptr<StageObject>>& objects) :
 	StageObject(objId, width, height, depth, player),objects_(objects)
 {
-	
 }
 
 void Table::Update(void)
 {
 	StageObject::Update();
+	colTran_.Update();
 	//テーブルの上にオブジェクトが置かれていないかどうか
 	for (const auto& obj : objects_)
 	{

@@ -362,7 +362,7 @@ Transform StageManager::GetCounterTran(void) const
 Transform StageManager::GetTableTran(int index) const
 {
 	if (index > tables_.size())return Transform(); // 範囲外のインデックスは無視
-	return tables_[index]->GetTransform();
+	return tables_[index]->GetTalbeColTran();
 }
 
 Transform StageManager::GetShowCase(void) const

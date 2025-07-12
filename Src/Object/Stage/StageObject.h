@@ -164,6 +164,8 @@ public:
 	Order::DRINK GetDrinkType(void) const { return drink_; }
 	Order::SWEETS GetSweetsType(void) const { return sweets_; }
 
+	const Transform& GetTalbeColTran(void) const{ return colTran_; }
+
 	//-------------------------------------------------------------------------
 
 	/// <summary>
@@ -204,6 +206,9 @@ protected:
 
 	//オブジェクトのパラメータ
 	StageObjectLibrary::ObjectParams param_;
+
+	//テーブル用のコライダー
+	Transform colTran_;
 
 	Player& player_;
 

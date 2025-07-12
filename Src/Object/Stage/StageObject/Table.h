@@ -13,9 +13,9 @@ public:
 
 	void Update(void)override;
 
-
 private:
 
 	std::vector<std::unique_ptr<StageObject>>& objects_;
+
 };
 

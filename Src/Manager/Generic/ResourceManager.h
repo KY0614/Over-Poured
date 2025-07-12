@@ -30,6 +30,7 @@ public:
 		DESK,
 		COUNTER,
 		TABLE,
+		TABLE_COL,
 		REGISTER,
 		CHOCO_RACK,
 		BERRY_RACK,
