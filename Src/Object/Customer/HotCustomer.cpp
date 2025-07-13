@@ -25,7 +25,7 @@ void HotCustomer::SetParam(void)
 {
 	//モデルの基本設定
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
-		ResourceManager::SRC::CUSTOMER));
+		ResourceManager::SRC::HOT_CUSTOMER));
 
 	transform_.Update();
 
@@ -34,7 +34,7 @@ void HotCustomer::SetParam(void)
 	color_ = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);
 
 	//テストでモデルの色を赤にする
-	MV1SetMaterialDifColor(transform_.modelId, 0, color_);
+	//MV1SetMaterialDifColor(transform_.modelId, 0, color_);
 
 	isVisible_ = true;
 }

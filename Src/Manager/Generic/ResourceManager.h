@@ -63,7 +63,8 @@ public:
 
 		TIMER_NUMBER,
 
-		CUSTOMER,
+		HOT_CUSTOMER,
+		ICE_CUSTOMER,
 	};
 
 	// 明示的にインステンスを生成する

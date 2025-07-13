@@ -290,7 +290,10 @@ void ResourceManager::InitGame(void)
 
 	//‰¼‹q
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/hotcup_customer.mv1");
-	resourcesMap_.emplace(SRC::CUSTOMER, std::move(res));
+	resourcesMap_.emplace(SRC::HOT_CUSTOMER, std::move(res));
+	//‰¼‹q
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/icecup_customer.mv1");
+	resourcesMap_.emplace(SRC::ICE_CUSTOMER, std::move(res));
 }
 
 void ResourceManager::InitResult(void)

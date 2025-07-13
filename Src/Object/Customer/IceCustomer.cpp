@@ -21,7 +21,7 @@ void IceCustomer::SetParam(void)
 {
 	//モデルの基本設定
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
-		ResourceManager::SRC::CUSTOMER));
+		ResourceManager::SRC::ICE_CUSTOMER));
 
 	transform_.Update();
 
@@ -30,7 +30,7 @@ void IceCustomer::SetParam(void)
 	color_ = GetColorF(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//テストでモデルの色を青にする
-	MV1SetMaterialDifColor(transform_.modelId, 0, color_);
+	//MV1SetMaterialDifColor(transform_.modelId, 0, color_);
 
 	isVisible_ = true;
 }
