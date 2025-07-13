@@ -18,7 +18,7 @@ CustomerBase::CustomerBase(void)
 
 void CustomerBase::Init(VECTOR pos)
 {
-	transform_.scl = AsoUtility::VECTOR_ONE;
+	transform_.scl = {0.7f,0.7f,0.7f};
 	transform_.pos = CUSTOMER_POS;
 	transform_.pos = pos;
 	transform_.quaRot = Quaternion();

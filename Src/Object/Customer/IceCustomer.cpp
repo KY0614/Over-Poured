@@ -37,9 +37,10 @@ void IceCustomer::SetParam(void)
 
 void IceCustomer::InitAnimation(void)
 {
-	std::string path = Application::PATH_MODEL + "Customer/";
+	std::string path = Application::PATH_MODEL + "Player/";
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
-	animationController_->Add((int)STATE::IDLE, path + "Idle2.mv1", 20.0f);
+	animationController_->Add((int)STATE::IDLE, path + "Idle.mv1", 20.0f);
+	animationController_->Add((int)STATE::WALK, path + "Walk.mv1", 30.0f);
 
 	animationController_->Play((int)STATE::IDLE);
 }

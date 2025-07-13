@@ -288,9 +288,8 @@ void ResourceManager::InitGame(void)
 		NUMBER_NUM_X, NUMBER_NUM_Y, NUMBER_SIZE_X, NUMBER_SIZE_Y);
 	resourcesMap_.emplace(SRC::TIMER_NUMBER, std::move(res));
 
-
 	//‰¼‹q
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/Model.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/hotcup_customer.mv1");
 	resourcesMap_.emplace(SRC::CUSTOMER, std::move(res));
 }
 

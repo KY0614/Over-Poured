@@ -82,7 +82,7 @@ void CustomerManager::Update(void)
 			isMove_ = false;
 			for (auto& c : customers_)
 			{
-				c->SetState(CustomerBase::STATE::WAIT);
+				c->SetState(CustomerBase::STATE::IDLE);
 			}
 		}
 	}

@@ -57,7 +57,6 @@ void Player::Init(void)
 	imgShadow_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::PLAYER_SHADOW).handleId_;
 
-
 	chestFrmNo_ = MV1SearchFrame(transform_.modelId, L"mixamorig:Hips");
 	chestPos_ = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
 

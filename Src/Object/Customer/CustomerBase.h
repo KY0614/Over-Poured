@@ -26,7 +26,6 @@ public:
 	{
 		IDLE,
 		WALK,
-		WAIT,
 	};
 
 	enum class REACTION
