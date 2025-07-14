@@ -267,6 +267,28 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/dustbox.mv1");
 	resourcesMap_.emplace(SRC::DUSTBOX, std::move(res));
 
+	//注文用UI---------------------------------------------------------------------
+	//背景用
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "order.png");
+	resourcesMap_.emplace(SRC::UI_ORDER_BACK, std::move(res));
+
+	//ホット
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "order_UI.png");
+	resourcesMap_.emplace(SRC::UI_HOT, std::move(res));
+
+	//アイス
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "order_ice.png");
+	resourcesMap_.emplace(SRC::UI_ICE, std::move(res));
+
+	//チョコ
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "order_choco.png");
+	resourcesMap_.emplace(SRC::UI_CHOCO, std::move(res));
+
+	//ベリー
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "oroder_berry.png");
+	resourcesMap_.emplace(SRC::UI_BERRY, std::move(res));
+
+	//-------------------------------------------------------------------------
 	//ゲージUI
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "bar_green.png");
 	resourcesMap_.emplace(SRC::UI_BAR, std::move(res));
@@ -275,18 +297,24 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "bar_shadow.png");
 	resourcesMap_.emplace(SRC::UI_BARSHADOW, std::move(res));
 
-	//ゲージUI
+	//サークルゲージUI
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleExpGage.png");
 	resourcesMap_.emplace(SRC::UI_CIRCLE, std::move(res));
 
-	//ゲージ影UI
+	//サークルゲージ影UI
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleGage.png");
 	resourcesMap_.emplace(SRC::UI_CIRCLESHADOW, std::move(res));
 
-	//タイマー用の数字
+	//タイマー用-----------------------------------------------------------
+	//数字
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Number.png",
 		NUMBER_NUM_X, NUMBER_NUM_Y, NUMBER_SIZE_X, NUMBER_SIZE_Y);
 	resourcesMap_.emplace(SRC::TIMER_NUMBER, std::move(res));
+
+	//コロン
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "colon.png");
+	resourcesMap_.emplace(SRC::TIMER_COLON, std::move(res));
+	//---------------------------------------------------------------------
 
 	//仮客
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/hotcup_customer.mv1");

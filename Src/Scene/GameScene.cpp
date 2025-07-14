@@ -159,9 +159,9 @@ void GameScene::Draw(void)
 
 	stage_->Draw();
 
-	player_->Draw();
-
 	customer_->Draw();
+
+	player_->Draw();
 
 	timer_->Draw();
 }

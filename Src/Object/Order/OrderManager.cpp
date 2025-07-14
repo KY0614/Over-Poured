@@ -140,7 +140,23 @@ std::vector<Order::DRINK> OrderManager::GetAllOrderDrink(void) const
 	return drink;
 }
 
+std::vector<Order::SWEETS> OrderManager::GetAllOrderSweet(void) const
+{
+	std::vector<Order::SWEETS> sweets;
+	for (auto& order : orders_)
+	{
+		sweets.push_back(order->GetOrder().sweets_);
+	}
+
+	return sweets;
+}
+
 Order::DRINK OrderManager::GetLastOrderDrink(void) const
 {
 	return orders_.back()->GetOrder().drink_;
+}
+
+Order::SWEETS OrderManager::GetLastOrderSweets(void) const
+{
+	return orders_.back()->GetOrder().sweets_;
 }

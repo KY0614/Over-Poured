@@ -142,20 +142,12 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
-	uiPos.y += 130.0f;	//UIの位置を調整
+	uiPos.y += UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
 }
 
 void Machine::Draw(void)
 {
-	//int line = 3;	//行
-	//int lineHeight = 30;	//行
-
-	//VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	//// 変換成功
-	//DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-	//	L"コーヒーができるまで %2.f", param_.interactTime_);
-
 	StageObject::Draw();
 
 	gaugeUI_->Draw();	//ゲージUIを描画

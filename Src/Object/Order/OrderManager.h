@@ -39,7 +39,9 @@ public:
 	Order::OrderData GetFirstOrder(void) { return orders_.front()->GetOrder(); }
 
 	std::vector<Order::DRINK> GetAllOrderDrink(void) const;
+	std::vector<Order::SWEETS> GetAllOrderSweet(void) const;
 	Order::DRINK GetLastOrderDrink(void) const;
+	Order::SWEETS GetLastOrderSweets(void) const;
 
 	int GetCount(void) { return count_; }
 

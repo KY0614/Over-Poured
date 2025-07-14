@@ -145,9 +145,9 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 		//スイーツ用UIの初期化
 		gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * SWEETS_STOCK_MAX);
 		gaugeUI_->Init();
-		gaugeUI_->SetUISize(50.0f, 10.0f);
+		gaugeUI_->SetUISize(50.0f, 5.0f);
 		VECTOR uiPos = transform_.pos;
-		uiPos.y -= UI_OFFSET_Y;	//UIの位置を調整
+		uiPos.y += SWEETS_UI_OFFSET_Y;	//UIの位置を調整
 		gaugeUI_->SetPos(uiPos); // UIの位置を設定
 
 		// 各スイーツの基準座標からのオフセットを配列で定義
@@ -178,9 +178,9 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	//カップ用UIの初期化
 	gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * CUP_STOCK_MAX);
 	gaugeUI_->Init();
-	gaugeUI_->SetUISize(70.0f, 30.0f);
+	gaugeUI_->SetUISize(70.0f, 10.0f);
 	VECTOR uiPos = transform_.pos;
-	uiPos.y -= UI_OFFSET_Y;	//UIの位置を調整
+	uiPos.y -= CUP_UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
 
 	//設定されていなかったらカップモデルを設定する

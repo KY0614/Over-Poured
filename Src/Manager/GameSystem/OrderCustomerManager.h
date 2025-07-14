@@ -6,12 +6,16 @@
 class OrderManager;
 class CustomerManager;
 class StageObject;
+class OrderUI;
 
 class OrderCustomerManager
 {
 public:
 
 	static constexpr float ORDER_INTERVAL_MAX = 3.5f;
+
+	static constexpr float ORDER_UI_OFFSET_X = 130.0f;
+	static constexpr float ORDER_UI_OFFSET_Y = 220.0f;
 
 	//コンストラクタ
 	OrderCustomerManager(void);
@@ -51,8 +55,6 @@ public:
 	/// <returns>スコア</returns>
 	int CheckServeAndOrder(const Order::OrderData serve);
 
-	int CheckServeAndOrder(StageObject& obj);
-
 	void IsServe(void) { isServe_ = true; }
 
 	bool GetIsMoving(void);
@@ -73,6 +75,8 @@ private:
 
 	//CustomerMangerのポインタ
 	std::shared_ptr<CustomerManager> customerMng_;
+
+	//std::vector<std::unique_ptr<OrderUI>> orderUI_;
 
 	bool isServe_;
 

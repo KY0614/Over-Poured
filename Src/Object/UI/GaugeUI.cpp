@@ -25,8 +25,8 @@ void GaugeUI::Init(void)
     shadowImg_ = ResourceManager::GetInstance().Load(
         ResourceManager::SRC::UI_BARSHADOW).handleId_;
 
-    width_ = 100.0f;    // 長方形ゲージの幅
-    height_ = 20.0f;    // 長方形ゲージの高さ
+    width_ = UI_DEFAULT_WIDTH;    // 長方形ゲージの幅
+    height_ = UI_DEFAULT_HEIGHT;    // 長方形ゲージの高さ
 
     if (!isCircle_) return;
     circleImg_ = ResourceManager::GetInstance().Load(
@@ -57,10 +57,12 @@ void GaugeUI::Draw(void)
     SetUseLighting(false);
     SetUseZBuffer3D(false);
 
-    if (isCircle_) {
+    if (isCircle_) 
+    {
         DrawCircleGauge(progress);
     }
-    else {
+    else 
+    {
         DrawRectGauge(progress);
     }
 
@@ -126,30 +128,8 @@ void GaugeUI::DrawRectGauge(float progress)
     auto MakeQuad = [&](float drawWidth, int texHandle) {
         VERTEX3D verts[6];
 
-        //// カメラの情報取得
-        //VECTOR cameraPos = SceneManager::GetInstance().GetCamera().lock()->GetPos();
-        //VECTOR look = VNorm(VSub(pos_, cameraPos)); // カメラ→UIの方向
-
-        //VECTOR up = VGet(0, 1.0f, 0);
-        //VECTOR right = VNorm(VCross(up, look));
-        //up = VNorm(VCross(look, right));
-
-        //// 長さ調整
-        //right = VScale(right, drawWidth);              // ゲージの幅分だけ右方向
-        //VECTOR halfUp = VScale(up, height * 0.5f); // 上下半分
-
-        //// 頂点計算（左上・右上・左下・右下）
-        //VECTOR leftBottom = VSub(pos_, halfUp);                // 左下
-        //VECTOR leftTop = VAdd(pos_, halfUp);                // 左上
-        //VECTOR rightBottom = VAdd(leftBottom, right);          // 右下
-        //VECTOR rightTop = VAdd(leftTop, right);             // 右上
-
-        //verts[0] = { leftTop,    look, dif, spec, 0.0f, 0.0f };
-        //verts[1] = { rightTop,   look, dif, spec, 1.0f, 0.0f };
-        //verts[2] = { leftBottom, look, dif, spec, 0.0f, 1.0f };
-        //verts[3] = verts[2];
-        //verts[4] = verts[1];
-        //verts[5] = { rightBottom, look, dif, spec, 1.0f, 1.0f };
+        // ゲージの高さ方向の傾き量（Z方向に何ユニット近づけるか）
+        const float zTilt = -30.0f;
 
         VERTEX3D v0 = {
             VGet(-width / 2, height / 2, 0),
@@ -166,14 +146,14 @@ void GaugeUI::DrawRectGauge(float progress)
             drawWidth / width, 0.0f };
 
         VERTEX3D v2 = {
-            VGet(-width / 2, -height / 2, 0),
+            VGet(-width / 2, -height / 2, zTilt),
             VGet(0.0f, 0.0f, 1.0f),
             dif,
             spec,
             0.0f, 1.0f };
 
         VERTEX3D v3 = {
-            VGet(-width / 2 + drawWidth, -height / 2, 0),
+            VGet(-width / 2 + drawWidth, -height / 2, zTilt),
             VGet(0.0f, 0.0f, 1.0f),
             dif,
             spec,
@@ -186,10 +166,9 @@ void GaugeUI::DrawRectGauge(float progress)
         verts[4] = v1;
         verts[5] = v3;
 
-        for (int i = 0; i < 6; ++i) {
-            verts[i].pos.x += pos_.x;
-            verts[i].pos.y += pos_.y;
-            verts[i].pos.z += pos_.z;
+        for (int i = 0; i < 6; ++i) 
+        {
+            verts[i].pos = VAdd(verts[i].pos, pos_);
         }
 
         DrawPolygon3D(verts, 2, texHandle, true);

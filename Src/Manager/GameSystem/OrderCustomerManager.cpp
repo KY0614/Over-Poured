@@ -7,6 +7,7 @@
 #include "../../Object/Order/OrderManager.h"
 #include "../../Object/Stage/StageObject.h"
 #include "../Generic/SceneManager.h"
+#include "../../Object/UI/OrderUI.h"
 #include "OrderCustomerManager.h"
 
 OrderCustomerManager::OrderCustomerManager(void)
@@ -33,18 +34,48 @@ void OrderCustomerManager::Init(void)
 	CreateCustomersByOrders();
 	customerMng_->Init();
 
+	//for (int i = 0; i < orderMng_->GetAllOrderDrink().size(); ++i)
+	//{
+	//	std::vector<Order::DRINK> drink;
+	//	std::vector<Order::SWEETS> sweets;
+	//	drink.resize(orderMng_->GetAllOrderDrink().size());
+	//	sweets.resize(orderMng_->GetAllOrderSweet().size());
+	//	drink = orderMng_->GetAllOrderDrink();
+	//	sweets = orderMng_->GetAllOrderSweet();
+	//	orderUI_.emplace_back(std::make_unique<OrderUI>(drink[i], sweets[i]));
+	//	VECTOR pos = VAdd(
+	//		customerMng_->GetPos(i),
+	//		VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
+	//	orderUI_[i]->Init();
+	//	orderUI_[i]->SetPos(pos);
+	//}
+
 	isServe_ = false;
 }
 
 void OrderCustomerManager::Update(void)
 {
 	customerMng_->Update();
-
+	//for (int i = 0; i < orderMng_->GetAllOrderDrink().size(); ++i)
+	//{
+	//	VECTOR pos = VAdd(customerMng_->GetPos(i),
+	//		VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y,0.0f));
+	//	orderUI_[i]->SetPos(pos);
+	//}
+	////着いたら注文を表示
+	//if (customerMng_->GetFirstState() == CustomerBase::STATE::IDLE)
+	//{
+	//	orderUI_.front()->SetActive(true);
+	//}
 	//入口からカウンターまで動かす用
 	if (!customerMng_->CheckFirstCustomerCol())
 	{
 		customerMng_->IsMove();
-		if (customerMng_->CheckFirstCustomerCol())customerMng_->IsNotMove();
+		//着いたら動かないように&注文を表示
+		if (customerMng_->CheckFirstCustomerCol())
+		{
+			customerMng_->IsNotMove();
+		}
 	}
 	
 	//注文の制限時間が過ぎたら追加生成を行う
@@ -63,6 +94,14 @@ void OrderCustomerManager::Update(void)
 			//追加生成
 			AddOrdersAndCustomers();
 			isServe_ = false;
+			////UIも追加生成
+			//orderUI_.emplace_back(std::make_unique<OrderUI>(
+			//	orderMng_->GetLastOrderDrink(), orderMng_->GetLastOrderSweets()));
+			//VECTOR pos = VAdd(
+			//	customerMng_->GetLastPos(),
+			//	VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
+			//orderUI_.back()->Init();
+			//orderUI_.back()->SetPos(pos);
 		}
 	}
 	else if(customerMng_->CheckFirstCustomerCol())
@@ -78,9 +117,14 @@ void OrderCustomerManager::Draw(void)
 
 	customerMng_->Draw();
 
+	//for (const auto& ui : orderUI_)
+	//{
+	//	ui->Draw();
+	//}
+
 #ifdef _DEBUG
 
-	DebugDraw();
+	//DebugDraw();
 
 #endif // _DEBUG
 
@@ -89,9 +133,10 @@ void OrderCustomerManager::Draw(void)
 void OrderCustomerManager::CreateCustomersByOrders(void)
 {
 	std::vector<Order::DRINK> drinks = orderMng_->GetAllOrderDrink();
-	for (Order::DRINK drink : drinks)
+	std::vector<Order::SWEETS> sweets = orderMng_->GetAllOrderSweet();
+	for(int i = 0; i < drinks.size();++i)
 	{
-		customerMng_->CreateSingleCustomer(drink);
+		customerMng_->CreateSingleCustomer(drinks[i], sweets[i]);
 	}
 }
 
@@ -111,7 +156,7 @@ void OrderCustomerManager::ClearOrderAndCustomer(void)
 
 void OrderCustomerManager::AddCustomerByOrder(void)
 {
-	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderDrink());
+	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderDrink(),orderMng_->GetLastOrderSweets());
 	customerMng_->SetLastCustomerPos();
 }
 
@@ -232,65 +277,6 @@ int OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 	//		score += 20;
 	//	}		
 	//}
-	customerMng_->SetCustomerReacton(score);
-	return score;
-}
-
-int OrderCustomerManager::CheckServeAndOrder(StageObject& obj)
-{
-	Order::DRINK serveDrink = obj.GetDrinkType();
-	Order::SWEETS serveSweets = obj.GetSweetsType();
-	int score = 0;
-
-	if (orderMng_->GetFirstOrder().num_ == 1)
-	{
-		//飲み物と提供品を比較して加点
-		if (serveDrink == orderMng_->GetFirstOrder().drink_)
-		{
-			score += 50;
-		}
-		else
-		{
-			score -= 50;
-		}
-
-		//注文数が１のときはサブオーダーはないので-50点
-		if (serveSweets != orderMng_->GetFirstOrder().sweets_)
-		{
-			score -= 50;
-		}
-
-		//オーダーの残り制限時間による加点
-		if (orderMng_->GetFirstOrder().time_ > 7.0f)
-		{
-			score += 50;
-		}
-		else if (orderMng_->GetFirstOrder().time_ > 3.0f)
-		{
-			score += 10;
-		}
-	}
-	else
-	{
-		if (serveDrink == orderMng_->GetFirstOrder().drink_)
-		{
-			score += 30;
-		}
-
-		if (serveSweets == orderMng_->GetFirstOrder().sweets_)
-		{
-			score += 30;
-		}
-
-		if (orderMng_->GetFirstOrder().time_ > 12.0f)
-		{
-			score += 40;
-		}
-		else if (orderMng_->GetFirstOrder().time_ > 6.0f)
-		{
-			score += 20;
-		}
-	}
 	customerMng_->SetCustomerReacton(score);
 	return score;
 }

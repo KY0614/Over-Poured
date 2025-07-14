@@ -16,7 +16,7 @@ public:
 	static constexpr int TIMER_BACK_SIZE_Y = 168 * TIMER_BACK_RATE;
 
 	//数字の間隔
-	static constexpr int MARGIN_SIZE = 60;
+	static constexpr int MARGIN_SIZE = 50;
 	static constexpr int MARGIN_SIZE_COLON = 10; // コロン部分のマージン
 
 	//数字大きさ
@@ -32,7 +32,7 @@ public:
 		Application::SCREEN_SIZE_X / 2 + MARGIN_SIZE,
 		Application::SCREEN_SIZE_X / 2 + (MARGIN_SIZE * 2),
 	};
-	static constexpr int NUM_POS_Y = 64;
+	static constexpr int NUM_POS_Y = 40;
 
 	Timer(void);
 	~Timer(void);
@@ -54,7 +54,8 @@ private:
 	VECTOR pos_;	//位置
 
 	int imgTimerBack_;	//背景
-	int* imgNumbers_;	//数字画像
+	int colonImg_;		//コロン（：）
+	int* NumberImgs_;	//数字画像
 
 	void ReduceTime(void);
 };

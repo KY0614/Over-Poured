@@ -51,6 +51,12 @@ public:
 		CUPLID_RACK,
 		DUSTBOX,
 
+		UI_ORDER_BACK,
+		UI_HOT,
+		UI_ICE,
+		UI_CHOCO,
+		UI_BERRY,
+
 		UI_BAR,
 		UI_BARSHADOW,
 		UI_CIRCLE,
@@ -62,6 +68,7 @@ public:
 		RANK_S,
 
 		TIMER_NUMBER,
+		TIMER_COLON,
 
 		HOT_CUSTOMER,
 		ICE_CUSTOMER,

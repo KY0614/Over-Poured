@@ -4,6 +4,7 @@
 #include "./CustomerBase.h"
 #include "../Order/Order.h"
 
+class OrderUI;
 
 class CustomerManager
 {
@@ -18,6 +19,9 @@ public:
 	//お客同士の間隔
 	static constexpr float CUSTOMERS_SPACE = 90.0f;
 
+	static constexpr float ORDER_UI_OFFSET_X = 130.0f;
+	static constexpr float ORDER_UI_OFFSET_Y = 220.0f;
+
 	CustomerManager(void);
 	~CustomerManager(void);
 
@@ -25,8 +29,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	//お客生成
-	
 	/// <summary>
 	/// 最初の5人の座標を初期化
 	/// </summary>
@@ -36,7 +38,7 @@ public:
 	/// お客を一人生成する
 	/// </summary>
 	/// <param name="order">生成するタイプ</param>
-	void CreateSingleCustomer(Order::DRINK order);
+	void CreateSingleCustomer(Order::DRINK order, Order::SWEETS sweets);
 
 	/// <summary>
 	/// お客を追加生成した後に位置調整する用
@@ -56,7 +58,7 @@ public:
 	/// <summary>
 	/// 客を止める
 	/// </summary>
-	/// <param name=""></param>
+	/// <param name="">falseにすると止まる</param>
 	void IsNotMove(void) { isMove_ = false; }
 
 	/// <summary>
@@ -75,9 +77,10 @@ public:
 	VECTOR SetLastCustomerPos(void);
 
 	int GetCustomerNum(void) { return customers_.size(); }
+	VECTOR GetPos(int index) { return customers_[index]->GetPos(); }
 	VECTOR GetFirstPos(void) { return customers_[cnt_]->GetPos(); }
-	VECTOR GetSecondPos(void) { return customers_[1]->GetPos(); }
 	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
+	CustomerBase::STATE GetFirstState(void) { return customers_.front()->GetState(); }
 
 	/// <summary>
 	/// 先頭のお客がカウンター前にいるかどうか
@@ -99,6 +102,9 @@ private:
 	
 	//お客生成用
 	std::vector<std::unique_ptr<CustomerBase>> customers_;
+
+	//注文UI用
+	std::vector<std::unique_ptr<OrderUI>> orderUI_;
 
 	bool isMove_;
 	int cnt_;

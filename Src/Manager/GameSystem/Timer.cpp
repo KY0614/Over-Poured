@@ -12,7 +12,8 @@ Timer::Timer(void)
 	pos_.y = 0.0f;
 	pos_.z = 0.0f;
 
-	imgNumbers_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_NUMBER).handleIds_;
+	NumberImgs_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_NUMBER).handleIds_;
+	colonImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_COLON).handleId_;
 	imgTimerBack_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::UI_BAR).handleId_;
 }
 
@@ -51,6 +52,14 @@ void Timer::Draw()
 		second_ % 10        // ïbÇÃàÍÇÃà 
 	};
 
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		NUM_POS_Y,
+		1.0f, 0.0f,
+		colonImg_,
+		true, false
+	);
+
 	//ïbêîÇÃï`âÊ
 	for (int i = 0; i < NUM_CNT; i++) {
 		DrawRotaGraph(
@@ -58,7 +67,7 @@ void Timer::Draw()
 			NUM_POS_Y,
 			NUM_RATE,
 			0.0f,
-			imgNumbers_[num[i]],
+			NumberImgs_[num[i]],
 			true);
 	}
 }

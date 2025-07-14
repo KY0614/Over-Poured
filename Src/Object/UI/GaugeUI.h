@@ -5,6 +5,9 @@ class GaugeUI : public UIBase
 {
 public:
 
+	static constexpr float UI_DEFAULT_WIDTH = 80.0f;
+	static constexpr float UI_DEFAULT_HEIGHT = 10.0f;
+
     GaugeUI(bool isCircle, float activeTime);
 
 	~GaugeUI(void) = default;

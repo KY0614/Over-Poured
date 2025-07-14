@@ -100,6 +100,7 @@ protected:
 
 	COLOR_F color_;
 
+	//•\Ž¦‚·‚é‚©‚Ç‚¤‚©
 	bool isVisible_;
 
 	virtual void SetParam(void) = 0;
