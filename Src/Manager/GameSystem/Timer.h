@@ -5,7 +5,6 @@
 class Timer
 {
 public:
-
 	//éûä‘ÇÃè„å¿ÅEâ∫å¿
 	static constexpr int TIME_MAX = 59;
 	static constexpr int TIME_MIN = 0;
@@ -34,7 +33,7 @@ public:
 	};
 	static constexpr int NUM_POS_Y = 40;
 
-	Timer(void);
+	Timer(int minute,int second);
 	~Timer(void);
 
 	void Update();

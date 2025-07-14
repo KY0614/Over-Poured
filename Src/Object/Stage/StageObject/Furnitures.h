@@ -32,6 +32,8 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
+	const Transform GetFloorTran(void)const { return floor_; }
+
 private:
 
 	std::unique_ptr<ModelMaterial> material_;

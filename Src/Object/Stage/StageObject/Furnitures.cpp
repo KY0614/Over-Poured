@@ -17,7 +17,7 @@ void Furnitures::Init(void)
 {
 	//モデルの基本設定
 	SetupFurniture(floor_, ResourceManager::SRC::FLOOR, AsoUtility::VECTOR_ZERO);
-
+	floor_.MakeCollider(Collider::TYPE::STAGE);
 	//モデル描画用
 	material_ = std::make_unique<ModelMaterial>(
 		"StdModelVS.cso", 1,

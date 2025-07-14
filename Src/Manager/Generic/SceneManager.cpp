@@ -54,7 +54,7 @@ void SceneManager::Init(void)
 	Init3D();
 
 	//初期シーンの設定
-	DoChangeScene(SCENE_ID::TUTORIAL);
+	DoChangeScene(SCENE_ID::TITLE);
 
 }
 
@@ -236,6 +236,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SceneManager::SCENE_ID::TUTORIAL:
 		scene_ = std::make_unique<TutorialScene>();
+		resM.InitGame();
 		break;
 	case SceneManager::SCENE_ID::GAME:
 		scene_ = std::make_unique<GameScene>();
@@ -284,32 +285,4 @@ void SceneManager::Fade(void)
 		break;
 	}
 
-}
-
-void SceneManager::UpdateDebugImGui(void)
-{
-	//ウィンドウタイトル&開始処理
-	ImGui::Begin("SceneManager:Light");
-	////角度
-	//VECTOR rotDeg = VECTOR();
-	//rotDeg.x = AsoUtility::Rad2DegF(angles_.x);
-	//rotDeg.y = AsoUtility::Rad2DegF(angles_.y);
-	//rotDeg.z = AsoUtility::Rad2DegF(angles_.z);
-	//ImGui::Text("angle(deg)");
-	//ImGui::SliderFloat("RotX", &rotDeg.x, -300.0f, 360.0f);
-	//ImGui::SliderFloat("RotY", &rotDeg.y, -300.0f, 360.0f);
-	//ImGui::SliderFloat("RotZ", &rotDeg.z, -300.0f, 360.0f);
-	//angles_.x = AsoUtility::Deg2RadF(rotDeg.x);
-	//angles_.y = AsoUtility::Deg2RadF(rotDeg.y);
-	//angles_.z = AsoUtility::Deg2RadF(rotDeg.z);
-	//位置
-	ImGui::Text("dir");
-	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &lightDir_.x);
-	ImGui::SliderFloat("PosX", &lightDir_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("PosY", &lightDir_.y, -10.0f, 10.0f);
-	ImGui::SliderFloat("PosZ", &lightDir_.z, -10.0f, 10.0f);
-
-	//終了処理
-	ImGui::End();
 }

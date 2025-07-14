@@ -80,8 +80,6 @@ public:
 
 	void ChangeState(STATE state);
 
-	void UpdateDebugImGui(void);
-
 private:
 
 	//アニメーション
@@ -157,7 +155,6 @@ private:
 	void UpdateStop(void);
 
 	//描画系
-	void DrawDebug(void);
 	void DrawShadow(void);
 
 	//操作 

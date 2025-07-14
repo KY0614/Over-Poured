@@ -112,9 +112,13 @@ void ResourceManager::InitTitle(void)
 
 	std::unique_ptr<Resource> res;
 
-	//PushSpace
+	//PushSpace画像
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "PushSpace.png");
 	resourcesMap_.emplace(SRC::PUSH_SPACE, std::move(res));
+
+	//タイトルロゴ
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Title.png");
+	resourcesMap_.emplace(SRC::TITLE_LOGO, std::move(res));
 
 	//プレイヤー
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Player/Player.mv1");

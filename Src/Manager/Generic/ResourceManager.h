@@ -17,6 +17,7 @@ public:
 	enum class SRC
 	{
 		NONE,
+		TITLE_LOGO,
 		PUSH_SPACE,
 		PLAYER,
 		PLAYER_SHADOW,

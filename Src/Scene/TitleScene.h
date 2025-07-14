@@ -11,6 +11,8 @@ class TitleScene : public SceneBase
 
 public:
 
+	static constexpr int LOGO_OFFSET_Y = 80;
+
 	//コンストラクタ
 	TitleScene(void);
 
@@ -24,7 +26,8 @@ public:
 private:
 
 	//画像
-	int imgPush_;
+	int pushImg_;
+	int titleImg_;
 
 	//スカイドーム用
 	Transform spaceDomeTran_;

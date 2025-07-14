@@ -47,7 +47,7 @@ void Player::Init(void)
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::PLAYER));
 	transform_.scl = {0.7f,0.7f,0.7f};
-	transform_.pos = { -60.0f, 30.0f, 0.0f };
+	transform_.pos = { -60.0f, 30.0f, -10.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
@@ -113,9 +113,6 @@ void Player::Update(void)
 
 	//アニメーション再生
 	animationController_->Update();
-
-	//ImGuiの操作を行う
-	//UpdateDebugImGui();
 }
 
 void Player::Draw(void)
@@ -126,10 +123,6 @@ void Player::Draw(void)
 
 	//丸影描画
 	DrawShadow();
-
-	//デバッグ用描画
-	//DrawDebug();
-
 }
 
 void Player::AddCollider(std::weak_ptr<Collider> collider)
@@ -156,27 +149,6 @@ void Player::SurveItem(void)
 {
 	isHolding_ = false;
 	holdItemId_ = "";
-}
-
-void Player::UpdateDebugImGui(void)
-{
-	//ウィンドウタイトル&開始処理
-	ImGui::Begin("Player");
-	//大きさ
-	ImGui::Text("scale");
-	ImGui::InputFloat("SclX", &transform_.scl.x);
-	ImGui::InputFloat("SclY", &transform_.scl.y);
-	ImGui::InputFloat("SclZ", &transform_.scl.z);
-
-	//位置
-	ImGui::Text("position");
-	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &transform_.pos.x);
-	ImGui::SliderFloat("PosX", &transform_.pos.x, -500.0f, 360.0f);
-	ImGui::SliderFloat("PosY", &transform_.pos.y, -500.0f, 360.0f);
-	ImGui::SliderFloat("PosZ", &transform_.pos.z, -500.0f, 1000.0f);
-	//終了処理
-	ImGui::End();
 }
 
 void Player::InitAnimation(void)
@@ -250,18 +222,6 @@ void Player::UpdateStop(void)
 	//ストップというよりインタラクト中という感じ
 	//インタラクト用のアニメーションをさせたい
 	animationController_->Play((int)ANIM_TYPE::IDLE_HOLD);
-}
-
-void Player::DrawDebug(void)
-{
-
-	SetFontSize(24);
-	int line = 5;
-	VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-
-	DebugDrawFormat::FormatStringRight(L"chestPos : %0.2f", chestPos_.y,line);
-	SetFontSize(16);
-
 }
 
 void Player::DrawShadow(void)

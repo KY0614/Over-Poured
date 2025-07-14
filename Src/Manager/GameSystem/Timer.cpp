@@ -1,10 +1,11 @@
 #include "../Generic/ResourceManager.h"
 #include "Timer.h"
 
-Timer::Timer(void)
+Timer::Timer(int minute, int second)
 {
-	minute_ = 2;
-	second_ = 0;
+	//タイマーの時間は
+	minute_ = minute;
+	second_ = second;
 	cnt_ = 0;
 	isEnd_ = false;
 
@@ -25,8 +26,8 @@ void Timer::Update()
 {
 	cnt_++;
 	//FPS参照のカウント更新
-	//FPSと同じ値のときは一秒立ったということ
-	if (cnt_ >= 60) {
+	//FPSと同じ値のときは一秒立ったということ(60で１秒）
+	if (cnt_ >= TIME_MAX + 1) {
 		cnt_ = 0;
 
 		//時間制限を減らす

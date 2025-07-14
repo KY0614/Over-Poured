@@ -13,7 +13,8 @@
 
 TitleScene::TitleScene(void)
 {
-	imgPush_ = -1;
+	pushImg_ = -1;
+	titleImg_ = -1;
 	skyDome_ = nullptr;
 	animationController_ = nullptr;
 }
@@ -27,7 +28,8 @@ void TitleScene::Init(void)
 {
 
 	//画像読み込み
-	imgPush_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::PUSH_SPACE).handleId_;
+	pushImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::PUSH_SPACE).handleId_;
+	titleImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 
 	//背景
 	spaceDomeTran_.pos = AsoUtility::VECTOR_ZERO;
@@ -63,7 +65,7 @@ void TitleScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsInputTriggered("NextScene"))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
 	}
 
 	//キャラアニメーション
@@ -75,16 +77,22 @@ void TitleScene::Update(void)
 
 void TitleScene::Draw(void)
 {
+	//ロゴを小さめに縮小しているのでジャギーが目立たないようにバイリニア法で描画
+	SetDrawMode(DX_DRAWMODE_BILINEAR);
 
 	skyDome_->Draw();
 
 	MV1DrawModel(planet_.modelId);
 	//MV1DrawModel(charactor_.modelId);
 
-	//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, 500, 1.0, 0.0, imgPush_, true);
+	//pushspaceの画像
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2, 500,
+		1.0, 0.0, pushImg_, true);
 
-	SetFontSize(32);
-	int width = GetDrawStringWidth(L"Push Enter", 10);
-	DrawString(Application::SCREEN_SIZE_X / 2 - width/2, 300, L"Push Enter", 0xffffff);
-	SetFontSize(16);
+	//ロゴ画像
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y/2 - LOGO_OFFSET_Y,
+		0.5, 0.0, titleImg_, true);
+	
 }

@@ -3,7 +3,6 @@
 #include "SceneBase.h"
 
 class StageManager;
-class SkyDome;
 class Player;
 class OrderManager;
 class OrderCustomerManager;
@@ -13,8 +12,8 @@ class GameScene : public SceneBase
 {
 
 public:
-
-	static constexpr float MAX_TIME = 50.0f;
+	//ゲーム全体の制限時間
+	static constexpr int  MAX_MINUTE_TIME = 2;
 	
 	//コンストラクタ
 	GameScene(void);
@@ -31,9 +30,6 @@ private:
 	//ステージ
 	std::unique_ptr<StageManager> stage_;
 
-	//スカイドーム
-	std::unique_ptr<SkyDome> skyDome_;
-
 	//プレイヤー
 	std::unique_ptr<Player> player_;
 
@@ -43,9 +39,5 @@ private:
 	//タイマー
 	std::unique_ptr<Timer> timer_;
 
-	float time_;
-
 	int score_;
-
-	void DebugDraw(void);
 };

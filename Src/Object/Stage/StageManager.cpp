@@ -97,8 +97,8 @@ void StageManager::Init(void)
 
 	InitAnimation(); // アニメーションの初期化
 
-	funitures_ = std::make_unique<Furnitures>();
-	funitures_->Init();
+	furnitures_ = std::make_unique<Furnitures>();
+	furnitures_->Init();
 
 	VECTOR firstPos = {};
 	//横のテーブル群(手前)
@@ -249,7 +249,7 @@ void StageManager::Update(void)
 	}
 
 	counter_->Update();
-	funitures_->Update();
+	furnitures_->Update();
 
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)
@@ -296,7 +296,6 @@ void StageManager::Update(void)
 
 	transform_.Update();
 	caseTran_.Update();
-	furnitureTran_.Update();
 
 #ifdef _DEBUG
 
@@ -311,8 +310,7 @@ void StageManager::Draw(void)
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
 	MV1DrawModel(caseTran_.modelId);
-	MV1DrawModel(furnitureTran_.modelId);
-	funitures_->Draw();
+	furnitures_->Draw();
 
 	for (const auto& table : tables_)
 	{
@@ -373,6 +371,11 @@ Transform StageManager::GetShowCase(void) const
 Transform StageManager::GetDustBox(void) const
 {
 	return dustBoxTran_;
+}
+
+Transform StageManager::GetFloorTran(void) const
+{
+	return furnitures_->GetFloorTran();
 }
 
 void StageManager::InitAnimation(void)

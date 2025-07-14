@@ -93,13 +93,13 @@ public:
 	Transform GetTableTran(int index) const;
 	Transform GetShowCase(void) const;
 	Transform GetDustBox(void) const;
+	Transform GetFloorTran(void) const;
 
 private:
 
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
 
-	Transform furnitureTran_;
 	Transform caseTran_;
 	Transform dustBoxTran_;
 
@@ -116,7 +116,7 @@ private:
 	std::unique_ptr<StageObject> counter_;
 	std::unique_ptr<StageObject> case_;
 
-	std::unique_ptr<Furnitures> funitures_;
+	std::unique_ptr<Furnitures> furnitures_;
 
 	bool isServed_;
 
