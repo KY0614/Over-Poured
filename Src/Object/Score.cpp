@@ -161,15 +161,6 @@ void Score::UpdatePlayScore(void)
 void Score::UpdateTotalScore(void)
 {
 	auto& scr = ScoreManager::GetInstance();
-	////¡‰ñ‚ÌƒXƒRƒA‚Ü‚Å‚O‚©‚ç‰ÁŽZ‚·‚é
-	//if (totalScr_ >= scr.GetAggregateScore() - currentScr_)
-	//{
-	//	totalScr_ = scr.GetAggregateScore() - currentScr_;
-	//}
-	//else
-	//{
-	//	totalScr_ += ADD_TOTALSCORE_SPEED;
-	//}
 
 	switch (phase_)
 	{

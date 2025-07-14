@@ -1,10 +1,15 @@
+#include "../Common/Easing.h"
 #include "../../Manager/Generic/ResourceManager.h"
+#include "../../Manager/Generic/SceneManager.h"
 #include "OrderUI.h"
 
-OrderUI::OrderUI(Order::DRINK drink, Order::SWEETS sweets)
+OrderUI::OrderUI(Order::DRINK drink, Order::SWEETS sweets, float maxTime)
 {
 	orderUIData_.drinkType_ = drink;
 	orderUIData_.sweetsType_ = sweets;
+	orderTime_ = maxTime;
+	orderUIData_.currentRate_ = 0.0f;
+	orderUIData_.displayedRate_ = 0.0f;
 	isActive_ = false;
 	alpha_ = 1.0f;
 	size_ = 100.0f;
@@ -14,6 +19,7 @@ void OrderUI::Init(void)
 {
 	orderUIData_.backUIImg_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::UI_ORDER_BACK).handleId_;
+
 	//ドリンク用UI
 	if (orderUIData_.drinkType_ == Order::DRINK::HOT)
 	{
@@ -40,6 +46,24 @@ void OrderUI::Init(void)
 	{
 		orderUIData_.sweetsUIImg_ = -1;
 	}
+
+	orderUIData_.timerBackImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
+
+	orderUIData_.timerImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::UI_CIRCLE).handleId_;
+}
+
+void OrderUI::UpdateTimeGauge(float orderTime)
+{
+	if (!isActive_)return;
+	orderUIData_.displayedRate_ = Easing::Linear(
+		gaugeTime_, 1.0f,
+		0.0f, orderUIData_.currentRate_);
+
+	//スコアを現在のランクの範囲を比例計算する（後で100をかけてパーセントにする）
+	orderUIData_.currentRate_ = orderTime / orderTime_;
+	if (orderUIData_.currentRate_ <= 0.0f)orderUIData_.currentRate_ = 0.0f;
 }
 
 void OrderUI::Update(void)
@@ -49,6 +73,9 @@ void OrderUI::Update(void)
 void OrderUI::Draw(void)
 {
 	if (isActive_ != true)return;
+	// UIの描画時はZバッファ無効
+	//SetUseZBuffer3D(false);
+	//SetUseLighting(false);
 
 	DrawBillboard3D(pos_, 0.5f, 0.5f, BACK_IMG_SIZE,
 		0.0f, orderUIData_.backUIImg_, true);
@@ -68,4 +95,21 @@ void OrderUI::Draw(void)
 		DrawBillboard3D(pos_, 0.5f, 0.5f, size_,
 			0.0f, orderUIData_.drinkUIImg_, true);
 	}
+
+	VECTOR pos = VAdd(pos_, VGet(120.0f, -50.0f, 0.0f));
+	VECTOR screenPos = ConvWorldPosToScreenPos(pos);
+	DrawBillboard3D(pos,
+		0.5f, 0.5f, size_,
+		0.0f, orderUIData_.timerBackImg_, true);
+	DrawCircleGauge(
+		(int)screenPos.x + 3,
+		(int)screenPos.y,
+		orderUIData_.currentRate_ * 100.0f,
+		orderUIData_.timerImg_,
+		0.0f,
+		0.62f,
+		true, false
+	);
+	//SetUseLighting(true);
+	//SetUseZBuffer3D(true);
 }

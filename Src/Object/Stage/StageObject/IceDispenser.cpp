@@ -6,6 +6,7 @@
 #include "../Object/Player.h"
 #include "../Object/Stage/StageManager.h"
 #include "../../UI/GaugeUI.h"
+#include "../../UI/UIManager.h"
 #include "IceDispenser.h"
 
 namespace {
@@ -29,6 +30,7 @@ void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
 	VECTOR uiPos = transform_.pos;
 	uiPos.y += 130.0f;	//UI‚ÌˆÊ’u‚ğ’²®
 	gaugeUI_->SetPos(uiPos); // UI‚ÌˆÊ’u‚ğİ’è
+	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
 
 void IceDispenser::Draw(void)

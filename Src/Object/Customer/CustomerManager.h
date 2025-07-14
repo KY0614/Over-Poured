@@ -5,6 +5,7 @@
 #include "../Order/Order.h"
 
 class OrderUI;
+class GaugeUI;
 
 class CustomerManager
 {
@@ -21,12 +22,15 @@ public:
 
 	static constexpr float ORDER_UI_OFFSET_X = 130.0f;
 	static constexpr float ORDER_UI_OFFSET_Y = 220.0f;
+	
+	static constexpr float TIMER_UI_OFFSET_X = 180.0f;
+	static constexpr float TIMER_UI_OFFSET_Y = 260.0f;
 
 	CustomerManager(void);
 	~CustomerManager(void);
 
 	void Init(void);
-	void Update(void);
+	void Update(float orderTime);
 	void Draw(void);
 
 	/// <summary>
@@ -38,7 +42,7 @@ public:
 	/// お客を一人生成する
 	/// </summary>
 	/// <param name="order">生成するタイプ</param>
-	void CreateSingleCustomer(Order::DRINK order, Order::SWEETS sweets);
+	void CreateSingleCustomer(Order::OrderData data);
 
 	/// <summary>
 	/// お客を追加生成した後に位置調整する用

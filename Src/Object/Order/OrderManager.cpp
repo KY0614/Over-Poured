@@ -5,7 +5,6 @@
 
 OrderManager::OrderManager(void)
 {
-	//count_ = 0;
 }
 
 OrderManager::~OrderManager(void)
@@ -17,7 +16,6 @@ void OrderManager::Init(void)
 {
 	orders_.clear();
 	InitOrder();
-	//count_ = 1;
 }
 
 void OrderManager::FirstOrderUpdate(void)
@@ -31,51 +29,6 @@ void OrderManager::FirstOrderUpdate(void)
 
 void OrderManager::Draw(void)
 {
-//#ifdef _DEBUG
-//
-//	auto orders = orders_.front()->GetOrder();
-//
-//	//注文に合わせて四角の色を変える
-//	int startX = DebugDrawFormat::GetFormatSize(L"注文 : %d,%d", orders.drink_, orders.sweets_);
-//	startX = startX * 1.5;//フォントサイズが1.5倍なので
-//	int scale = 25;
-//	int endX = startX + scale;
-//	int startY = 30;
-//	int endY = startY + scale;
-//	int drinkCol = GetColor(0, 0, 0);
-//
-//	if (orders.drink_ == Order::DRINK::HOT)
-//	{
-//		drinkCol = GetColor(255, 0, 0);
-//	}
-//	else
-//	{
-//		drinkCol = GetColor(0, 255, 255);
-//	}
-//	//飲み物用
-//	DrawBox(startX, startY, endX, endY, drinkCol, true);
-//
-//	int foodCol = GetColor(0, 0, 0);
-//	switch (orders.sweets_)
-//	{
-//	case Order::SWEETS::NONE:
-//		foodCol = GetColor(0, 0, 0);
-//		break;
-//
-//	case Order::SWEETS::CHOCO:
-//		foodCol = GetColor(132, 98, 68);
-//		break;
-//
-//	case Order::SWEETS::STRAWBERRY:
-//		foodCol = GetColor(255, 198, 244);
-//		break;
-//	default:
-//		break;
-//	}
-//
-//	//食べ物用
-//	DrawBox(endX + scale, startY, endX + (scale * 2), endY, foodCol, true);
-//#endif // _DEBUG
 }
 
 void OrderManager::InitOrder(void)
@@ -151,6 +104,17 @@ std::vector<Order::SWEETS> OrderManager::GetAllOrderSweet(void) const
 	return sweets;
 }
 
+std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
+{
+	std::vector<Order::OrderData> data;
+	for (auto& order : orders_)
+	{
+		data.push_back(order->GetOrder());
+	}
+
+	return data;
+}
+
 Order::DRINK OrderManager::GetLastOrderDrink(void) const
 {
 	return orders_.back()->GetOrder().drink_;
@@ -159,4 +123,9 @@ Order::DRINK OrderManager::GetLastOrderDrink(void) const
 Order::SWEETS OrderManager::GetLastOrderSweets(void) const
 {
 	return orders_.back()->GetOrder().sweets_;
+}
+
+Order::OrderData OrderManager::GetLastOrderData(void) const
+{
+	return orders_.back()->GetOrder();
 }

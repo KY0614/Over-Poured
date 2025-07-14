@@ -7,6 +7,7 @@
 #include "../Object/Player.h"
 #include "../Object/Stage/StageManager.h"
 #include "../../UI/GaugeUI.h"
+#include "../../UI/UIManager.h"
 #include "Machine.h"
 
 namespace {
@@ -143,7 +144,8 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
 	uiPos.y += UI_OFFSET_Y;	//UI‚ÌˆÊ’u‚ğ’²®
-	gaugeUI_->SetPos(uiPos); // UI‚ÌˆÊ’u‚ğİ’è
+	gaugeUI_->SetPos(uiPos); // UI‚ÌˆÊ’u‚ğİ’è1
+	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
 
 void Machine::Draw(void)

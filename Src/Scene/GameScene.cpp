@@ -15,7 +15,7 @@
 #include"../Object/Order/OrderManager.h"
 #include "../Object/Player.h"
 #include "../Manager/GameSystem//ScoreManager.h"
-#include "../Object/SkyDome.h"
+#include "../Object/UI/UIManager.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -132,6 +132,7 @@ void GameScene::Draw(void)
 	customer_->Draw();
 	//プレイヤー描画
 	player_->Draw();
+	UIManager::GetInstance().Draw();
 	//タイマー描画
 	timer_->Draw();
 }

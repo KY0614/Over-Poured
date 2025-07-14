@@ -302,11 +302,11 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::UI_BARSHADOW, std::move(res));
 
 	//サークルゲージUI
-	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleExpGage.png");
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "order_timer.png");
 	resourcesMap_.emplace(SRC::UI_CIRCLE, std::move(res));
 
 	//サークルゲージ影UI
-	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleGage.png");
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "order_timer_back.png");
 	resourcesMap_.emplace(SRC::UI_CIRCLESHADOW, std::move(res));
 
 	//タイマー用-----------------------------------------------------------

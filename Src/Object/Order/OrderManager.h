@@ -40,20 +40,15 @@ public:
 
 	std::vector<Order::DRINK> GetAllOrderDrink(void) const;
 	std::vector<Order::SWEETS> GetAllOrderSweet(void) const;
+	std::vector<Order::OrderData> GetAllOrder(void) const;
 	Order::DRINK GetLastOrderDrink(void) const;
 	Order::SWEETS GetLastOrderSweets(void) const;
-
-	int GetCount(void) { return count_; }
+	Order::OrderData GetLastOrderData(void) const;
 
 private:
+
 	//íçï∂ä«óùóp
 	std::vector<std::unique_ptr<Order>> orders_;
-
-#ifdef _DEBUG
-
-	int count_;
-
-#endif // _DEBUG
 
 };
 

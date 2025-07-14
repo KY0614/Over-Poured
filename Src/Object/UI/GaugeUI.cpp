@@ -54,8 +54,8 @@ void GaugeUI::Draw(void)
 
     float progress = currentTime_ / activeTime_;
 
-    SetUseLighting(false);
-    SetUseZBuffer3D(false);
+    //SetUseLighting(false);
+    //SetUseZBuffer3D(false);
 
     if (isCircle_) 
     {
@@ -66,8 +66,8 @@ void GaugeUI::Draw(void)
         DrawRectGauge(progress);
     }
 
-    SetUseZBuffer3D(true);
-    SetUseLighting(true);
+    //SetUseZBuffer3D(true);
+    //SetUseLighting(true);
 }
 
 void GaugeUI::Reset(void)
@@ -170,8 +170,9 @@ void GaugeUI::DrawRectGauge(float progress)
         {
             verts[i].pos = VAdd(verts[i].pos, pos_);
         }
-
+        SetLightDirection(VGet(0.0f, 0.0f, -1.0f));
         DrawPolygon3D(verts, 2, texHandle, true);
+        SetLightDirection(VGet(0.0f, -0.5f, 0.3f));
         };
 
     MakeQuad(width, shadowImg_);

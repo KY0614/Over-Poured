@@ -6,6 +6,7 @@
 #include "../../Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../../UI/GaugeUI.h"
+#include "../../UI/UIManager.h"
 #include "ItemObject.h"
 #include "RackObject.h"
 
@@ -149,7 +150,7 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 		VECTOR uiPos = transform_.pos;
 		uiPos.y += SWEETS_UI_OFFSET_Y;	//UIの位置を調整
 		gaugeUI_->SetPos(uiPos); // UIの位置を設定
-
+		UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 		// 各スイーツの基準座標からのオフセットを配列で定義
 		const VECTOR sweetsOffsets[] = {
 			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
@@ -182,7 +183,7 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	VECTOR uiPos = transform_.pos;
 	uiPos.y -= CUP_UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
-
+	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 	//設定されていなかったらカップモデルを設定する
 	if (param_.id_ == "Cup_Hot_Rack")
 	{

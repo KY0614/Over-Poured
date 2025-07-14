@@ -36,23 +36,27 @@ void CustomerBase::Update(void)
 	transform_.Update();
 	animationController_->Update();
 
+	switch (state_)
+	{
+	case CustomerBase::STATE::IDLE:
+		animationController_->Play((int)STATE::IDLE);
+		break;
+	case CustomerBase::STATE::WALK:
+		animationController_->Play((int)STATE::WALK);
+		break;
+	default:
+		break;
+	}
+
 	RotateY();
 
-	//d—Í•ûŒü‚É‰ˆ‚Á‚Ä‰ñ“]‚³‚¹‚é
+	//‰ñ“]‚³‚¹‚é
 	transform_.quaRot = Quaternion::Quaternion();
 	transform_.quaRot = transform_.quaRot.Mult(customerRotY_);
 }
 
 void CustomerBase::Move(void)
 {
-	//if (transform_.pos.x < transform_.targetPos.x)
-	//{
-	//	isMove_ = true;
-	//	transform_.pos.x++;
-	//}
-	//else {
-	//	isMove_ = false;
-	//}
 	transform_.pos.x += 1.5f;
 }
 

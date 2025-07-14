@@ -4,6 +4,7 @@
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Player.h"
 #include "../../UI/GaugeUI.h"
+#include "../../UI/UIManager.h"
 #include "CupLidRack.h"
 
 namespace {
@@ -69,6 +70,7 @@ void CupLidRack::Init(VECTOR pos, float rotY, VECTOR scale)
 	VECTOR uiPos = transform_.pos;
 	uiPos.y += 50.0f;	//UI‚ÌˆÊ’u‚ğ’²®
 	gaugeUI_->SetPos(uiPos); // UI‚ÌˆÊ’u‚ğİ’è
+	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
 
 void CupLidRack::Update(void)

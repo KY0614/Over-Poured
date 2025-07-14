@@ -55,7 +55,7 @@ void OrderCustomerManager::Init(void)
 
 void OrderCustomerManager::Update(void)
 {
-	customerMng_->Update();
+	customerMng_->Update(orderMng_->GetFirstOrder().time_);
 	//for (int i = 0; i < orderMng_->GetAllOrderDrink().size(); ++i)
 	//{
 	//	VECTOR pos = VAdd(customerMng_->GetPos(i),
@@ -134,9 +134,10 @@ void OrderCustomerManager::CreateCustomersByOrders(void)
 {
 	std::vector<Order::DRINK> drinks = orderMng_->GetAllOrderDrink();
 	std::vector<Order::SWEETS> sweets = orderMng_->GetAllOrderSweet();
-	for(int i = 0; i < drinks.size();++i)
+	std::vector<Order::OrderData> data = orderMng_->GetAllOrder();
+	for(int i = 0; i < data.size();++i)
 	{
-		customerMng_->CreateSingleCustomer(drinks[i], sweets[i]);
+		customerMng_->CreateSingleCustomer(data[i]);
 	}
 }
 
@@ -156,7 +157,7 @@ void OrderCustomerManager::ClearOrderAndCustomer(void)
 
 void OrderCustomerManager::AddCustomerByOrder(void)
 {
-	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderDrink(),orderMng_->GetLastOrderSweets());
+	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderData());
 	customerMng_->SetLastCustomerPos();
 }
 

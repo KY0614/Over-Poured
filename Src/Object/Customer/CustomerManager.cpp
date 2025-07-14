@@ -3,6 +3,7 @@
 #include "../../Object/Customer/HotCustomer.h"
 #include "../../Object/Customer/IceCustomer.h"
 #include "../../Object/UI/OrderUI.h"
+#include "../../Object/UI/UIManager.h"
 #include "CustomerManager.h"
 
 CustomerManager::CustomerManager(void)
@@ -31,7 +32,7 @@ void CustomerManager::Init(void)
 	cnt_ = 0;
 }
 
-void CustomerManager::Update(void)
+void CustomerManager::Update(float orderTime)
 {
 
 	for (auto& c : customers_)
@@ -53,6 +54,7 @@ void CustomerManager::Update(void)
 		VECTOR pos = VAdd(customers_[i]->GetPos(),
 			VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y,0.0f));
 		orderUI_[i]->SetPos(pos);
+		orderUI_[i]->UpdateTimeGauge(orderTime);
 	}
 
 	//カウンターの前に来たら、回転させてカウンターの方を見るようにする
@@ -77,10 +79,11 @@ void CustomerManager::Draw(void)
 	{
 		c->Draw();
 	}
+
 	for (const auto& ui : orderUI_)
 	{
 		ui->Draw();
-	}
+	}	
 }
 
 void CustomerManager::InitCustomersPos(void)
@@ -94,14 +97,14 @@ void CustomerManager::InitCustomersPos(void)
 	}
 }
 
-void CustomerManager::CreateSingleCustomer(Order::DRINK drink, Order::SWEETS sweets)
+void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 {
 	//最大注文生成数を超えそうだったらreturn
 	//if (customers_.size() >= MAX_CREATE_SIZE) return;
 
-	orderUI_.emplace_back(std::make_unique<OrderUI>(drink, sweets));
+	orderUI_.emplace_back(std::make_unique<OrderUI>(data.drink_, data.sweets_,data.time_));
 
-	switch (drink)
+	switch (data.drink_)
 	{
 	case Order::DRINK::NONE:
 		break;
@@ -133,7 +136,7 @@ void CustomerManager::CreateSingleCustomer(Order::DRINK drink, Order::SWEETS swe
 	default:
 		break;
 	}
-
+	UIManager::GetInstance().AddOrderUI(orderUI_.back().get());
 }
 
 void CustomerManager::MoveCustomerPos(void)

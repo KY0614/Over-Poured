@@ -23,7 +23,7 @@ public:
 	static constexpr float SPEED_RUN = 7.0f;
 
 	//回転完了までの時間
-	static constexpr float TIME_ROT = 1.0f;
+	static constexpr float TIME_ROT = 0.5f;
 
 	//煙エフェクト発生間隔
 	static constexpr float TERM_FOOT_SMOKE = 0.3f;
