@@ -48,6 +48,8 @@ void UIManager::Update(void)
 
 void UIManager::Draw(void)
 {
+	if (gaugeUIs_.empty() && orderUIs_.empty())return;
+
 	for (auto& ui : gaugeUIs_) 
 	{
 		ui->Draw();
@@ -58,8 +60,16 @@ void UIManager::Draw(void)
 	}
 }
 
+void UIManager::Release(void)
+{
+	gaugeUIs_.clear();
+	orderUIs_.clear();
+}
+
 void UIManager::Destroy(void)
 {
+	gaugeUIs_.clear();
+	orderUIs_.clear();
 	delete instance_;
 }
 

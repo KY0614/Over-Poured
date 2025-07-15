@@ -54,12 +54,12 @@ void Resource::Load(void)
 	switch (type_)
 	{
 	case Resource::TYPE::IMG:
-		// 画像
+		//画像
 		handleId_ = LoadGraph(StringUtility::StringToWstring(path_).c_str());
 		break;
 
 	case Resource::TYPE::IMGS:
-		// 複数画像
+		//複数画像
 		handleIds_ = new int[numX_ * numY_];
 		LoadDivGraph(
 			StringUtility::StringToWstring(path_).c_str(),
@@ -70,16 +70,21 @@ void Resource::Load(void)
 		break;
 
 	case Resource::TYPE::MODEL:
-		// モデル
+		//モデル
 		handleId_ = MV1LoadModel(StringUtility::StringToWstring(path_).c_str());
 		break;
 
 	case Resource::TYPE::EFFEKSEER:
-
-		handleId_ = LoadEffekseerEffect(path_.c_str());
+		///エフェクト
+		handleId_ = LoadEffekseerEffect(StringUtility::StringToWstring(path_).c_str());
 		break;
 
+	case Resource::TYPE::SOUND:
+		//サウンド
+		handleId_ = LoadSoundMem(StringUtility::StringToWstring(path_).c_str());
+		break;
 	}
+	
 
 }
 
@@ -119,6 +124,9 @@ void Resource::Release(void)
 		DeleteEffekseerEffect(handleId_);
 		break;
 
+	case Resource::TYPE::SOUND:
+		DeleteSoundMem(handleId_);
+		break;
 	}
 
 }

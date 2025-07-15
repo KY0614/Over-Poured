@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\GameSystem\SoundManager.cpp" />
     <ClCompile Include="Src\Object\UI\OrderUI.cpp" />
     <ClCompile Include="Src\Object\Stage\StageObject\Furnitures.cpp" />
     <ClCompile Include="Src\Common\Easing.cpp" />
@@ -91,6 +92,7 @@
     <ClCompile Include="Src\Object\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\GameSystem\SoundManager.h" />
     <ClInclude Include="Src\Object\UI\OrderUI.h" />
     <ClInclude Include="Src\Object\Stage\StageObject\Furnitures.h" />
     <ClInclude Include="Src\Common\Easing.h" />

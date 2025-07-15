@@ -28,10 +28,10 @@ public:
     virtual ~OrderUI() = default;
 
     void Init(void) override;
-    void UpdateTimeGauge(float orderTime);
     void Update(void) override;
     void Draw(void) override;
 
+    void SetOrderTimer(float progressT) { orderTimer_ = progressT; }
 private:
 
     OrderUIData orderUIData_;
@@ -39,7 +39,8 @@ private:
     //ゲージを進ませる用の時間
     float gaugeTime_;
 
-    float orderTime_;
+    float orderMaxTime_;
+    float orderTimer_;
 
     float size_;
 };

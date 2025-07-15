@@ -109,11 +109,12 @@ void ResourceManager::InitTitle(void)
 	static std::string PATH_IMG = Application::PATH_IMAGE;
 	static std::string PATH_MDL = Application::PATH_MODEL;
 	static std::string PATH_EFF = Application::PATH_EFFECT;
+	static std::string PATH_SND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;
 
 	//PushSpace画像
-	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "PushSpace.png");
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "PleaseKey.png");
 	resourcesMap_.emplace(SRC::PUSH_SPACE, std::move(res));
 
 	//タイトルロゴ
@@ -127,6 +128,30 @@ void ResourceManager::InitTitle(void)
 	//スカイドーム
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "SkyDome/SkyDome.mv1");
 	resourcesMap_.emplace(SRC::SKY_DOME, std::move(res));
+
+	//お店
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/cafe.mv1");
+	resourcesMap_.emplace(SRC::CAFE, std::move(res));
+
+	//家具：床
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/floor.mv1");
+	resourcesMap_.emplace(SRC::FLOOR, std::move(res));
+
+	//地面テクスチャ
+	res = std::make_unique<RES>(RES_T::IMG, PATH_MDL + "Stage/Tex/ground.png");
+	resourcesMap_.emplace(SRC::GROUND, std::move(res));
+
+	//音------------------------------------------------------------------------
+
+	//BGM
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "BGM/Title.mp3");
+	resourcesMap_.emplace(SRC::TITLE_BGM, std::move(res));
+
+	//SE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/press_key.mp3");
+	resourcesMap_.emplace(SRC::PUSH_SPACE_SE, std::move(res));
+
+	//--------------------------------------------------------------------------
 }
 
 void ResourceManager::InitMovie(void)
@@ -148,6 +173,7 @@ void ResourceManager::InitGame(void)
 	static std::string PATH_IMG = Application::PATH_IMAGE;
 	static std::string PATH_MDL = Application::PATH_MODEL;
 	static std::string PATH_EFF = Application::PATH_EFFECT;
+	static std::string PATH_SND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;
 
@@ -311,7 +337,7 @@ void ResourceManager::InitGame(void)
 
 	//タイマー用-----------------------------------------------------------
 	//数字
-	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Number.png",
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Timer_Numbers.png",
 		NUMBER_NUM_X, NUMBER_NUM_Y, NUMBER_SIZE_X, NUMBER_SIZE_Y);
 	resourcesMap_.emplace(SRC::TIMER_NUMBER, std::move(res));
 
@@ -320,6 +346,29 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::TIMER_COLON, std::move(res));
 	//---------------------------------------------------------------------
 
+	//カウントダウン用------------------------------------------------------------------
+	//数字
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "count_down.png",
+		1, 4, 400, 150);
+	resourcesMap_.emplace(SRC::COUNTDOWN_NUMBER, std::move(res));
+
+	//--------------------------------------------------------------------------
+	
+	//スコア用------------------------------------------------------------------
+	//数字
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Numbers.png",
+		NUMBER_NUM_X, NUMBER_NUM_Y, 128, 128);
+	resourcesMap_.emplace(SRC::SCORE_NUMBER, std::move(res));
+
+	//--------------------------------------------------------------------------
+
+	//音------------------------------------------------------------------------
+	//BGM
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "BGM/GameScene.mp3");
+	resourcesMap_.emplace(SRC::GAME_BGM, std::move(res));
+
+	//--------------------------------------------------------------------------
+	
 	//仮客
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/hotcup_customer.mv1");
 	resourcesMap_.emplace(SRC::HOT_CUSTOMER, std::move(res));

@@ -93,17 +93,7 @@ void CupLidRack::Update(void)
 
 void CupLidRack::Draw(void)
 {
-	//int line = 4;	//çs
-	//int lineHeight = 30;	//çs
-	////DebugDrawFormat::FormatStringRight(L"LidTime %2.f", param_.interactTime, line, lineHeight);
-	//
-	//VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	//// ïœä∑ê¨å˜
-	//DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-	//	L"äWÇÇ∑ÇÈ %2.f", param_.interactTime_);
 
 	StageObject::Draw();
-
-	gaugeUI_->Draw();
 
 }

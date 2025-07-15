@@ -18,29 +18,10 @@ void Furnitures::Init(void)
 	//モデルの基本設定
 	SetupFurniture(floor_, ResourceManager::SRC::FLOOR, AsoUtility::VECTOR_ZERO);
 	floor_.MakeCollider(Collider::TYPE::STAGE);
-	//モデル描画用
-	material_ = std::make_unique<ModelMaterial>(
-		"StdModelVS.cso", 1,
-		"StdModelPS.cso", 3
-	);
-	//タイリングするのでテクスチャアドレスをWRAPに
-	material_->SetTextureAddress(ModelMaterial::TEXADDRESS::WRAP);
 
-	//uvに渡すスケール値
-	material_->AddConstBufVS({ TILLING_SIZE ,TILLING_SIZE,TILLING_SIZE,TILLING_SIZE });
-
-	//色の影響度
-	material_->AddConstBufPS({ AsoUtility::VECTOR_ONE.x,AsoUtility::VECTOR_ONE.y,AsoUtility::VECTOR_ONE.z,1.0f });
-
-	//ライトの方向
-	VECTOR light = GetLightDirection();
-	material_->AddConstBufPS({ light.x,light.y,light.z,1.0f });
-
-	//環境光
-	material_->AddConstBufPS({ AMBIENT_COLOR,AMBIENT_COLOR,AMBIENT_COLOR,AMBIENT_COLOR });
-
-	renderer_ = std::make_unique<ModelRenderer>(floor_.modelId, *material_);
-
+	//床用のマテリアル初期化
+	InitMaterial();
+	
 	SetupFurniture(deskL_, ResourceManager::SRC::DESK, DESK_L_POS);
 	SetupFurniture(deskR_, ResourceManager::SRC::DESK, DESK_R_POS);
 	SetupFurniture(sidePlant_, ResourceManager::SRC::PLANT, SIDE_PLANT_POS);
@@ -80,19 +61,29 @@ void Furnitures::SetupFurniture(Transform& transform,
 	transform.Update();
 }
 
-void Furnitures::UpdateDebugImGui(void)
+void Furnitures::InitMaterial(void)
 {
-	//ウィンドウタイトル&開始処理
-	ImGui::Begin("case");
+	//モデル描画用
+	material_ = std::make_unique<ModelMaterial>(
+		"StdModelVS.cso", 1,
+		"StdModelPS.cso", 3
+	);
+	//タイリングするのでテクスチャアドレスをWRAPに
+	material_->SetTextureAddress(ModelMaterial::TEXADDRESS::WRAP);
 
-	//位置
-	ImGui::Text("plant");
-	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &deskR_.pos.x);
-	ImGui::SliderFloat("PosX", &deskR_.pos.x, -1000.0f, 1000.0f);
-	ImGui::SliderFloat("PosY", &deskR_.pos.y, 0.0f, 500.0f);
-	ImGui::SliderFloat("PosZ", &deskR_.pos.z, -1000.0f, 1000.0f);
+	//uvに渡すスケール値
+	material_->AddConstBufVS({ TILLING_SIZE ,TILLING_SIZE,TILLING_SIZE,TILLING_SIZE });
 
-	//終了処理
-	ImGui::End();
+	//色の影響度
+	material_->AddConstBufPS({ AsoUtility::VECTOR_ONE.x,AsoUtility::VECTOR_ONE.y,AsoUtility::VECTOR_ONE.z,1.0f });
+
+	//ライトの方向
+	VECTOR light = GetLightDirection();
+	material_->AddConstBufPS({ light.x,light.y,light.z,1.0f });
+
+	//環境光
+	material_->AddConstBufPS({ AMBIENT_COLOR,AMBIENT_COLOR,AMBIENT_COLOR,AMBIENT_COLOR });
+
+	renderer_ = std::make_unique<ModelRenderer>(floor_.modelId, *material_);
+
 }

@@ -1,3 +1,4 @@
+#include "../../Application.h"
 #include "../Common/Easing.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "../../Manager/Generic/SceneManager.h"
@@ -7,9 +8,11 @@ OrderUI::OrderUI(Order::DRINK drink, Order::SWEETS sweets, float maxTime)
 {
 	orderUIData_.drinkType_ = drink;
 	orderUIData_.sweetsType_ = sweets;
-	orderTime_ = maxTime;
+	orderMaxTime_ = maxTime;
+	orderTimer_ = 0.0f;
 	orderUIData_.currentRate_ = 0.0f;
 	orderUIData_.displayedRate_ = 0.0f;
+	gaugeTime_ = 0.0f;
 	isActive_ = false;
 	alpha_ = 1.0f;
 	size_ = 100.0f;
@@ -52,9 +55,10 @@ void OrderUI::Init(void)
 
 	orderUIData_.timerImg_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::UI_CIRCLE).handleId_;
+
 }
 
-void OrderUI::UpdateTimeGauge(float orderTime)
+void OrderUI::Update(void)
 {
 	if (!isActive_)return;
 	orderUIData_.displayedRate_ = Easing::Linear(
@@ -62,20 +66,13 @@ void OrderUI::UpdateTimeGauge(float orderTime)
 		0.0f, orderUIData_.currentRate_);
 
 	//スコアを現在のランクの範囲を比例計算する（後で100をかけてパーセントにする）
-	orderUIData_.currentRate_ = orderTime / orderTime_;
+	orderUIData_.currentRate_ = orderTimer_ / orderMaxTime_;
 	if (orderUIData_.currentRate_ <= 0.0f)orderUIData_.currentRate_ = 0.0f;
-}
-
-void OrderUI::Update(void)
-{
 }
 
 void OrderUI::Draw(void)
 {
 	if (isActive_ != true)return;
-	// UIの描画時はZバッファ無効
-	//SetUseZBuffer3D(false);
-	//SetUseLighting(false);
 
 	DrawBillboard3D(pos_, 0.5f, 0.5f, BACK_IMG_SIZE,
 		0.0f, orderUIData_.backUIImg_, true);
@@ -101,15 +98,17 @@ void OrderUI::Draw(void)
 	DrawBillboard3D(pos,
 		0.5f, 0.5f, size_,
 		0.0f, orderUIData_.timerBackImg_, true);
+	//画面の大きさに合わせて拡大率を変える
+	float scale = 
+		static_cast<float>(Application::SCREEN_SIZE_Y) / 
+		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
 	DrawCircleGauge(
-		(int)screenPos.x + 3,
+		(int)screenPos.x,
 		(int)screenPos.y,
 		orderUIData_.currentRate_ * 100.0f,
 		orderUIData_.timerImg_,
 		0.0f,
-		0.62f,
-		true, false
+		scale,
+		false, false
 	);
-	//SetUseLighting(true);
-	//SetUseZBuffer3D(true);
 }

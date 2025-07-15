@@ -40,6 +40,11 @@ void CustomerManager::Update(float orderTime)
 		c->Update();
 	}
 
+	for (auto& ui : orderUI_)
+	{
+		ui->Update();
+	}
+
 	if (isMove_)
 	{
 		for (auto& c : customers_)
@@ -49,12 +54,13 @@ void CustomerManager::Update(float orderTime)
 		}
 	}
 
+	//UI座標をお客の座用と合わせる
 	for (int i = 0; i < customers_.size(); ++i)
 	{
 		VECTOR pos = VAdd(customers_[i]->GetPos(),
 			VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y,0.0f));
 		orderUI_[i]->SetPos(pos);
-		orderUI_[i]->UpdateTimeGauge(orderTime);
+		orderUI_[i]->SetOrderTimer(orderTime);
 	}
 
 	//カウンターの前に来たら、回転させてカウンターの方を見るようにする
@@ -79,11 +85,6 @@ void CustomerManager::Draw(void)
 	{
 		c->Draw();
 	}
-
-	for (const auto& ui : orderUI_)
-	{
-		ui->Draw();
-	}	
 }
 
 void CustomerManager::InitCustomersPos(void)
@@ -102,7 +103,8 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 	//最大注文生成数を超えそうだったらreturn
 	//if (customers_.size() >= MAX_CREATE_SIZE) return;
 
-	orderUI_.emplace_back(std::make_unique<OrderUI>(data.drink_, data.sweets_,data.time_));
+	orderUI_.emplace_back(std::make_unique<OrderUI>(
+		data.drink_, data.sweets_,data.time_));
 
 	switch (data.drink_)
 	{
@@ -136,6 +138,7 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 	default:
 		break;
 	}
+
 	UIManager::GetInstance().AddOrderUI(orderUI_.back().get());
 }
 

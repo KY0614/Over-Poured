@@ -35,18 +35,7 @@ void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
 
 void IceDispenser::Draw(void)
 {
-	//int line = 3;	//çs
-	//int lineHeight = 30;	//çs
-
-	//VECTOR screenPos = ConvWorldPosToScreenPos(GetTransform().pos);
-	//// ïœä∑ê¨å˜
-	//DrawFormatString(static_cast<int>(screenPos.x) - 30, static_cast<int>(screenPos.y) - 150, GetColor(255, 255, 255),
-	//	L"ïXÇÇ¢ÇÍÇÈÇ‹Ç≈ %2.f", param_.interactTime_);
-
 	StageObject::Draw();
-
-	gaugeUI_->Draw();	//ÉQÅ[ÉWUIÇï`âÊ
-
 }
 
 void IceDispenser::Interact(const std::string& objId)

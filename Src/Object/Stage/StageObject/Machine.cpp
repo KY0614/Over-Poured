@@ -151,7 +151,4 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 void Machine::Draw(void)
 {
 	StageObject::Draw();
-
-	gaugeUI_->Draw();	//ƒQ[ƒWUI‚ð•`‰æ
-
 }

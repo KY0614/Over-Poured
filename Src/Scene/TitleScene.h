@@ -2,16 +2,25 @@
 #include <memory>
 #include "SceneBase.h"
 #include "../Object/Common/Transform.h"
+
 class SceneManager;
-class SkyDome;
 class AnimationController;
+class ModelRenderer;
+class ModelMaterial;
+
 
 class TitleScene : public SceneBase
 {
 
 public:
+	//UVスケール
+	static constexpr float TILLING_SIZE = 35.0f;
+
+	static constexpr float AMBIENT_COLOR = 0.2f;
 
 	static constexpr int LOGO_OFFSET_Y = 80;
+	static constexpr int LOGO_HEIGHT = 1024;
+	static constexpr int PUSHIMG_OFFSET_Y = 100;
 
 	//コンストラクタ
 	TitleScene(void);
@@ -24,20 +33,20 @@ public:
 	void Draw(void) override;
 
 private:
+	//マテリアル
+	std::unique_ptr<ModelMaterial> material_;
+	//レンダラ
+	std::unique_ptr<ModelRenderer> renderer_;
 
 	//画像
 	int pushImg_;
 	int titleImg_;
 
-	//スカイドーム用
-	Transform spaceDomeTran_;
+	//お店用
+	Transform cafeTran_;
 
-	//スカイドーム(背景)
-	std::unique_ptr<SkyDome> skyDome_;
-
-	//惑星
-	Transform planet_;
-	Transform movePlanet_;
+	//地面用
+	Transform graoundTran_;
 
 	//キャラクター
 	Transform charactor_;
@@ -45,4 +54,11 @@ private:
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
 
+	/// <summary>
+	/// マテリアル情報初期化
+	/// </summary>
+	/// <param name="">マテリアルの定数バッファ設定</param>
+	void InitMaterial(void);
+
+	void UpdateDebugImGui(void);
 };

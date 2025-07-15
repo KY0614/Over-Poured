@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include <memory>
 #include <chrono>
+#include <list>
 
 // 推奨しませんが、どうしても使いたい方は
 #define mainCamera SceneManager::GetInstance().GetCamera().lock()
@@ -53,6 +54,24 @@ public:
 	// カメラの取得
 	std::weak_ptr<Camera> GetCamera(void) const;
 
+	/// <summary>
+	/// シーンを新しく積む
+	/// </summary>
+	/// <param name="_scene">シーン情報</param>
+	void PushScene(std::shared_ptr<SceneBase>_scene);
+
+	/// <summary>
+	/// 最後に追加したシーンを削除する。
+	/// </summary>
+	/// <param name=""></param>
+	void PopScene(void);
+
+	/// <summary>
+	/// 強制的に特定のシーンに飛ぶ。つんでてもリセット
+	/// </summary>
+	/// <param name="scene">ジャンプ先シーン</param>
+	void JumpScene(std::shared_ptr<SceneBase> scene);
+
 private:
 
 	// 静的インスタンス
@@ -63,6 +82,7 @@ private:
 
 	// フェード
 	std::unique_ptr<SceneBase> scene_;
+	std::list<std::shared_ptr<SceneBase>>scenes_;
 
 	// 各種シーン
 	std::unique_ptr<Fader> fader_;

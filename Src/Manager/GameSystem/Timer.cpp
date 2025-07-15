@@ -53,6 +53,7 @@ void Timer::Draw()
 		second_ % 10        // 秒の一の位
 	};
 
+	//タイマーのコロン
 	DrawRotaGraph(
 		Application::SCREEN_SIZE_X / 2,
 		NUM_POS_Y,

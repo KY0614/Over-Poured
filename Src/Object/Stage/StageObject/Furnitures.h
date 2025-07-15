@@ -59,6 +59,6 @@ private:
 		ResourceManager::SRC modelSrc, const VECTOR& pos,
 		const Quaternion& quaRotLocal = Quaternion());
 
-	void UpdateDebugImGui(void);
+	void InitMaterial(void);
 };
 

@@ -261,6 +261,4 @@ void RackObject::Draw(void)
 		//ƒ‚ƒfƒ‹‚Ì•`‰æ
 		MV1DrawModel(sweetsOfRack_[i].modelId);
 	}
-
-	gaugeUI_->Draw(); // UI‚ð•`‰æ
 }

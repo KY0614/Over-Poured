@@ -8,18 +8,15 @@ class Application
 {
 
 public:
-
-#ifdef _DEBUG
+	//スクリーンサイズ
+	//static constexpr int SCREEN_SIZE_X = 1024;
+	//static constexpr int SCREEN_SIZE_Y = 640;
 
 	//スクリーンサイズ
-	static constexpr int SCREEN_SIZE_X = 1024;
-	static constexpr int SCREEN_SIZE_Y = 640;
+	static constexpr int SCREEN_SIZE_X = 1920;
+	static constexpr int SCREEN_SIZE_Y = 1080;
 
-#endif // _DEBUG
-
-	//スクリーンサイズ
-	//static constexpr int SCREEN_SIZE_X = 1920;
-	//static constexpr int SCREEN_SIZE_Y = 1080;
+	static constexpr int SCREEN_MAX_SIZE_Y = 1080;
 
 	//データパス関連
 	//-------------------------------------------
@@ -27,6 +24,7 @@ public:
 	static const std::string PATH_MODEL;
 	static const std::string PATH_EFFECT;
 	static const std::string PATH_SHADER;
+	static const std::string PATH_SOUND;
 	static const std::string PATH_SCORE;
 	//-------------------------------------------
 

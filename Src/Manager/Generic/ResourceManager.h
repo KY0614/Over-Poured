@@ -18,12 +18,17 @@ public:
 	{
 		NONE,
 		TITLE_LOGO,
+		CAFE,
+		GROUND,
 		PUSH_SPACE,
+		PUSH_SPACE_SE,
+
 		PLAYER,
 		PLAYER_SHADOW,
 		SKY_DOME,
 		FOOT_SMOKE,
 
+		//ステージオブジェクト
 		FLOOR,
 		PLANT,
 		SHELVES,
@@ -52,24 +57,38 @@ public:
 		CUPLID_RACK,
 		DUSTBOX,
 
+		//注文内容のUI
 		UI_ORDER_BACK,
 		UI_HOT,
 		UI_ICE,
 		UI_CHOCO,
 		UI_BERRY,
 
+		//バーのゲージとその背景
 		UI_BAR,
 		UI_BARSHADOW,
 		UI_CIRCLE,
 		UI_CIRCLESHADOW,
 
+		//スコアによるランクのゲージ
 		RANK_C,
 		RANK_B,
 		RANK_A,
 		RANK_S,
 
+		//タイマー用
 		TIMER_NUMBER,
 		TIMER_COLON,
+
+		//スコア用
+		SCORE_NUMBER,
+
+		//カウントダウン用
+		COUNTDOWN_NUMBER,
+
+		//音
+		TITLE_BGM,
+		GAME_BGM,
 
 		HOT_CUSTOMER,
 		ICE_CUSTOMER,

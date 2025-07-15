@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-
+#include <map>
 
 class OrderUI;
 class GaugeUI;
@@ -21,6 +21,7 @@ public:
 	void Init(void);
 	void Update(void);
 	void Draw(void);
+	void Release(void);
 
 	//ÉäÉ\Å[ÉXÇÃîjä¸
 	void Destroy(void);
@@ -34,5 +35,6 @@ private:
 
 	std::vector<GaugeUI*> gaugeUIs_;
 	std::vector<OrderUI*> orderUIs_;
+	std::map<OrderUI*, float> orderUIMap_;
 };
 

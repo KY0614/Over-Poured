@@ -11,6 +11,8 @@
 #include "../../Scene/GameScene.h"
 #include "../../Scene/ResultScene.h"
 #include "Camera.h"
+#include "../GameSystem/SoundManager.h"
+#include "../../Object/UI/UIManager.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
 
@@ -32,6 +34,8 @@ SceneManager& SceneManager::GetInstance(void)
 
 void SceneManager::Init(void)
 {
+	SoundManager::CreateInstance();
+	UIManager::CreateInstance();
 
 	sceneId_ = SCENE_ID::NONE;
 	waitSceneId_ = SCENE_ID::NONE;
@@ -54,7 +58,7 @@ void SceneManager::Init(void)
 	Init3D();
 
 	//初期シーンの設定
-	DoChangeScene(SCENE_ID::GAME);
+	DoChangeScene(SCENE_ID::TITLE);
 
 }
 
@@ -90,7 +94,7 @@ void SceneManager::Init3D(void)
 void SceneManager::Update(void)
 {
 	ChangeLightTypeDir(lightDir_);
-	if (scene_ == nullptr)
+	if (scenes_.empty())
 	{
 		return;
 	}
@@ -108,7 +112,8 @@ void SceneManager::Update(void)
 	}
 	else
 	{
-		scene_->Update();
+		//scene_->Update();
+		scenes_.back()->Update();
 	}
 
 	//カメラ更新
@@ -134,7 +139,11 @@ void SceneManager::Draw(void)
 	UpdateEffekseer3D();
 
 	//描画
-	scene_->Draw();
+	//scene_->Draw();
+	for (auto& scene : scenes_) 
+	{
+		scene->Draw();
+	}
 
 	//主にポストエフェクト用
 	camera_->Draw();
@@ -149,6 +158,8 @@ void SceneManager::Draw(void)
 
 void SceneManager::Destroy(void)
 {
+	SoundManager::GetInstance().Destroy();
+	UIManager::GetInstance().Destroy();
 	delete instance_;
 }
 
@@ -181,6 +192,27 @@ std::weak_ptr<Camera> SceneManager::GetCamera(void) const
 	return camera_;
 }
 
+void SceneManager::PushScene(std::shared_ptr<SceneBase> _scene)
+{
+	//新しく積むのでもともと入っている奴はまだ削除されない
+	scenes_.push_back(_scene);
+}
+
+void SceneManager::PopScene(void)
+{
+	//積んであるものをけして、もともとあったものを末尾にする
+	if (scenes_.size() > 1) 
+	{
+		scenes_.pop_back();
+	}
+}
+
+void SceneManager::JumpScene(std::shared_ptr<SceneBase> scene)
+{
+	scenes_.clear();
+	scenes_.push_back(scene);
+}
+
 SceneManager::SceneManager(void)
 {
 
@@ -188,6 +220,7 @@ SceneManager::SceneManager(void)
 	waitSceneId_ = SCENE_ID::NONE;
 
 	scene_ = nullptr;
+	scenes_.clear();
 	fader_ = nullptr;
 
 	isSceneChanging_ = false;
@@ -210,6 +243,8 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	auto& resM = ResourceManager::GetInstance();
 	//リソースの解放
 	resM.Release();
+	SoundManager::GetInstance().Release();
+	UIManager::GetInstance().Release();
 
 	//シーンを変更する
 	sceneId_ = sceneId;
@@ -219,38 +254,48 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	{
 		scene_.reset();
 	}
-
+	std::unique_ptr<SceneBase> scene;
 	switch (sceneId_)
 	{
 	case SceneManager::SCENE_ID::NONE:
 		break;
 	case SceneManager::SCENE_ID::TITLE:
-		scene_ = std::make_unique<TitleScene>();
+		scene = std::make_unique<TitleScene>();
 		resM.InitTitle();
 		break;
 	case SceneManager::SCENE_ID::MOVIE:
-		scene_ = std::make_unique<MovieScene>();
+		scene = std::make_unique<MovieScene>();
 		break;
 	case SceneManager::SCENE_ID::SELECT:
-		scene_ = std::make_unique<SelectScene>();
+		scene = std::make_unique<SelectScene>();
 		break;
 	case SceneManager::SCENE_ID::TUTORIAL:
-		scene_ = std::make_unique<TutorialScene>();
+		scene = std::make_unique<TutorialScene>();
 		resM.InitGame();
 		break;
 	case SceneManager::SCENE_ID::GAME:
-		scene_ = std::make_unique<GameScene>();
+		scene = std::make_unique<GameScene>();
 		resM.InitGame();
 		break;
 	case SceneManager::SCENE_ID::RESULT:
-		scene_ = std::make_unique<ResultScene>();
+		scene = std::make_unique<ResultScene>();
 		resM.InitResult();
 		break;
 	default:
 		break;
 	}
-
-	scene_->Init();
+	if (scenes_.empty()) 
+	{
+		//空だったら新しく入れる
+		scenes_.push_back(std::move(scene));
+	}
+	else 
+	{
+		//末尾のものを新しい物に入れ替える
+		scenes_.back() = std::move(scene);
+	}
+	scenes_.back()->Init();
+	//scene_->Init();
 
 	ResetDeltaTime();
 
