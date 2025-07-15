@@ -85,13 +85,22 @@ public:
 
 		//カウントダウン用
 		COUNTDOWN_NUMBER,
+		TIME_UP,
 
 		//音
 		TITLE_BGM,
 		GAME_BGM,
+		TIMER,
+		TIMER_FAST,
+		GAME_FINISH,
 
 		HOT_CUSTOMER,
 		ICE_CUSTOMER,
+
+		//リザルト用ラベル
+		CURRENT_SCORE,
+		RANKING,
+
 	};
 
 	// 明示的にインステンスを生成する

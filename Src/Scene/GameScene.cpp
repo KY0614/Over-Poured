@@ -23,6 +23,9 @@ GameScene::GameScene(void)
 	timer_ = nullptr;
 	score_ = 0;
 	numbersImgs_ = nullptr;
+	countImgs_ = nullptr;
+	cntDownIdx_ = 0;
+	cntDownTimer_ = 0.0f;
 	scale_ = 0.0f;
 	sclTime_ = 0.0f;
 }
@@ -34,19 +37,27 @@ GameScene::~GameScene(void)
 void GameScene::Init(void)
 {
 	auto& sound = SoundManager::GetInstance();
-	//bgm追加
+	//bgm追加&再生
 	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::GAME,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_BGM).handleId_);
 	sound.AdjustVolume(SoundManager::SOUND::GAME, 256 / 3);
 	sound.Play(SoundManager::SOUND::GAME);
 
-	//スコア用
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GAME_FINISH,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_FINISH).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::GAME_FINISH, 256 / 3);
+
+	//スコア用画像
 	numbersImgs_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::SCORE_NUMBER).handleIds_;
 
-	//カウントダウン用
+	//カウントダウン用画像
 	countImgs_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::COUNTDOWN_NUMBER).handleIds_;
+
+	//タイムアップ用画像
+	timeUpImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::TIME_UP).handleId_;
 
 	//プレイヤー
 	player_ = std::make_unique<Player>();
@@ -72,7 +83,7 @@ void GameScene::Init(void)
 	customer_->Init();
 
 	//タイマー(2:00）２分
-	timer_ = std::make_unique<Timer>(MAX_MINUTE_TIME,0);
+	timer_ = std::make_unique<Timer>(MAX_MINUTE_TIME, MAX_SECOND_TIME);
 
 	//最初のお客の注文を受け取る
 	stage_->SetCurrentOrder(customer_->GetOrderData());
@@ -103,7 +114,7 @@ void GameScene::Update(void)
 			cntDownIdx_++;
 			sclTime_ = 0.0f;
 			scale_ = 0.0f;
-			if (cntDownIdx_ >= 4)
+			if (cntDownIdx_ >= MAX_COUNT_DOWN)
 			{
 				phase_ = PHASE::GAME;
 			}
@@ -115,9 +126,26 @@ void GameScene::Update(void)
 		break;
 	
 	case GameScene::PHASE::FINISH:
-		scr.SetCurrentScore(score_);
-		scr.SaveScore(score_);
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		SoundManager::GetInstance().Play(SoundManager::SOUND::GAME_FINISH);
+		cntDownTimer_++;
+		sclTime_ += SceneManager::GetInstance().GetDeltaTime();
+		scale_ = Easing::QuintOut(
+			static_cast<float>(sclTime_),
+			static_cast<float>(1.0f), 0.0f, 2.0f);
+		scale_ = std::clamp(abs(scale_), 0.0f, 2.0f);
+		if (cntDownTimer_ >= COUNTDOWN_FRAME)
+		{
+			if (cntDownIdx_ >= MAX_COUNT_DOWN)
+			{
+				scr.SetCurrentScore(score_);
+				scr.SaveScore(score_);
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+			}
+			cntDownTimer_ = 0;
+			cntDownIdx_++;
+			sclTime_ = 0.0f;
+			scale_ = 0.0f;
+		}
 		break;
 	
 	default:
@@ -150,7 +178,15 @@ void GameScene::Draw(void)
 		break;
 
 	case GameScene::PHASE::FINISH:
-
+		DrawGame();
+		DrawRotaGraph(
+			Application::SCREEN_SIZE_X / 2,
+			Application::SCREEN_SIZE_Y / 2 - 50,
+			scale_,
+			0.0,
+			timeUpImg_,
+			true
+		);
 		break;
 
 	default:
@@ -227,7 +263,7 @@ void GameScene::DrawGame(void)
 void GameScene::DrawScore(int score)
 {
 	std::string str = std::to_string(score);
-	const int digitWidth = 128;
+	const int digitWidth = 70;
 	for (int i = 0; i < str.size(); ++i)
 	{
 		char ch = str[i];

@@ -13,7 +13,11 @@ class GameScene : public SceneBase
 
 public:
 	//ゲーム全体の制限時間
-	static constexpr int  MAX_MINUTE_TIME = 2;
+	static constexpr int  MAX_MINUTE_TIME = 0;
+	static constexpr int  MAX_SECOND_TIME = 10;
+
+	//カウントダウン
+	static constexpr int  MAX_COUNT_DOWN = 4;
 
 	//カウントダウン用
 	static constexpr int  COUNTDOWN_FRAME = 60;	//６０フレームで１秒
@@ -63,6 +67,8 @@ private:
 
 	float scale_;
 	float sclTime_;
+
+	int timeUpImg_;
 
 	void UpdateGame(void);
 	void DrawGame(void);

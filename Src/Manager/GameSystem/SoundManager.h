@@ -25,6 +25,9 @@ public:
 		PUSH_SPACE,
 
 		GAME,
+		TIMER,
+		TIMER_FAST,
+		GAME_FINISH,
 	};
 
 	struct SOUND_DATA

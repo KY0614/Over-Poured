@@ -19,9 +19,8 @@ public:
 	void Draw(void) override;
 
 private:
-
+	//ÉXÉRÉA
 	std::unique_ptr<Score> score_;
 
-	void DebugDraw(void);
 };
 

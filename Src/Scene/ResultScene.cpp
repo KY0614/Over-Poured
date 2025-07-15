@@ -28,13 +28,4 @@ void ResultScene::Update(void)
 void ResultScene::Draw(void)
 {
 	score_->Draw();
-
-#ifdef _DEBUG
-	DebugDraw();
-#endif // _DEBUG
-
-}
-
-void ResultScene::DebugDraw(void)
-{
 }

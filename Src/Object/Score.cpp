@@ -1,3 +1,4 @@
+#include <DxLib.h>
 #include <algorithm>
 #include <cmath>
 #include "../Application.h"
@@ -36,6 +37,8 @@ Score::Score(void)
 	state_ = STATE::PLAY_SCORE;
 	rank_ = RANK::MAX;
 	phase_ = TOTALSCR_PHASE::COUNT_UP;
+	numberImgs_ = nullptr;
+	rankingImgs_ = nullptr;
 
 	stateChange_.emplace(STATE::PLAY_SCORE, std::bind(&Score::ChangePlayScore, this));
 	stateChange_.emplace(STATE::TOTAL_SCORE, std::bind(&Score::ChangeTotalScore, this));
@@ -50,10 +53,24 @@ void Score::Init(void)
 	auto& scr = ScoreManager::GetInstance();
 	scr.LoadScore();
 
+	//ランクごとの情報初期化
 	InitRankInfo();
 
+	//画像読み込み
 	circleShadowImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
+	
+	//画像読み込み
+	numberImgs_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::SCORE_NUMBER).handleIds_;
+		
+	//画像読み込み
+	rankingImgs_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::RANKING).handleIds_;
+		
+	//画像読み込み
+	currentScrImg_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::CURRENT_SCORE).handleId_;
 
 	//今回のスコアをランキングに照らし合わせてランクイン位置を調べる
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
@@ -237,34 +254,35 @@ void Score::UpdateTotalScore(void)
 
 void Score::DrawPlayScore(void)
 {
-#ifdef _DEBUG
-	DrawString(0, 0, L"リザルト", 0xFFFFFF);
 	auto& scr = ScoreManager::GetInstance();
-	//スコアを読み込む
 
-	DrawFormatString(0, 20, 0xff0000, L"スコア", 0xFFFFFF);
+	//現在のスコア
+	DrawVariableScore(currentScr_, Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 256);
 
-	int line = 10;	//行
-	int lineHeight = 40;	//行
-	SetFontSize(24);
-	DebugDrawFormat::FormatStringRight(L"今回のスコア : ￥%d      ",
-		currentScr_, line, lineHeight);
+	//「現在のスコア」ラベル
+	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
+				Application::SCREEN_SIZE_Y / 2 + 256,
+				1.0f, 0.0f,
+				currentScrImg_, true);
 
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + 320,
-		Application::SCREEN_SIZE_Y/2 - 80,
-		2.0f, 0.0f, circleShadowImg_,
+	//ゲージの背景
+	DrawRotaGraph(GAUGE_POS_X,
+		GAUGE_POS_Y,
+		3.0f, 0.0f, circleShadowImg_,
 		true, false);
 
+	//ゲージ本体
 	for (int i = 0; i < static_cast<int>(rank_) + 1; ++i)
 	{
 		// DrawCircleGaugeを使った描画
 		DrawCircleGauge(
-			Application::SCREEN_SIZE_X / 2 + 320,
-			Application::SCREEN_SIZE_Y / 2 - 80,
+			GAUGE_POS_X,
+			GAUGE_POS_Y,
 			rankData_[i].displayedRate_ * 100.0f,
 			rankData_[i].gaugeImg_,
 			0.0f,
-			2.0f,
+			3.0f,
 			false,false
 		);
 	}
@@ -277,16 +295,19 @@ void Score::DrawPlayScore(void)
 				Application::SCREEN_SIZE_Y / 2 - 80, L"C",
 				0xFFFFFF);
 			break;
+
 		case Score::RANK::B:
 			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
 				Application::SCREEN_SIZE_Y / 2 - 80, L"B",
 				0xFFFFFF);
 			break;
+
 		case Score::RANK::A:
 			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
 				Application::SCREEN_SIZE_Y / 2 - 80, L"A",
 				0xFFFFFF);
 			break;
+
 		case Score::RANK::S:
 			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
 				Application::SCREEN_SIZE_Y / 2 - 80, L"S",
@@ -298,19 +319,20 @@ void Score::DrawPlayScore(void)
 		}
 	}
 
-	DrawFormatString(END_SLIDE_X, 180, 0xFFFFFF,
-		L"スコアランキング");
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
 	{
 		//点滅表示用フラグと色
 		bool isBlink = (i == highLightIdx_) && (fmod(blinkTime_, 1.0f) < 0.5f);
 		int col = isBlink ? 0xFFFF00 : 0xFFFFFF;
 
-		DrawFormatString(slideX_[i], 220 + (40 * i), col,
-			L"%d 位 : ￥%d", i + 1, scr.GetRankingScore(i));
+		DrawRankingScore(scr.GetRankingScore(i),
+			(slideX_[i] + RANK_SCORE_MARIGINE_X),
+			RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i));
+
+		DrawRotaGraph(slideX_[i], RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i),
+			0.6f, 0.0f, rankingImgs_[i],
+			true, false);
 	}
-	SetFontSize(16);
-#endif // _DEBUG
 }
 
 void Score::DrawTotalScore(void)
@@ -450,4 +472,67 @@ void Score::InitRankInfo(void)
 	rankData_[3].endVal_ = RANK_S_MAX;
 	rankData_[3].currentRate_ = 0.0f;
 	rankData_[3].displayedRate_ = 0.0f;
+}
+
+void Score::DrawVariableScore(int score, int posX, int posY)
+{
+	std::string str = std::to_string(score);
+	const int digitWidth = 70;
+	const float scale = 1.0f;
+
+	// 桁数分の描画幅を計算
+	int totalWidth = static_cast<int>(str.size() * digitWidth * scale);
+	// 右寄せ：画面右端から totalWidth 分左へずらす
+	int marigineX = Application::SCREEN_SIZE_X - totalWidth;
+
+	for (int i = 0; i < str.size(); ++i)
+	{
+		char ch = str[i];
+		if ('0' <= ch && ch <= '9')
+		{
+			int digit = ch - '0';
+			DrawRotaGraph(
+				marigineX + static_cast<int>(i * digitWidth * scale), posY,
+				0.8f, 0.0f,
+				numberImgs_[digit], true);
+		}
+	}
+}
+
+void Score::DrawRankingScore(int score, int posX, int posY)
+{
+	std::string str = std::to_string(score);
+	const int digitWidth = 80;
+	const float scale = 0.5f;
+
+	for (int i = 0; i < str.size(); ++i)
+	{
+		char ch = str[i];
+		if ('0' <= ch && ch <= '9')
+		{
+			int digit = ch - '0';
+			DrawRotaGraph(
+				posX + static_cast<int>(i * digitWidth * scale), posY,
+				scale, 0.0f,
+				numberImgs_[digit], true);
+		}
+	}
+}
+
+void Score::DrawScore(int score, int posX, int posY)
+{
+	std::string str = std::to_string(score);
+	const int digitWidth = 70;
+	for (int i = 0; i < str.size(); ++i)
+	{
+		char ch = str[i];
+		if ('0' <= ch && ch <= '9')
+		{
+			int digit = ch - '0';
+			DrawRotaGraph(
+				50 + i * digitWidth, 50,
+				0.8f, 0.0f,
+				numberImgs_[digit], true);
+		}
+	}
 }

@@ -76,7 +76,6 @@
     <ClCompile Include="Src\Object\Common\Collider.cpp" />
     <ClCompile Include="Src\Object\Common\Transform.cpp" />
     <ClCompile Include="Src\Object\Player.cpp" />
-    <ClCompile Include="Src\Object\SkyDome.cpp" />
     <ClCompile Include="Src\Object\Stage\StageManager.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
     <ClCompile Include="Src\Scene\SceneBase.cpp" />
@@ -196,7 +195,6 @@
     <ClInclude Include="Src\Object\Common\Collider.h" />
     <ClInclude Include="Src\Object\Common\Transform.h" />
     <ClInclude Include="Src\Object\Player.h" />
-    <ClInclude Include="Src\Object\SkyDome.h" />
     <ClInclude Include="Src\Object\Stage\StageManager.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />
     <ClInclude Include="Src\Scene\SceneBase.h" />

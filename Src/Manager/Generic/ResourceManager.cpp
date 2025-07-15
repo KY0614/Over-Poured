@@ -351,6 +351,9 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "count_down.png",
 		1, 4, 400, 150);
 	resourcesMap_.emplace(SRC::COUNTDOWN_NUMBER, std::move(res));
+		
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "time_up.png");
+	resourcesMap_.emplace(SRC::TIME_UP, std::move(res));
 
 	//--------------------------------------------------------------------------
 	
@@ -363,9 +366,13 @@ void ResourceManager::InitGame(void)
 	//--------------------------------------------------------------------------
 
 	//音------------------------------------------------------------------------
+	
 	//BGM
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "BGM/GameScene.mp3");
 	resourcesMap_.emplace(SRC::GAME_BGM, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/game_finish.mp3");
+	resourcesMap_.emplace(SRC::GAME_FINISH, std::move(res));
 
 	//--------------------------------------------------------------------------
 	
@@ -407,6 +414,19 @@ void ResourceManager::InitResult(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "CircleGage.png");
 	resourcesMap_.emplace(SRC::UI_CIRCLESHADOW, std::move(res));
 
+	//数字
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Numbers.png",
+		NUMBER_NUM_X, NUMBER_NUM_Y, 128, 128);
+	resourcesMap_.emplace(SRC::SCORE_NUMBER, std::move(res));
+	
+	//現在スコアラベル
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "current_score.png");
+	resourcesMap_.emplace(SRC::CURRENT_SCORE, std::move(res));
+
+	//ランキングラベル
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "ranking.png",
+		1, 5, 300, 100);
+	resourcesMap_.emplace(SRC::RANKING, std::move(res));
 }
 
 ResourceManager::ResourceManager(void)
