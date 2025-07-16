@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include "../Application.h"
-#include "../Common/DebugDrawFormat.h"
+#include "../Manager/GameSystem/SoundManager.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Manager/Generic/ResourceManager.h"
@@ -11,6 +11,10 @@
 
 Score::Score(void)
 {
+	isCurrentScrDraw_ = false;
+	isRankingScrDraw_ = false;
+	isGaugeDraw_ = false;
+	playSE_ = false;
 	currentScr_ = 0;
 	totalScr_ = 0;
 	highLightIdx_ = -1;
@@ -53,6 +57,19 @@ void Score::Init(void)
 	auto& scr = ScoreManager::GetInstance();
 	scr.LoadScore();
 
+	auto& sound = SoundManager::GetInstance();
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::NORMAL,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::SCORE_NORMAL).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::NORMAL, 256 / 2);
+	
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GOOD,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::SCORE_GOOD).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::GOOD, 256 / 2);
+	
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GREATE,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::SCORE_GREATE).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::GREATE, 256 / 2);
+
 	//ランクごとの情報初期化
 	InitRankInfo();
 
@@ -71,6 +88,10 @@ void Score::Init(void)
 	//画像読み込み
 	currentScrImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::CURRENT_SCORE).handleId_;
+		
+	//画像読み込み
+	rankingBackImg_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::RANKING_BACK).handleId_;
 
 	//今回のスコアをランキングに照らし合わせてランクイン位置を調べる
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
@@ -121,11 +142,13 @@ void Score::ChangeTotalScore(void)
 
 void Score::UpdatePlayScore(void)
 {
+	auto& sound = SoundManager::GetInstance();
 	//ステート遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsInputTriggered("Interact"))
 	{
-		ChangeState(STATE::TOTAL_SCORE);
+		//ChangeState(STATE::TOTAL_SCORE);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
 	auto& scr = ScoreManager::GetInstance();
@@ -133,6 +156,7 @@ void Score::UpdatePlayScore(void)
 	if (currentScr_ >= scr.GetCurrentScore())
 	{
 		currentScr_ = scr.GetCurrentScore();
+		isCurrentScrDraw_ = true;
 	}
 	else
 	{
@@ -155,6 +179,7 @@ void Score::UpdatePlayScore(void)
 		{
 			slideX_[i] = END_SLIDE_X;
 			slideXTime_[i] = SLIDE_MAX_TIME;
+			if (i >= RANK_NUM - 1)isRankingScrDraw_ = true;
 		}
 	}
 	//ディレイを付けるため、
@@ -172,6 +197,14 @@ void Score::UpdatePlayScore(void)
 	if (highLightIdx_ != -1)
 	{
 		blinkTime_ += SceneManager::GetInstance().GetDeltaTime() * BLINK_SPEED;
+	}
+
+	if (isRankingScrDraw_ && isCurrentScrDraw_ && isGaugeDraw_ && !playSE_)
+	{
+		if (rank_ == RANK::C)sound.Play(SoundManager::SOUND::NORMAL);
+		if (rank_ == RANK::B)sound.Play(SoundManager::SOUND::GOOD);
+		if (rank_ >= RANK::A)sound.Play(SoundManager::SOUND::GREATE);
+		playSE_ = true;
 	}
 }
 
@@ -261,7 +294,7 @@ void Score::DrawPlayScore(void)
 		Application::SCREEN_SIZE_Y / 2 + 256);
 
 	//「現在のスコア」ラベル
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
+	DrawRotaGraph(Application::SCREEN_SIZE_X / 2 - 50,
 				Application::SCREEN_SIZE_Y / 2 + 256,
 				1.0f, 0.0f,
 				currentScrImg_, true);
@@ -286,6 +319,14 @@ void Score::DrawPlayScore(void)
 			false,false
 		);
 	}
+
+	//ランキングのの背景
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 4,
+		Application::SCREEN_SIZE_Y / 4 - 150,
+		1.7f, 0.0f, rankingBackImg_,
+		true, false);
+
 	if (rankData_[(int)rank_].isFull_)
 	{
 		switch (rank_)
@@ -323,11 +364,11 @@ void Score::DrawPlayScore(void)
 	{
 		//点滅表示用フラグと色
 		bool isBlink = (i == highLightIdx_) && (fmod(blinkTime_, 1.0f) < 0.5f);
-		int col = isBlink ? 0xFFFF00 : 0xFFFFFF;
+		int col = isBlink ? 100 : 255;
 
 		DrawRankingScore(scr.GetRankingScore(i),
 			(slideX_[i] + RANK_SCORE_MARIGINE_X),
-			RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i));
+			RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i), col);
 
 		DrawRotaGraph(slideX_[i], RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i),
 			0.6f, 0.0f, rankingImgs_[i],
@@ -429,6 +470,7 @@ void Score::CalcPercentFromRank(void)
 				data.displayedRate_ = data.currentRate_;
 				gaugeTime_ = 0.0f;      //リセット
 				data.isFull_ = true;
+				isGaugeDraw_ = true;
 			}
 		}
 	}
@@ -499,7 +541,7 @@ void Score::DrawVariableScore(int score, int posX, int posY)
 	}
 }
 
-void Score::DrawRankingScore(int score, int posX, int posY)
+void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 {
 	std::string str = std::to_string(score);
 	const int digitWidth = 80;
@@ -511,10 +553,12 @@ void Score::DrawRankingScore(int score, int posX, int posY)
 		if ('0' <= ch && ch <= '9')
 		{
 			int digit = ch - '0';
+			SetDrawBright(255, 255, hightLight);
 			DrawRotaGraph(
 				posX + static_cast<int>(i * digitWidth * scale), posY,
 				scale, 0.0f,
 				numberImgs_[digit], true);
+			SetDrawBright(255, 255, 255);
 		}
 	}
 }

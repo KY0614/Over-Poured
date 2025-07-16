@@ -82,6 +82,7 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 void StageObject::Update(void)
 {
 	isActioned_ = false;
+	isInteract_ = false;
 
 	switch (itemState_)
 	{

@@ -100,7 +100,9 @@ private:
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
 
+	//スイーツケース用トランスフォーム
 	Transform caseTran_;
+	//ゴミ箱用トランスフォーム
 	Transform dustBoxTran_;
 
 	//プレイヤーの参照
@@ -128,6 +130,8 @@ private:
 
 	//各注文が提供されたかどうかのフラグ
 	std::vector<bool> isServedItems_; 
+
+	void Init3DModel(void);
 
 	void InitAnimation(void);
 
@@ -199,9 +203,4 @@ private:
 	/// <param name=""></param>
 	/// <returns></returns>
 	bool IsOrderCompleted(void);
-
-	void DrawDebug(void);
-
-	void UpdateDebugImGui(void);
-
 };

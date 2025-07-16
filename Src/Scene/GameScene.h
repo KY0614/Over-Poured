@@ -13,8 +13,12 @@ class GameScene : public SceneBase
 
 public:
 	//ゲーム全体の制限時間
-	static constexpr int  MAX_MINUTE_TIME = 0;
-	static constexpr int  MAX_SECOND_TIME = 10;
+	static constexpr int  MAX_MINUTE_TIME = 2;
+	static constexpr int  MAX_SECOND_TIME = 0;
+
+	//残り秒数が少なったときにSEを鳴らす用の目安秒数
+	static constexpr int  SECOND_SOUND_TIME = 30;
+	static constexpr int  SECOND_SOUND_TIME_FAST = 10;
 
 	//カウントダウン
 	static constexpr int  MAX_COUNT_DOWN = 4;
@@ -60,15 +64,23 @@ private:
 	//スコア用数字画像
 	int* numbersImgs_;
 
+	//カウントダウン用タイマー
 	int cntDownTimer_;
+	//カウントダウン画像用インデックス
 	int cntDownIdx_;
+
 	//カウントダウン用数字画像
 	int* countImgs_;
 
+	//カウントダウンやタイムアップの画像拡大率
 	float scale_;
+	//イージング用の時間(遅くするとイージングがゆっくりになる）
 	float sclTime_;
 
+	//タイムアップ用画像
 	int timeUpImg_;
+
+	bool remainderSE_;
 
 	void UpdateGame(void);
 	void DrawGame(void);

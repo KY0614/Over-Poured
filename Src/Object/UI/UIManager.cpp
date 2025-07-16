@@ -1,5 +1,6 @@
 #include "OrderUI.h"
 #include "GaugeUI.h"
+#include "IconUi.h"
 #include "UIManager.h"
 
 UIManager* UIManager::instance_ = nullptr;
@@ -58,18 +59,24 @@ void UIManager::Draw(void)
 	{
 		ui->Draw();
 	}
+	for (auto& ui : iconUIs_)
+	{
+		ui->Draw();
+	}
 }
 
 void UIManager::Release(void)
 {
 	gaugeUIs_.clear();
 	orderUIs_.clear();
+	iconUIs_.clear();
 }
 
 void UIManager::Destroy(void)
 {
 	gaugeUIs_.clear();
 	orderUIs_.clear();
+	iconUIs_.clear();
 	delete instance_;
 }
 
@@ -81,4 +88,9 @@ void UIManager::AddGaugeUI(GaugeUI* ui)
 void UIManager::AddOrderUI(OrderUI* ui)
 {
 	orderUIs_.emplace_back(ui);
+}
+
+void UIManager::AddIconUI(IconUI* ui)
+{
+	iconUIs_.emplace_back(ui);
 }

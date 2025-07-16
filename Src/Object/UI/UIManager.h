@@ -5,6 +5,7 @@
 
 class OrderUI;
 class GaugeUI;
+class IconUI;
 
 class UIManager
 {
@@ -28,6 +29,7 @@ public:
 
 	void AddGaugeUI(GaugeUI* ui);
 	void AddOrderUI(OrderUI* ui);
+	void AddIconUI(IconUI* ui);
 
 private:
 	//シングルトン用インスタンス
@@ -35,6 +37,6 @@ private:
 
 	std::vector<GaugeUI*> gaugeUIs_;
 	std::vector<OrderUI*> orderUIs_;
-	std::map<OrderUI*, float> orderUIMap_;
+	std::vector<IconUI*> iconUIs_;
 };
 

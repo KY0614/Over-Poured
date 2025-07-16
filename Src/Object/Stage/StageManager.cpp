@@ -1,7 +1,7 @@
 #include <DxLib.h>
-#include "../Common/DebugDrawFormat.h"
+#include "../../Application.h"
 #include "../Utility/AsoUtility.h"
-#include "../Libs/ImGui/imgui.h"
+#include "../../Manager/GameSystem/SoundManager.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "../../Manager/Generic/InputManager.h"
 #include "../Player.h"
@@ -66,153 +66,23 @@ StageManager::~StageManager(void)
 
 void StageManager::Init(void)
 {
-	//モデル制御の基本情報
-	caseTran_.SetModel(
-		ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::SWEETS_CASE));
-	caseTran_.scl = AsoUtility::VECTOR_ONE;
-	caseTran_.pos = CASE_POS;
-	caseTran_.quaRot = Quaternion::Euler(
-		0.0f,0.0f,0.0f);
+	auto& sound = SoundManager::GetInstance();
 
-	caseTran_.quaRotLocal = Quaternion();
-	caseTran_.MakeCollider(Collider::TYPE::STAGE);
-	caseTran_.Update();
+	//se追加
+	//アイテムを取り出す時のSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PICK_UP,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PICK_UP).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PICK_UP, 256);
+	//ストック追加時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::ADD_STOCK,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::ADD_STOCK).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, 256);
+	//提供追加時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PAYING,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PAYING).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, 256 / 2);
 
-	//モデル制御の基本情報
-	transform_.SetModel(
-		ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::REGISTER));
-	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = AsoUtility::VECTOR_ZERO;
-	transform_.quaRot = Quaternion::Euler(
-		0.0f,
-		AsoUtility::Deg2RadF(0.0f),
-		0.0f
-	);
-
-	transform_.quaRotLocal = Quaternion();
-	transform_.MakeCollider(Collider::TYPE::STAGE);
-	transform_.Update();
-
-	InitAnimation(); // アニメーションの初期化
-
-	furnitures_ = std::make_unique<Furnitures>();
-	furnitures_->Init();
-
-	VECTOR firstPos = {};
-	//横のテーブル群(手前)
-	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
-	{
-		firstPos = TABLE_POS_BACK;
-		firstPos.x += (x * TABLE_WIDTH);
-		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_,objects_));
-		tables_.back()->Init(firstPos, 180.0f);
-	}
-
-	//縦のテーブル群(左側）
-	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
-	{
-		firstPos = COLUMN_TABLE_LEFT_POS;
-		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
-		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
-		tables_.back()->Init(firstPos, -90.0f);
-	}
-	
-	//縦のテーブル群(右側）
-	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
-	{
-		firstPos = COLUMN_TABLE_RIGHT_POS;
-		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
-		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_,objects_));
-		tables_.back()->Init(firstPos, 90.0f);
-	}
-
-	//真ん中のテーブル群
-	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
-	{
-		firstPos = CENTER_TABLE_POS;
-		firstPos.x += i * 90.0f;
-		//奥側のテーブル２つ
-		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
-		tables_.back()->Init(firstPos, 0.0f);
-	}
-	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
-	{
-		firstPos = CENTER_TABLE_POS;
-		firstPos.x += i * 90.0f;
-		firstPos.z += 60.0f;
-		//手前側のテーブル２つ
-		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
-		tables_.back()->Init(firstPos, 180.0f);
-	}
-
-	//ケースのテーブル群(奥側)
-	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
-	{
-		firstPos = TABLE_POS_FRONT;
-		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
-		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH + 20.0f, 76.0f, 60.0f, player_, objects_));
-		tables_.back()->Init(firstPos);
-	}
-
-	//カウンター用テーブル
-	counter_ = std::make_unique<Table>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
-	counter_->Init(COUNTER_POS);
-
-	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
-	//ホット用カップのラック
-	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init(pos, -90.0f);
-	
-	//アイス用カップのラック
-	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM -1]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init(pos,90.0f);
-	
-	//チョコスイーツ用のラック
-	pos = tables_[tables_.size() - 2]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init(pos);
-	
-	//ベリースイーツ用のラック
-	pos = tables_.back()->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(BERRY_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
-	objects_.back()->Init(pos);
-	
-	//カップ用の蓋
-	pos = tables_[2]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID_RACK, 60.0f, 20.0f, 60.0f, player_,objects_));
-	objects_.back()->Init(pos);
-
-	//コーヒーマシン
-	pos = tables_[MAX_TABLE_NUM - 2]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
-		 player_,objects_));
-	objects_.back()->Init(pos,90.0f);
-	//コーヒーマシン２個目
-	pos = tables_[MAX_TABLE_NUM - 4]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
-		 player_,objects_));
-	objects_.back()->Init(pos,90.0f);
-
-	//アイスディスペンサー
-	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
-		 player_,objects_));
-	objects_.back()->Init(pos,-90.0f);
-	//アイスディスペンサー２個目
-	pos = tables_[MAX_TABLE_NUM - 3]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
-		 player_,objects_));
-	objects_.back()->Init(pos,-90.0f);
-
-	//ゴミ箱
-	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
-		 player_,objects_));
-	objects_.back()->Init(DUSTBOX_POS, -180.0f, { 1.0f,0.8f,1.0f });
-	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
-
+	Init3DModel();
 }
 
 void StageManager::Update(void)
@@ -223,17 +93,6 @@ void StageManager::Update(void)
 	{
 		//アニメーションが終わったらマシンモードに切り替え
 		animationController_->Play((int)ANIM_TYPE::IDLE);
-	}
-
-	auto& ins = InputManager::GetInstance();
-	if(ins.IsTrgDown(KEY_INPUT_Q))
-	{
-		//生成アニメーション
-		animationController_->Play((int)ANIM_TYPE::CREATE,false);
-	}
-	if (ins.IsTrgDown(KEY_INPUT_E))
-	{
-		animationController_->Play((int)ANIM_TYPE::PAYING, false);
 	}
 
 	auto& pSphere = player_.GetSphere();
@@ -296,13 +155,6 @@ void StageManager::Update(void)
 
 	transform_.Update();
 	caseTran_.Update();
-
-#ifdef _DEBUG
-
-	//ImGuiの操作を行う
-	//UpdateDebugImGui();
-
-#endif // _DEBUG
 }
 
 void StageManager::Draw(void)
@@ -323,10 +175,6 @@ void StageManager::Draw(void)
 	{
 		obj->Draw();
 	}
-
-#ifdef _DEBUG
-	//DrawDebug();
-#endif // _DEBUG
 }
 
 void StageManager::SetCurrentOrder(const Order::OrderData& order)
@@ -378,6 +226,157 @@ Transform StageManager::GetFloorTran(void) const
 	return furnitures_->GetFloorTran();
 }
 
+void StageManager::Init3DModel(void)
+{
+	//モデル制御の基本情報
+	caseTran_.SetModel(
+		ResourceManager::GetInstance().LoadModelDuplicate(
+			ResourceManager::SRC::SWEETS_CASE));
+	caseTran_.scl = AsoUtility::VECTOR_ONE;
+	caseTran_.pos = CASE_POS;
+	caseTran_.quaRot = Quaternion::Euler(
+		0.0f, 0.0f, 0.0f);
+
+	caseTran_.quaRotLocal = Quaternion();
+	caseTran_.MakeCollider(Collider::TYPE::STAGE);
+	caseTran_.Update();
+
+	//モデル制御の基本情報
+	transform_.SetModel(
+		ResourceManager::GetInstance().LoadModelDuplicate(
+			ResourceManager::SRC::REGISTER));
+	transform_.scl = AsoUtility::VECTOR_ONE;
+	transform_.pos = AsoUtility::VECTOR_ZERO;
+	transform_.quaRot = Quaternion::Euler(
+		0.0f,
+		AsoUtility::Deg2RadF(0.0f),
+		0.0f
+	);
+
+	transform_.quaRotLocal = Quaternion();
+	transform_.MakeCollider(Collider::TYPE::STAGE);
+	transform_.Update();
+
+	InitAnimation(); // アニメーションの初期化
+
+	furnitures_ = std::make_unique<Furnitures>();
+	furnitures_->Init();
+
+	VECTOR firstPos = {};
+	//横のテーブル群(手前)
+	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
+	{
+		firstPos = TABLE_POS_BACK;
+		firstPos.x += (x * TABLE_WIDTH);
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
+		tables_.back()->Init(firstPos, 180.0f);
+	}
+
+	//縦のテーブル群(左側）
+	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
+	{
+		firstPos = COLUMN_TABLE_LEFT_POS;
+		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
+		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_, objects_));
+		tables_.back()->Init(firstPos, -90.0f);
+	}
+
+	//縦のテーブル群(右側）
+	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
+	{
+		firstPos = COLUMN_TABLE_RIGHT_POS;
+		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
+		tables_.emplace_back(std::make_unique<Table>(TABLE, 60.0f, 76.0f, TABLE_WIDTH, player_, objects_));
+		tables_.back()->Init(firstPos, 90.0f);
+	}
+
+	//真ん中のテーブル群
+	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
+	{
+		firstPos = CENTER_TABLE_POS;
+		firstPos.x += i * 90.0f;
+		//奥側のテーブル２つ
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
+		tables_.back()->Init(firstPos, 0.0f);
+	}
+	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
+	{
+		firstPos = CENTER_TABLE_POS;
+		firstPos.x += i * 90.0f;
+		firstPos.z += 60.0f;
+		//手前側のテーブル２つ
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_));
+		tables_.back()->Init(firstPos, 180.0f);
+	}
+
+	//ケースのテーブル群(奥側)
+	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
+	{
+		firstPos = TABLE_POS_FRONT;
+		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
+		tables_.emplace_back(std::make_unique<Table>(TABLE, TABLE_WIDTH + 20.0f, 76.0f, 60.0f, player_, objects_));
+		tables_.back()->Init(firstPos);
+	}
+
+	//カウンター用テーブル
+	counter_ = std::make_unique<Table>(COUNTER, TABLE_WIDTH, 76.0f, 60.0f, player_, objects_);
+	counter_->Init(COUNTER_POS);
+
+	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
+	//ホット用カップのラック
+	objects_.emplace_back(std::make_unique<RackObject>(HOT_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init(pos, -90.0f);
+
+	//アイス用カップのラック
+	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<RackObject>(ICE_CUP_RACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init(pos, 90.0f);
+
+	//チョコスイーツ用のラック
+	pos = tables_[tables_.size() - 2]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<RackObject>(CHOCO_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init(pos);
+
+	//ベリースイーツ用のラック
+	pos = tables_.back()->GetTopCenter();
+	objects_.emplace_back(std::make_unique<RackObject>(BERRY_SWEETSRACK, 60.0f, 20.0f, 60.0f, player_));
+	objects_.back()->Init(pos);
+
+	//カップ用の蓋
+	pos = tables_[2]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<CupLidRack>(CUP_LID_RACK, 60.0f, 20.0f, 60.0f, player_, objects_));
+	objects_.back()->Init(pos);
+
+	//コーヒーマシン
+	pos = tables_[MAX_TABLE_NUM - 2]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
+		player_, objects_));
+	objects_.back()->Init(pos, 90.0f);
+	//コーヒーマシン２個目
+	pos = tables_[MAX_TABLE_NUM - 4]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<Machine>(COFFEE_MACHINE, 50.0f, 60.0f, 75.0f,
+		player_, objects_));
+	objects_.back()->Init(pos, 90.0f);
+
+	//アイスディスペンサー
+	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
+		player_, objects_));
+	objects_.back()->Init(pos, -90.0f);
+	//アイスディスペンサー２個目
+	pos = tables_[MAX_TABLE_NUM - 3]->GetTopCenter();
+	objects_.emplace_back(std::make_unique<IceDispenser>(ICE_DISPENSER, 50.0f, 75.0f, 60.0f,
+		player_, objects_));
+	objects_.back()->Init(pos, -90.0f);
+
+	//ゴミ箱
+	objects_.emplace_back(std::make_unique<DustBox>(DUST_BOX, 50.0f, 75.0f, 60.0f,
+		player_, objects_));
+	objects_.back()->Init(DUSTBOX_POS, -180.0f, { 1.0f,0.8f,1.0f });
+	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
+
+}
+
 void StageManager::InitAnimation(void)
 {
 	std::string path = Application::PATH_MODEL + "Stage/";
@@ -420,11 +419,13 @@ void StageManager::SurveItem(StageObject& obj)
 
 	DeleteSurvedItem(); // 提供後はオブジェクトを削除
 
+	auto& sound = SoundManager::GetInstance();
 	// 注文が揃ったか判定
-	if (IsOrderCompleted()) 
+	if (IsOrderCompleted())
 	{
 		isServed_ = true;
-		animationController_->Play((int)ANIM_TYPE::PAYING,false);
+		animationController_->Play((int)ANIM_TYPE::PAYING, false);
+		sound.Play(SoundManager::SOUND::PAYING);
 	}
 }
 
@@ -804,152 +805,4 @@ bool StageManager::IsOrderCompleted(void)
 		}
 	}
 	return true;
-}
-
-void StageManager::DrawDebug(void)
-{
-	//DrawSphere3D(objects_[3]->GetSpherePos(),
-	//	objects_[3]->GetSphereRad(), 8, 0xff0000, 0xff0000, true);
-
-	int line = 8;	//行
-	int lineHeight = 30;	//行
-	DebugDrawFormat::FormatString(L"item : %s", StringUtility::StringToWstring(player_.GetHoldItem()).c_str(), line, lineHeight);
-	DebugDrawFormat::FormatString(L"hold : %d", player_.GetIsHolding(), line, lineHeight);
-	//DebugDrawFormat::FormatString(L"mode : %d", mode_, line, lineHeight);
-
-	//DebugDrawFormat::FormatString(L"currentD,S : %d,%d",
-	//		currentOrder_.drink_, currentOrder_.sweets_, line, lineHeight);
-
-	//DebugDrawFormat::FormatString(L"surevdD,S : %d,%d",
-	//	servedItems_.drink_, servedItems_.sweets_, line, lineHeight);
-
-	//DebugDrawFormat::FormatString(L"boolSize : %d",
-	//		isServedItems_.size(), line, lineHeight);
-		
-	//DebugDrawFormat::FormatString(L"back   : %s",
-	//	StringUtility::StringToWstring(objects_.back()->GetParam().id_).c_str(), line, lineHeight);
-	//
-	//int size = static_cast<int>(objects_.size());
-	//DebugDrawFormat::FormatString(L"back -1  : %s",
-	//	StringUtility::StringToWstring(objects_[size -2]->GetParam().id_).c_str(), line, lineHeight);
-	//	
-	//DebugDrawFormat::FormatString(L"back -2  : %s",
-	//	StringUtility::StringToWstring(objects_[size -3]->GetParam().id_).c_str(), line, lineHeight);
-	//	
-	//DebugDrawFormat::FormatString(L"back -3  : %s",
-	//	StringUtility::StringToWstring(objects_[size -4]->GetParam().id_).c_str(), line, lineHeight);	
-	//	
-	//DebugDrawFormat::FormatString(L"back -4  : %s",
-	//	StringUtility::StringToWstring(objects_[size -5]->GetParam().id_).c_str(), line, lineHeight);
-	//	
-	//size_t size = objects_.size();
-	////蓋生成数確認用
-	//DebugDrawFormat::FormatString(L"end - 2 : %s",
-	//	StringUtility::StringToWstring(objects_[size - 3]->GetObjectId()).c_str(), line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"end - 1 : %s",
-	//	StringUtility::StringToWstring(objects_[size - 2]->GetObjectId()).c_str(), line, lineHeight);
-
-	//DebugDrawFormat::FormatString(L"end : %s",
-	//	StringUtility::StringToWstring(objects_.back()->GetObjectId()).c_str(), line, lineHeight);
-
-	//DebugDrawFormat::FormatString(L"surveD : %d",
-	//	surveDrink_, line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"surveS : %d",
-	//	surveSweets_, line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"surveL : %d",
-	//	surveDrinkLid_, line, lineHeight);
-	//
-	//DebugDrawFormat::FormatString(L"surve : %d",
-	//	isSurved_, line, lineHeight);
-
-	//for (const auto& obj : objects_)
-	//{
-	//	DebugDrawFormat::FormatString(L"objActioned : %d",
-	//		obj->IsActioned() , line, lineHeight);
-	//}
-
-	//for (size_t i = 0; i < objects_.size(); ++i)
-	//{
-	//	//コーヒー以外のオブジェクトは判定しない
-	//	if (objects_[i]->GetParam().id_ != HOT_COFFEE &&
-	//		objects_[i]->GetParam().id_ != ICE_COFFEE) continue;
-
-	//	DebugDrawFormat::FormatString(L"coffee%d.lid  : %d", i,
-	//		objects_[i]->IsLidOn(), line, lineHeight);
-	//}
-
-	for (size_t i = 0; i < objects_.size(); ++i)
-	{
-		//ディスペンサーの状態
-		if (objects_[i]->GetParam().id_ != ICE_DISPENSER) continue;
-
-		DebugDrawFormat::FormatString(L"ice_dis%d  : %d",i,
-			objects_[i]->GetMachineState(), line, lineHeight);
-
-		DebugDrawFormat::FormatString(L"ice_dis%d  : %0.2f",i,
-			objects_[i]->GetParam().interactTime_, line, lineHeight);
-	}
-
-	//for (int i = 0; i < tables_.size(); i++)
-	//{
-	//	DebugDrawFormat::FormatString(L"table%d.placeable  : %d", i,
-	//		tables_[i]->GetIsPlaceable(), line, lineHeight);
-	//}
-
-	//テーブル番号を表示
-	//for (int i = 0; i < (int)tables_.size(); i++)
-	//{
-	//	VECTOR screenPos = ConvWorldPosToScreenPos(tables_[i]->GetTransform().pos);
-	//	// 変換成功
-	//	DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
-	//		L"%s : %d",
-	//		StringUtility::StringToWstring(tables_[i]->GetParam().id_.c_str()).c_str(), i);
-	//}
-
-	//for (const auto& obj : objects_)
-	//{
-	//	VECTOR screenPos = ConvWorldPosToScreenPos(obj->GetTransform().pos);
-	//	// 変換成功
-	//	DrawFormatString(static_cast<int>(screenPos.x) - 25, static_cast<int>(screenPos.y) - 50, GetColor(255, 255, 255),
-	//		L"%s",
-	//		StringUtility::StringToWstring(obj->GetParam().id_.c_str()).c_str());
-	//}
-}
-
-void StageManager::UpdateDebugImGui(void)
-{
-	//ウィンドウタイトル&開始処理
-	ImGui::Begin("case");
-	////大きさ
-	//ImGui::Text("scale");
-	//ImGui::InputFloat("SclX", &sphereTran_.scl.x);
-	//ImGui::InputFloat("SclY", &sphereTran_.scl.y);
-	//ImGui::InputFloat("SclZ", &sphereTran_.scl.z);
-
-	//角度
-	//VECTOR rotDeg = VECTOR();
-	//rotDeg.x = AsoUtility::Rad2DegF(sphereTran_.rot.x);
-	//rotDeg.y = AsoUtility::Rad2DegF(sphereTran_.rot.y);
-	//rotDeg.z = AsoUtility::Rad2DegF(sphereTran_.rot.z);
-	//ImGui::Text("angle(deg)");
-	//ImGui::SliderFloat("RotX", &rotDeg.x, 0.0f, 360.0f);
-	//ImGui::SliderFloat("RotY", &rotDeg.y, 0.0f, 360.0f);
-	//ImGui::SliderFloat("RotZ", &rotDeg.z, 0.0f, 360.0f);
-	//sphereTran_.rot.x = AsoUtility::Deg2RadF(rotDeg.x);
-	//sphereTran_.rot.y = AsoUtility::Deg2RadF(rotDeg.y);
-	//sphereTran_.rot.z = AsoUtility::Deg2RadF(rotDeg.z);
-
-	//位置
-	ImGui::Text("position");
-	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &caseTran_.pos.x);
-	ImGui::SliderFloat("PosX", &caseTran_.pos.x, -500.0f, 500.0f);
-	ImGui::SliderFloat("PosY", &caseTran_.pos.y, 0.0f, 500.0f);
-	ImGui::SliderFloat("PosZ", &caseTran_.pos.z, -500.0f, 500.0f);
-
-	//終了処理
-	ImGui::End();
 }

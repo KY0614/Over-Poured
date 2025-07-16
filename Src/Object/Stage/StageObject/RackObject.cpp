@@ -1,4 +1,4 @@
-#include "../../../Common/DebugDrawFormat.h"
+#include "../../../Manager/GameSystem/SoundManager.h"
 #include "../../../Manager/Generic/SceneManager.h"
 #include "../../../Manager/Generic/InputManager.h"
 #include "../../../Manager/Generic/ResourceManager.h"
@@ -6,6 +6,7 @@
 #include "../../Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../../UI/GaugeUI.h"
+#include "../../UI/IconUI.h"
 #include "../../UI/UIManager.h"
 #include "ItemObject.h"
 #include "RackObject.h"
@@ -24,11 +25,13 @@ RackObject::RackObject(const std::string objId,
 void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
 {
 	if (!hasStock_)return;
-
+	isInteract_ = true;
 	auto& ins = InputManager::GetInstance();
+	auto& sound = SoundManager::GetInstance();
 	//ホットカップ用ラックにインタラクトしたときの処理
 	if (rackName == "Cup_Hot_Rack" && ins.IsInputTriggered("Interact"))
 	{
+		sound.Play(SoundManager::SOUND::PICK_UP);
 		object.emplace_back(std::make_unique<ItemObject>("Hot_Cup", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
@@ -40,6 +43,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	//アイスカップ用ラックにインタラクトしたときの処理
 	if (rackName == "Cup_Ice_Rack" && ins.IsInputTriggered("Interact"))
 	{
+		sound.Play(SoundManager::SOUND::PICK_UP);
 		object.emplace_back(std::make_unique<ItemObject>("Ice_Cup", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
@@ -51,6 +55,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	//スイーツ（ベリー）用ラックにインタラクトしたときの処理
 	if (rackName == "Sweets_Strawberry_Rack" && ins.IsInputTriggered("Interact"))
 	{
+		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
 		object.emplace_back(std::make_unique<ItemObject>("Sweets_Strawberry", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
@@ -64,6 +69,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	//スイーツ（チョコ）用ラックにインタラクトしたときの処理
 	if (rackName == "Sweets_Choco_Rack" && ins.IsInputTriggered("Interact"))
 	{
+		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
 		object.emplace_back(std::make_unique<ItemObject>("Sweets_Choco", 40.0f, 30.0f, 40.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
@@ -80,7 +86,7 @@ void RackObject::AddStock(int addStockNum)
 	if (hasStock_) return;
 	
 	auto& ins = InputManager::GetInstance();
-
+	auto& sound = SoundManager::GetInstance();
 	if (ins.IsInputPressed("Interact"))
 	{
 		gaugeUI_->SetActive(true);
@@ -96,6 +102,7 @@ void RackObject::AddStock(int addStockNum)
 		{
 			addInterval_ = 0.0f;
 			sweetsStockCnt_++;
+			sound.Play(SoundManager::SOUND::ADD_STOCK);
 		}
 		//スイーツの在庫が最大に達したら、在庫ありに設定
 		if (sweetsStockCnt_ >= SWEETS_STOCK_MAX)
@@ -113,6 +120,7 @@ void RackObject::AddStock(int addStockNum)
 		{
 			addInterval_ = 0.0f;
 			cupsStockCnt_++;
+			sound.Play(SoundManager::SOUND::ADD_STOCK);
 		}
 		//カップの在庫が最大に達したら、在庫ありに設定
 		if (cupsStockCnt_ >= CUP_STOCK_MAX)
@@ -128,6 +136,13 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 {
 	StageObject::Init(pos, rotY, scale);
 
+	//スイーツ用UIの初期化
+	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, height_ + 60.0f, 0.0f),
+		transform_.pos, ResourceManager::SRC::INTERACT);
+	iconUI_->SetActive(false);
+	iconUI_->Init();
+	iconUI_->SetUISize(70.0f);
+	UIManager::GetInstance().AddIconUI(iconUI_.get());
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
 	if (param_.id_ == "Sweets_Strawberry_Rack")
@@ -225,6 +240,8 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 
 void RackObject::Update(void)
 {
+	if (isInteract_)iconUI_->SetActive(true);
+	else iconUI_->SetActive(false);
 	if(sweetsStockCnt_ <= 0 && cupsStockCnt_ <= 0)
 	{
 		hasStock_ = false;
@@ -245,9 +262,6 @@ void RackObject::Update(void)
 
 void RackObject::Draw(void)
 {
-	int line = 3;	//行
-	int lineHeight = 30;	//行
-
 	StageObject::Draw();
 
 	for (int i = 0; i < cupsStockCnt_; ++i)
@@ -261,4 +275,5 @@ void RackObject::Draw(void)
 		//モデルの描画
 		MV1DrawModel(sweetsOfRack_[i].modelId);
 	}
+
 }

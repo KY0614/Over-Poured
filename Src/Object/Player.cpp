@@ -372,6 +372,7 @@ void Player::ProcessMove(void)
 			if (speed_ == SPEED_RUN)
 			{
 				animationController_->Play((int)ANIM_TYPE::RUN);
+				if (isHolding_)animationController_->Play((int)ANIM_TYPE::WALK_HOLD);
 			}
 			else 
 			{

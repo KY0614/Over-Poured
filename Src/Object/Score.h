@@ -12,7 +12,7 @@ public:
 
 	//イージング関連
 	static constexpr float START_SLIDE_X = -500.0f;	//X開始位置
-	static constexpr float END_SLIDE_X = 128.0f;	//X終了位置
+	static constexpr float END_SLIDE_X = 160.0f;	//X終了位置
 	static constexpr float START_SLIDE_Y = 690.0f;	//Y開始位置
 	static constexpr float END_SLIDE_Y = 420.0f;	//Y終了位置
 	static constexpr float NEXT_SLIDE_START_X = -125.0f;	//次のイージングを開始する目標位置
@@ -40,7 +40,7 @@ public:
 
 	static constexpr float RANK_SCORE_MARIGINE_X = 100.0f;	//ランキングスコアをラベルの大きさ分ずらす用
 	static constexpr float RANK_SCORE_MARIGINE_Y = 80.0f;	//ランキング毎の縦間隔（描画する際にずらすため）
-	static constexpr int RANK_SCORE_POS_Y = 70;				//ランキングY座標
+	static constexpr int RANK_SCORE_POS_Y = 50;				//ランキングY座標
 
 	struct RankInfo 
 	{
@@ -96,6 +96,11 @@ private:
 	std::function<void(void)> stateUpdate_;
 	std::function<void(void)> stateDraw_;
 
+	bool isCurrentScrDraw_;
+	bool isRankingScrDraw_;
+	bool isGaugeDraw_;
+	bool playSE_;
+
 	//今回のゲームのスコア
 	int currentScr_;
 
@@ -130,10 +135,11 @@ private:
 	int* numberImgs_;
 
 	int* rankingImgs_;
+	int rankingBackImg_;
 	int currentScrImg_;
 
 	void DrawVariableScore(int score,int posX,int posY);
-	void DrawRankingScore(int score,int posX,int posY);
+	void DrawRankingScore(int score,int posX,int posY,int hightLight);
 	void DrawScore(int score, int posX, int posY);
 
 	void ChangeState(STATE state);

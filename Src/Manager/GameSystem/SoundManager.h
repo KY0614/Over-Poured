@@ -28,6 +28,14 @@ public:
 		TIMER,
 		TIMER_FAST,
 		GAME_FINISH,
+		PICK_UP,
+		ADD_STOCK,
+		PAYING,
+
+		RESULT,
+		NORMAL,
+		GOOD,
+		GREATE,
 	};
 
 	struct SOUND_DATA

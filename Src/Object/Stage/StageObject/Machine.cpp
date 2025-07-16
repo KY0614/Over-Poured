@@ -6,6 +6,7 @@
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../Object/Stage/StageManager.h"
+#include "../../UI/IconUI.h"
 #include "../../UI/GaugeUI.h"
 #include "../../UI/UIManager.h"
 #include "Machine.h"
@@ -59,6 +60,7 @@ void Machine::Interact(const std::string& objId)
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
+			iconUI_->SetActive(true);
 			//スペースキー押下でマシンの場所にカップを置く
 			if ((player_.GetHoldItem() == items.front().c_str() ||
 				player_.GetHoldItem() == items.back().c_str()) &&
@@ -82,6 +84,7 @@ void Machine::Interact(const std::string& objId)
 
 void Machine::UpdateInActive(void)
 {
+	iconUI_->SetActive(false);
 	SetInteractTime(COFFEE_PRODUCES_TIME);
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
@@ -108,6 +111,7 @@ void Machine::UpdateInActive(void)
 
 void Machine::UpdateActive(void)
 {
+	iconUI_->SetActive(false);
 	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	gaugeUI_->Update();
@@ -139,6 +143,12 @@ void Machine::UpdateActive(void)
 void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 {
 	StageObject::Init(pos, rotY, scale);
+
+	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
+		transform_.pos, ResourceManager::SRC::BREW_COFFEE);
+	iconUI_->Init();
+	iconUI_->SetActive(false);
+	UIManager::GetInstance().AddIconUI(iconUI_.get());
 
 	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
 	gaugeUI_->Init();

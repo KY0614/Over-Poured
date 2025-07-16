@@ -2,6 +2,7 @@
 #include "../StageObject.h"
 
 class GaugeUI;
+class IconUI;
 
 class RackObject : public StageObject
 {
@@ -35,6 +36,9 @@ private:
 
 	//ゲージのUI
 	std::unique_ptr<GaugeUI> gaugeUI_;
+
+	//アイコンUI
+	std::unique_ptr<IconUI> iconUI_;
 
 	Transform sweetsOfRack_[SWEETS_STOCK_MAX];
 	Transform cupesOfRack_[CUP_STOCK_MAX];

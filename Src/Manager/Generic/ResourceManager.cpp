@@ -297,6 +297,14 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/dustbox.mv1");
 	resourcesMap_.emplace(SRC::DUSTBOX, std::move(res));
 
+	//インタラクト可能画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "interact.png");
+	resourcesMap_.emplace(SRC::INTERACT, std::move(res));
+
+	//コーヒー可能画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "coffee.png");
+	resourcesMap_.emplace(SRC::BREW_COFFEE, std::move(res));
+
 	//注文用UI---------------------------------------------------------------------
 	//背景用
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "order.png");
@@ -374,6 +382,21 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/game_finish.mp3");
 	resourcesMap_.emplace(SRC::GAME_FINISH, std::move(res));
 
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/timer.mp3");
+	resourcesMap_.emplace(SRC::TIMER, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/timer_fast.mp3");
+	resourcesMap_.emplace(SRC::TIMER_FAST, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/pick_up.mp3");
+	resourcesMap_.emplace(SRC::PICK_UP, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/add_stock.mp3");
+	resourcesMap_.emplace(SRC::ADD_STOCK, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/paying.mp3");
+	resourcesMap_.emplace(SRC::PAYING, std::move(res));
+
 	//--------------------------------------------------------------------------
 	
 	//仮客
@@ -391,6 +414,7 @@ void ResourceManager::InitResult(void)
 	static std::string PATH_IMG = Application::PATH_IMAGE;
 	static std::string PATH_MDL = Application::PATH_MODEL;
 	static std::string PATH_EFF = Application::PATH_EFFECT;
+	static std::string PATH_SND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;
 
@@ -427,6 +451,26 @@ void ResourceManager::InitResult(void)
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "ranking.png",
 		1, 5, 300, 100);
 	resourcesMap_.emplace(SRC::RANKING, std::move(res));
+
+	//ランキング背景
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "ranking_back.png");
+	resourcesMap_.emplace(SRC::RANKING_BACK, std::move(res));
+
+	//音------------------------------------------------------------------------
+
+	//BGM
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "BGM/Result.mp3");
+	resourcesMap_.emplace(SRC::RESULT_BGM, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/normal.mp3");
+	resourcesMap_.emplace(SRC::SCORE_NORMAL, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/good.mp3");
+	resourcesMap_.emplace(SRC::SCORE_GOOD, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/greate.mp3");
+	resourcesMap_.emplace(SRC::SCORE_GREATE, std::move(res));
+
 }
 
 ResourceManager::ResourceManager(void)

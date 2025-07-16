@@ -2,6 +2,7 @@
 #include "../StageObject.h"
 
 class GaugeUI;
+class IconUI;
 
 class Machine : public StageObject
 {
@@ -30,5 +31,6 @@ private:
 
 	//ÉQÅ[ÉWÇÃUI
 	std::unique_ptr<GaugeUI> gaugeUI_;
+	std::unique_ptr<IconUI> iconUI_;
 };
 

@@ -1,5 +1,7 @@
 #include<string>
 #include "../Common/DebugDrawFormat.h"
+#include "../Manager/GameSystem/SoundManager.h"
+#include "../Manager/Generic/ResourceManager.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Score.h"
@@ -16,6 +18,13 @@ ResultScene::~ResultScene(void)
 
 void ResultScene::Init(void)
 {
+	auto& sound = SoundManager::GetInstance();
+
+	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::RESULT,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::RESULT_BGM).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::RESULT, 256 / 2);
+	sound.Play(SoundManager::SOUND::RESULT);
+
 	score_ = std::make_unique<Score>();
 	score_->Init();
 }

@@ -32,7 +32,7 @@ void TitleScene::Init(void)
 	//BGM“o˜^‚µ‚Ä‰¹—Ê’²ßŒã‚ÉÄ¶
 	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::TITLE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_BGM).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::TITLE, 256 / 3);
+	sound.AdjustVolume(SoundManager::SOUND::TITLE, 256 / 2);
 	sound.Play(SoundManager::SOUND::TITLE);
 
 	//SE“o˜^‚µ‚Ä‰¹—Ê’²®

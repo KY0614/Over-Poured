@@ -28,6 +28,8 @@ GameScene::GameScene(void)
 	cntDownTimer_ = 0.0f;
 	scale_ = 0.0f;
 	sclTime_ = 0.0f;
+	timeUpImg_ = 0;
+	remainderSE_ = false;
 }
 
 GameScene::~GameScene(void)
@@ -43,6 +45,17 @@ void GameScene::Init(void)
 	sound.AdjustVolume(SoundManager::SOUND::GAME, 256 / 3);
 	sound.Play(SoundManager::SOUND::GAME);
 
+	//タイマー残り３０秒時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::TIMER,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::TIMER, 256 / 3);
+
+	//タイマー残り1０秒時SE
+	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::TIMER_FAST,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_FAST).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::TIMER_FAST, 256 / 3);
+
+	//タイムアップ時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GAME_FINISH,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_FINISH).handleId_);
 	sound.AdjustVolume(SoundManager::SOUND::GAME_FINISH, 256 / 3);
@@ -126,7 +139,7 @@ void GameScene::Update(void)
 		break;
 	
 	case GameScene::PHASE::FINISH:
-		SoundManager::GetInstance().Play(SoundManager::SOUND::GAME_FINISH);
+		//カウントダウンの時と同じようにイージングで画像を拡大させる
 		cntDownTimer_++;
 		sclTime_ += SceneManager::GetInstance().GetDeltaTime();
 		scale_ = Easing::QuintOut(
@@ -137,9 +150,11 @@ void GameScene::Update(void)
 		{
 			if (cntDownIdx_ >= MAX_COUNT_DOWN)
 			{
+				scale_ = 2.0f;
 				scr.SetCurrentScore(score_);
 				scr.SaveScore(score_);
 				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+				return;
 			}
 			cntDownTimer_ = 0;
 			cntDownIdx_++;
@@ -209,7 +224,6 @@ void GameScene::UpdateGame(void)
 
 	if (ins.IsInputTriggered("pause"))
 	{
-		//stop = !stop;
 		score_ += 100;
 	}
 
@@ -221,8 +235,28 @@ void GameScene::UpdateGame(void)
 		stage_->ResetServeData();	//サーブしたアイテムをリセット
 	}
 
+	//残り３０秒になったらチクタク音
+	if (!remainderSE_ &&
+		timer_->GetMinute() <= 0 &&
+		timer_->GetSecond() == SECOND_SOUND_TIME)
+	{
+		SoundManager::GetInstance().Play(SoundManager::SOUND::TIMER);
+		remainderSE_ = true;
+	}
+
+	if (remainderSE_ &&
+		timer_->GetMinute() <= 0 &&
+		timer_->GetSecond() == SECOND_SOUND_TIME_FAST)
+	{
+		SoundManager::GetInstance().Play(SoundManager::SOUND::TIMER_FAST);
+		remainderSE_ = false;
+	}
+
+	//タイマーが０になったらぴぴーって鳴らす
 	if (timer_->IsEnd())
 	{
+		SoundManager::GetInstance().Stop(SoundManager::SOUND::TIMER_FAST);
+		SoundManager::GetInstance().Play(SoundManager::SOUND::GAME_FINISH);
 		phase_ = PHASE::FINISH;
 	}
 
@@ -246,10 +280,11 @@ void GameScene::UpdateGame(void)
 
 void GameScene::DrawGame(void)
 {
-	//ステージ描画
-	stage_->Draw();
 	//お客と注文描画
 	customer_->Draw();
+	//ステージ描画
+	stage_->Draw();
+
 	//プレイヤー描画
 	player_->Draw();
 	//UI描画

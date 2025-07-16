@@ -48,11 +48,6 @@ void ItemObject::PouredIce(void)
 
 void ItemObject::Draw(void)
 {
-    int line = 3;	//çs
-    int lineHeight = 30;	//çs
-
-    DebugDrawFormat::FormatStringRight(L"isIce : %d", isIced_, line, lineHeight);
-
     StageObject::Draw();
 }
 

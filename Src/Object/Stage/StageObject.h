@@ -249,6 +249,10 @@ protected:
 	std::string objId_;
 	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
 
+	int interactImg_;
+
+	bool isInteract_;
+
 private:
 
 	ITEM_STATE itemState_;

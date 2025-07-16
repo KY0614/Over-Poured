@@ -42,6 +42,9 @@ public:
 
 	bool IsEnd(void) const { return isEnd_; }
 
+	int GetSecond(void)const { return second_; }
+	int GetMinute(void)const { return minute_; }
+
 private:
 	int minute_;	//•ª”
 	int second_;	//•b”

@@ -28,6 +28,10 @@ public:
 		SKY_DOME,
 		FOOT_SMOKE,
 
+		//お客
+		HOT_CUSTOMER,
+		ICE_CUSTOMER,
+
 		//ステージオブジェクト
 		FLOOR,
 		PLANT,
@@ -56,6 +60,9 @@ public:
 		ICECUP_LID,
 		CUPLID_RACK,
 		DUSTBOX,
+
+		INTERACT,
+		BREW_COFFEE,
 
 		//注文内容のUI
 		UI_ORDER_BACK,
@@ -93,13 +100,20 @@ public:
 		TIMER,
 		TIMER_FAST,
 		GAME_FINISH,
+		PICK_UP,
+		ADD_STOCK,
+		PAYING,
 
-		HOT_CUSTOMER,
-		ICE_CUSTOMER,
+		RESULT_BGM,
+		SCORE_NORMAL,
+		SCORE_GOOD,
+		SCORE_GREATE,
+
 
 		//リザルト用ラベル
 		CURRENT_SCORE,
 		RANKING,
+		RANKING_BACK,
 
 	};
 
