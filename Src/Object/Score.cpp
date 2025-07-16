@@ -43,6 +43,7 @@ Score::Score(void)
 	phase_ = TOTALSCR_PHASE::COUNT_UP;
 	numberImgs_ = nullptr;
 	rankingImgs_ = nullptr;
+	scale_ = 0.0f;
 
 	stateChange_.emplace(STATE::PLAY_SCORE, std::bind(&Score::ChangePlayScore, this));
 	stateChange_.emplace(STATE::TOTAL_SCORE, std::bind(&Score::ChangeTotalScore, this));
@@ -107,7 +108,9 @@ void Score::Init(void)
 	isMove_[0] = true;
 	currentRankIdx_ = 0;
 	rank_ = GetRankFromScore(scr.GetCurrentScore());
-
+	//画面の大きさに合わせて拡大率を変える
+	scale_ = static_cast<float>(Application::SCREEN_SIZE_Y) /
+		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
 	ChangeState(STATE::PLAY_SCORE);
 }
 
@@ -291,12 +294,12 @@ void Score::DrawPlayScore(void)
 
 	//現在のスコア
 	DrawVariableScore(currentScr_, Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y / 2 + 256);
+		Application::SCREEN_SIZE_Y / 2 + 256, scale_);
 
 	//「現在のスコア」ラベル
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2 - 50,
 				Application::SCREEN_SIZE_Y / 2 + 256,
-				1.0f, 0.0f,
+				scale_, 0.0f,
 				currentScrImg_, true);
 
 	//ゲージの背景
@@ -320,11 +323,11 @@ void Score::DrawPlayScore(void)
 		);
 	}
 
-	//ランキングのの背景
+	//ランキングの背景
 	DrawRotaGraph(
 		Application::SCREEN_SIZE_X / 4,
 		Application::SCREEN_SIZE_Y / 4 - 150,
-		1.7f, 0.0f, rankingBackImg_,
+		scale_ * 2.0f, 0.0f, rankingBackImg_,
 		true, false);
 
 	if (rankData_[(int)rank_].isFull_)
@@ -516,16 +519,14 @@ void Score::InitRankInfo(void)
 	rankData_[3].displayedRate_ = 0.0f;
 }
 
-void Score::DrawVariableScore(int score, int posX, int posY)
+void Score::DrawVariableScore(int score, int posX, int posY,float scale)
 {
 	std::string str = std::to_string(score);
-	const int digitWidth = 70;
-	const float scale = 1.0f;
+	const int digitWidth = 128 * scale;
+	const float strScale = scale;
 
-	// 桁数分の描画幅を計算
-	int totalWidth = static_cast<int>(str.size() * digitWidth * scale);
 	// 右寄せ：画面右端から totalWidth 分左へずらす
-	int marigineX = Application::SCREEN_SIZE_X - totalWidth;
+	int marigineX = posX + 256;
 
 	for (int i = 0; i < str.size(); ++i)
 	{
@@ -534,8 +535,8 @@ void Score::DrawVariableScore(int score, int posX, int posY)
 		{
 			int digit = ch - '0';
 			DrawRotaGraph(
-				marigineX + static_cast<int>(i * digitWidth * scale), posY,
-				0.8f, 0.0f,
+				marigineX + static_cast<int>(i * digitWidth * strScale), posY,
+				strScale, 0.0f,
 				numberImgs_[digit], true);
 		}
 	}

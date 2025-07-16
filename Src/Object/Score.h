@@ -137,8 +137,10 @@ private:
 	int* rankingImgs_;
 	int rankingBackImg_;
 	int currentScrImg_;
+	
+	float scale_;
 
-	void DrawVariableScore(int score,int posX,int posY);
+	void DrawVariableScore(int score,int posX,int posY, float scale);
 	void DrawRankingScore(int score,int posX,int posY,int hightLight);
 	void DrawScore(int score, int posX, int posY);
 

@@ -47,7 +47,7 @@ void Player::Init(void)
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::PLAYER));
 	transform_.scl = {0.7f,0.7f,0.7f};
-	transform_.pos = { -60.0f, 30.0f, -10.0f };
+	transform_.pos = { -60.0f, 30.0f, 30.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
@@ -82,19 +82,6 @@ void Player::Init(void)
 	ChangeState(STATE::PLAY);
 
 	stepFootSmoke_ = TERM_FOOT_SMOKE;
-
-#ifdef _DEBUG
-
-	//カウンター前の当たり判定用の球体
-	sphereTran_.Update();
-
-	sphereTran_.scl = AsoUtility::VECTOR_ONE;
-	sphereTran_.pos = { 221.0f, 0.0f, 139.0f };
-	sphereTran_.quaRot = Quaternion();
-	sphereTran_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
-
-#endif // _DEBUG
 
 	isHolding_ = false;
 }

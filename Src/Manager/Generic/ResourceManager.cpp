@@ -282,7 +282,7 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::ICE, std::move(res));
 
 	//カップの蓋のラック
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/cuplidRack.mv1");
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Stage/cuplidRack_.mv1");
 	resourcesMap_.emplace(SRC::CUPLID_RACK, std::move(res));
 
 	//カップの蓋(ホット）
