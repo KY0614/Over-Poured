@@ -10,6 +10,18 @@ class Timer;
 class TutorialScene : public SceneBase
 {
 public:
+	//背景画像関連
+	static constexpr int BACK_IMG_MARGINE = 250;	//初期座標から少しだけ間隔をあける
+	static constexpr int BACK_IMG_SCALE = 500;		//背景画像の大きさ
+
+	static constexpr int CURSOR_IMG_MARGINE = 300;	//初期座標から少しだけ間隔をあける
+
+	static constexpr int TUTORIAL_IMG_MAX_NUM = 3;				//説明用画像の最大枚数
+	static constexpr int INDEX_MAX = TUTORIAL_IMG_MAX_NUM - 1;	//０からなので１引いておく
+
+	static constexpr float HIGH_LIGHT_INTERVAL = 1.2f;
+
+	static constexpr int LOGO_HEIGHT = 1024;
 
 	//コンストラクタ
 	TutorialScene(void);
@@ -22,14 +34,25 @@ public:
 	void Draw(void) override;
 
 private:
+	//説明用画像
+	int* tutorialImgs_;
+	int tutorialBackImg_;
+	int* cursorImg_;
 
-	//ステージ
-	std::unique_ptr<StageManager> stage_;
+	int decoImg_;
 
-	//プレイヤー
-	std::unique_ptr<Player> player_;
+	int pushImg_;	//押下画像
 
-	//客
-	std::unique_ptr<OrderCustomerManager> customer_;
+	//説明用画像のインデックス
+	int imgIdx_;
+
+	int blinkTime_;
+	int blinkIdx_;
+
+	bool isBlinkR_;
+	bool isBlinkL_;
+
+	bool isView_;
+	float highlightTime_;
 };
 

@@ -12,7 +12,7 @@ public:
 
 	//イージング関連
 	static constexpr float START_SLIDE_X = -500.0f;	//X開始位置
-	static constexpr float END_SLIDE_X = 160.0f;	//X終了位置
+	static constexpr float END_SLIDE_X = 290.0f;	//X終了位置
 	static constexpr float START_SLIDE_Y = 690.0f;	//Y開始位置
 	static constexpr float END_SLIDE_Y = 420.0f;	//Y終了位置
 	static constexpr float NEXT_SLIDE_START_X = -125.0f;	//次のイージングを開始する目標位置
@@ -23,8 +23,8 @@ public:
 	static constexpr float MAX_GAUGE_TIME = 1.0f;		//ゲージのイージング目標時間
 	static constexpr float FIRST_GAUGE_SPEED = 0.5f;	//最初に表示するゲージのスピード
 	static constexpr float CURRENT_GAUGE_SPEED = 0.5f;	//最後に表示するゲージのスピード
-	static constexpr int GAUGE_POS_X = Application::SCREEN_SIZE_X / 2 + 220;
-	static constexpr int GAUGE_POS_Y = Application::SCREEN_SIZE_Y / 2 - 80;
+	static constexpr int GAUGE_POS_X = Application::SCREEN_SIZE_X / 2 + 450;
+	static constexpr int GAUGE_POS_Y = Application::SCREEN_SIZE_Y / 2 - 150;
 	
 	//ランク関連
 	static constexpr int RANK_NUM = 4;		//ランクの数
@@ -38,9 +38,11 @@ public:
 	static constexpr int RANK_A_MIN = 1001;	//Aランクの最小値
 	static constexpr int RANK_S_MIN = 1501;	//Sランクの最小値
 
-	static constexpr float RANK_SCORE_MARIGINE_X = 100.0f;	//ランキングスコアをラベルの大きさ分ずらす用
-	static constexpr float RANK_SCORE_MARIGINE_Y = 80.0f;	//ランキング毎の縦間隔（描画する際にずらすため）
-	static constexpr int RANK_SCORE_POS_Y = 50;				//ランキングY座標
+	static constexpr float RANK_SCORE_MARIGINE_X = 150.0f;	//ランキングスコアをラベルの大きさ分ずらす用
+	static constexpr float RANK_SCORE_MARIGINE_Y = 120.0f;	//ランキング毎の縦間隔（描画する際にずらすため）
+	static constexpr int RANK_SCORE_POS_Y = 100;				//ランキングY座標
+
+	static constexpr int LOGO_HEIGHT = 1024;
 
 	struct RankInfo 
 	{
@@ -129,14 +131,18 @@ private:
 	float slideY_;
 	float slideYTime_;
 
-	int circleShadowImg_;
+	int* rankingImgs_;
+	int rankingBackImg_;
 
 	//数字用
 	int* numberImgs_;
-
-	int* rankingImgs_;
-	int rankingBackImg_;
 	int currentScrImg_;
+
+	int* ranksImgs_;
+	int circleShadowImg_;
+	int decoImg_;
+
+	int pushImg_;	//押下画像
 	
 	float scale_;
 
@@ -160,5 +166,6 @@ private:
 
 	void InitRankInfo(void);
 
+	void LoadImages(void);
 };
 

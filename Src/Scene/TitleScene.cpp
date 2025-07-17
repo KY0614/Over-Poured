@@ -18,6 +18,8 @@ TitleScene::TitleScene(void)
 	pushImg_ = -1;
 	titleImg_ = -1;
 	animationController_ = nullptr;
+	isView_ = false;
+	highlightTime_ = 0.0f;
 }
 
 TitleScene::~TitleScene(void)
@@ -38,7 +40,7 @@ void TitleScene::Init(void)
 	//SE登録して音量調整
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PUSH_SPACE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::PUSH_SPACE_SE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::PUSH_SPACE, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::PUSH_SPACE, 256 / 3);
 
 	//画像読み込み
 	pushImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::PUSH_SPACE).handleId_;
@@ -67,41 +69,47 @@ void TitleScene::Init(void)
 	InitMaterial();
 
 	//キャラ
-	charactor_.SetModel(
+	character_.SetModel(
 		ResourceManager::GetInstance().
 		LoadModelDuplicate(ResourceManager::SRC::PLAYER));
-	charactor_.pos = { -390.0f,0.0f, -265.0f };
-	charactor_.scl = AsoUtility::VECTOR_ONE;
-	charactor_.quaRot = Quaternion::Euler(
+	character_.pos = { -390.0f,0.0f, -265.0f };
+	character_.scl = AsoUtility::VECTOR_ONE;
+	character_.quaRot = Quaternion::Euler(
 		0.0f, AsoUtility::Deg2RadF(0.0f), 0.0f);
-	charactor_.Update();
+	character_.Update();
 
 	//アニメーションの設定
 	std::string path = Application::PATH_MODEL + "Player/";
-	animationController_ = std::make_unique<AnimationController>(charactor_.modelId);
+	animationController_ = std::make_unique<AnimationController>(character_.modelId);
 	animationController_->Add(0, path + "Idle.mv1", 20.0f);
 	animationController_->Play(0);
 
 	//定点カメラ
 	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
-
+	isView_ = true;
 }
 
 void TitleScene::Update(void)
 {
 	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
+	highlightTime_ += SceneManager::GetInstance().GetDeltaTime();
 	if (ins.IsInputTriggered("Interact"))
 	{
 		SoundManager::GetInstance().Play(SoundManager::SOUND::PUSH_SPACE);
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TUTORIAL);
 	}
 
+	if (highlightTime_ >= HIGH_LIGHT_INTERVAL)
+	{
+		isView_ = !isView_;
+		highlightTime_ = 0.0f;
+	}
 	//キャラアニメーション
 	animationController_->Update();
 
 	cafeTran_.Update();
-	charactor_.Update();
+	character_.Update();
 	graoundTran_.Update();
 }
 
@@ -112,9 +120,8 @@ void TitleScene::Draw(void)
 
 	renderer_->Draw();
 
-	//MV1DrawModel(graoundTran_.modelId);
 	MV1DrawModel(cafeTran_.modelId);
-	MV1DrawModel(charactor_.modelId);
+	MV1DrawModel(character_.modelId);
 
 	//画面の大きさに合わせて拡大率を変える
 	float screenScl =
@@ -125,12 +132,15 @@ void TitleScene::Draw(void)
 	screenScl *= 0.8f;
 
 	//pushspace画像を配置するためにロゴの大きさを確保
-	int logoScl = (LOGO_HEIGHT / 2) * screenScl;
-	//pushspaceの画像
-	DrawRotaGraph(
-		Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y / 2 + logoScl,
-		2.0f, 0.0, pushImg_, true);
+	int logoScl = (int)((float)(LOGO_HEIGHT / 2) * screenScl);
+	if (isView_)
+	{
+		//pushspaceの画像
+		DrawRotaGraph(
+			Application::SCREEN_SIZE_X / 2,
+			Application::SCREEN_SIZE_Y / 2 + logoScl,
+			2.0f, 0.0, pushImg_, true);
+	}
 
 	//ロゴ画像
 	DrawRotaGraph(

@@ -45,6 +45,16 @@ void GameScene::Init(void)
 	sound.AdjustVolume(SoundManager::SOUND::GAME, 256 / 3);
 	sound.Play(SoundManager::SOUND::GAME);
 
+	//カウントダウン時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::COUNT_DOWN,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::COUNT_DOWN).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::COUNT_DOWN, 256 / 2);
+
+	//スタート時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GAME_START,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_START).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::GAME_START, 256 / 3);
+
 	//タイマー残り３０秒時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::TIMER,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER).handleId_);
@@ -111,10 +121,15 @@ void GameScene::Init(void)
 void GameScene::Update(void)
 {
 	ScoreManager& scr = ScoreManager::GetInstance();
-
+	SoundManager& sound = SoundManager::GetInstance();
 	switch (phase_)
 	{
 	case GameScene::PHASE::COUNT_DOWN:
+		if (cntDownTimer_ == 0 && 
+			cntDownIdx_ < MAX_COUNT_DOWN - 1)sound.Play(SoundManager::SOUND::COUNT_DOWN);
+		else if(cntDownTimer_ == 0 && 
+			cntDownIdx_ >= MAX_COUNT_DOWN - 1)sound.Play(SoundManager::SOUND::GAME_START);
+
 		cntDownTimer_++;
 		sclTime_ += SceneManager::GetInstance().GetDeltaTime();
 		scale_ = Easing::QuintOut(
@@ -130,6 +145,7 @@ void GameScene::Update(void)
 			if (cntDownIdx_ >= MAX_COUNT_DOWN)
 			{
 				phase_ = PHASE::GAME;
+				break;
 			}
 		}
 		break;
@@ -224,7 +240,7 @@ void GameScene::UpdateGame(void)
 
 	if (ins.IsInputTriggered("pause"))
 	{
-		score_ += 100;
+		//score_ += 100;
 	}
 
 	if (stage_->IsServed())
@@ -260,14 +276,14 @@ void GameScene::UpdateGame(void)
 		phase_ = PHASE::FINISH;
 	}
 
-	//シーン遷移
-	if (ins.IsInputTriggered("NextScene"))
-	{
-		scr.SetCurrentScore(score_);
-		scr.SaveScore(score_);
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
-		return;
-	}
+	////シーン遷移
+	//if (ins.IsInputTriggered("NextScene"))
+	//{
+	//	scr.SetCurrentScore(score_);
+	//	scr.SaveScore(score_);
+	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+	//	return;
+	//}
 
 	stage_->Update();
 

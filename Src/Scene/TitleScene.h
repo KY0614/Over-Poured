@@ -13,6 +13,8 @@ class TitleScene : public SceneBase
 {
 
 public:
+	static constexpr float HIGH_LIGHT_INTERVAL = 1.2f;
+
 	//UVスケール
 	static constexpr float TILLING_SIZE = 35.0f;
 
@@ -39,8 +41,11 @@ private:
 	std::unique_ptr<ModelRenderer> renderer_;
 
 	//画像
-	int pushImg_;
-	int titleImg_;
+	int pushImg_;	//押下画像
+	int titleImg_;	//ロゴ画像
+
+	bool isView_;
+	float highlightTime_;
 
 	//お店用
 	Transform cafeTran_;
@@ -49,7 +54,7 @@ private:
 	Transform graoundTran_;
 
 	//キャラクター
-	Transform charactor_;
+	Transform character_;
 
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;

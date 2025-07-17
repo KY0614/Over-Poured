@@ -12,7 +12,7 @@
 // 定数バッファ：スロット7番目(b7と書く)
 cbuffer cbParam : register(b7)
 {
-    float4 g_uv_scale;  //タイリング用スケール値
+    float4 g_uv_scale;  //タイリング用UVスケール値
 }
 
 VS_OUTPUT main(VS_INPUT VSInput)

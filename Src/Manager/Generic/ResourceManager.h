@@ -23,6 +23,16 @@ public:
 		PUSH_SPACE,
 		PUSH_SPACE_SE,
 
+		TUTORIAL,
+		TUTORIAL_BGM,
+		NEXT_PAGE,
+		RETURN_PAGE,
+		NOT_PAGE,
+		TUTORIAL_BACK,
+		BACK,
+		CURSOR_R,
+		OPEN_DOOR,
+
 		PLAYER,
 		PLAYER_SHADOW,
 		SKY_DOME,
@@ -77,18 +87,9 @@ public:
 		UI_CIRCLE,
 		UI_CIRCLESHADOW,
 
-		//スコアによるランクのゲージ
-		RANK_C,
-		RANK_B,
-		RANK_A,
-		RANK_S,
-
 		//タイマー用
 		TIMER_NUMBER,
 		TIMER_COLON,
-
-		//スコア用
-		SCORE_NUMBER,
 
 		//カウントダウン用
 		COUNTDOWN_NUMBER,
@@ -99,16 +100,31 @@ public:
 		GAME_BGM,
 		TIMER,
 		TIMER_FAST,
+		COUNT_DOWN,
+		GAME_START,
 		GAME_FINISH,
 		PICK_UP,
 		ADD_STOCK,
 		PAYING,
 
+		//リザルト
+		
+		RANKS,
+
+		//スコアによるランクのゲージ
+		RANK_C,
+		RANK_B,
+		RANK_A,
+		RANK_S,
+
+		//スコア用
+		SCORE_NUMBER,
+
+		//音
 		RESULT_BGM,
 		SCORE_NORMAL,
 		SCORE_GOOD,
 		SCORE_GREATE,
-
 
 		//リザルト用ラベル
 		CURRENT_SCORE,

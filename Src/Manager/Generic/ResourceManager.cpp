@@ -164,6 +164,57 @@ void ResourceManager::InitSelect(void)
 
 void ResourceManager::InitTutorial(void)
 {
+	using RES = Resource;
+	using RES_T = RES::TYPE;
+	static std::string PATH_IMG = Application::PATH_IMAGE;
+	static std::string PATH_MDL = Application::PATH_MODEL;
+	static std::string PATH_EFF = Application::PATH_EFFECT;
+	static std::string PATH_SND = Application::PATH_SOUND;
+
+	std::unique_ptr<Resource> res;
+
+	//説明用画像
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "tutorial.png",
+		3, 1, 1080, 1080);
+	resourcesMap_.emplace(SRC::TUTORIAL, std::move(res));
+
+	//背景用画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "tutorial_back.png");
+	resourcesMap_.emplace(SRC::TUTORIAL_BACK, std::move(res));
+
+	//装飾用画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "score_gauge_back.png");
+	resourcesMap_.emplace(SRC::BACK, std::move(res));
+
+	//カーソル用画像
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "cursor_R.png",
+		2,1,300,300);
+	resourcesMap_.emplace(SRC::CURSOR_R, std::move(res));
+
+	//PushSpace画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "PleaseKey.png");
+	resourcesMap_.emplace(SRC::PUSH_SPACE, std::move(res));
+
+	//音----------------------------------------------------------------------------
+	//BGM
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "BGM/Tutorial.mp3");
+	resourcesMap_.emplace(SRC::TUTORIAL_BGM, std::move(res));
+
+	//ページを進ませるときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/next_page.mp3");
+	resourcesMap_.emplace(SRC::NEXT_PAGE, std::move(res));
+
+	//ページを進ませるときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/return_page.mp3");
+	resourcesMap_.emplace(SRC::RETURN_PAGE, std::move(res));
+
+	//ページが進まないときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/not_page.mp3");
+	resourcesMap_.emplace(SRC::NOT_PAGE, std::move(res));
+
+	//開店カランコロン
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/open_door.mp3");
+	resourcesMap_.emplace(SRC::OPEN_DOOR, std::move(res));
 }
 
 void ResourceManager::InitGame(void)
@@ -379,6 +430,12 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "BGM/GameScene.mp3");
 	resourcesMap_.emplace(SRC::GAME_BGM, std::move(res));
 
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/game_start.mp3");
+	resourcesMap_.emplace(SRC::GAME_START, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/count_down.mp3");
+	resourcesMap_.emplace(SRC::COUNT_DOWN, std::move(res));
+
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/game_finish.mp3");
 	resourcesMap_.emplace(SRC::GAME_FINISH, std::move(res));
 
@@ -447,6 +504,11 @@ void ResourceManager::InitResult(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "current_score.png");
 	resourcesMap_.emplace(SRC::CURRENT_SCORE, std::move(res));
 
+	//ランク（C,B,A,S)
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Ranks.png",
+		4, 1, 300, 300);
+	resourcesMap_.emplace(SRC::RANKS, std::move(res));
+
 	//ランキングラベル
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "ranking.png",
 		1, 5, 300, 100);
@@ -455,6 +517,14 @@ void ResourceManager::InitResult(void)
 	//ランキング背景
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "ranking_back.png");
 	resourcesMap_.emplace(SRC::RANKING_BACK, std::move(res));
+
+	//装飾用画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "score_gauge_back.png");
+	resourcesMap_.emplace(SRC::BACK, std::move(res));
+
+	//PushSpace画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "PleaseKey.png");
+	resourcesMap_.emplace(SRC::PUSH_SPACE, std::move(res));
 
 	//音------------------------------------------------------------------------
 

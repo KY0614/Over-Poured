@@ -64,8 +64,10 @@ void SceneManager::Init(void)
 
 void SceneManager::Init3D(void)
 {
+	////背景色設定
+	//SetBackgroundColor(0, 139, 139);
 	//背景色設定
-	SetBackgroundColor(0, 139, 139);
+	SetBackgroundColor(64, 64, 128);
 
 	//Zバッファを有効にする
 	SetUseZBuffer3D(true);
@@ -85,9 +87,9 @@ void SceneManager::Init3D(void)
 	ChangeLightTypeDir(lightDir_);
 
 	//フォグ設定
-	//SetFogEnable(true);
-	//SetFogColor(5, 5, 5);
-	//SetFogStartEnd(10000.0f, 20000.0f);
+	SetFogEnable(true);
+	SetFogColor(5, 5, 5);
+	SetFogStartEnd(10000.0f, 20000.0f);
 
 }
 
@@ -119,7 +121,6 @@ void SceneManager::Update(void)
 	//カメラ更新
 	camera_->Update();
 
-	//UpdateDebugImGui();
 }
 
 void SceneManager::Draw(void)
@@ -153,7 +154,6 @@ void SceneManager::Draw(void)
 	
 	//暗転・明転
 	fader_->Draw();
-
 }
 
 void SceneManager::Destroy(void)
@@ -271,7 +271,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SceneManager::SCENE_ID::TUTORIAL:
 		scene = std::make_unique<TutorialScene>();
-		resM.InitGame();
+		resM.InitTutorial();
 		break;
 	case SceneManager::SCENE_ID::GAME:
 		scene = std::make_unique<GameScene>();

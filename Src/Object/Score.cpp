@@ -9,44 +9,50 @@
 #include "../Common/Easing.h"
 #include "Score.h"
 
-Score::Score(void)
-{
-	isCurrentScrDraw_ = false;
-	isRankingScrDraw_ = false;
-	isGaugeDraw_ = false;
-	playSE_ = false;
-	currentScr_ = 0;
-	totalScr_ = 0;
-	highLightIdx_ = -1;
-	currentRankIdx_ = -1;
+Score::Score(void)  
+{  
+    isCurrentScrDraw_ = false;  
+    isRankingScrDraw_ = false;  
+    isGaugeDraw_ = false;  
+    playSE_ = false;  
+    currentScr_ = 0;  
+    totalScr_ = 0;  
+    highLightIdx_ = -1;  
+    currentRankIdx_ = -1;  
 
-	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
-	{
-		slideX_[i] = 0.0f;
-		slideXTime_[i] = 0.0f;
-		isMove_[i] = false;
-	}
+    for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)  
+    {  
+        slideX_[i] = 0.0f;  
+        slideXTime_[i] = 0.0f;  
+        isMove_[i] = false;  
+    }  
 
-	for (int i = 0; i < RANK_NUM; ++i)
-	{
-		rankData_[i] = {};
-	}
+    for (int i = 0; i < RANK_NUM; ++i)  
+    {  
+        rankData_[i] = {};  
+    }  
 
-	blinkTime_ = 0.0f;
-	gaugeTime_ = 0.0f;
-	slideY_ = 0.0f;
-	slideYTime_ = 0.0f;
+    blinkTime_ = 0.0f;  
+    gaugeTime_ = 0.0f;  
+    slideY_ = 0.0f;  
+    slideYTime_ = 0.0f;  
 
-	circleShadowImg_ = -1;
-	state_ = STATE::PLAY_SCORE;
-	rank_ = RANK::MAX;
-	phase_ = TOTALSCR_PHASE::COUNT_UP;
-	numberImgs_ = nullptr;
-	rankingImgs_ = nullptr;
-	scale_ = 0.0f;
+    circleShadowImg_ = -1;  
+    currentScrImg_ = -1;
+    rankingBackImg_ = -1; 
+	pushImg_ = -1;
+    ranksImgs_ = nullptr; 
 
-	stateChange_.emplace(STATE::PLAY_SCORE, std::bind(&Score::ChangePlayScore, this));
-	stateChange_.emplace(STATE::TOTAL_SCORE, std::bind(&Score::ChangeTotalScore, this));
+    state_ = STATE::PLAY_SCORE;  
+    rank_ = RANK::MAX;  
+    phase_ = TOTALSCR_PHASE::COUNT_UP;  
+    numberImgs_ = nullptr;  
+    rankingImgs_ = nullptr;  
+    decoImg_ = 0;  
+    scale_ = 0.0f;  
+
+    stateChange_.emplace(STATE::PLAY_SCORE, std::bind(&Score::ChangePlayScore, this));  
+    stateChange_.emplace(STATE::TOTAL_SCORE, std::bind(&Score::ChangeTotalScore, this));  
 }
 
 Score::~Score(void)
@@ -74,27 +80,9 @@ void Score::Init(void)
 	//ランクごとの情報初期化
 	InitRankInfo();
 
-	//画像読み込み
-	circleShadowImg_ = ResourceManager::GetInstance().
-		Load(ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
-	
-	//画像読み込み
-	numberImgs_ = ResourceManager::GetInstance().
-		Load(ResourceManager::SRC::SCORE_NUMBER).handleIds_;
-		
-	//画像読み込み
-	rankingImgs_ = ResourceManager::GetInstance().
-		Load(ResourceManager::SRC::RANKING).handleIds_;
-		
-	//画像読み込み
-	currentScrImg_ = ResourceManager::GetInstance().
-		Load(ResourceManager::SRC::CURRENT_SCORE).handleId_;
-		
-	//画像読み込み
-	rankingBackImg_ = ResourceManager::GetInstance().
-		Load(ResourceManager::SRC::RANKING_BACK).handleId_;
+	LoadImages();
 
-	//今回のスコアをランキングに照らし合わせてランクイン位置を調べる
+	//今回のスコアをランキングに照らし合わせてランクイン位置を初期化
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
 	{
 		slideX_[i] = START_SLIDE_X;
@@ -104,13 +92,16 @@ void Score::Init(void)
 			highLightIdx_ = i;
 		}
 	}
+
 	slideY_ = START_SLIDE_Y;
 	isMove_[0] = true;
 	currentRankIdx_ = 0;
 	rank_ = GetRankFromScore(scr.GetCurrentScore());
+
 	//画面の大きさに合わせて拡大率を変える
 	scale_ = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
+
 	ChangeState(STATE::PLAY_SCORE);
 }
 
@@ -292,20 +283,38 @@ void Score::DrawPlayScore(void)
 {
 	auto& scr = ScoreManager::GetInstance();
 
+	//ランキングの背景
+	DrawRotaGraph3(
+		Application::SCREEN_SIZE_X / 4,
+		Application::SCREEN_SIZE_Y / 4 - 150,
+		161,
+		272,
+		scale_ * 3.0f, scale_ * 2.2f,
+		0.0f, rankingBackImg_,
+		true);
+
+	//装飾（左）
+	DrawRotaGraph3(Application::SCREEN_SIZE_X - 500, 500,
+		250,250,
+		scale_ * 2.1f, scale_ * 2.0f,
+		0.0f,
+		decoImg_,
+		true, false);
+
 	//現在のスコア
-	DrawVariableScore(currentScr_, Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y / 2 + 256, scale_);
+	DrawVariableScore(currentScr_, 356,
+		Application::SCREEN_SIZE_Y - 128, scale_);
 
 	//「現在のスコア」ラベル
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2 - 50,
-				Application::SCREEN_SIZE_Y / 2 + 256,
+	DrawRotaGraph(306,
+				Application::SCREEN_SIZE_Y - 128,
 				scale_, 0.0f,
 				currentScrImg_, true);
 
 	//ゲージの背景
 	DrawRotaGraph(GAUGE_POS_X,
 		GAUGE_POS_Y,
-		3.0f, 0.0f, circleShadowImg_,
+		scale_ * 3.0f, 0.0f, circleShadowImg_,
 		true, false);
 
 	//ゲージ本体
@@ -323,44 +332,48 @@ void Score::DrawPlayScore(void)
 		);
 	}
 
-	//ランキングの背景
-	DrawRotaGraph(
-		Application::SCREEN_SIZE_X / 4,
-		Application::SCREEN_SIZE_Y / 4 - 150,
-		scale_ * 2.0f, 0.0f, rankingBackImg_,
-		true, false);
-
 	if (rankData_[(int)rank_].isFull_)
 	{
 		switch (rank_)
 		{
 		case Score::RANK::C:
-			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
-				Application::SCREEN_SIZE_Y / 2 - 80, L"C",
-				0xFFFFFF);
+			DrawRotaGraph(GAUGE_POS_X,
+				GAUGE_POS_Y,
+				scale_ * 0.5f, 0.0f, ranksImgs_[0],
+				true, false);
 			break;
 
 		case Score::RANK::B:
-			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
-				Application::SCREEN_SIZE_Y / 2 - 80, L"B",
-				0xFFFFFF);
+				DrawRotaGraph(GAUGE_POS_X,
+					GAUGE_POS_Y,
+					scale_ * 0.5f, 0.0f, ranksImgs_[1],
+					true, false);
 			break;
 
 		case Score::RANK::A:
-			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
-				Application::SCREEN_SIZE_Y / 2 - 80, L"A",
-				0xFFFFFF);
+			DrawRotaGraph(GAUGE_POS_X,
+				GAUGE_POS_Y,
+				scale_ * 0.5f, 0.0f, ranksImgs_[2],
+				true, false);
 			break;
 
 		case Score::RANK::S:
-			DrawString(Application::SCREEN_SIZE_X / 2 + 320,
-				Application::SCREEN_SIZE_Y / 2 - 80, L"S",
-				0xFFFFFF);
+			DrawRotaGraph(GAUGE_POS_X,
+				GAUGE_POS_Y,
+				scale_ * 0.5f, 0.0f, ranksImgs_[3],
+				true, false);
 			break;
 
 		default:
 			break;
 		}
+
+		int logoScl = (int)((float)(LOGO_HEIGHT / 2) * scale_);
+		//pushspaceの画像
+		DrawRotaGraph(
+			Application::SCREEN_SIZE_X / 2,
+			Application::SCREEN_SIZE_Y / 2 + logoScl,
+			2.0f, 0.0, pushImg_, true);
 	}
 
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
@@ -374,7 +387,7 @@ void Score::DrawPlayScore(void)
 			RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i), col);
 
 		DrawRotaGraph(slideX_[i], RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i),
-			0.6f, 0.0f, rankingImgs_[i],
+			scale_ * 0.8f, 0.0f, rankingImgs_[i],
 			true, false);
 	}
 }
@@ -519,6 +532,42 @@ void Score::InitRankInfo(void)
 	rankData_[3].displayedRate_ = 0.0f;
 }
 
+void Score::LoadImages(void)
+{
+	//画像読み込み
+	circleShadowImg_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
+
+	//画像読み込み
+	numberImgs_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::SCORE_NUMBER).handleIds_;
+
+	//画像読み込み
+	rankingImgs_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::RANKING).handleIds_;
+
+	//画像読み込み
+	currentScrImg_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::CURRENT_SCORE).handleId_;
+
+	//画像読み込み
+	rankingBackImg_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::RANKING_BACK).handleId_;
+
+	//装飾画像読み込み
+	decoImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::BACK).handleId_;
+
+	//ランクごとの文字画像
+	ranksImgs_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::RANKS).handleIds_;
+
+	//画像読み込み
+	pushImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::PUSH_SPACE).handleId_;
+
+}
+
 void Score::DrawVariableScore(int score, int posX, int posY,float scale)
 {
 	std::string str = std::to_string(score);
@@ -546,7 +595,7 @@ void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 {
 	std::string str = std::to_string(score);
 	const int digitWidth = 80;
-	const float scale = 0.5f;
+	const float scale = scale_;
 
 	for (int i = 0; i < str.size(); ++i)
 	{
@@ -557,7 +606,7 @@ void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 			SetDrawBright(255, 255, hightLight);
 			DrawRotaGraph(
 				posX + static_cast<int>(i * digitWidth * scale), posY,
-				scale, 0.0f,
+				scale * 0.8f, 0.0f,
 				numberImgs_[digit], true);
 			SetDrawBright(255, 255, 255);
 		}
@@ -576,7 +625,7 @@ void Score::DrawScore(int score, int posX, int posY)
 			int digit = ch - '0';
 			DrawRotaGraph(
 				50 + i * digitWidth, 50,
-				0.8f, 0.0f,
+				scale_, 0.0f,
 				numberImgs_[digit], true);
 		}
 	}
