@@ -17,8 +17,8 @@ public:
 	static constexpr int  MAX_SECOND_TIME = 0;
 
 	//残り秒数が少なったときにSEを鳴らす用の目安秒数
-	static constexpr int  SECOND_SOUND_TIME = 30;
-	static constexpr int  SECOND_SOUND_TIME_FAST = 10;
+	static constexpr int  SECOND_SOUND_TIME = 30;		//残り30秒でSEを鳴らす(遅い方のSE)
+	static constexpr int  SECOND_SOUND_TIME_FAST = 10;	//残り10秒でSEを鳴らす(速い方のSE)
 
 	//カウントダウン
 	static constexpr int  MAX_COUNT_DOWN = 4;
@@ -44,7 +44,7 @@ public:
 	void Draw(void) override;
 
 private:
-
+	//フェーズ
 	PHASE phase_;
 
 	//ステージ
@@ -82,7 +82,16 @@ private:
 
 	bool remainderSE_;
 
+	/// <summary>
+	/// ゲーム中の更新処理
+	/// </summary>
+	/// <param name="">カウントダウン、カウントアップ以外の処理</param>
 	void UpdateGame(void);
+
+	/// <summary>
+	/// ゲーム中の描画
+	/// </summary>
+	/// <param name="">カウントダウン、カウントアップ以外の描画</param>
 	void DrawGame(void);
 
 	/// <summary>

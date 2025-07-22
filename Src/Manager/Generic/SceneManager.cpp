@@ -229,7 +229,7 @@ SceneManager::SceneManager(void)
 	deltaTime_ = 1.0f / 60.0f;
 
 	camera_ = nullptr;
-
+	lightDir_ = { 0.0f,0.0f,0.0f };
 }
 
 void SceneManager::ResetDeltaTime(void)
@@ -254,46 +254,9 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	{
 		scene_.reset();
 	}
-	std::unique_ptr<SceneBase> scene;
-	switch (sceneId_)
-	{
-	case SceneManager::SCENE_ID::NONE:
-		break;
-	case SceneManager::SCENE_ID::TITLE:
-		scene = std::make_unique<TitleScene>();
-		resM.InitTitle();
-		break;
-	case SceneManager::SCENE_ID::MOVIE:
-		scene = std::make_unique<MovieScene>();
-		break;
-	case SceneManager::SCENE_ID::SELECT:
-		scene = std::make_unique<SelectScene>();
-		break;
-	case SceneManager::SCENE_ID::TUTORIAL:
-		scene = std::make_unique<TutorialScene>();
-		resM.InitTutorial();
-		break;
-	case SceneManager::SCENE_ID::GAME:
-		scene = std::make_unique<GameScene>();
-		resM.InitGame();
-		break;
-	case SceneManager::SCENE_ID::RESULT:
-		scene = std::make_unique<ResultScene>();
-		resM.InitResult();
-		break;
-	default:
-		break;
-	}
-	if (scenes_.empty()) 
-	{
-		//空だったら新しく入れる
-		scenes_.push_back(std::move(scene));
-	}
-	else 
-	{
-		//末尾のものを新しい物に入れ替える
-		scenes_.back() = std::move(scene);
-	}
+	
+	MakeScene(sceneId);
+
 	scenes_.back()->Init();
 	//scene_->Init();
 
@@ -330,4 +293,57 @@ void SceneManager::Fade(void)
 		break;
 	}
 
+}
+
+void SceneManager::MakeScene(SCENE_ID sceneId)
+{
+	auto& resM = ResourceManager::GetInstance();
+	std::unique_ptr<SceneBase> scene;
+	switch (sceneId)
+	{
+	case SceneManager::SCENE_ID::NONE:
+		break;
+	
+	case SceneManager::SCENE_ID::TITLE:
+		scene = std::make_unique<TitleScene>();
+		resM.InitTitle();
+		break;
+	
+	case SceneManager::SCENE_ID::MOVIE:
+		scene = std::make_unique<MovieScene>();
+		break;
+	
+	case SceneManager::SCENE_ID::SELECT:
+		scene = std::make_unique<SelectScene>();
+		break;
+	
+	case SceneManager::SCENE_ID::TUTORIAL:
+		scene = std::make_unique<TutorialScene>();
+		resM.InitTutorial();
+		break;
+	
+	case SceneManager::SCENE_ID::GAME:
+		scene = std::make_unique<GameScene>();
+		resM.InitGame();
+		break;
+	case SceneManager::SCENE_ID::RESULT:
+	
+		scene = std::make_unique<ResultScene>();
+		resM.InitResult();
+		break;
+	
+	default:
+		break;
+	}
+
+	if (scenes_.empty())
+	{
+		//空だったら新しく入れる
+		scenes_.push_back(std::move(scene));
+	}
+	else
+	{
+		//末尾のものを新しい物に入れ替える
+		scenes_.back() = std::move(scene);
+	}
 }

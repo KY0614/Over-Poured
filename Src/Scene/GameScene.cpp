@@ -12,6 +12,7 @@
 #include "../Object/Player.h"
 #include "../Manager/GameSystem//ScoreManager.h"
 #include "../Object/UI/UIManager.h"
+#include "PauseScene.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -240,7 +241,7 @@ void GameScene::UpdateGame(void)
 
 	if (ins.IsInputTriggered("pause"))
 	{
-		//score_ += 100;
+		SceneManager::GetInstance().PushScene(std::make_shared<PauseScene>());
 	}
 
 	if (stage_->IsServed())
@@ -259,7 +260,7 @@ void GameScene::UpdateGame(void)
 		SoundManager::GetInstance().Play(SoundManager::SOUND::TIMER);
 		remainderSE_ = true;
 	}
-
+	//Žc‚è‚P‚O•b‚É‚È‚Á‚½‚ç‘¬‚¢ƒ`ƒNƒ^ƒN‰¹
 	if (remainderSE_ &&
 		timer_->GetMinute() <= 0 &&
 		timer_->GetSecond() == SECOND_SOUND_TIME_FAST)
@@ -317,6 +318,7 @@ void GameScene::DrawScore(int score)
 	const int digitWidth = 70;
 	for (int i = 0; i < str.size(); ++i)
 	{
+		//•¶Žš—ñ‚ÌŠeŒ…‚ð”Žš‚É•ÏŠ·‚µ‚Ä•`‰æ
 		char ch = str[i];
 		if ('0' <= ch && ch <= '9')
 		{

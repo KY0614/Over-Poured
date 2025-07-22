@@ -10,9 +10,9 @@
 // 定数バッファ：スロット4番目(b4と書く)
 cbuffer cbParam : register(b4)
 {
-    float4 g_color;
+    float4 g_color;     //定数バッファの色
     
-    float3 g_light_dir;
+    float3 g_light_dir; //ライトの方向
     float dummy; // float4のサイズに合わせるためのダミー変数
     
     float4 g_ambient_color; // 環境光の色

@@ -25,6 +25,7 @@ public:
 		SELECT,
 		TUTORIAL,
 		GAME,
+		PAUSE,
 		RESULT
 	};
 	
@@ -116,5 +117,5 @@ private:
 	// フェード
 	void Fade(void);
 
-	void UpdateDebugImGui(void);
+	void MakeScene(SCENE_ID sceneId);
 };
