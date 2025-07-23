@@ -1,7 +1,7 @@
 #include <chrono>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
-#include "../../Libs/ImGui/imgui.h"
+#include "../../Utility/AsoUtility.h"
 #include "../../Common/Fader.h"
 #include "../../Scene/TitleScene.h"
 #include "../../Scene/MovieScene.h"
@@ -52,13 +52,14 @@ void SceneManager::Init(void)
 	//デルタタイム
 	preTime_ = std::chrono::system_clock::now();
 
-	lightDir_ = { 0.0f, -0.5f, 0.3f };
+	//ライトの向き
+	lightDir_ = LIGHT_DIR;
 
 	//3D用の設定
 	Init3D();
 
 	//初期シーンの設定
-	DoChangeScene(SCENE_ID::TITLE);
+	DoChangeScene(SCENE_ID::GAME);
 
 }
 
@@ -229,7 +230,7 @@ SceneManager::SceneManager(void)
 	deltaTime_ = 1.0f / 60.0f;
 
 	camera_ = nullptr;
-	lightDir_ = { 0.0f,0.0f,0.0f };
+	lightDir_ = AsoUtility::VECTOR_ZERO;
 }
 
 void SceneManager::ResetDeltaTime(void)
@@ -327,7 +328,6 @@ void SceneManager::MakeScene(SCENE_ID sceneId)
 		resM.InitGame();
 		break;
 	case SceneManager::SCENE_ID::RESULT:
-	
 		scene = std::make_unique<ResultScene>();
 		resM.InitResult();
 		break;

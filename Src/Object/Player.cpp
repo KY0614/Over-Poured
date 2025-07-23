@@ -447,12 +447,12 @@ bool Player::IsEndLanding(void)
 {
 	bool ret = true;
 
-	//アニメーションがジャンプではない
-	if (animationController_->GetPlayType() != (int)ANIM_TYPE::JUMP)
-	{
-		return ret;
-	}
-	
+	////アニメーションがジャンプではない
+	//if (animationController_->GetPlayType() != (int)ANIM_TYPE::JUMP)
+	//{
+	//	return ret;
+	//}
+	//
 	//アニメーションが終了しているか
 	if (animationController_->IsEnd())
 	{

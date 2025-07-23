@@ -13,8 +13,9 @@ class Camera;
 
 class SceneManager
 {
-
 public:
+
+	static constexpr VECTOR LIGHT_DIR = { 0.0f, -0.5f, 0.3f }; // デフォルトのライト方向
 
 	// シーン管理用
 	enum class SCENE_ID
