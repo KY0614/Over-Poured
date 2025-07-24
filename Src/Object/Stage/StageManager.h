@@ -10,6 +10,8 @@ class StageObject;
 class Furnitures;
 class Player;
 class AnimationController;
+class ModelMaterial;
+class ModelRenderer;
 
 class StageManager : public ActorBase
 {
@@ -96,6 +98,9 @@ public:
 	Transform GetFloorTran(void) const;
 
 private:
+
+	std::vector<std::unique_ptr<ModelRenderer>> rendereres_;
+	std::vector<std::unique_ptr<ModelMaterial>> materials_;
 
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;

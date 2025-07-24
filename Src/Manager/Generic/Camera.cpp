@@ -188,7 +188,6 @@ void Camera::ProcessRot(void)
 	InputManager& ins = InputManager::GetInstance();
 
 	//âÒì]é≤Ç∆ó ÇåàÇﬂÇÈ
-	//VECTOR axisDeg = AsoUtility::VECTOR_ZERO;
 	float rotPow = 1.0f * DX_PI_F / 180.0f;
 	//âÒì]èàóù
 	if (ins.IsInputPressed("CameraUp")) { angles_.x += rotPow; }
@@ -205,6 +204,20 @@ void Camera::ProcessRot(void)
 	{
 		angles_.x = -LIMIT_X_DW_RAD;
 	}
+}
+
+void Camera::ProcessMove(void)
+{
+	InputManager& ins = InputManager::GetInstance();
+
+	VECTOR dir = AsoUtility::VECTOR_ZERO;
+	if (ins.IsInputPressed("CameraFront"))	pos_.z += 5.0f; targetPos_.z += 5.0f;
+	if (ins.IsInputPressed("CameraBack"))	pos_.z -= 5.0f; targetPos_.z -= 5.0f;
+	if (ins.IsInputPressed("CameraR"))		pos_.x += 5.0f;	targetPos_.x += 5.0f;
+	if (ins.IsInputPressed("CameraL"))		pos_.x -= 5.0f;	targetPos_.x -= 5.0f;
+
+	if (ins.IsInputPressed("CameraRise"))	pos_.y += 5.0f;	targetPos_.y += 5.0f;
+	if (ins.IsInputPressed("CameraDescent"))pos_.y -= 5.0f;	targetPos_.y -= 5.0f;
 }
 
 void Camera::SetBeforeDrawFixedPoint(void)
@@ -230,6 +243,8 @@ void Camera::SetBeforeDrawFree(void)
 {
 	//ÉJÉÅÉâëÄçÏ
 	ProcessRot();
+
+	ProcessMove();	
 }
 
 void Camera::UpdateDebugImGui(void)

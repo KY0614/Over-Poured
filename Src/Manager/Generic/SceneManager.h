@@ -119,4 +119,6 @@ private:
 	void Fade(void);
 
 	void MakeScene(SCENE_ID sceneId);
+
+	void UpdateDebugImGui(void);
 };

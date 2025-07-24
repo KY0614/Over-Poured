@@ -1,6 +1,7 @@
 #include <chrono>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
+#include "../../Libs/ImGui/imgui.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Common/Fader.h"
 #include "../../Scene/TitleScene.h"
@@ -65,7 +66,6 @@ void SceneManager::Init(void)
 
 void SceneManager::Init3D(void)
 {
-	////背景色設定
 	//SetBackgroundColor(0, 139, 139);
 	//背景色設定
 	SetBackgroundColor(64, 64, 128);
@@ -91,7 +91,6 @@ void SceneManager::Init3D(void)
 	SetFogEnable(true);
 	SetFogColor(5, 5, 5);
 	SetFogStartEnd(10000.0f, 20000.0f);
-
 }
 
 void SceneManager::Update(void)
@@ -122,6 +121,7 @@ void SceneManager::Update(void)
 	//カメラ更新
 	camera_->Update();
 
+	UpdateDebugImGui();
 }
 
 void SceneManager::Draw(void)
@@ -346,4 +346,21 @@ void SceneManager::MakeScene(SCENE_ID sceneId)
 		//末尾のものを新しい物に入れ替える
 		scenes_.back() = std::move(scene);
 	}
+}
+
+void SceneManager::UpdateDebugImGui(void)
+{
+	//ウィンドウタイトル&開始処理
+	ImGui::Begin("Camera");
+
+	//位置
+	ImGui::Text("position");
+	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
+	ImGui::InputFloat3("Pos", &lightDir_.x);
+	ImGui::SliderFloat("PosX", &lightDir_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("PosY", &lightDir_.y, -10.0f, 10.0f);
+	ImGui::SliderFloat("PosZ", &lightDir_.z, -10.0f, 10.0f);
+
+	//終了処理
+	ImGui::End();
 }

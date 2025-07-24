@@ -277,15 +277,6 @@ void GameScene::UpdateGame(void)
 		phase_ = PHASE::FINISH;
 	}
 
-	////ƒV[ƒ“‘JˆÚ
-	//if (ins.IsInputTriggered("NextScene"))
-	//{
-	//	scr.SetCurrentScore(score_);
-	//	scr.SaveScore(score_);
-	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
-	//	return;
-	//}
-
 	stage_->Update();
 
 	player_->Update();

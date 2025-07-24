@@ -123,6 +123,7 @@ private:
 
 	//カメラ操作
 	void ProcessRot(void);
+	void ProcessMove(void);
 
 	//モード別更新ステップ
 	void SetBeforeDrawFixedPoint(void);

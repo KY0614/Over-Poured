@@ -8,13 +8,21 @@ class Application
 {
 
 public:
+#ifdef _DEBUG
+
 	//スクリーンサイズ
-	//static constexpr int SCREEN_SIZE_X = 1024;
-	//static constexpr int SCREEN_SIZE_Y = 640;
+	static constexpr int SCREEN_SIZE_X = 1024;
+	static constexpr int SCREEN_SIZE_Y = 640;
+
+#endif // _DEBUG
+
+#if !_DEBUG
 
 	//スクリーンサイズ
 	static constexpr int SCREEN_SIZE_X = 1920;
 	static constexpr int SCREEN_SIZE_Y = 1080;
+
+#endif // _RELEASE
 
 	static constexpr int SCREEN_MAX_SIZE_Y = 1080;
 

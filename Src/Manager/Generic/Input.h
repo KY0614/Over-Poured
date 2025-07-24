@@ -24,7 +24,7 @@ enum class AnalogInputType {
 	none,	//押してない
 	l_up,	//左スティックの上
 	l_down,	//左スティックの下
-	l_left,//左スティックの左
+	l_left,	//左スティックの左
 	l_right,//左スティックの右
 	r_up,	//右スティックの上
 	r_down,	//右スティックの下
@@ -41,7 +41,7 @@ class Input
 	friend KeyConfigScene;	//privateもいじていいよ
 
 public:
-
+	//コンストラクタ
 	Input();
 
 	/// <summary>
@@ -73,7 +73,7 @@ private:
 
 	using InputData_t = std::unordered_map<std::string, bool>;
 	InputData_t currentInput_;	//そのイベントに対応するボタンが押されている状態か
-	InputData_t lastInput_;	//そのイベントに対応するボタンが押されている状態か(直前)
+	InputData_t lastInput_;		//そのイベントに対応するボタンが押されている状態か(直前)
 
 	std::vector<std::string> inputlistForDisplay_;
 

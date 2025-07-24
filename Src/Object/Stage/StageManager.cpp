@@ -7,7 +7,6 @@
 #include "../Player.h"
 #include "../Common/Sphere.h"
 #include "../Common/AnimationController.h"
-#include "StageObjectLibrary.h"
 #include "StageObject/Furnitures.h"
 #include "StageObject.h"
 #include "StageObject/ItemObject.h"
@@ -18,7 +17,8 @@
 #include "StageObject/CupLidRack.h"
 #include "StageObject/DustBox.h"
 #include "StageObject/IceDispenser.h"
-#include "../UI/GaugeUI.h"	
+#include "../../Renderer/ModelMaterial.h"
+#include "../../Renderer/ModelRenderer.h"
 #include "StageManager.h"
 
 namespace {
@@ -49,6 +49,8 @@ StageManager::StageManager(Player& player):player_(player)
 	servedItems_ = {};
 	currentOrder_ = {};
 
+	rendereres_.clear();
+	materials_.clear();
 	objects_.clear();
 	tables_.clear();
 	counter_ = nullptr;
@@ -82,6 +84,7 @@ void StageManager::Init(void)
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::PAYING).handleId_);
 	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, 256 / 2);
 
+	//3Dモデルの初期化
 	Init3DModel();
 }
 
@@ -160,8 +163,14 @@ void StageManager::Update(void)
 void StageManager::Draw(void)
 {
 	//モデルの描画
-	MV1DrawModel(transform_.modelId);
+	for(const auto& renderer : rendereres_)
+	{
+		renderer->Draw();
+	}
+
+	//MV1DrawModel(transform_.modelId);
 	MV1DrawModel(caseTran_.modelId);
+
 	furnitures_->Draw();
 
 	for (const auto& table : tables_)
@@ -241,24 +250,41 @@ void StageManager::Init3DModel(void)
 	caseTran_.MakeCollider(Collider::TYPE::STAGE);
 	caseTran_.Update();
 
+	//モデル描画用
+	materials_.push_back(std::make_unique<ModelMaterial>(
+		"StdModelVS.cso", 1,
+		"StdModelPS.cso", 3
+	));
+
+	//uvスケールのサイズ
+	materials_.back()->AddConstBufVS({ 1.0f,1.0f,1.0f,1.0f });
+
+	//色の影響度
+	materials_.back()->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+
+	//ライトの方向
+	VECTOR light = GetLightDirection();
+	materials_.back()->AddConstBufPS({ light.x,light.y,light.z,1.0f });
+
+	//環境光
+	materials_.back()->AddConstBufPS({ 0.2f,0.2f,0.2f,0.2f });
+
 	//モデル制御の基本情報
 	transform_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::REGISTER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
 	transform_.pos = AsoUtility::VECTOR_ZERO;
-	transform_.quaRot = Quaternion::Euler(
-		0.0f,
-		AsoUtility::Deg2RadF(0.0f),
-		0.0f
-	);
-
+	transform_.quaRot = Quaternion::Euler(AsoUtility::VECTOR_ZERO);
 	transform_.quaRotLocal = Quaternion();
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
+	rendereres_.push_back(std::make_unique<ModelRenderer>(transform_.modelId, *materials_.back()));
+
 	InitAnimation(); // アニメーションの初期化
 
+	//家具の初期化
 	furnitures_ = std::make_unique<Furnitures>();
 	furnitures_->Init();
 
