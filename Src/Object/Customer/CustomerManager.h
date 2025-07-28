@@ -81,10 +81,6 @@ public:
 	VECTOR SetLastCustomerPos(void);
 
 	int GetCustomerNum(void) { return customers_.size(); }
-	VECTOR GetPos(int index) { return customers_[index]->GetPos(); }
-	VECTOR GetFirstPos(void) { return customers_[cnt_]->GetPos(); }
-	VECTOR GetLastPos(void) { return customers_.back()->GetPos(); }
-	CustomerBase::STATE GetFirstState(void) { return customers_.front()->GetState(); }
 
 	/// <summary>
 	/// 先頭のお客がカウンター前にいるかどうか
@@ -99,6 +95,13 @@ public:
 	/// <param name="">先頭のお客の注文提供後に確認する用</param>
 	/// <returns>true:いる　false:いない</returns>
 	bool CheckSecondCustomerCol(void);
+
+	/// <summary>
+	/// 注文の確認UIを表示する
+	/// </summary>
+	/// <param name="index">指定する配列</param>
+	/// <param name="isActive">表示させるかどうか</param>
+	void IsCheckUI(const int index,const bool isActive);
 
 private:
 	// 静的インスタンス

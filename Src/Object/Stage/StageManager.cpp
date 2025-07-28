@@ -17,8 +17,6 @@
 #include "StageObject/CupLidRack.h"
 #include "StageObject/DustBox.h"
 #include "StageObject/IceDispenser.h"
-#include "../../Renderer/ModelMaterial.h"
-#include "../../Renderer/ModelRenderer.h"
 #include "StageManager.h"
 
 namespace {
@@ -49,8 +47,6 @@ StageManager::StageManager(Player& player):player_(player)
 	servedItems_ = {};
 	currentOrder_ = {};
 
-	rendereres_.clear();
-	materials_.clear();
 	objects_.clear();
 	tables_.clear();
 	counter_ = nullptr;
@@ -162,13 +158,7 @@ void StageManager::Update(void)
 
 void StageManager::Draw(void)
 {
-	//モデルの描画
-	for(const auto& renderer : rendereres_)
-	{
-		renderer->Draw();
-	}
-
-	//MV1DrawModel(transform_.modelId);
+	MV1DrawModel(transform_.modelId);
 	MV1DrawModel(caseTran_.modelId);
 
 	furnitures_->Draw();
@@ -250,25 +240,6 @@ void StageManager::Init3DModel(void)
 	caseTran_.MakeCollider(Collider::TYPE::STAGE);
 	caseTran_.Update();
 
-	//モデル描画用
-	materials_.push_back(std::make_unique<ModelMaterial>(
-		"StdModelVS.cso", 1,
-		"StdModelPS.cso", 3
-	));
-
-	//uvスケールのサイズ
-	materials_.back()->AddConstBufVS({ 1.0f,1.0f,1.0f,1.0f });
-
-	//色の影響度
-	materials_.back()->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-
-	//ライトの方向
-	VECTOR light = GetLightDirection();
-	materials_.back()->AddConstBufPS({ light.x,light.y,light.z,1.0f });
-
-	//環境光
-	materials_.back()->AddConstBufPS({ 0.2f,0.2f,0.2f,0.2f });
-
 	//モデル制御の基本情報
 	transform_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
@@ -279,8 +250,6 @@ void StageManager::Init3DModel(void)
 	transform_.quaRotLocal = Quaternion();
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
-
-	rendereres_.push_back(std::make_unique<ModelRenderer>(transform_.modelId, *materials_.back()));
 
 	InitAnimation(); // アニメーションの初期化
 
@@ -442,8 +411,8 @@ void StageManager::SurveItem(StageObject& obj)
 		servedItems_.sweets_ = Order::SWEETS::STRAWBERRY;
 		isServedItems_.back() = true;
 	}
-
-	DeleteSurvedItem(); // 提供後はオブジェクトを削除
+	//提供後はオブジェクトを削除
+	DeleteSurvedItem(); 
 
 	auto& sound = SoundManager::GetInstance();
 	// 注文が揃ったか判定

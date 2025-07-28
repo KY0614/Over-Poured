@@ -207,3 +207,8 @@ bool CustomerManager::CheckSecondCustomerCol(void)
 	}
 	return ret;
 }
+
+void CustomerManager::IsCheckUI(const int index, const bool isActive)
+{
+	orderUI_[cnt_]->SetCheckUI(index, isActive);
+}

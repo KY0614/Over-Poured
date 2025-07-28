@@ -17,12 +17,12 @@ public:
 	~Machine(void) = default;
 
 	void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = { 1.0f,1.0f,1.0f }) override;
+	void UpdateInActive(void)override;
+	void UpdateActive(void)override;
 	void Draw(void) override;
 
 	void Interact(const std::string& objId) override;
 
-	void UpdateInActive(void)override;
-	void UpdateActive(void)override;
 
 private:
 
@@ -31,6 +31,7 @@ private:
 
 	//ゲージのUI
 	std::unique_ptr<GaugeUI> gaugeUI_;
+	//アイコンのUI
 	std::unique_ptr<IconUI> iconUI_;
 };
 

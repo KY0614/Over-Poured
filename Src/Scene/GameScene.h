@@ -80,13 +80,25 @@ private:
 	//タイムアップ用画像
 	int timeUpImg_;
 
+	//タイマーのリマインド用SEのフラグ
 	bool remainderSE_;
+
+	//関数ポインタ
+	using UpdateFunc_t = void(GameScene::*)();
+	using DrawFunc_t = void(GameScene::*)();
+
+	UpdateFunc_t update_;
+	DrawFunc_t draw_;
+
+	void UpdateCountDown(void);
 
 	/// <summary>
 	/// ゲーム中の更新処理
 	/// </summary>
 	/// <param name="">カウントダウン、カウントアップ以外の処理</param>
 	void UpdateGame(void);
+
+	void DrawCountDown(void);
 
 	/// <summary>
 	/// ゲーム中の描画

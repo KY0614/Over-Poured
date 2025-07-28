@@ -80,6 +80,7 @@ public:
 		UI_ICE,
 		UI_CHOCO,
 		UI_BERRY,
+		UI_CHECK,
 
 		//バーのゲージとその背景
 		UI_BAR,

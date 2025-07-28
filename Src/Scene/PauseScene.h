@@ -5,7 +5,7 @@ class PauseScene : public SceneBase
 {
 public:
 
-	PauseScene(void);
+	PauseScene(SceneManager& manager);
 	~PauseScene(void);
 
 	void Init(void)override;
@@ -14,5 +14,11 @@ public:
 
 private:
 
+	//ŠÖ”ƒ|ƒCƒ“ƒ^
+	using UpdateFunc_t = void(PauseScene::*)();
+	using DrawFunc_t = void(PauseScene::*)();
+
+	UpdateFunc_t update_;
+	DrawFunc_t draw_;
 };
 

@@ -12,6 +12,7 @@ class Player;
 class AnimationController;
 class ModelMaterial;
 class ModelRenderer;
+class IconUI;
 
 class StageManager : public ActorBase
 {
@@ -99,9 +100,6 @@ public:
 
 private:
 
-	std::vector<std::unique_ptr<ModelRenderer>> rendereres_;
-	std::vector<std::unique_ptr<ModelMaterial>> materials_;
-
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
 
@@ -123,8 +121,10 @@ private:
 	std::unique_ptr<StageObject> counter_;
 	std::unique_ptr<StageObject> case_;
 
+	//家具用
 	std::unique_ptr<Furnitures> furnitures_;
 
+	//注文された分を用意したかどうか
 	bool isServed_;
 
 	//提供済み商品

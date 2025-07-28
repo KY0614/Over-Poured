@@ -377,6 +377,10 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "oroder_berry.png");
 	resourcesMap_.emplace(SRC::UI_BERRY, std::move(res));
 
+	//チェックマーク
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "check.png");
+	resourcesMap_.emplace(SRC::UI_CHECK, std::move(res));
+
 	//-------------------------------------------------------------------------
 	//ゲージUI
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "bar_green.png");
@@ -405,12 +409,13 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::TIMER_COLON, std::move(res));
 	//---------------------------------------------------------------------
 
-	//カウントダウン用------------------------------------------------------------------
-	//数字
+	//カウントダウン、カウントアップ用------------------------------------------------------------------
+	//数字とstart用画像
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "count_down.png",
 		1, 4, 400, 150);
 	resourcesMap_.emplace(SRC::COUNTDOWN_NUMBER, std::move(res));
 		
+	//タイムアップ用画像
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "time_up.png");
 	resourcesMap_.emplace(SRC::TIME_UP, std::move(res));
 

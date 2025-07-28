@@ -82,6 +82,24 @@ void Machine::Interact(const std::string& objId)
 	}
 }
 
+void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
+{
+	StageObject::Init(pos, rotY, scale);
+
+	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
+		transform_.pos, ResourceManager::SRC::BREW_COFFEE);
+	iconUI_->Init();
+	iconUI_->SetActive(false);
+	UIManager::GetInstance().AddIconUI(iconUI_.get());
+
+	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
+	gaugeUI_->Init();
+	VECTOR uiPos = transform_.pos;
+	uiPos.y += UI_OFFSET_Y;	//UIの位置を調整
+	gaugeUI_->SetPos(uiPos); // UIの位置を設定1
+	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
+}
+
 void Machine::UpdateInActive(void)
 {
 	iconUI_->SetActive(false);
@@ -138,24 +156,6 @@ void Machine::UpdateActive(void)
 		ChangeMachineState(MACHINE_STATE::INACTIVE);
 		return;
 	}
-}
-
-void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
-{
-	StageObject::Init(pos, rotY, scale);
-
-	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
-		transform_.pos, ResourceManager::SRC::BREW_COFFEE);
-	iconUI_->Init();
-	iconUI_->SetActive(false);
-	UIManager::GetInstance().AddIconUI(iconUI_.get());
-
-	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
-	gaugeUI_->Init();
-	VECTOR uiPos = transform_.pos;
-	uiPos.y += UI_OFFSET_Y;	//UIの位置を調整
-	gaugeUI_->SetPos(uiPos); // UIの位置を設定1
-	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
 
 void Machine::Draw(void)

@@ -6,16 +6,19 @@
 class OrderManager;
 class CustomerManager;
 class StageObject;
-class OrderUI;
 
 class OrderCustomerManager
 {
 public:
+	//注文のスコア
+	static constexpr int DRINK_SCORE = 50;	//飲み物のスコア
+	static constexpr int SWEETS_SCORE = 30;	//スイーツのスコア
 
-	static constexpr float ORDER_INTERVAL_MAX = 3.5f;
+	static constexpr int TIME_EARLY_BONUS = 50;	//早い提供の時間ボーナス
+	static constexpr int TIME_BONUS = 10;		//普通の提供の時間ボーナス
 
-	static constexpr float ORDER_UI_OFFSET_X = 130.0f;
-	static constexpr float ORDER_UI_OFFSET_Y = 220.0f;
+	static constexpr float TIME_EARLY_LIMIT = 6.0f;	//早い提供の時間制限
+	static constexpr float TIME_LIMIT = 3.0f;	//普通提供の時間制限
 
 	//コンストラクタ
 	OrderCustomerManager(void);
@@ -53,10 +56,18 @@ public:
 	/// </summary>
 	/// <param name="serve">提供されたもの</param>
 	/// <returns>スコア</returns>
-	int CheckServeAndOrder(const Order::OrderData serve);
+	int GetOrderScore(const Order::OrderData serve);
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name=""></param>
 	void IsServe(void) { isServe_ = true; }
 
+	/// <summary>
+	/// 客が動いているかどうかを取得する
+	/// </summary>
+	/// <returns>動いている場合はtrue、そうでない場合はfalse</returns>
 	bool GetIsMoving(void);
 
 	/// <summary>
@@ -68,6 +79,8 @@ public:
 
 	Order::OrderData GetOrderData(void) const;
 
+	void CheckServeAndOrder(const Order::OrderData serve);
+
 private:
 
 	//OrderManagerのポインタ
@@ -75,8 +88,6 @@ private:
 
 	//CustomerMangerのポインタ
 	std::shared_ptr<CustomerManager> customerMng_;
-
-	//std::vector<std::unique_ptr<OrderUI>> orderUI_;
 
 	bool isServe_;
 

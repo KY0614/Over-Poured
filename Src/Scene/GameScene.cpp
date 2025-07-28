@@ -15,7 +15,9 @@
 #include "PauseScene.h"
 #include "GameScene.h"
 
-GameScene::GameScene(void)
+GameScene::GameScene(void) : 
+	update_(&GameScene::UpdateCountDown),
+	draw_(&GameScene::DrawCountDown)
 {
 	phase_ = PHASE::COUNT_DOWN;
 	player_ = nullptr;
@@ -109,46 +111,23 @@ void GameScene::Init(void)
 	//タイマー(2:00）２分
 	timer_ = std::make_unique<Timer>(MAX_MINUTE_TIME, MAX_SECOND_TIME);
 
-	//最初のお客の注文を受け取る
+	//最初のお客の注文内容を受け取って設定
 	stage_->SetCurrentOrder(customer_->GetOrderData());
 
 	//カメラ
 	mainCamera->SetFollow(&player_->GetTransform());
-	//mainCamera->ChangeMode(Camera::MODE::FOLLOW);
 	mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
-
 }
 
 void GameScene::Update(void)
 {
 	ScoreManager& scr = ScoreManager::GetInstance();
 	SoundManager& sound = SoundManager::GetInstance();
+	//フェーズごとの更新処理
 	switch (phase_)
 	{
 	case GameScene::PHASE::COUNT_DOWN:
-		if (cntDownTimer_ == 0 && 
-			cntDownIdx_ < MAX_COUNT_DOWN - 1)sound.Play(SoundManager::SOUND::COUNT_DOWN);
-		else if(cntDownTimer_ == 0 && 
-			cntDownIdx_ >= MAX_COUNT_DOWN - 1)sound.Play(SoundManager::SOUND::GAME_START);
-
-		cntDownTimer_++;
-		sclTime_ += SceneManager::GetInstance().GetDeltaTime();
-		scale_ = Easing::QuintOut(
-			static_cast<float>(sclTime_),
-			static_cast<float>(1.0f), 0.0f, 2.0f);
-		scale_ = std::clamp(abs(scale_),0.0f,2.0f);
-		if (cntDownTimer_ >= COUNTDOWN_FRAME)
-		{
-			cntDownTimer_ = 0;
-			cntDownIdx_++;
-			sclTime_ = 0.0f;
-			scale_ = 0.0f;
-			if (cntDownIdx_ >= MAX_COUNT_DOWN)
-			{
-				phase_ = PHASE::GAME;
-				break;
-			}
-		}
+		
 		break;
 	
 	case GameScene::PHASE::GAME:
@@ -227,11 +206,17 @@ void GameScene::Draw(void)
 
 }
 
+void GameScene::UpdateCountDown(void)
+{
+}
+
 void GameScene::UpdateGame(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 	ScoreManager& scr = ScoreManager::GetInstance();
 	UIManager& ui = UIManager::GetInstance();
+
+	customer_->CheckServeAndOrder(stage_->GetServeItems());
 
 	if (customer_->GetIsMoving())
 	{
@@ -244,11 +229,12 @@ void GameScene::UpdateGame(void)
 		SceneManager::GetInstance().PushScene(std::make_shared<PauseScene>());
 	}
 
+	//注文数分の商品が提供されたら
 	if (stage_->IsServed())
 	{
 		//スコアの加算
-		score_ += customer_->CheckServeAndOrder(stage_->GetServeItems());
-		customer_->IsServe();	//注文を出す
+		score_ += customer_->GetOrderScore(stage_->GetServeItems());
+		customer_->IsServe();		//注文を出す
 		stage_->ResetServeData();	//サーブしたアイテムをリセット
 	}
 
@@ -284,6 +270,10 @@ void GameScene::UpdateGame(void)
 	customer_->Update();
 
 	timer_->Update();
+}
+
+void GameScene::DrawCountDown(void)
+{
 }
 
 void GameScene::DrawGame(void)

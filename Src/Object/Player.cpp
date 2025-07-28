@@ -104,7 +104,6 @@ void Player::Update(void)
 
 void Player::Draw(void)
 {
-
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
 
@@ -323,13 +322,6 @@ void Player::ProcessMove(void)
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{
-		////移動スピード
-		//speed_ = SPEED_MOVE;
-		//if (ins.IsInputPressed("Dash"))
-		//{
-		//	speed_ = SPEED_RUN;
-		//}
-
 		dir = VNorm(dir); //方向を正規化
 
 		// カメラのY軸角度だけ取得（XZ平面の回転だけで十分）
@@ -353,41 +345,17 @@ void Player::ProcessMove(void)
 		double rotRad = atan2(worldDir.x, worldDir.z); // ラジアン
 		SetGoalRotate(rotRad);
 
-		// アニメーション（ジャンプ中は切り替えない）
-		if (IsEndLanding())
+		// アニメーション
+		if (speed_ == SPEED_RUN)
 		{
-			if (speed_ == SPEED_RUN)
-			{
-				animationController_->Play((int)ANIM_TYPE::RUN);
-				if (isHolding_)animationController_->Play((int)ANIM_TYPE::WALK_HOLD);
-			}
-			else 
-			{
-				animationController_->Play((int)ANIM_TYPE::WALK);
-				if (isHolding_)animationController_->Play((int)ANIM_TYPE::WALK_HOLD);
-			}
+			animationController_->Play((int)ANIM_TYPE::RUN);
+			if (isHolding_)animationController_->Play((int)ANIM_TYPE::WALK_HOLD);
 		}
-
-		////移動量
-		//movePow_ = VScale(dir, speed_);
-
-		////回転処理
-		//SetGoalRotate(rotRad);
-
-		//if (IsEndLanding())
-		//{
-		//	//アニメーション
-		//	if (ins.IsInputPressed("Dash"))
-		//	{
-		//		//速く走るアニメーション
-		//		animationController_->Play((int)ANIM_TYPE::FAST_RUN);
-		//	}
-		//	else
-		//	{
-		//		//走るアニメーション
-		//		animationController_->Play((int)ANIM_TYPE::RUN);
-		//	}
-		//}
+		else
+		{
+			animationController_->Play((int)ANIM_TYPE::WALK);
+			if (isHolding_)animationController_->Play((int)ANIM_TYPE::WALK_HOLD);
+		}
 	}
 	else
 	{
@@ -447,19 +415,19 @@ bool Player::IsEndLanding(void)
 {
 	bool ret = true;
 
-	////アニメーションがジャンプではない
+	//アニメーションがジャンプではない
 	//if (animationController_->GetPlayType() != (int)ANIM_TYPE::JUMP)
 	//{
 	//	return ret;
 	//}
 	//
-	//アニメーションが終了しているか
-	if (animationController_->IsEnd())
-	{
-		return ret;
-	}
+	////アニメーションが終了しているか
+	//if (animationController_->IsEnd())
+	//{
+	//	return ret;
+	//}
 
-	return false;
+	return true;
 }
 
 void Player::CollisionCapsule(void)
