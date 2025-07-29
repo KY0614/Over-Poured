@@ -50,9 +50,9 @@ private:
 	//客
 	std::unique_ptr<OrderCustomerManager> customer_;
 
-	void UpdateProcess(void);
+	void UpdateOperation(void);
 	
-	void DrawProcess(void);
+	void DrawOperation(void);
 
 	//画像で説明用ーーーーーーーーーーーーーーーーーーーーーー
 

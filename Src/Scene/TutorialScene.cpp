@@ -2,6 +2,7 @@
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/GameSystem/SoundManager.h"
+#include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Manager/Generic/ResourceManager.h"
@@ -13,8 +14,8 @@
 #include "TutorialScene.h"
 
 TutorialScene::TutorialScene(void) :
-	update_(&TutorialScene::UpdateProcess),
-	draw_(&TutorialScene::DrawProcess)
+	update_(&TutorialScene::UpdateOperation),
+	draw_(&TutorialScene::DrawOperation)
 {
 	tutorialImgs_ = nullptr;
 	tutorialBackImg_ = 0;
@@ -62,6 +63,10 @@ void TutorialScene::Init(void)
 	//ãqÇ∆íçï∂
 	customer_ = std::make_unique<OrderCustomerManager>();
 	customer_->Init();
+
+	//ÉJÉÅÉâ
+	mainCamera->SetFollow(&player_->GetTransform());
+	mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 }
 
 void TutorialScene::Update(void)
@@ -74,7 +79,7 @@ void TutorialScene::Draw(void)
 	(this->*draw_)();
 }
 
-void TutorialScene::UpdateProcess(void)
+void TutorialScene::UpdateOperation(void)
 {
 	stage_->Update();
 
@@ -83,7 +88,7 @@ void TutorialScene::UpdateProcess(void)
 	customer_->Update();
 }
 
-void TutorialScene::DrawProcess(void)
+void TutorialScene::DrawOperation(void)
 {
 	//Ç®ãqÇ∆íçï∂ï`âÊ
 	customer_->Draw();
