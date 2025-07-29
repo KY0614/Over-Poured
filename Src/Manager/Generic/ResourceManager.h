@@ -164,6 +164,7 @@ public:
 	void InitSelect(void);
 	void InitTutorial(void);
 	void InitGame(void);
+	void InitPause(void);
 	void InitResult(void);
 
 private:

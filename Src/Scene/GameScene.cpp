@@ -171,7 +171,8 @@ void GameScene::UpdateGame(void)
 
 	if (ins.IsInputTriggered("pause"))
 	{
-		SceneManager::GetInstance().PushScene(std::make_shared<PauseScene>());
+		//ポーズボタンが押されたらポーズシーンへ遷移
+		SceneManager::GetInstance().PushScene(std::make_unique<PauseScene>());
 	}
 
 	//注文数分の商品が提供されたら
@@ -205,7 +206,7 @@ void GameScene::UpdateGame(void)
 	{
 		SoundManager::GetInstance().Stop(SoundManager::SOUND::TIMER_FAST);
 		SoundManager::GetInstance().Play(SoundManager::SOUND::GAME_FINISH);
-		//phase_ = PHASE::FINISH;
+		//タイムアップ関数へ移行
 		update_ = &GameScene::UpdateFinish;
 		draw_ = &GameScene::DrawFinish;
 	}

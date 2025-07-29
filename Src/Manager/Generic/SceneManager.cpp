@@ -7,7 +7,7 @@
 #include "../../Scene/TitleScene.h"
 #include "../../Scene/MovieScene.h"
 #include "../../Scene/SelectScene.h"
-#include "../../Scene/SelectScene.h"
+#include "../../Scene/PauseScene.h"
 #include "../../Scene/TutorialScene.h"
 #include "../../Scene/GameScene.h"
 #include "../../Scene/ResultScene.h"
@@ -60,7 +60,7 @@ void SceneManager::Init(void)
 	Init3D();
 
 	//初期シーンの設定
-	DoChangeScene(SCENE_ID::TITLE);
+	DoChangeScene(SCENE_ID::TUTORIAL);
 
 }
 
@@ -166,7 +166,6 @@ void SceneManager::Destroy(void)
 
 void SceneManager::ChangeScene(SCENE_ID nextId)
 {
-
 	//フェード処理が終わってからシーンを変える場合もあるため、
 	//遷移先シーンをメンバ変数に保持
 	waitSceneId_ = nextId;
@@ -174,7 +173,18 @@ void SceneManager::ChangeScene(SCENE_ID nextId)
 	//フェードアウト(暗転)を開始する
 	fader_->SetFade(Fader::STATE::FADE_OUT);
 	isSceneChanging_ = true;
+}
 
+void SceneManager::ChangeScene(std::unique_ptr<SceneBase> _scene)
+{
+	if (scenes_.empty()) {
+		//空だったら新しく入れる
+		scenes_.push_back(std::move(_scene));
+	}
+	else {
+		//末尾のものを新しい物に入れ替える
+		scenes_.back() = std::move(_scene);
+	}
 }
 
 SceneManager::SCENE_ID SceneManager::GetSceneID(void)
@@ -193,10 +203,11 @@ std::weak_ptr<Camera> SceneManager::GetCamera(void) const
 	return camera_;
 }
 
-void SceneManager::PushScene(std::shared_ptr<SceneBase> _scene)
+void SceneManager::PushScene(std::unique_ptr<SceneBase> _scene)
 {
 	//新しく積むのでもともと入っている奴はまだ削除されない
-	scenes_.push_back(_scene);
+	scenes_.push_back(std::move(_scene));
+	scenes_.back()->Init();
 }
 
 void SceneManager::PopScene(void)
@@ -208,10 +219,10 @@ void SceneManager::PopScene(void)
 	}
 }
 
-void SceneManager::JumpScene(std::shared_ptr<SceneBase> scene)
+void SceneManager::JumpScene(std::unique_ptr<SceneBase> scene)
 {
 	scenes_.clear();
-	scenes_.push_back(scene);
+	scenes_.push_back(std::move(scene));
 }
 
 SceneManager::SceneManager(void)
@@ -320,13 +331,18 @@ void SceneManager::MakeScene(SCENE_ID sceneId)
 	
 	case SceneManager::SCENE_ID::TUTORIAL:
 		scene = std::make_unique<TutorialScene>();
-		resM.InitTutorial();
+		resM.InitGame();
 		break;
 	
 	case SceneManager::SCENE_ID::GAME:
 		scene = std::make_unique<GameScene>();
 		resM.InitGame();
 		break;
+	
+	case SceneManager::SCENE_ID::PAUSE:
+		scene = std::make_unique<PauseScene>();
+		break;
+
 	case SceneManager::SCENE_ID::RESULT:
 		scene = std::make_unique<ResultScene>();
 		resM.InitResult();

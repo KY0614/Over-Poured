@@ -469,6 +469,22 @@ void ResourceManager::InitGame(void)
 	resourcesMap_.emplace(SRC::ICE_CUSTOMER, std::move(res));
 }
 
+void ResourceManager::InitPause(void)
+{
+	using RES = Resource;
+	using RES_T = RES::TYPE;
+	static std::string PATH_IMG = Application::PATH_IMAGE;
+	static std::string PATH_MDL = Application::PATH_MODEL;
+	static std::string PATH_EFF = Application::PATH_EFFECT;
+	static std::string PATH_SND = Application::PATH_SOUND;
+
+	std::unique_ptr<Resource> res;
+
+	//”wŒi—p‰æ‘œ
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "tutorial_back.png");
+	resourcesMap_.emplace(SRC::TUTORIAL_BACK, std::move(res));
+}
+
 void ResourceManager::InitResult(void)
 {
 	using RES = Resource;

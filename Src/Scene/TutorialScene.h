@@ -34,6 +34,28 @@ public:
 	void Draw(void) override;
 
 private:
+	//関数ポインタ
+	using UpdateFunc_t = void(TutorialScene::*)();
+	using DrawFunc_t = void(TutorialScene::*)();
+
+	UpdateFunc_t update_;
+	DrawFunc_t draw_;
+
+	//ステージ
+	std::unique_ptr<StageManager> stage_;
+
+	//プレイヤー
+	std::unique_ptr<Player> player_;
+
+	//客
+	std::unique_ptr<OrderCustomerManager> customer_;
+
+	void UpdateProcess(void);
+	
+	void DrawProcess(void);
+
+	//画像で説明用ーーーーーーーーーーーーーーーーーーーーーー
+
 	//説明用画像
 	int* tutorialImgs_;
 	int tutorialBackImg_;
@@ -54,5 +76,9 @@ private:
 
 	bool isView_;
 	float highlightTime_;
+
+	void ImageInit(void);
+	void ImageUpdate(void);
+	void ImageDraw(void);
 };
 

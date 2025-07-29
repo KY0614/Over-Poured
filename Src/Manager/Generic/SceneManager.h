@@ -46,6 +46,7 @@ public:
 
 	// 状態遷移
 	void ChangeScene(SCENE_ID nextId);
+	void ChangeScene(std::unique_ptr<SceneBase> _scene);
 
 	// シーンIDの取得
 	SCENE_ID GetSceneID(void);
@@ -60,7 +61,7 @@ public:
 	/// シーンを新しく積む
 	/// </summary>
 	/// <param name="_scene">シーン情報</param>
-	void PushScene(std::shared_ptr<SceneBase>_scene);
+	void PushScene(std::unique_ptr<SceneBase>_scene);
 
 	/// <summary>
 	/// 最後に追加したシーンを削除する。
@@ -72,7 +73,7 @@ public:
 	/// 強制的に特定のシーンに飛ぶ。つんでてもリセット
 	/// </summary>
 	/// <param name="scene">ジャンプ先シーン</param>
-	void JumpScene(std::shared_ptr<SceneBase> scene);
+	void JumpScene(std::unique_ptr<SceneBase> scene);
 
 private:
 
@@ -84,7 +85,7 @@ private:
 
 	// フェード
 	std::unique_ptr<SceneBase> scene_;
-	std::list<std::shared_ptr<SceneBase>>scenes_;
+	std::list<std::unique_ptr<SceneBase>>scenes_;
 
 	// 各種シーン
 	std::unique_ptr<Fader> fader_;

@@ -20,5 +20,10 @@ private:
 
 	UpdateFunc_t update_;
 	DrawFunc_t draw_;
+
+	int backImg_;
+
+	void UpdateNormal(void);
+	void DrawNormal(void);
 };
 

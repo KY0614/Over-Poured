@@ -5,9 +5,16 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Manager/Generic/ResourceManager.h"
+#include"../Manager/GameSystem/OrderCustomerManager.h"
+#include "../Object/Common/Collider.h"
+#include "../Object/Stage/StageManager.h"
+#include "../Object/Player.h"
+#include "../Object/UI/UIManager.h"
 #include "TutorialScene.h"
 
-TutorialScene::TutorialScene(void)
+TutorialScene::TutorialScene(void) :
+	update_(&TutorialScene::UpdateProcess),
+	draw_(&TutorialScene::DrawProcess)
 {
 	tutorialImgs_ = nullptr;
 	tutorialBackImg_ = 0;
@@ -30,6 +37,65 @@ TutorialScene::~TutorialScene(void)
 }
 
 void TutorialScene::Init(void)
+{
+	//ImageInit();
+
+	//プレイヤー
+	player_ = std::make_unique<Player>();
+	player_->Init();
+
+	//ステージ
+	stage_ = std::make_unique<StageManager>(*player_);
+	stage_->Init();
+
+	//ステージのコライダーを追加
+	player_->AddCollider(stage_->GetCounterTran().collider);
+	int tableNum = stage_->GetTableNum();
+	for (int i = 0; i < tableNum; ++i)
+	{
+		player_->AddCollider(stage_->GetTableTran(i).collider);
+	}
+	player_->AddCollider(stage_->GetShowCase().collider);
+	player_->AddCollider(stage_->GetDustBox().collider);
+	player_->AddCollider(stage_->GetFloorTran().collider);
+
+	//客と注文
+	customer_ = std::make_unique<OrderCustomerManager>();
+	customer_->Init();
+}
+
+void TutorialScene::Update(void)
+{
+	(this->*update_)();
+}
+
+void TutorialScene::Draw(void)
+{
+	(this->*draw_)();
+}
+
+void TutorialScene::UpdateProcess(void)
+{
+	stage_->Update();
+
+	player_->Update();
+
+	customer_->Update();
+}
+
+void TutorialScene::DrawProcess(void)
+{
+	//お客と注文描画
+	customer_->Draw();
+	//ステージ描画
+	stage_->Draw();
+	//プレイヤー描画
+	player_->Draw();
+	//UI描画
+	UIManager::GetInstance().Draw();
+}
+
+void TutorialScene::ImageInit(void)
 {
 	auto& sound = SoundManager::GetInstance();
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::TUTORIAL,
@@ -80,17 +146,17 @@ void TutorialScene::Init(void)
 	isBlinkR_ = true;
 }
 
-void TutorialScene::Update(void)
+void TutorialScene::ImageUpdate(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 	auto& sound = SoundManager::GetInstance();
 	blinkTime_++;
 	blinkIdx_ = (blinkTime_ / 60) % 2;
-	
+
 
 	if (ins.IsInputTriggered("pause"))
 	{
-	
+
 	}
 
 	//シーン遷移(チュートリアルのページが端までいったら）
@@ -150,7 +216,7 @@ void TutorialScene::Update(void)
 	}
 }
 
-void TutorialScene::Draw(void)
+void TutorialScene::ImageDraw(void)
 {
 	//画面の大きさに合わせて拡大率を変える
 	float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
