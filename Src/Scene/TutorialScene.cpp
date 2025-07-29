@@ -71,7 +71,7 @@ void TutorialScene::Init(void)
 
 	//‘•ü‰æ‘œ“Ç‚İ‚İ
 	decoImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::BACK).handleId_;
+		ResourceManager::SRC::PINK_BANNER).handleId_;
 
 	//‰æ‘œ“Ç‚İ‚İ
 	pushImg_ = ResourceManager::GetInstance().Load(

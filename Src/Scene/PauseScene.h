@@ -5,7 +5,7 @@ class PauseScene : public SceneBase
 {
 public:
 
-	PauseScene(SceneManager& manager);
+	PauseScene(void);
 	~PauseScene(void);
 
 	void Init(void)override;

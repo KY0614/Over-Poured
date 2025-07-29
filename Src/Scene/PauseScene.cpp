@@ -3,7 +3,7 @@
 #include "../Manager/Generic/InputManager.h"
 #include "PauseScene.h"
 
-PauseScene::PauseScene(SceneManager& manager) :
+PauseScene::PauseScene(void) :
 	update_(&PauseScene::Update),
 	draw_(&PauseScene::Draw)
 {

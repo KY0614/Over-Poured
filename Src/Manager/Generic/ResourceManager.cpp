@@ -183,8 +183,8 @@ void ResourceManager::InitTutorial(void)
 	resourcesMap_.emplace(SRC::TUTORIAL_BACK, std::move(res));
 
 	//装飾用画像
-	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "score_gauge_back.png");
-	resourcesMap_.emplace(SRC::BACK, std::move(res));
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Hangin_Banner.png");
+	resourcesMap_.emplace(SRC::PINK_BANNER, std::move(res));
 
 	//カーソル用画像
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "cursor_R.png",
@@ -517,15 +517,15 @@ void ResourceManager::InitResult(void)
 	//ランキングラベル
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "ranking.png",
 		1, 5, 300, 100);
-	resourcesMap_.emplace(SRC::RANKING, std::move(res));
+	resourcesMap_.emplace(SRC::RANKING_LABEL, std::move(res));
 
 	//ランキング背景
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "ranking_back.png");
 	resourcesMap_.emplace(SRC::RANKING_BACK, std::move(res));
 
 	//装飾用画像
-	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "score_gauge_back.png");
-	resourcesMap_.emplace(SRC::BACK, std::move(res));
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Hangin_Banner.png");
+	resourcesMap_.emplace(SRC::PINK_BANNER, std::move(res));
 
 	//PushSpace画像
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "PleaseKey.png");

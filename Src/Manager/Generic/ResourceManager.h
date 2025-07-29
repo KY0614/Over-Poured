@@ -29,7 +29,7 @@ public:
 		RETURN_PAGE,
 		NOT_PAGE,
 		TUTORIAL_BACK,
-		BACK,
+		PINK_BANNER,
 		CURSOR_R,
 		OPEN_DOOR,
 
@@ -129,7 +129,7 @@ public:
 
 		//リザルト用ラベル
 		CURRENT_SCORE,
-		RANKING,
+		RANKING_LABEL,
 		RANKING_BACK,
 
 	};

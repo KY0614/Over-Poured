@@ -19,7 +19,6 @@ GameScene::GameScene(void) :
 	update_(&GameScene::UpdateCountDown),
 	draw_(&GameScene::DrawCountDown)
 {
-	phase_ = PHASE::COUNT_DOWN;
 	player_ = nullptr;
 	stage_ = nullptr;
 	customer_ = nullptr;
@@ -28,7 +27,6 @@ GameScene::GameScene(void) :
 	numbersImgs_ = nullptr;
 	countImgs_ = nullptr;
 	cntDownIdx_ = 0;
-	cntDownTimer_ = 0.0f;
 	scale_ = 0.0f;
 	sclTime_ = 0.0f;
 	timeUpImg_ = 0;
@@ -121,100 +119,47 @@ void GameScene::Init(void)
 
 void GameScene::Update(void)
 {
-	ScoreManager& scr = ScoreManager::GetInstance();
-	SoundManager& sound = SoundManager::GetInstance();
-	//フェーズごとの更新処理
-	switch (phase_)
-	{
-	case GameScene::PHASE::COUNT_DOWN:
-		
-		break;
-	
-	case GameScene::PHASE::GAME:
-		UpdateGame();
-		break;
-	
-	case GameScene::PHASE::FINISH:
-		//カウントダウンの時と同じようにイージングで画像を拡大させる
-		cntDownTimer_++;
-		sclTime_ += SceneManager::GetInstance().GetDeltaTime();
-		scale_ = Easing::QuintOut(
-			static_cast<float>(sclTime_),
-			static_cast<float>(1.0f), 0.0f, 2.0f);
-		scale_ = std::clamp(abs(scale_), 0.0f, 2.0f);
-		if (cntDownTimer_ >= COUNTDOWN_FRAME)
-		{
-			if (cntDownIdx_ >= MAX_COUNT_DOWN)
-			{
-				scale_ = 2.0f;
-				scr.SetCurrentScore(score_);
-				scr.SaveScore(score_);
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
-				return;
-			}
-			cntDownTimer_ = 0;
-			cntDownIdx_++;
-			sclTime_ = 0.0f;
-			scale_ = 0.0f;
-		}
-		break;
-	
-	default:
-		break;
-	}
+	(this->*update_)();
 }
 
 void GameScene::Draw(void)
 {
-	switch (phase_)
-	{
-	case GameScene::PHASE::COUNT_DOWN:
-		//ステージ描画
-		stage_->Draw();
-		//プレイヤー描画
-		player_->Draw();
-
-		DrawRotaGraph(
-			Application::SCREEN_SIZE_X / 2,
-			Application::SCREEN_SIZE_Y / 2 - 50,
-			scale_,
-			0.0,
-			countImgs_[cntDownIdx_],
-			true
-		);
-		break;
-
-	case GameScene::PHASE::GAME:
-		DrawGame();
-		break;
-
-	case GameScene::PHASE::FINISH:
-		DrawGame();
-		DrawRotaGraph(
-			Application::SCREEN_SIZE_X / 2,
-			Application::SCREEN_SIZE_Y / 2 - 50,
-			scale_,
-			0.0,
-			timeUpImg_,
-			true
-		);
-		break;
-
-	default:
-		break;
-	}
-
+	(this->*draw_)();
 }
 
 void GameScene::UpdateCountDown(void)
 {
+	SoundManager& sound = SoundManager::GetInstance();
+	if (sclTime_ == 0.0f &&
+		cntDownIdx_ < MAX_COUNT_DOWN - 1)sound.Play(SoundManager::SOUND::COUNT_DOWN);
+	else if (sclTime_ == 0.0f &&
+		cntDownIdx_ >= MAX_COUNT_DOWN - 1)sound.Play(SoundManager::SOUND::GAME_START);
+	//拡大させる時間を更新
+	sclTime_ += SceneManager::GetInstance().GetDeltaTime();
+	//カウントダウン画像の拡大率をイージングで滑らかに拡大
+	scale_ = Easing::QuintOut(
+		sclTime_, CNTDOWN_SCL_MAX_TIME, 0.0f, CNTDOWN_IMG_MAX_SCL);
+	//拡大率を制限（0.0f～2.0fまで)
+	scale_ = std::clamp(abs(scale_), 0.0f, CNTDOWN_IMG_MAX_SCL);
+	//拡大させる時間が拡大最大時間を超えたら
+	//カウントダウンのインデックスを進める(カウントダウン画像を変更する)
+	if (sclTime_ >= CNTDOWN_SCL_MAX_TIME)
+	{
+		cntDownIdx_++;
+		sclTime_ = 0.0f;
+		scale_ = 0.0f;
+		//start画像までいったらゲーム開始
+		if (cntDownIdx_ >= MAX_COUNT_DOWN)
+		{
+			update_ = &GameScene::UpdateGame;
+			draw_ = &GameScene::DrawGame;
+		}
+	}
 }
 
 void GameScene::UpdateGame(void)
 {
 	InputManager& ins = InputManager::GetInstance();
-	ScoreManager& scr = ScoreManager::GetInstance();
-	UIManager& ui = UIManager::GetInstance();
 
 	customer_->CheckServeAndOrder(stage_->GetServeItems());
 
@@ -260,7 +205,9 @@ void GameScene::UpdateGame(void)
 	{
 		SoundManager::GetInstance().Stop(SoundManager::SOUND::TIMER_FAST);
 		SoundManager::GetInstance().Play(SoundManager::SOUND::GAME_FINISH);
-		phase_ = PHASE::FINISH;
+		//phase_ = PHASE::FINISH;
+		update_ = &GameScene::UpdateFinish;
+		draw_ = &GameScene::DrawFinish;
 	}
 
 	stage_->Update();
@@ -272,8 +219,51 @@ void GameScene::UpdateGame(void)
 	timer_->Update();
 }
 
+void GameScene::UpdateFinish(void)
+{
+	ScoreManager& scr = ScoreManager::GetInstance();
+
+	//カウントダウンの時と同じようにイージングで画像を拡大させる
+	//拡大させる時間を更新
+	sclTime_ += SceneManager::GetInstance().GetDeltaTime();
+	//画像の拡大率をイージングで滑らかに拡大
+	scale_ = Easing::QuintOut(
+		sclTime_, CNTDOWN_SCL_MAX_TIME, 0.0f, CNTDOWN_IMG_MAX_SCL);
+	//拡大率を制限（0.0f～2.0fまで)
+	scale_ = std::clamp(abs(scale_), 0.0f, CNTDOWN_IMG_MAX_SCL);
+	//拡大させる時間が拡大最大時間を超えたら
+	//スコアを保存してリザルト画面へ遷移
+	if (sclTime_ >= CNTDOWN_SCL_MAX_TIME)
+	{
+		if (cntDownIdx_ >= MAX_COUNT_DOWN)
+		{
+			scale_ = CNTDOWN_IMG_MAX_SCL;
+			scr.SetCurrentScore(score_);
+			scr.SaveScore(score_);
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+			return;
+		}
+		cntDownIdx_++;
+		sclTime_ = 0.0f;
+		scale_ = 0.0f;
+	}
+}
+
 void GameScene::DrawCountDown(void)
 {
+	//ステージ描画
+	stage_->Draw();
+	//プレイヤー描画
+	player_->Draw();
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 - 50,
+		scale_,
+		0.0,
+		countImgs_[cntDownIdx_],
+		true
+	);
 }
 
 void GameScene::DrawGame(void)
@@ -291,6 +281,20 @@ void GameScene::DrawGame(void)
 	timer_->Draw();
 	//スコア描画
 	DrawScore(score_);
+}
+
+void GameScene::DrawFinish(void)
+{
+	DrawGame();
+	//タイムアップ画像を拡大して描画
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 - 50,
+		scale_,
+		0.0,
+		timeUpImg_,
+		true
+	);
 }
 
 void GameScene::DrawScore(int score)

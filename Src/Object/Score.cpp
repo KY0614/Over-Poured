@@ -47,7 +47,7 @@ Score::Score(void)
     rank_ = RANK::MAX;  
     phase_ = TOTALSCR_PHASE::COUNT_UP;  
     numberImgs_ = nullptr;  
-    rankingImgs_ = nullptr;  
+	rankLabelImgs_ = nullptr;
     decoImg_ = 0;  
     scale_ = 0.0f;  
 
@@ -80,6 +80,7 @@ void Score::Init(void)
 	//ランクごとの情報初期化
 	InitRankInfo();
 
+	//画像読み込み
 	LoadImages();
 
 	//今回のスコアをランキングに照らし合わせてランクイン位置を初期化
@@ -293,10 +294,13 @@ void Score::DrawPlayScore(void)
 		0.0f, rankingBackImg_,
 		true);
 
-	//装飾（左）
-	DrawRotaGraph3(Application::SCREEN_SIZE_X - 500, 500,
+	const int BANNER_SIZE = 500;
+	const float scaleX = static_cast<float>(Application::SCREEN_SIZE_X) /
+		static_cast<float>(Application::SCREEN_MAX_SIZE_X);
+	//装飾
+	DrawRotaGraph3(Application::SCREEN_SIZE_X - (BANNER_SIZE * scaleX), BANNER_SIZE * scale_,
 		250,250,
-		scale_ * 2.1f, scale_ * 2.0f,
+		scaleX * 2.0f, scale_ * 2.0f,
 		0.0f,
 		decoImg_,
 		true, false);
@@ -383,11 +387,11 @@ void Score::DrawPlayScore(void)
 		int col = isBlink ? 100 : 255;
 
 		DrawRankingScore(scr.GetRankingScore(i),
-			(slideX_[i] + RANK_SCORE_MARIGINE_X),
-			RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i), col);
+			(slideX_[i] + (RANK_SCORE_MARIGINE_X * scale_)),
+			RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i * scale_), col);
 
-		DrawRotaGraph(slideX_[i], RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i),
-			scale_ * 0.8f, 0.0f, rankingImgs_[i],
+		DrawRotaGraph(slideX_[i], RANK_SCORE_POS_Y + (RANK_SCORE_MARIGINE_Y * i * scale_),
+			scale_ * 0.8f, 0.0f, rankLabelImgs_[i],
 			true, false);
 	}
 }
@@ -534,29 +538,29 @@ void Score::InitRankInfo(void)
 
 void Score::LoadImages(void)
 {
-	//画像読み込み
+	//円ゲージの背景画像読み込み
 	circleShadowImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
 
-	//画像読み込み
+	//スコア用数字画像読み込み
 	numberImgs_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::SCORE_NUMBER).handleIds_;
 
-	//画像読み込み
-	rankingImgs_ = ResourceManager::GetInstance().
-		Load(ResourceManager::SRC::RANKING).handleIds_;
+	//ランキングラベル画像読み込み
+	rankLabelImgs_ = ResourceManager::GetInstance().
+		Load(ResourceManager::SRC::RANKING_LABEL).handleIds_;
 
-	//画像読み込み
+	//現在スコアラベル画像読み込み
 	currentScrImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::CURRENT_SCORE).handleId_;
 
-	//画像読み込み
+	//ランキングの背景画像読み込み
 	rankingBackImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANKING_BACK).handleId_;
 
 	//装飾画像読み込み
 	decoImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::BACK).handleId_;
+		ResourceManager::SRC::PINK_BANNER).handleId_;
 
 	//ランクごとの文字画像
 	ranksImgs_ = ResourceManager::GetInstance().
@@ -595,7 +599,6 @@ void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 {
 	std::string str = std::to_string(score);
 	const int digitWidth = 80;
-	const float scale = scale_;
 
 	for (int i = 0; i < str.size(); ++i)
 	{
@@ -605,8 +608,8 @@ void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 			int digit = ch - '0';
 			SetDrawBright(255, 255, hightLight);
 			DrawRotaGraph(
-				posX + static_cast<int>(i * digitWidth * scale), posY,
-				scale * 0.8f, 0.0f,
+				posX + static_cast<int>(i * digitWidth * scale_), posY,
+				scale_ * 0.8f, 0.0f,
 				numberImgs_[digit], true);
 			SetDrawBright(255, 255, 255);
 		}

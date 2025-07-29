@@ -12,7 +12,7 @@ public:
 
 	//イージング関連
 	static constexpr float START_SLIDE_X = -500.0f;	//X開始位置
-	static constexpr float END_SLIDE_X = 290.0f;	//X終了位置
+	static constexpr float END_SLIDE_X = (float)(Application::SCREEN_SIZE_X / 6);	//X終了位置
 	static constexpr float START_SLIDE_Y = 690.0f;	//Y開始位置
 	static constexpr float END_SLIDE_Y = 420.0f;	//Y終了位置
 	static constexpr float NEXT_SLIDE_START_X = -125.0f;	//次のイージングを開始する目標位置
@@ -131,13 +131,16 @@ private:
 	float slideY_;
 	float slideYTime_;
 
-	int* rankingImgs_;
+	//ランキングのラベル画像（１位：～５位：）
+	int* rankLabelImgs_;
+	//ランキングの背景画像
 	int rankingBackImg_;
 
 	//数字用
 	int* numberImgs_;
+	//「現在スコア」ラベル画像
 	int currentScrImg_;
-
+	//ランクごとの文字画像（C,B,A,S)
 	int* ranksImgs_;
 	int circleShadowImg_;
 	int decoImg_;
