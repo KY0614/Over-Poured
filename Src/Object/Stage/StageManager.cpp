@@ -545,7 +545,7 @@ void StageManager::MachineInteract(void)
 		//設置して一定時間経ったら氷入りカップを出力する
 		if (objects_[i]->GetParam().interactTime_ <= 0.0f)
 		{
-			ProduceCoffee(i);
+			ProduceCoffee(static_cast<int>(i));
 			break;
 		}
 	}

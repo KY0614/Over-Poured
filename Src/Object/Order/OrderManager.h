@@ -8,7 +8,6 @@ class Order;
 class OrderManager
 {
 public:
-
 	//注文関連
 	static constexpr int MAX_CREATE_NUM = 6;	//最大注文生成数
 
@@ -17,12 +16,18 @@ public:
 
 	void Init(void);
 	void FirstOrderUpdate(void);
-	void Draw(void);
 
-	//注文を生成
-	void InitOrder(void);			//最初に５つ生成する用
+	/// <summary>
+	/// 注文を最大数まで生成する
+	/// </summary>
+	/// <param name="">ゲームの始まりに生成する用</param>
+	void CreateOrderMaxNum(void);
 
-	void CreateSingleOrder(void);	//問答無用で一つだけ生成する用
+	/// <summary>
+	/// １つだけ注文を生成する
+	/// </summary>
+	/// <param name=""></param>
+	void CreateSingleOrder(void);
 
 	void AddOrder(void);			//注文が１つ減ったら１つ追加生成する用
 
@@ -41,8 +46,6 @@ public:
 	std::vector<Order::DRINK> GetAllOrderDrink(void) const;
 	std::vector<Order::SWEETS> GetAllOrderSweet(void) const;
 	std::vector<Order::OrderData> GetAllOrder(void) const;
-	Order::DRINK GetLastOrderDrink(void) const;
-	Order::SWEETS GetLastOrderSweets(void) const;
 	Order::OrderData GetLastOrderData(void) const;
 
 private:

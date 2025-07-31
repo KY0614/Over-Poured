@@ -15,29 +15,26 @@ OrderManager::~OrderManager(void)
 void OrderManager::Init(void)
 {
 	orders_.clear();
-	InitOrder();
+	CreateOrderMaxNum();
 }
 
 void OrderManager::FirstOrderUpdate(void)
 {
-	//ordersの中身が空だったらしない
+	//ordersの中身が空だったら更新しない
 	if (orders_.empty()) return;
 
-	//先頭の注文を表示し、制限時間だけを減らす
-	orders_.front()->Update();
+	//先頭の注文の制限時間を減らす
+	orders_.front()->TimerUpdate();
 }
 
-void OrderManager::Draw(void)
-{
-}
-
-void OrderManager::InitOrder(void)
+void OrderManager::CreateOrderMaxNum(void)
 {
 	if (orders_.empty())
 	{
-		//6つまで生成する
+		//最大数の6つまで生成する
 		for (int i = 0; i < MAX_CREATE_NUM; i++)
 		{
+			//１つ生成
 			CreateSingleOrder();
 		}
 	}
@@ -45,9 +42,9 @@ void OrderManager::InitOrder(void)
 
 void OrderManager::CreateSingleOrder(void)
 {
-	//最大注文生成数を超えそうだったらreturn
+	//最大注文生成数を超えそうだったら生成しない
 	if (orders_.size() >= MAX_CREATE_NUM) return;
-
+	//注文を生成する
 	std::unique_ptr<Order> order = std::make_unique<Order>();
 	order->CreateOrder();		//注文を生成
 	orders_.push_back(std::move(order));
@@ -113,16 +110,6 @@ std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
 	}
 
 	return data;
-}
-
-Order::DRINK OrderManager::GetLastOrderDrink(void) const
-{
-	return orders_.back()->GetOrder().drink_;
-}
-
-Order::SWEETS OrderManager::GetLastOrderSweets(void) const
-{
-	return orders_.back()->GetOrder().sweets_;
 }
 
 Order::OrderData OrderManager::GetLastOrderData(void) const

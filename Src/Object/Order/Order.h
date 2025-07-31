@@ -3,9 +3,9 @@
 class Order
 {
 public:
-
 	//注文関連
-	static constexpr int ORDER_MAX_NUM = 2;			//最大注文内容数
+	static constexpr int ORDER_MAX_NUM = 2;			//注文の最大数
+	static constexpr int ORDER_MIN_NUM = 1;			//注文の最小数
 
 	static constexpr float ONE_ORDER_TIME = 25.0f;	//注文の制限時間(1つ)
 	static constexpr float TWO_ORDER_TIME = 33.0f;	//注文の制限時間(２つ)
@@ -17,7 +17,7 @@ public:
 	//ドリンクの種類
 	enum class DRINK
 	{
-		NONE,
+		NONE,	
 		HOT,	//ホット
 		ICE,	//アイス
 	};
@@ -35,7 +35,7 @@ public:
 	{
 		int num_;			//注文数
 		DRINK drink_;		//飲み物
-		bool lid_ = false;	//飲み物のふた
+		bool lid_;			//飲み物に蓋があるかどうか
 		SWEETS sweets_;		//スイーツ
 		float time_;		//注文の制限時間
 	};
@@ -46,12 +46,16 @@ public:
 	//デストラクタ
 	~Order(void);
 
-	void Init(void);
-	void Update(void);
-	void Draw(void);
+	/// <summary>
+	/// 制限時間の更新処理
+	/// </summary>
+	void TimerUpdate(void);
 
-	//注文を生成する
-	void CreateOrder(void);		//１つ生成
+	/// <summary>
+	/// 注文を生成
+	/// </summary>
+	/// <param name="">１つ生成</param>
+	void CreateOrder(void);
 
 	//設定する関数-------------------------------------------------
 
@@ -83,11 +87,26 @@ public:
 
 	//取得する関数--------------------------------------------------------------------
 
-	int GetOrderNum(void) { return orderNum_; }		//注文数を取得する
+	/// <summary>
+	/// 注文数を取得
+	/// </summary>
+	/// <param name="">注文している商品の数</param>
+	/// <returns>注文数</returns>
+	int GetOrderNum(void) const { return orderNum_; }	
 
-	OrderData GetOrder(void) { return orderData_; }			//注文内容を取得する
+	/// <summary>
+	/// 注文内容を取得
+	/// </summary>
+	/// <param name="">注文内容を返す(OrderDataを返す)</param>
+	/// <returns>注文内容</returns>
+	OrderData GetOrder(void) const { return orderData_; }
 
-	float GetOrderTime(void) { return orderData_.time_; }	//注文の制限時間を取得する
+	/// <summary>
+	/// 注文の制限時間を取得
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	float GetOrderTime(void) const { return orderData_.time_; }	
 
 private:
 	//注文内容
@@ -95,7 +114,5 @@ private:
 
 	//注文数
 	int orderNum_;
-
-	//void UpdateImgGUI(void);
 };
 

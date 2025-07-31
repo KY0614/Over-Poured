@@ -13,6 +13,7 @@ public:
 	//注文のスコア
 	static constexpr int DRINK_SCORE = 50;	//飲み物のスコア
 	static constexpr int SWEETS_SCORE = 30;	//スイーツのスコア
+	static constexpr int LID_SCORE = 20;	//スイーツのスコア
 
 	static constexpr int TIME_EARLY_BONUS = 50;	//早い提供の時間ボーナス
 	static constexpr int TIME_BONUS = 10;		//普通の提供の時間ボーナス

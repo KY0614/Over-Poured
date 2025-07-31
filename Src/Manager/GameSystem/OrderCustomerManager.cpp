@@ -9,11 +9,11 @@
 #include "../Generic/SceneManager.h"
 #include "OrderCustomerManager.h"
 
-OrderCustomerManager::OrderCustomerManager(void)
+OrderCustomerManager::OrderCustomerManager(void):
+	orderMng_(nullptr),
+	customerMng_(nullptr),
+	isServe_(false)
 {
-	orderMng_ = nullptr;
-	customerMng_ = nullptr;
-	isServe_ = false;
 }
 
 OrderCustomerManager::~OrderCustomerManager(void)
@@ -79,8 +79,6 @@ void OrderCustomerManager::Update(void)
 
 void OrderCustomerManager::Draw(void)
 {
-	orderMng_->Draw();
-
 	customerMng_->Draw();
 }
 
@@ -111,8 +109,9 @@ void OrderCustomerManager::ClearOrderAndCustomer(void)
 
 void OrderCustomerManager::AddCustomerByOrder(void)
 {
+	//お客を追加生成
 	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderData());
-	customerMng_->SetLastCustomerPos();
+	customerMng_->SetLastCustomerPos();	//最後尾に位置を調整
 }
 
 int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
@@ -129,7 +128,7 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 		if (serve.drink_ == order.drink_) 
 		{
 			score += DRINK_SCORE;
-			if (serve.lid_) score += 20;
+			if (serve.lid_) score += LID_SCORE;
 		}
 		else	//ドリンクが違う場合はマイナス
 		{
