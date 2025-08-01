@@ -1,10 +1,10 @@
 #include <DxLib.h>
-#include "../../Common/DebugDrawFormat.h"
 #include "Order.h"
 #include "OrderManager.h"
 
 OrderManager::OrderManager(void)
 {
+	orders_.clear();
 }
 
 OrderManager::~OrderManager(void)
@@ -14,7 +14,9 @@ OrderManager::~OrderManager(void)
 
 void OrderManager::Init(void)
 {
+	//”z—ñ‚Ì‰Šú‰»
 	orders_.clear();
+	//’•¶‚ğÅ‘å”‚Ü‚Å¶¬‚·‚é
 	CreateOrderMaxNum();
 }
 
@@ -29,9 +31,10 @@ void OrderManager::FirstOrderUpdate(void)
 
 void OrderManager::CreateOrderMaxNum(void)
 {
+	//’•¶‚ª‚·‚Å‚É¶¬‚³‚ê‚Ä‚¢‚½‚ç¶¬‚µ‚È‚¢
 	if (orders_.empty())
 	{
-		//Å‘å”‚Ì6‚Â‚Ü‚Å¶¬‚·‚é
+		//Å‘å”‚Ü‚Å¶¬‚·‚é
 		for (int i = 0; i < MAX_CREATE_NUM; i++)
 		{
 			//‚P‚Â¶¬
@@ -50,66 +53,43 @@ void OrderManager::CreateSingleOrder(void)
 	orders_.push_back(std::move(order));
 }
 
-void OrderManager::AddOrder(void)
+void OrderManager::AddCreateOrder(void)
 {
 	//Å‘å’•¶¶¬”‚ğ’´‚¦‚»‚¤‚¾‚Á‚½‚çreturn
 	if (orders_.size() >= MAX_CREATE_NUM) return;
 
-	//’•¶‚ª‚S‚ÂˆÈ‰º‚É‚È‚Á‚½‚ç‚P‚Â’Ç‰Á
-	if (orders_.size() <= MAX_CREATE_NUM - 1)
+	//’•¶‚ªÅ‘å”–¢–‚É‚È‚Á‚½‚ç‚P‚Â’Ç‰Á
+	if (orders_.size() < MAX_CREATE_NUM)
 	{
 		CreateSingleOrder();
 	}
-}
-
-bool OrderManager::IsFirstOrderTimeOut(void)
-{
-	// §ŒÀŠÔ‚ªØ‚ê‚½‚çtrue‚ğ•Ô‚·
-	if (orders_.front()->GetOrderTime() < 0.1f) 
-	{
-		return true;
-	}
-	return false;
 }
 
 void OrderManager::ClearFirstOrder(void)
 {
 	//æ“ª‚Ì—v‘f‚ğíœ
 	orders_.erase(orders_.begin());
-	//count_++;
 }
 
-std::vector<Order::DRINK> OrderManager::GetAllOrderDrink(void) const
+bool OrderManager::IsFirstOrderTimeOut(void)
 {
-	std::vector<Order::DRINK> drink;
-	for (auto& order : orders_)
+	// §ŒÀŠÔ‚ªØ‚ê‚½‚çtrue‚ğ•Ô‚·
+	if (orders_.front()->GetOrderTime() < 0.1f)
 	{
-		drink.push_back(order->GetOrder().drink_);
+		return true;
 	}
-
-	return drink;
-}
-
-std::vector<Order::SWEETS> OrderManager::GetAllOrderSweet(void) const
-{
-	std::vector<Order::SWEETS> sweets;
-	for (auto& order : orders_)
-	{
-		sweets.push_back(order->GetOrder().sweets_);
-	}
-
-	return sweets;
+	return false;
 }
 
 std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
 {
-	std::vector<Order::OrderData> data;
-	for (auto& order : orders_)
+	//‘S‚Ä‚Ì’•¶ƒf[ƒ^‚ğ•Ô‚·
+	std::vector<Order::OrderData> retData;
+	for (const auto& order : orders_)
 	{
-		data.push_back(order->GetOrder());
+		retData.push_back(order->GetOrder());
 	}
-
-	return data;
+	return retData;
 }
 
 Order::OrderData OrderManager::GetLastOrderData(void) const

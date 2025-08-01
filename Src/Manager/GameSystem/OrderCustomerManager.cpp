@@ -84,8 +84,6 @@ void OrderCustomerManager::Draw(void)
 
 void OrderCustomerManager::CreateCustomersByOrders(void)
 {
-	std::vector<Order::DRINK> drinks = orderMng_->GetAllOrderDrink();
-	std::vector<Order::SWEETS> sweets = orderMng_->GetAllOrderSweet();
 	std::vector<Order::OrderData> data = orderMng_->GetAllOrder();
 	for(int i = 0; i < data.size();++i)
 	{
@@ -96,7 +94,7 @@ void OrderCustomerManager::CreateCustomersByOrders(void)
 void OrderCustomerManager::AddOrdersAndCustomers(void)
 {
 	//’•¶‚Æ‚¨‹q‚ð’Ç‰Á¶¬AˆÊ’u’²®
-	orderMng_->AddOrder();
+	orderMng_->AddCreateOrder();
 	AddCustomerByOrder();
 }
 
