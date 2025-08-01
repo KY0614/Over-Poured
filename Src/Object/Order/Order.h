@@ -17,7 +17,7 @@ public:
 	//ドリンクの種類
 	enum class DRINK
 	{
-		NONE,	
+		NONE,	//無し
 		HOT,	//ホット
 		ICE,	//アイス
 	};

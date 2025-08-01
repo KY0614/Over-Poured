@@ -156,7 +156,7 @@ void CustomerManager::ClearFirstCustomers(void)
 	if (!customers_.empty())
 	{
 		//‚¨‹q‚ðíœ
-		customers_[cnt_]->IsVisible();
+		customers_[cnt_]->IsNotVisible();
 		orderUI_[cnt_]->SetActive(false);
 		cnt_++;
 	}

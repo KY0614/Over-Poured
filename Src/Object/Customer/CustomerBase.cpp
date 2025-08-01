@@ -4,12 +4,14 @@
 #include "../../Utility/AsoUtility.h"
 #include "CustomerBase.h"
 
-namespace
+namespace//‚±‚Ìcpp“à‚Å‚µ‚©Žg‚í‚È‚¢’è”
 {
 	const VECTOR CUSTOMER_SCALE = { 0.7f, 0.7f, 0.7f };	//‚¨‹q‚Ì‘å‚«‚³
 	const VECTOR COUNTER_POS = { 221.0f, 0.0f, 271.0f };//ƒJƒEƒ“ƒ^[‚ÌˆÊ’u
-	const float CUSTOMER_ROT_Y = -90.0f; // ŒÚ‹q‚Ì‰ŠúYŽ²‰ñ“]Šp“x
-	const float MOVE_SPEED = 1.5f;
+	const float CUSTOMER_ROT_Y = -90.0f;	//‚¨‹q‚Ì‰ŠúYŽ²‰ñ“]Šp“x
+	const float MOVE_SPEED = 1.5f;			//‚¨‹q‚ÌˆÚ“®‘¬“x
+	const float COUNTER_RADIUS = 30.0f;		//ƒJƒEƒ“ƒ^[‚Ì‹…‘Ì“–‚½‚è”»’è‚Ì”¼Œa
+	const float ROT_TIME = 1.0f;			//‰ñ“]Š®—¹‚Ü‚Å‚ÌŽžŠÔ
 }
 
 CustomerBase::CustomerBase(void)
@@ -21,7 +23,7 @@ CustomerBase::CustomerBase(void)
 
 	isVisible_ = false;
 
-	stepRotTime_ = 0.0f;
+	stepRotTime_ = -1.0f;
 }
 
 void CustomerBase::Init(VECTOR pos)
@@ -61,19 +63,30 @@ void CustomerBase::Move(void)
 	transform_.pos.x += MOVE_SPEED;
 }
 
-void CustomerBase::RotateY(void)
-{
-	//‰ñ“]‚É‚©‚©‚éŽžŠÔ‚ðŒo‰ßŽž‚ÅŒ¸‚ç‚·
-	stepRotTime_ -= SceneManager::GetInstance().GetDeltaTime();
+void CustomerBase::SetGoalRotate(double rotRad)
+{ 
+	//‰ñ“]Ž²‚ðYŽ²‚ÉÝ’è‚µ‚Ä‰ñ“]Šp“x‚ðÝ’è
+	Quaternion axis =
+		Quaternion::AngleAxis(
+			rotRad, AsoUtility::AXIS_Y);
 
-	//‰ñ“]‚Ì‹…–Ê•âŠÔ
-	customerRotY_ = Quaternion::Slerp(
-		customerRotY_, goalQuaRot_, (TIME_ROT - stepRotTime_) / TIME_ROT);
+	//Œ»ÝÝ’è‚³‚ê‚Ä‚¢‚é‰ñ“]‚Æ‚ÌŠp“x·‚ðŽæ‚é
+	double angleDiff = Quaternion::Angle(axis, goalQuaRot_);
+
+	//Šp“x·‚ª0.1ˆÈã‚È‚ç‰ñ“]ŽžŠÔ‚ðÝ’è
+	if (angleDiff > 0.1)
+	{
+		stepRotTime_ = ROT_TIME;
+	}
+	//–Ú•W‚Ì‰ñ“]‚ðÝ’è
+	goalQuaRot_ = axis;
 }
 
 bool CustomerBase::CollisionCounter(void)
 {
-	if (AsoUtility::IsHitSpherePoint(COUNTER_POS, 30, GetTransform().pos) && isVisible_)
+	//•\Ž¦’†‚Ì‚¨‹q‚ªƒJƒEƒ“ƒ^[‚Ì‹…‘Ì“–‚½‚è”»’è‚É“–‚½‚Á‚Ä‚¢‚é‚©
+	if (AsoUtility::IsHitSpherePoint(COUNTER_POS, COUNTER_RADIUS,
+		GetTransform().pos) && isVisible_)
 	{
 		//“–‚½‚Á‚Ä‚¢‚½‚çtrue‚ð•Ô‚·
 		return true;
@@ -91,26 +104,14 @@ bool CustomerBase::CheckCounterToCustomer(void)
 	return false;
 }
 
-void CustomerBase::SetGoalRotate(double rotRad)
-{ 
-	Quaternion axis =
-		Quaternion::AngleAxis(
-			rotRad, AsoUtility::AXIS_Y);
-
-	//Œ»ÝÝ’è‚³‚ê‚Ä‚¢‚é‰ñ“]‚Æ‚ÌŠp“x·‚ðŽæ‚é
-	double angleDiff = Quaternion::Angle(axis, goalQuaRot_);
-
-	//‚µ‚«‚¢’l
-	if (angleDiff > 0.1)
-	{
-		stepRotTime_ = TIME_ROT;
-	}
-	goalQuaRot_ = axis;
-}
-
-void CustomerBase::Rotate(void)
+void CustomerBase::RotateY(void)
 {
+	//‰ñ“]‚É‚©‚©‚éŽžŠÔ‚ðŒo‰ßŽž‚ÅŒ¸‚ç‚·
 	stepRotTime_ -= SceneManager::GetInstance().GetDeltaTime();
+
+	//‰ñ“]‚Ì‹…–Ê•âŠÔ
+	customerRotY_ = Quaternion::Slerp(
+		customerRotY_, goalQuaRot_, (ROT_TIME - stepRotTime_) / ROT_TIME);
 }
 
 void CustomerBase::StateAnimation(void)
@@ -118,11 +119,11 @@ void CustomerBase::StateAnimation(void)
 	//ó‘Ô‚²‚Æ‚É‚æ‚éƒAƒjƒ[ƒVƒ‡ƒ“‚ÌØ‚è‘Ö‚¦
 	switch (state_)
 	{
-	case CustomerBase::STATE::IDLE:
+	case CustomerBase::STATE::IDLE:	//‘Ò‹@ó‘Ô
 		animationController_->Play((int)STATE::IDLE);
 		break;
 
-	case CustomerBase::STATE::WALK:
+	case CustomerBase::STATE::WALK:	//•àsó‘Ô
 		animationController_->Play((int)STATE::WALK);
 		break;
 	default:
