@@ -48,7 +48,7 @@ public:
 	/// 初期化処理
 	/// </summary>
 	/// <param name="pos">設定する座標</param>
-	virtual void Init(VECTOR pos);
+	virtual void Init(const VECTOR pos);
 
 	/// <summary>
 	/// 更新処理
@@ -74,31 +74,31 @@ public:
 	/// 客の種類を設定する
 	/// </summary>
 	/// <param name="type">設定する種類</param>
-	void SetType(TYPE type) { type_ = type; }
+	void SetType(const TYPE type) { type_ = type; }
 
 	/// <summary>
 	/// X座標を設定
 	/// </summary>
 	/// <param name="posX">X座標</param>
-	void SetPosX(float posX) { transform_.pos.x = posX; }
+	void SetPosX(const float posX) { transform_.pos.x = posX; }
 
 	/// <summary>
 	/// お客の状態を設定する
 	/// </summary>
 	/// <param name="state">設定する状態</param>
-	void SetState(STATE state) { state_ = state; }
+	void SetState(const STATE state) { state_ = state; }
 
 	/// <summary>
 	/// お客の反応を設定する
 	/// </summary>
 	/// <param name="reaction">設定する反応</param>
-	void SetReaction(REACTION reaction) { reaction_ = reaction; }
+	void SetReaction(const REACTION reaction) { reaction_ = reaction; }
 
 	/// <summary>
 	/// 目標の回転角度（ラジアン）を設定します。
 	/// </summary>
 	/// <param name="rotRad">設定する回転角度（ラジアン単位）</param>
-	void SetGoalRotate(double rotRad);
+	void SetGoalRotate(const double rotRad);
 
 	/// <summary>
 	/// お客を非表示にする

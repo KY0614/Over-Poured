@@ -1,6 +1,4 @@
 #include "../../Application.h"
-#include "../../Utility/AsoUtility.h"
-#include "../../Manager/Generic/SceneManager.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "../Common/AnimationController.h"
 #include "HotCustomer.h"
@@ -33,10 +31,11 @@ void HotCustomer::SetParam(void)
 
 void HotCustomer::InitAnimation(void)
 {
+	//アニメーションの初期化
 	std::string path = Application::PATH_MODEL + "Player/";
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
 	animationController_->Add((int)STATE::IDLE, path + "Idle.mv1", IDLE_ANIM_SPEED);
 	animationController_->Add((int)STATE::WALK, path + "Walk.mv1", WALK_ANIM_SPEED);
-
+	//アニメーションの初期状態を設定
 	animationController_->Play((int)STATE::IDLE);
 }

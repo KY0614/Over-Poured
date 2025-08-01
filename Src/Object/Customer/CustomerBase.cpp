@@ -26,8 +26,12 @@ CustomerBase::CustomerBase(void)
 	stepRotTime_ = -1.0f;
 }
 
-void CustomerBase::Init(VECTOR pos)
+void CustomerBase::Init(const VECTOR pos)
 {
+	//お客のパラメーター設定
+	SetParam();
+	//アニメーション初期化
+	InitAnimation();
 	//モデル情報初期化
 	transform_.scl = CUSTOMER_SCALE;	//大きさ
 	transform_.pos = pos;				//位置を引数で指定
@@ -36,10 +40,6 @@ void CustomerBase::Init(VECTOR pos)
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(CUSTOMER_ROT_Y), 0.0f });
 	//モデル情報を更新
 	transform_.Update();
-	//お客のパラメーター設定
-	SetParam();
-	//アニメーション初期化
-	InitAnimation();
 }
 
 void CustomerBase::Update(void)

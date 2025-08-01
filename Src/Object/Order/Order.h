@@ -93,25 +93,25 @@ private:
 	/// ’•¶”‚ğİ’è‚·‚é
 	/// </summary>
 	/// <param name="num"></param>
-	void SetOrderNum(int num) { orderData_.num_ = num; }
+	void SetOrderNum(const int num) { orderData_.num_ = num; }
 
 	/// <summary>
 	/// ’•¶“à—e‚Ìˆù‚İ•¨‚ğİ’è‚·‚é
 	/// </summary>
 	/// <param name="type">İ’è‚·‚é‚à‚Ì</param>
-	void SetDrink(DRINK type) { orderData_.drink_ = type; }
+	void SetDrink(const DRINK type) { orderData_.drink_ = type; }
 
 	/// <summary>
 	/// ’•¶“à—e‚ÌH‚×•¨‚ğİ’è‚·‚é
 	/// </summary>
 	/// <param name="type">İ’è‚·‚é‚à‚Ì</param>
-	void SetSweets(SWEETS type) { orderData_.sweets_ = type; };
+	void SetSweets(const SWEETS type) { orderData_.sweets_ = type; };
 
 	/// <summary>
 	/// ’•¶‚Ì§ŒÀŠÔ‚ğİ’è‚·‚é
 	/// </summary>
 	/// <param name="time">İ’è‚·‚éŠÔ</param>
-	void SetOrderTime(float time) { orderData_.time_ = time; }
+	void SetOrderTime(const float time) { orderData_.time_ = time; }
 	//--------------------------------------------------------------
 };
 
