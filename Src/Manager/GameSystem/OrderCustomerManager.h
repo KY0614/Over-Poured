@@ -71,13 +71,6 @@ public:
 	/// <returns>“®‚¢‚Ä‚¢‚éê‡‚ÍtrueA‚»‚¤‚Å‚È‚¢ê‡‚Ífalse</returns>
 	bool GetIsMoving(void);
 
-	/// <summary>
-	/// ¶¬‚µ‚Ä‚¢‚é‚¨‹q‚Ì”
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>‚¨‹q‚Ì”</returns>
-	int GetCustomerNum(void) const;
-
 	Order::OrderData GetOrderData(void) const;
 
 	void CheckServeAndOrder(const Order::OrderData serve);

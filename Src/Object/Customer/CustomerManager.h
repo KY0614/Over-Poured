@@ -11,43 +11,32 @@ class CustomerManager
 {
 public:
 
-	//お客の最大人数
-	static constexpr int MAX_CUSTOMER_SIZE = 10;
-
-	//生成する上限
-	static constexpr int MAX_CREATE_SIZE = 6;
-
-	//お客同士の間隔
-	static constexpr float CUSTOMERS_SPACE = 90.0f;
-
-	static constexpr float ORDER_UI_OFFSET_X = 130.0f;
-	static constexpr float ORDER_UI_OFFSET_Y = 220.0f;
-	
-	static constexpr float TIMER_UI_OFFSET_X = 180.0f;
-	static constexpr float TIMER_UI_OFFSET_Y = 260.0f;
-
+	//コンストラクタ
 	CustomerManager(void);
+	//デストラクタ
 	~CustomerManager(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void);
-	void Update(float orderTime);
-	void Draw(void);
 
 	/// <summary>
-	/// 最初の5人の座標を初期化
+	/// 更新処理
 	/// </summary>
-	void InitCustomersPos(void);	
+	/// <param name="orderTime">注文の経過時間</param>
+	void Update(float orderTime);
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	void Draw(void);
 
 	/// <summary>
 	/// お客を一人生成する
 	/// </summary>
 	/// <param name="order">生成するタイプ</param>
 	void CreateSingleCustomer(Order::OrderData data);
-
-	/// <summary>
-	/// お客を追加生成した後に位置調整する用
-	/// </summary>
-	void MoveCustomerPos(void);
 
 	/// <summary>
 	/// 配列の先頭のお客情報を削除
@@ -57,20 +46,20 @@ public:
 	/// <summary>
 	/// 客を動かす
 	/// </summary>
-	void IsMove(void) { isMove_ = true; }
+	void StartMove(void) { isCustomersMove_ = true; }
 
 	/// <summary>
 	/// 客を止める
 	/// </summary>
-	/// <param name="">falseにすると止まる</param>
-	void IsNotMove(void) { isMove_ = false; }
+	/// <param name="">止めるためにfalseにする</param>
+	void StopMove(void) { isCustomersMove_ = false; }
 
 	/// <summary>
 	/// 客が動いているか取得する
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true:動いている　false:止まってる</returns>
-	bool GetIsMove(void) { return isMove_; }
+	bool GetIsMove(void)const { return isCustomersMove_; }
 
 	/// <summary>
 	/// スコアによるお客の反応の設定
@@ -78,9 +67,12 @@ public:
 	/// <param name="score">スコア</param>
 	void SetCustomerReacton(int score);
 
-	VECTOR SetLastCustomerPos(void);
-
-	int GetCustomerNum(void) { return customers_.size(); }
+	/// <summary>
+	/// 最後尾（６人目）の座標を取得
+	/// </summary>
+	/// <param name="">５人目から間隔をあけて左にずらした座標を返す</param>
+	/// <returns>最後尾の座標</returns>
+	VECTOR GetLastCustomerPos(void) const;
 
 	/// <summary>
 	/// 先頭のお客がカウンター前にいるかどうか
@@ -113,7 +105,13 @@ private:
 	//注文UI用
 	std::vector<std::unique_ptr<OrderUI>> orderUI_;
 
-	bool isMove_;
+	bool isCustomersMove_;
 	int cnt_;
+
+
+	/// <summary>
+	/// 最初の5人の座標を初期化
+	/// </summary>
+	void InitCustomersPos(void);
 };
 

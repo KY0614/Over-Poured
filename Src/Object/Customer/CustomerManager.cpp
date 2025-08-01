@@ -6,9 +6,22 @@
 #include "../../Object/UI/UIManager.h"
 #include "CustomerManager.h"
 
+namespace
+{
+	//生成する上限
+	const int MAX_CREATE_SIZE = 6;
+
+	//お客同士の間隔
+	const float CUSTOMERS_SPACE = 90.0f;
+
+	//注文UIの表示位置
+	const float ORDER_UI_OFFSET_X = 130.0f;		//X座標のオフセット
+	const float ORDER_UI_OFFSET_Y = 220.0f;		//Y座標のオフセット
+}
+
 CustomerManager::CustomerManager(void)
 {
-	isMove_ = false;
+	isCustomersMove_ = false;
 	cnt_ = 0;
 }
 
@@ -19,34 +32,27 @@ CustomerManager::~CustomerManager(void)
 
 void CustomerManager::Init(void)
 {
-	//お客の初期位置を設定
-	VECTOR pos = CustomerBase::CUSTOMER_POS;	
-	//全員の位置をx軸で左にずらす
-	for (int i = 0; i < MAX_CREATE_SIZE; i++)
-	{
-		auto& customer = customers_[i];
-		pos.x -= CUSTOMERS_SPACE;
-		customer->Init(pos);
-	}
+	//お客らの初期位置を設定
+	InitCustomersPos();
 
-	isMove_ = true;
+	isCustomersMove_ = true;
 	cnt_ = 0;
 }
 
 void CustomerManager::Update(float orderTime)
 {
-
+	//お客の更新処理
 	for (auto& c : customers_)
 	{
 		c->Update();
 	}
-
+	//注文UIの更新処理
 	for (auto& ui : orderUI_)
 	{
 		ui->Update();
 	}
-
-	if (isMove_)
+	//お客が動いていたら、全員の位置を更新＆歩行アニメーションを再生
+	if (isCustomersMove_)
 	{
 		for (auto& c : customers_)
 		{
@@ -70,7 +76,7 @@ void CustomerManager::Update(float orderTime)
 		if (customers_[cnt_]->CheckCounterToCustomer())
 		{
 			customers_[cnt_]->SetGoalRotate(AsoUtility::Deg2RadF(90.0f));
-			isMove_ = false;
+			isCustomersMove_ = false;
 			orderUI_[cnt_]->SetActive(true);
 			for (auto& c : customers_)
 			{
@@ -88,25 +94,12 @@ void CustomerManager::Draw(void)
 	}
 }
 
-void CustomerManager::InitCustomersPos(void)
-{
-	//とりあえず全員の位置をx軸だけずらす
-	for (int i = 1; i < MAX_CREATE_SIZE; i++)
-	{
-		VECTOR pos = customers_[cnt_]->GetPos();
-		pos.x -= (i * CUSTOMERS_SPACE);
-		customers_[i]->SetPosX(pos.x);
-	}
-}
-
 void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 {
-	//最大注文生成数を超えそうだったらreturn
-	//if (customers_.size() >= MAX_CREATE_SIZE) return;
-
+	//注文用UIを生成
 	orderUI_.emplace_back(std::make_unique<OrderUI>(
 		data.drink_, data.sweets_,data.time_));
-
+	//注文に応じたお客を生成
 	switch (data.drink_)
 	{
 	case Order::DRINK::NONE:
@@ -114,10 +107,10 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 
 	case Order::DRINK::HOT:
 		customers_.emplace_back(std::make_unique<HotCustomer>());
-		customers_.back()->Init(SetLastCustomerPos());
+		customers_.back()->Init(GetLastCustomerPos());
 		{
 			VECTOR pos = VAdd(
-				SetLastCustomerPos(),
+				GetLastCustomerPos(),
 				VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
 			orderUI_.back()->Init();
 			orderUI_.back()->SetPos(pos);
@@ -126,10 +119,10 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 
 	case Order::DRINK::ICE:
 		customers_.emplace_back(std::move(std::make_unique<IceCustomer>()));
-		customers_.back()->Init(SetLastCustomerPos());
+		customers_.back()->Init(GetLastCustomerPos());
 		{
 			VECTOR pos = VAdd(
-				SetLastCustomerPos(),
+				GetLastCustomerPos(),
 				VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
 			orderUI_.back()->Init();
 			orderUI_.back()->SetPos(pos);
@@ -139,16 +132,8 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 	default:
 		break;
 	}
-
+	//UIをManagerに登録
 	UIManager::GetInstance().AddOrderUI(orderUI_.back().get());
-}
-
-void CustomerManager::MoveCustomerPos(void)
-{
-	for (auto& c : customers_)
-	{
-		c->Move();
-	}
 }
 
 void CustomerManager::ClearFirstCustomers(void)
@@ -178,14 +163,15 @@ void CustomerManager::SetCustomerReacton(int score)
 	}
 }
 
-VECTOR CustomerManager::SetLastCustomerPos(void)
+VECTOR CustomerManager::GetLastCustomerPos(void) const
 {
 	//座標を返す
-	VECTOR ret;
-
-	ret = customers_[cnt_]->GetPos();
-	ret.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
-	return ret;
+	VECTOR retPos;
+	//最後のお客の位置を取得
+	retPos = customers_[cnt_]->GetPos();
+	//最後のお客の位置から間隔をあけて左にずらす
+	retPos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+	return retPos;
 }
 
 bool CustomerManager::CheckFirstCustomerCol(void)
@@ -202,6 +188,7 @@ bool CustomerManager::CheckFirstCustomerCol(void)
 bool CustomerManager::CheckSecondCustomerCol(void)
 {
 	bool ret = false;
+	//2番目のお客がカウンター前にいるかどうか
 	if (customers_[cnt_ + 1]->CollisionCounter())
 	{
 		ret = true;
@@ -212,4 +199,18 @@ bool CustomerManager::CheckSecondCustomerCol(void)
 void CustomerManager::IsCheckUI(const int index, const bool isActive)
 {
 	orderUI_[cnt_]->SetCheckUI(index, isActive);
+}
+
+void CustomerManager::InitCustomersPos(void)
+{
+	//お客の初期位置設定
+	VECTOR pos = CustomerBase::CUSTOMER_POS;
+	//全員の位置をx軸で左にずらす
+	for (int i = 0; i < MAX_CREATE_SIZE; i++)
+	{
+		auto& customer = customers_[i];
+		//一人ずつずらす
+		pos.x -= CUSTOMERS_SPACE;
+		customer->Init(pos);
+	}
 }

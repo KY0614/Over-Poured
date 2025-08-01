@@ -23,6 +23,14 @@ public:
 
 	static constexpr int LOGO_HEIGHT = 1024;
 
+	enum class STEP
+	{
+		OPERATION,	//操作説明
+		ORDER,		//注文説明
+		CUSTOMER,	//客の説明
+		FINISH,		//終了
+	};
+
 	//コンストラクタ
 	TutorialScene(void);
 

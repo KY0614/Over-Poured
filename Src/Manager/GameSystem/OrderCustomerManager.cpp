@@ -44,11 +44,11 @@ void OrderCustomerManager::Update(void)
 	//入口からカウンターまで動かす用
 	if (!customerMng_->CheckFirstCustomerCol())
 	{
-		customerMng_->IsMove();
+		customerMng_->StartMove();
 		//着いたら動かないように&注文を表示
 		if (customerMng_->CheckFirstCustomerCol())
 		{
-			customerMng_->IsNotMove();
+			customerMng_->StopMove();
 		}
 	}
 	
@@ -56,8 +56,9 @@ void OrderCustomerManager::Update(void)
 	if (orderMng_->IsFirstOrderTimeOut() || isServe_)
 	{
 		if(!isServe_)customerMng_->SetCustomerReacton(0);
+
 		//お客を移動させる
-		customerMng_->IsMove();
+		customerMng_->StartMove();
 
 		//お客の移動が終わったら削除と生成を行う
 		if (customerMng_->CheckSecondCustomerCol())
@@ -109,7 +110,6 @@ void OrderCustomerManager::AddCustomerByOrder(void)
 {
 	//お客を追加生成
 	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderData());
-	customerMng_->SetLastCustomerPos();	//最後尾に位置を調整
 }
 
 int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
@@ -164,11 +164,6 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 bool OrderCustomerManager::GetIsMoving(void)
 {
 	return customerMng_->GetIsMove();
-}
-
-int OrderCustomerManager::GetCustomerNum(void) const
-{
-	return customerMng_->GetCustomerNum();
 }
 
 Order::OrderData OrderCustomerManager::GetOrderData(void) const
