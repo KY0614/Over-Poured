@@ -30,18 +30,6 @@ public:
 	//生成関数-----------------------------------------------------
 
 	/// <summary>
-	/// 注文を最大数まで生成する
-	/// </summary>
-	/// <param name="">ゲームの始まりに生成する用</param>
-	void CreateOrderMaxNum(void);
-
-	/// <summary>
-	/// １つだけ注文を生成する
-	/// </summary>
-	/// <param name="">Orderクラスを１つ生成し、配列に格納</param>
-	void CreateSingleOrder(void);
-
-	/// <summary>
 	/// 注文を追加生成
 	/// </summary>
 	/// <param name="">注文数が最大数未満になったら追加生成</param>
@@ -89,5 +77,20 @@ private:
 
 	//注文管理用
 	std::vector<std::unique_ptr<Order>> orders_;
+
+	//生成関数-----------------------------------------------------
+
+	/// <summary>
+	/// 注文を最大数まで生成する
+	/// </summary>
+	/// <param name="">ゲームの始まりに生成する用</param>
+	void CreateOrderMaxNum(void);
+
+	/// <summary>
+	/// １つだけ注文を生成する
+	/// </summary>
+	/// <param name="">Orderクラスを１つ生成し、配列に格納</param>
+	void CreateSingleOrder(void);
+
 };
 

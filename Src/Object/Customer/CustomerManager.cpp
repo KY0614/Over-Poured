@@ -19,13 +19,14 @@ CustomerManager::~CustomerManager(void)
 
 void CustomerManager::Init(void)
 {
-	//とりあえず全員の位置をx軸だけずらす
+	//お客の初期位置を設定
+	VECTOR pos = CustomerBase::CUSTOMER_POS;	
+	//全員の位置をx軸で左にずらす
 	for (int i = 0; i < MAX_CREATE_SIZE; i++)
 	{
-		VECTOR pos = CustomerBase::CUSTOMER_POS;
-		pos.x -= (i * CUSTOMERS_SPACE);
-
-		customers_[i]->Init(pos);
+		auto& customer = customers_[i];
+		pos.x -= CUSTOMERS_SPACE;
+		customer->Init(pos);
 	}
 
 	isMove_ = true;

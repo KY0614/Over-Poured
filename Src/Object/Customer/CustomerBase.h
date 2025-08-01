@@ -7,14 +7,13 @@ class AnimationController;
 class CustomerBase : public ActorBase
 {
 public:
-
-	static constexpr VECTOR COUNTER_FRONT_POS = {221.0f, 0.0f, 271.0f};
+	//お客の初期位置
 	static constexpr VECTOR CUSTOMER_POS = {-139.0f, 0.0f, 271.0f};
-	static constexpr float COUNTER_FRONT_POS_X = 221.0f;
 
 	//回転完了までの時間
 	static constexpr float TIME_ROT = 1.0f;
 
+	//お客の種類（タイプ）
 	enum class TYPE
 	{
 		NONE,
@@ -22,12 +21,14 @@ public:
 		ICE
 	};
 
+	//お客の状態
 	enum class STATE
 	{
 		IDLE,
 		WALK,
 	};
 
+	//お客の反応
 	enum class REACTION
 	{
 		NONE,
@@ -42,13 +43,33 @@ public:
 	//デストラクタ
 	~CustomerBase(void) = default;
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
+	/// <param name="pos">設定する座標</param>
 	virtual void Init(VECTOR pos);
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	virtual void Update(void)override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	virtual void Draw(void)override = 0;
 
 	//一定間隔だけ進む
+	
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	/// <param name="">右に一定間隔で移動する</param>
 	void Move(void);
 
+	/// <summary>
+	/// Y軸を中心に回転する
+	/// </summary>
 	void RotateY(void);
 
 	/// <summary>
@@ -57,6 +78,11 @@ public:
 	/// <returns>true:当たっている , false:当たっていない</returns>
 	bool CollisionCounter(void);
 
+	/// <summary>
+	/// お客がカウンターの前にいるかどうかを確認する
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true：カウンターの位置を超えている場合、false：そうでない場合</returns>
 	bool CheckCounterToCustomer(void);
 
 	/// <summary>
@@ -115,5 +141,7 @@ private:
 	Quaternion customerRotY_;
 	Quaternion goalQuaRot_;
 	float stepRotTime_;
+
+	void StateAnimation(void);
 };
 

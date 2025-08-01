@@ -29,30 +29,6 @@ void OrderManager::FirstOrderUpdate(void)
 	orders_.front()->TimerUpdate();
 }
 
-void OrderManager::CreateOrderMaxNum(void)
-{
-	//’•¶‚ª‚·‚Å‚É¶¬‚³‚ê‚Ä‚¢‚½‚ç¶¬‚µ‚È‚¢
-	if (orders_.empty())
-	{
-		//Å‘å”‚Ü‚Å¶¬‚·‚é
-		for (int i = 0; i < MAX_CREATE_NUM; i++)
-		{
-			//‚P‚Â¶¬
-			CreateSingleOrder();
-		}
-	}
-}
-
-void OrderManager::CreateSingleOrder(void)
-{
-	//Å‘å’•¶¶¬”‚ğ’´‚¦‚»‚¤‚¾‚Á‚½‚ç¶¬‚µ‚È‚¢
-	if (orders_.size() >= MAX_CREATE_NUM) return;
-	//’•¶‚ğ¶¬‚·‚é
-	std::unique_ptr<Order> order = std::make_unique<Order>();
-	order->CreateOrder();		//’•¶‚ğ¶¬
-	orders_.push_back(std::move(order));
-}
-
 void OrderManager::AddCreateOrder(void)
 {
 	//Å‘å’•¶¶¬”‚ğ’´‚¦‚»‚¤‚¾‚Á‚½‚çreturn
@@ -95,4 +71,28 @@ std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
 Order::OrderData OrderManager::GetLastOrderData(void) const
 {
 	return orders_.back()->GetOrder();
+}
+
+void OrderManager::CreateOrderMaxNum(void)
+{
+	//’•¶‚ª‚·‚Å‚É¶¬‚³‚ê‚Ä‚¢‚½‚ç¶¬‚µ‚È‚¢
+	if (orders_.empty())
+	{
+		//Å‘å”‚Ü‚Å¶¬‚·‚é
+		for (int i = 0; i < MAX_CREATE_NUM; i++)
+		{
+			//‚P‚Â¶¬
+			CreateSingleOrder();
+		}
+	}
+}
+
+void OrderManager::CreateSingleOrder(void)
+{
+	//Å‘å’•¶¶¬”‚ğ’´‚¦‚»‚¤‚¾‚Á‚½‚ç¶¬‚µ‚È‚¢
+	if (orders_.size() >= MAX_CREATE_NUM) return;
+	//’•¶‚ğ¶¬‚·‚é
+	std::unique_ptr<Order> order = std::make_unique<Order>();
+	order->CreateOrder();		//’•¶‚ğ¶¬
+	orders_.push_back(std::move(order));
 }

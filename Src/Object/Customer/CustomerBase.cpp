@@ -4,6 +4,14 @@
 #include "../../Utility/AsoUtility.h"
 #include "CustomerBase.h"
 
+namespace
+{
+	const VECTOR CUSTOMER_SCALE = { 0.7f, 0.7f, 0.7f };	//お客の大きさ
+	const VECTOR COUNTER_POS = { 221.0f, 0.0f, 271.0f };//カウンターの位置
+	const float CUSTOMER_ROT_Y = -90.0f; // 顧客の初期Y軸回転角度
+	const float MOVE_SPEED = 1.5f;
+}
+
 CustomerBase::CustomerBase(void)
 {
 	animationController_ = nullptr;
@@ -18,16 +26,17 @@ CustomerBase::CustomerBase(void)
 
 void CustomerBase::Init(VECTOR pos)
 {
-	transform_.scl = {0.7f,0.7f,0.7f};
-	transform_.pos = CUSTOMER_POS;
-	transform_.pos = pos;
-	transform_.quaRot = Quaternion();
-	transform_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(-90.0f), 0.0f });
-
+	//モデル情報初期化
+	transform_.scl = CUSTOMER_SCALE;	//大きさ
+	transform_.pos = pos;				//位置を引数で指定
+	transform_.quaRot = Quaternion();	//回転は初期化
+	transform_.quaRotLocal =			//ローカル回転設定
+		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(CUSTOMER_ROT_Y), 0.0f });
+	//モデル情報を更新
 	transform_.Update();
-
+	//お客のパラメーター設定
 	SetParam();
+	//アニメーション初期化
 	InitAnimation();
 }
 
@@ -36,32 +45,25 @@ void CustomerBase::Update(void)
 	transform_.Update();
 	animationController_->Update();
 
-	switch (state_)
-	{
-	case CustomerBase::STATE::IDLE:
-		animationController_->Play((int)STATE::IDLE);
-		break;
-	case CustomerBase::STATE::WALK:
-		animationController_->Play((int)STATE::WALK);
-		break;
-	default:
-		break;
-	}
-
+	//状態ごとのアニメーション
+	StateAnimation();
+	//Y軸回転
 	RotateY();
 
-	//回転させる
+	//Y軸回転を反映
 	transform_.quaRot = Quaternion::Quaternion();
 	transform_.quaRot = transform_.quaRot.Mult(customerRotY_);
 }
 
 void CustomerBase::Move(void)
 {
-	transform_.pos.x += 1.5f;
+	//右に移動させる
+	transform_.pos.x += MOVE_SPEED;
 }
 
 void CustomerBase::RotateY(void)
 {
+	//回転にかかる時間を経過時で減らす
 	stepRotTime_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	//回転の球面補間
@@ -71,9 +73,7 @@ void CustomerBase::RotateY(void)
 
 bool CustomerBase::CollisionCounter(void)
 {
-	VECTOR spherePos = { 221.0f, 0.0f, 271.0f };
-
-	if (AsoUtility::IsHitSpherePoint(spherePos, 30, GetTransform().pos) && isVisible_)
+	if (AsoUtility::IsHitSpherePoint(COUNTER_POS, 30, GetTransform().pos) && isVisible_)
 	{
 		//当たっていたらtrueを返す
 		return true;
@@ -83,8 +83,8 @@ bool CustomerBase::CollisionCounter(void)
 
 bool CustomerBase::CheckCounterToCustomer(void)
 {
-	VECTOR spherePos = { 221.0f, 0.0f, 271.0f };
-	if (GetTransform().pos.x > spherePos.x)
+	//お客がカウンターの位置を超えそうだったらtrueを返す
+	if (GetTransform().pos.x > COUNTER_POS.x)
 	{
 		return true;
 	}
@@ -111,4 +111,21 @@ void CustomerBase::SetGoalRotate(double rotRad)
 void CustomerBase::Rotate(void)
 {
 	stepRotTime_ -= SceneManager::GetInstance().GetDeltaTime();
+}
+
+void CustomerBase::StateAnimation(void)
+{
+	//状態ごとによるアニメーションの切り替え
+	switch (state_)
+	{
+	case CustomerBase::STATE::IDLE:
+		animationController_->Play((int)STATE::IDLE);
+		break;
+
+	case CustomerBase::STATE::WALK:
+		animationController_->Play((int)STATE::WALK);
+		break;
+	default:
+		break;
+	}
 }

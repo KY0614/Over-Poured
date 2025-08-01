@@ -57,35 +57,7 @@ public:
 	/// <param name="">１つ生成</param>
 	void CreateOrder(void);
 
-	//設定する関数-------------------------------------------------
-
-	/// <summary>
-	/// 注文数を設定する
-	/// </summary>
-	/// <param name="num"></param>
-	void SetOrderNum(int num) { orderData_.num_ = num; }
-
-	/// <summary>
-	/// 注文内容の飲み物を設定する
-	/// </summary>
-	/// <param name="type">設定するもの</param>
-	void SetDrink(DRINK type) { orderData_.drink_ = type; }
-
-	/// <summary>
-	/// 注文内容の食べ物を設定する
-	/// </summary>
-	/// <param name="type">設定するもの</param>
-	void SetSweets(SWEETS type) { orderData_.sweets_ = type; };
-
-	/// <summary>
-	/// 注文の制限時間を設定する
-	/// </summary>
-	/// <param name="time">設定する時間</param>
-	void SetOrderTime(float time) { orderData_.time_ = time; }
-
-	//--------------------------------------------------------------
-
-	//取得する関数--------------------------------------------------------------------
+	//取得関数--------------------------------------------------------------------
 
 	/// <summary>
 	/// 注文数を取得
@@ -114,5 +86,32 @@ private:
 
 	//注文数
 	int orderNum_;
+
+	//設定関数-------------------------------------------------
+
+	/// <summary>
+	/// 注文数を設定する
+	/// </summary>
+	/// <param name="num"></param>
+	void SetOrderNum(int num) { orderData_.num_ = num; }
+
+	/// <summary>
+	/// 注文内容の飲み物を設定する
+	/// </summary>
+	/// <param name="type">設定するもの</param>
+	void SetDrink(DRINK type) { orderData_.drink_ = type; }
+
+	/// <summary>
+	/// 注文内容の食べ物を設定する
+	/// </summary>
+	/// <param name="type">設定するもの</param>
+	void SetSweets(SWEETS type) { orderData_.sweets_ = type; };
+
+	/// <summary>
+	/// 注文の制限時間を設定する
+	/// </summary>
+	/// <param name="time">設定する時間</param>
+	void SetOrderTime(float time) { orderData_.time_ = time; }
+	//--------------------------------------------------------------
 };
 
