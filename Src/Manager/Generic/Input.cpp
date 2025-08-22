@@ -17,7 +17,7 @@ Input::Input()
 	Load();
 
 	inputlistForDisplay_ = {
-		"NextScene","pause","Dash","Interact"
+		"Back","pause","Dash","Interact"
 	};
 	analogInputTable_[AnalogInputType::l_up] = [](const XINPUT_STATE& state) {
 		return state.ThumbLY > 10000;
@@ -123,7 +123,7 @@ void Input::Update(void)
 void Input::ResetTable()
 {
 	inputTable_ = {
-	{"NextScene",{
+	{"Back",{
 		{PeripheralType::keyboard,KEY_INPUT_RETURN},
 		{PeripheralType::gamepad,PAD_INPUT_A},//Aボタン
 		//{PeripheralType::mouse,MOUSE_INPUT_LEFT}}//左クリック	

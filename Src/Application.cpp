@@ -32,12 +32,14 @@ Application& Application::GetInstance(void)
 
 void Application::Init(void)
 {
+	isEnd_ = false;
 
 	//アプリケーションの初期設定
 	SetWindowText(L"BARISTA BLITZ");
 
 	//ウィンドウサイズ
-	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
+	windowSize_ = { SCREEN_SIZE_X ,SCREEN_SIZE_Y };
+	SetGraphMode(windowSize_.width_, windowSize_.height_, 32);
 	ChangeWindowMode(true);
 
 	//DxLibの初期化
@@ -76,7 +78,7 @@ void Application::Run(void)
 	auto& imGuiWrapper = ImGuiWrapper::GetInstance();
 
 	//ゲームループ
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 /*&& CheckHitKey(KEY_INPUT_ESCAPE) == 0 */&& !isEnd_)
 	{
 
 		//フレームレート更新

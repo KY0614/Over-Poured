@@ -39,6 +39,9 @@ public:
 		PICK_UP,
 		ADD_STOCK,
 		PAYING,
+		MENU_BACK,
+		MENU_OPEN,
+		MENU_CLOSE,
 
 		RESULT,
 		NORMAL,

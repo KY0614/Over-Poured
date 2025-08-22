@@ -204,7 +204,7 @@ void ResourceManager::InitTutorial(void)
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/next_page.mp3");
 	resourcesMap_.emplace(SRC::NEXT_PAGE, std::move(res));
 
-	//ページを進ませるときのSE
+	//ページを戻すときのSE
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/return_page.mp3");
 	resourcesMap_.emplace(SRC::RETURN_PAGE, std::move(res));
 
@@ -459,6 +459,10 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/paying.mp3");
 	resourcesMap_.emplace(SRC::PAYING, std::move(res));
 
+	//メニューを開くときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/menu.mp3");
+	resourcesMap_.emplace(SRC::MENU_OPEN, std::move(res));
+
 	//--------------------------------------------------------------------------
 	
 	//仮客
@@ -483,6 +487,42 @@ void ResourceManager::InitPause(void)
 	//背景用画像
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "tutorial_back.png");
 	resourcesMap_.emplace(SRC::TUTORIAL_BACK, std::move(res));
+
+	//メニューリスト
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "MenuList.png",1,5,1080,216);
+	resourcesMap_.emplace(SRC::MENU_LIST, std::move(res));
+	
+	//メニューカーソル
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Menu_Cursor.png");
+	resourcesMap_.emplace(SRC::MENU_CURSOR, std::move(res));
+
+	//説明用画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Explain.png");
+	resourcesMap_.emplace(SRC::TUTORIAL, std::move(res));
+
+	//メニューへ戻る画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Menu_Back.png");
+	resourcesMap_.emplace(SRC::MENU_BACK_LOGO, std::move(res));
+	
+	//操作方法
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "keyconfig.png");
+	resourcesMap_.emplace(SRC::MENU_KEY_CONFIG, std::move(res));
+
+	//ページを進ませるときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/next_page.mp3");
+	resourcesMap_.emplace(SRC::NEXT_PAGE, std::move(res));
+
+	//ページを戻すときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/return_page.mp3");
+	resourcesMap_.emplace(SRC::RETURN_PAGE, std::move(res));
+
+	//ページを戻すときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/menu_back.mp3");
+	resourcesMap_.emplace(SRC::MENU_BACK, std::move(res));
+
+	//メニューを閉じるときのSE
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/menu_cancel.mp3");
+	resourcesMap_.emplace(SRC::MENU_CLOSE, std::move(res));
 }
 
 void ResourceManager::InitResult(void)

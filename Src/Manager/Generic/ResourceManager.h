@@ -96,6 +96,13 @@ public:
 		COUNTDOWN_NUMBER,
 		TIME_UP,
 
+		//ポーズ
+		MENU_LIST,
+		MENU_CURSOR,
+		MENU_EXPLAIN,
+		MENU_BACK_LOGO,
+		MENU_KEY_CONFIG,
+
 		//音
 		TITLE_BGM,
 		GAME_BGM,
@@ -107,9 +114,11 @@ public:
 		PICK_UP,
 		ADD_STOCK,
 		PAYING,
+		MENU_BACK,
+		MENU_OPEN,
+		MENU_CLOSE,
 
 		//リザルト
-		
 		RANKS,
 
 		//スコアによるランクのゲージ

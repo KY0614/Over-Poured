@@ -37,6 +37,12 @@ public:
 	static const std::string PATH_SCORE;
 	//-------------------------------------------
 
+	struct Size
+	{
+		int width_;
+		int height_;
+	};
+
 	//明示的にインステンスを生成する
 	static void CreateInstance(void);
 
@@ -58,7 +64,13 @@ public:
 	//解放成功／失敗の判定
 	bool IsReleaseFail(void) const;
 
+	const Size& GetWindowSize(void) const { return windowSize_; }
+
+	void EndGame(void) { isEnd_ = true; }
+
 private:
+
+	Size windowSize_;
 
 	//静的インスタンス
 	static Application* instance_;
@@ -68,6 +80,8 @@ private:
 
 	//解放失敗
 	bool isReleaseFail_;
+
+	bool isEnd_;
 
 	std::unique_ptr<FpsControl> fps_;
 

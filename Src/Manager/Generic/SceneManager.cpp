@@ -330,7 +330,7 @@ void SceneManager::MakeScene(SCENE_ID sceneId)
 	
 	case SceneManager::SCENE_ID::TUTORIAL:
 		scene = std::make_unique<TutorialScene>();
-		resM.InitGame();
+		resM.InitTutorial();
 		break;
 	
 	case SceneManager::SCENE_ID::GAME:

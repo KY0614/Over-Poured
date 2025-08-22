@@ -16,7 +16,7 @@ ItemObject::ItemObject(const std::string objId,
 void ItemObject::ItemCarry(void)
 {
     auto& ins = InputManager::GetInstance();
-    // ホット用カップ固有のインタラクションロジック
+    //アイテムオブジェクトのインタラクト処理（持ち運ぶ）
     if (ins.IsInputTriggered("Interact") && GetItemState() == ITEM_STATE::PLACED)
     {
         player_.SetHoldItem(param_.id_);
@@ -28,6 +28,7 @@ void ItemObject::ItemCarry(void)
 void ItemObject::ItemPlaced(VECTOR pos)
 {
     auto& ins = InputManager::GetInstance();
+    //アイテムオブジェクトのインタラクト処理（設置）
     if (ins.IsInputTriggered("Interact") && GetItemState() == ITEM_STATE::HOLD)
     {
         player_.SetHoldItem("");

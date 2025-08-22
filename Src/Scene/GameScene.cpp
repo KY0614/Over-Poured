@@ -70,6 +70,11 @@ void GameScene::Init(void)
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GAME_FINISH,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_FINISH).handleId_);
 	sound.AdjustVolume(SoundManager::SOUND::GAME_FINISH, 256 / 3);
+	
+	//メニュー時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::MENU_OPEN,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::MENU_OPEN).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::MENU_OPEN, 256 / 2);
 
 	//スコア用画像
 	numbersImgs_ = ResourceManager::GetInstance().Load(
@@ -160,7 +165,7 @@ void GameScene::UpdateCountDown(void)
 void GameScene::UpdateGame(void)
 {
 	InputManager& ins = InputManager::GetInstance();
-
+	SoundManager& sound = SoundManager::GetInstance();
 	customer_->CheckServeAndOrder(stage_->GetServeItems());
 
 	if (customer_->GetIsMoving())
@@ -171,6 +176,7 @@ void GameScene::UpdateGame(void)
 
 	if (ins.IsInputTriggered("pause"))
 	{
+		sound.Play(SoundManager::SOUND::MENU_OPEN);
 		//ポーズボタンが押されたらポーズシーンへ遷移
 		SceneManager::GetInstance().PushScene(std::make_unique<PauseScene>());
 	}

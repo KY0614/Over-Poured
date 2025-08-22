@@ -39,34 +39,30 @@ TutorialScene::~TutorialScene(void)
 
 void TutorialScene::Init(void)
 {
-	//ImageInit();
+	ImageInit();
 
-	//プレイヤー
-	player_ = std::make_unique<Player>();
-	player_->Init();
+	////プレイヤー
+	//player_ = std::make_unique<Player>();
+	//player_->Init();
 
-	//ステージ
-	stage_ = std::make_unique<StageManager>(*player_);
-	stage_->Init();
+	////ステージ
+	//stage_ = std::make_unique<StageManager>(*player_);
+	//stage_->Init();
 
-	//ステージのコライダーを追加
-	player_->AddCollider(stage_->GetCounterTran().collider);
-	int tableNum = stage_->GetTableNum();
-	for (int i = 0; i < tableNum; ++i)
-	{
-		player_->AddCollider(stage_->GetTableTran(i).collider);
-	}
-	player_->AddCollider(stage_->GetShowCase().collider);
-	player_->AddCollider(stage_->GetDustBox().collider);
-	player_->AddCollider(stage_->GetFloorTran().collider);
+	////ステージのコライダーを追加
+	//player_->AddCollider(stage_->GetCounterTran().collider);
+	//int tableNum = stage_->GetTableNum();
+	//for (int i = 0; i < tableNum; ++i)
+	//{
+	//	player_->AddCollider(stage_->GetTableTran(i).collider);
+	//}
+	//player_->AddCollider(stage_->GetShowCase().collider);
+	//player_->AddCollider(stage_->GetDustBox().collider);
+	//player_->AddCollider(stage_->GetFloorTran().collider);
 
-	//客と注文
-	customer_ = std::make_unique<OrderCustomerManager>();
-	customer_->Init();
-
-	//カメラ
-	mainCamera->SetFollow(&player_->GetTransform());
-	mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
+	////カメラ
+	//mainCamera->SetFollow(&player_->GetTransform());
+	//mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 }
 
 void TutorialScene::Update(void)
@@ -81,23 +77,25 @@ void TutorialScene::Draw(void)
 
 void TutorialScene::UpdateOperation(void)
 {
-	stage_->Update();
+	ImageUpdate();
+	//stage_->Update();
 
-	player_->Update();
+	//player_->Update();
 
-	customer_->Update();
+	//customer_->Update();
 }
 
 void TutorialScene::DrawOperation(void)
 {
-	//お客と注文描画
-	customer_->Draw();
-	//ステージ描画
-	stage_->Draw();
-	//プレイヤー描画
-	player_->Draw();
-	//UI描画
-	UIManager::GetInstance().Draw();
+	ImageDraw();
+	////お客と注文描画
+	//customer_->Draw();
+	////ステージ描画
+	//stage_->Draw();
+	////プレイヤー描画
+	//player_->Draw();
+	////UI描画
+	//UIManager::GetInstance().Draw();
 }
 
 void TutorialScene::ImageInit(void)
@@ -157,12 +155,6 @@ void TutorialScene::ImageUpdate(void)
 	auto& sound = SoundManager::GetInstance();
 	blinkTime_++;
 	blinkIdx_ = (blinkTime_ / 60) % 2;
-
-
-	if (ins.IsInputTriggered("pause"))
-	{
-
-	}
 
 	//シーン遷移(チュートリアルのページが端までいったら）
 	if (isView_ &&
