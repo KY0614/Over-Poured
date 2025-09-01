@@ -355,6 +355,10 @@ void ResourceManager::InitGame(void)
 	//コーヒー可能画像
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "coffee.png");
 	resourcesMap_.emplace(SRC::BREW_COFFEE, std::move(res));
+	
+	//氷画像
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "ice.png");
+	resourcesMap_.emplace(SRC::ICE_IN, std::move(res));
 
 	//注文用UI---------------------------------------------------------------------
 	//背景用
@@ -462,6 +466,10 @@ void ResourceManager::InitGame(void)
 	//メニューを開くときのSE
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/menu.mp3");
 	resourcesMap_.emplace(SRC::MENU_OPEN, std::move(res));
+	
+	//
+	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/put_on.mp3");
+	resourcesMap_.emplace(SRC::PUT_ON, std::move(res));
 
 	//--------------------------------------------------------------------------
 	

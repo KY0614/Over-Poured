@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\UI\PopUpUI.cpp" />
     <ClCompile Include="Src\Scene\PauseScene\KeyConfigScene.cpp" />
     <ClCompile Include="Src\Scene\PauseScene\ExplainScene.cpp" />
     <ClCompile Include="Src\Scene\PauseScene.cpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="Src\Object\TutorialText.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\UI\PopUpUI.h" />
     <ClInclude Include="Src\Scene\PauseScene\KeyConfigScene.h" />
     <ClInclude Include="Src\Scene\PauseScene\ExplainScene.h" />
     <ClInclude Include="Src\Scene\PauseScene.h" />

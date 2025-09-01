@@ -1,6 +1,7 @@
 #include "OrderUI.h"
 #include "GaugeUI.h"
 #include "IconUi.h"
+#include "PopUpUI.h"
 #include "UIManager.h"
 
 UIManager* UIManager::instance_ = nullptr;
@@ -45,6 +46,15 @@ void UIManager::Update(void)
 	{
 		ui->Update();
 	}
+
+}
+
+void UIManager::PopUpUIUpdate(void)
+{
+	for (auto& ui : popUpUIs_)
+	{
+		ui->Update();
+	}
 }
 
 void UIManager::Draw(void)
@@ -63,6 +73,10 @@ void UIManager::Draw(void)
 	{
 		ui->Draw();
 	}
+	for (auto& ui : popUpUIs_)
+	{
+		ui->Draw();
+	}
 }
 
 void UIManager::Release(void)
@@ -70,6 +84,7 @@ void UIManager::Release(void)
 	gaugeUIs_.clear();
 	orderUIs_.clear();
 	iconUIs_.clear();
+	popUpUIs_.clear();
 }
 
 void UIManager::Destroy(void)
@@ -77,6 +92,7 @@ void UIManager::Destroy(void)
 	gaugeUIs_.clear();
 	orderUIs_.clear();
 	iconUIs_.clear();
+	popUpUIs_.clear();
 	delete instance_;
 }
 
@@ -93,4 +109,10 @@ void UIManager::AddOrderUI(OrderUI* ui)
 void UIManager::AddIconUI(IconUI* ui)
 {
 	iconUIs_.emplace_back(ui);
+}
+
+void UIManager::AddPopUpUI(int score, const VECTOR& pos)
+{
+	popUpUIs_.emplace_back(std::make_unique<PopUpUI>(score, pos));
+	popUpUIs_.back()->Init();
 }

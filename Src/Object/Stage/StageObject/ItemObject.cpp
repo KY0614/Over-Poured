@@ -1,6 +1,7 @@
 #include "../../../Common/DebugDrawFormat.h"
 #include "../../../Utility/AsoUtility.h"
 #include "../Manager/Generic/InputManager.h"
+#include "../Manager/GameSystem/SoundManager.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "ItemObject.h"
@@ -16,9 +17,11 @@ ItemObject::ItemObject(const std::string objId,
 void ItemObject::ItemCarry(void)
 {
     auto& ins = InputManager::GetInstance();
+    auto& sound = SoundManager::GetInstance();
     //アイテムオブジェクトのインタラクト処理（持ち運ぶ）
     if (ins.IsInputTriggered("Interact") && GetItemState() == ITEM_STATE::PLACED)
     {
+        sound.Play(SoundManager::SOUND::PICK_UP);
         player_.SetHoldItem(param_.id_);
         ChangeItemState(ITEM_STATE::HOLD);
         isActioned_ = true;
@@ -28,9 +31,11 @@ void ItemObject::ItemCarry(void)
 void ItemObject::ItemPlaced(VECTOR pos)
 {
     auto& ins = InputManager::GetInstance();
+    auto& sound = SoundManager::GetInstance();
     //アイテムオブジェクトのインタラクト処理（設置）
     if (ins.IsInputTriggered("Interact") && GetItemState() == ITEM_STATE::HOLD)
     {
+        sound.Play(SoundManager::SOUND::PUT_ON);
         player_.SetHoldItem("");
         ChangeItemState(ITEM_STATE::PLACED);
         SetPos(pos);

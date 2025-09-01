@@ -1,11 +1,12 @@
-#include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
+#include "../Manager/Generic/ResourceManager.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../Object/Stage/StageManager.h"
 #include "../../UI/GaugeUI.h"
+#include "../../UI/IconUI.h"
 #include "../../UI/UIManager.h"
 #include "IceDispenser.h"
 
@@ -25,10 +26,16 @@ void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
 {
 	StageObject::Init(pos, rotY,scale);
 
+	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, 160.0f, 0.0f),
+		transform_.pos, ResourceManager::SRC::ICE_IN);
+	iconUI_->Init();
+	iconUI_->SetActive(false);
+	UIManager::GetInstance().AddIconUI(iconUI_.get());
+
 	gaugeUI_ = std::make_unique<GaugeUI>(false, ICE_PRODUCES_TIME);
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
-	uiPos.y += 130.0f;	//UIの位置を調整
+	uiPos.y += 160.0f;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
 	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
@@ -70,11 +77,11 @@ void IceDispenser::Interact(const std::string& objId)
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
+			iconUI_->SetActive(true);
 			//スペースキー押下でマシンの場所にカップを置く(とりあえず)
 			if (player_.GetHoldItem() == items.front().c_str() &&
 				ins.IsInputTriggered("Interact"))
 			{
-
 				//マシンの上に乗るようにカップを配置する
 				VECTOR cupPos = GetTransform().pos;
 				cupPos = VAdd(cupPos, { 0.0f,MACHINE_OFSET_Y ,DISPENSER_OFSET_Z });
@@ -94,7 +101,7 @@ void IceDispenser::Interact(const std::string& objId)
 void IceDispenser::UpdateInActive(void)
 {
 	SetInteractTime(ICE_PRODUCES_TIME);
-
+	iconUI_->SetActive(false);
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
@@ -119,7 +126,7 @@ void IceDispenser::UpdateInActive(void)
 void IceDispenser::UpdateActive(void)
 {
 	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
-
+	iconUI_->SetActive(false);
 	gaugeUI_->Update();
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック

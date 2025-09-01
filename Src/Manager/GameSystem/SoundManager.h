@@ -42,6 +42,7 @@ public:
 		MENU_BACK,
 		MENU_OPEN,
 		MENU_CLOSE,
+		PUT_ON,
 
 		RESULT,
 		NORMAL,

@@ -71,8 +71,10 @@ public:
 		CUPLID_RACK,
 		DUSTBOX,
 
+		//アイコン系のUI
 		INTERACT,
 		BREW_COFFEE,
+		ICE_IN,
 
 		//注文内容のUI
 		UI_ORDER_BACK,
@@ -114,6 +116,7 @@ public:
 		PICK_UP,
 		ADD_STOCK,
 		PAYING,
+		PUT_ON,
 		MENU_BACK,
 		MENU_OPEN,
 		MENU_CLOSE,

@@ -70,7 +70,11 @@ void StageManager::Init(void)
 	//アイテムを取り出す時のSE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PICK_UP,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::PICK_UP).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::PICK_UP, 256);
+	sound.AdjustVolume(SoundManager::SOUND::PICK_UP, 256);	
+	//アイテムを置く時のSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PUT_ON,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PUT_ON).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PUT_ON, 256);
 	//ストック追加時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::ADD_STOCK,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::ADD_STOCK).handleId_);

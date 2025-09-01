@@ -2,6 +2,7 @@
 #include "../StageObject.h"
 
 class GaugeUI;
+class IconUI;
 
 class IceDispenser : public StageObject
 {
@@ -29,5 +30,7 @@ private:
 	std::vector<std::unique_ptr<StageObject>>& objects_;
 
 	std::unique_ptr<GaugeUI> gaugeUI_;
+	//ÉAÉCÉRÉìÇÃUI
+	std::unique_ptr<IconUI> iconUI_;
 };
 

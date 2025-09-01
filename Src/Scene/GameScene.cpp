@@ -180,13 +180,16 @@ void GameScene::UpdateGame(void)
 		//ポーズボタンが押されたらポーズシーンへ遷移
 		SceneManager::GetInstance().PushScene(std::make_unique<PauseScene>());
 	}
-
+	UIManager::GetInstance().PopUpUIUpdate();
 	//注文数分の商品が提供されたら
 	if (stage_->IsServed())
 	{
+		int addScore = customer_->GetOrderScore(stage_->GetServeItems());
 		//スコアの加算
-		score_ += customer_->GetOrderScore(stage_->GetServeItems());
+		score_ += addScore;
 		customer_->IsServe();		//注文を出す
+		VECTOR screenPos = ConvWorldPosToScreenPos({ 225.0f, 76.0f, 190.0f });
+		UIManager::GetInstance().AddPopUpUI(addScore, screenPos);
 		stage_->ResetServeData();	//サーブしたアイテムをリセット
 	}
 

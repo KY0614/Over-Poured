@@ -6,6 +6,7 @@
 class OrderUI;
 class GaugeUI;
 class IconUI;
+class PopUpUI;
 
 class UIManager
 {
@@ -21,6 +22,7 @@ public:
 
 	void Init(void);
 	void Update(void);
+	void PopUpUIUpdate(void);
 	void Draw(void);
 	void Release(void);
 
@@ -30,6 +32,7 @@ public:
 	void AddGaugeUI(GaugeUI* ui);
 	void AddOrderUI(OrderUI* ui);
 	void AddIconUI(IconUI* ui);
+	void AddPopUpUI(int score, const VECTOR& pos);
 
 private:
 	//シングルトン用インスタンス
@@ -38,5 +41,6 @@ private:
 	std::vector<GaugeUI*> gaugeUIs_;
 	std::vector<OrderUI*> orderUIs_;
 	std::vector<IconUI*> iconUIs_;
+	std::vector<std::unique_ptr<PopUpUI>> popUpUIs_;
 };
 

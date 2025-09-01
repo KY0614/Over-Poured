@@ -9,7 +9,7 @@ class Machine : public StageObject
 public:
 
 	static constexpr float COFFEE_PRODUCES_TIME = 3.0f;
-	static constexpr float UI_OFFSET_Y = 130.0f;
+	static constexpr float UI_OFFSET_Y = 160.0f;
 
 	Machine(const std::string objId, const float width,
 		const float height, const float depth,Player& player,
