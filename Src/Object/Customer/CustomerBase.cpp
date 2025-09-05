@@ -1,5 +1,7 @@
 #include<DxLib.h>
+#include<EffekseerForDXLib.h>
 #include "../../Manager/Generic/SceneManager.h"
+#include "../../Manager/Generic/ResourceManager.h"
 #include "../Common/AnimationController.h"
 #include "../../Utility/AsoUtility.h"
 #include "CustomerBase.h"
@@ -40,6 +42,11 @@ void CustomerBase::Init(const VECTOR pos)
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(CUSTOMER_ROT_Y), 0.0f });
 	//モデル情報を更新
 	transform_.Update();
+
+	effektHappyResId_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::HAPPY_STAR).handleId_;
+
+	chestFrmNo_ = MV1SearchFrame(transform_.modelId, L"mixamorig:Head");
 }
 
 void CustomerBase::Update(void)
@@ -49,6 +56,7 @@ void CustomerBase::Update(void)
 
 	//状態ごとのアニメーション
 	StateAnimation();
+	StateReaction();
 	//Y軸回転
 	RotateY();
 
@@ -129,4 +137,54 @@ void CustomerBase::StateAnimation(void)
 	default:
 		break;
 	}
+}
+
+void CustomerBase::StateReaction(void)
+{
+	//状態ごとによるアニメーションの切り替え
+	switch (reaction_)
+	{
+	case CustomerBase::REACTION::NONE:
+		
+		break;
+
+	case CustomerBase::REACTION::BAD:
+		
+		break;
+
+	case CustomerBase::REACTION::SOSO:
+		
+		break;
+	case CustomerBase::REACTION::GOOD:
+		EffektHappyStar();
+		break;
+
+	default:
+		break;
+	}
+}
+
+void CustomerBase::EffektHappyStar(void)
+{
+	effektHappyPlayId_ = PlayEffekseer3DEffect(effektHappyResId_);
+
+	float scale = 30.0f;
+	SetScalePlayingEffekseer3DEffect(
+		effektHappyPlayId_,
+		scale,
+		scale,
+		scale
+	);
+
+	VECTOR pos = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
+	//VECTOR pos = transform_.pos;
+
+	// 位置の設定
+	SetPosPlayingEffekseer3DEffect(
+		effektHappyPlayId_,
+		pos.x,
+		pos.y,
+		pos.z);
+
+	SetReaction(REACTION::NONE);
 }

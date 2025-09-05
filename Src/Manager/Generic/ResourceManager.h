@@ -144,6 +144,8 @@ public:
 		RANKING_LABEL,
 		RANKING_BACK,
 
+		HAPPY_STAR,
+
 	};
 
 	// 明示的にインステンスを生成する

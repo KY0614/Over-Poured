@@ -479,6 +479,11 @@ void ResourceManager::InitGame(void)
 	//‰¼‹q
 	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/icecup_customer.mv1");
 	resourcesMap_.emplace(SRC::ICE_CUSTOMER, std::move(res));
+
+
+	//
+	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Star/star.efkefc");
+	resourcesMap_.emplace(SRC::HAPPY_STAR, std::move(res));
 }
 
 void ResourceManager::InitPause(void)
@@ -531,6 +536,7 @@ void ResourceManager::InitPause(void)
 	//ƒƒjƒ…[‚ğ•Â‚¶‚é‚Æ‚«‚ÌSE
 	res = std::make_unique<RES>(RES_T::SOUND, PATH_SND + "SE/menu_cancel.mp3");
 	resourcesMap_.emplace(SRC::MENU_CLOSE, std::move(res));
+	
 }
 
 void ResourceManager::InitResult(void)

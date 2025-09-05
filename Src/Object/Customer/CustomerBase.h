@@ -165,6 +165,10 @@ private:
 	//回転時間
 	float stepRotTime_;
 
+	int effektHappyResId_;
+	int effektHappyPlayId_;
+	int chestFrmNo_;
+
 	/// <summary>
 	/// Y軸を中心に回転する
 	/// </summary>
@@ -175,5 +179,9 @@ private:
 	/// </summary>
 	/// <param name="">アニメーション再生</param>
 	void StateAnimation(void);
+
+	void StateReaction(void);
+
+	void EffektHappyStar(void);
 };
 
