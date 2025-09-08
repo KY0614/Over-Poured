@@ -168,6 +168,8 @@ void CustomerBase::EffektHappyStar(void)
 {
 	effektHappyPlayId_ = PlayEffekseer3DEffect(effektHappyResId_);
 
+	SetSpeedPlayingEffekseer3DEffect(effektHappyPlayId_, 2.5f);
+
 	float scale = 30.0f;
 	SetScalePlayingEffekseer3DEffect(
 		effektHappyPlayId_,

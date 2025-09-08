@@ -202,3 +202,10 @@ void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 		}
 	}
 }
+
+bool OrderCustomerManager::IsTimeOutOrder(void) const
+{
+	//’•¶‚Ì§ŒÀŽžŠÔ‚ª‰ß‚¬‚Ä‚¢‚½‚çtrue‚ð•Ô‚·
+	if (orderMng_->IsFirstOrderTimeOut())return true;
+	return false;
+}

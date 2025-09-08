@@ -192,6 +192,10 @@ void GameScene::UpdateGame(void)
 		UIManager::GetInstance().AddPopUpUI(addScore, screenPos);
 		stage_->ResetServeData();	//サーブしたアイテムをリセット
 	}
+	if (customer_->IsTimeOutOrder())
+	{
+		stage_->ResetServeData();	//サーブしたアイテムをリセット
+	}
 
 	//残り３０秒になったらチクタク音
 	if (!remainderSE_ &&

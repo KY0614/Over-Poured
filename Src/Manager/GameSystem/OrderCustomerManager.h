@@ -75,6 +75,8 @@ public:
 
 	void CheckServeAndOrder(const Order::OrderData serve);
 
+	bool IsTimeOutOrder(void)const;
+
 private:
 
 	//OrderManager‚Ìƒ|ƒCƒ“ƒ^
