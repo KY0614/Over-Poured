@@ -167,6 +167,10 @@ private:
 
 	int effektHappyResId_;
 	int effektHappyPlayId_;
+	int effektBadResId_;
+	int effektBadPlayId_;
+	int effektSosoResId_;
+	int effektSosoPlayId_;
 	int chestFrmNo_;
 
 	/// <summary>
@@ -183,5 +187,7 @@ private:
 	void StateReaction(void);
 
 	void EffektHappyStar(void);
+	void EffektBad(void);
+	void EffektOrb(void);
 };
 

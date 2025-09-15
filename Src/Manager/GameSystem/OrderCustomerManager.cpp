@@ -55,7 +55,7 @@ void OrderCustomerManager::Update(void)
 	//’•¶‚Ì§ŒÀŽžŠÔ‚ª‰ß‚¬‚½‚ç’Ç‰Á¶¬‚ðs‚¤
 	if (orderMng_->IsFirstOrderTimeOut() || isServe_)
 	{
-		if(!isServe_)customerMng_->SetCustomerReacton(0);
+		if (!isServe_)customerMng_->SetCustomerReacton(0); isServe_ = true;
 
 		//‚¨‹q‚ðˆÚ“®‚³‚¹‚é
 		customerMng_->StartMove();

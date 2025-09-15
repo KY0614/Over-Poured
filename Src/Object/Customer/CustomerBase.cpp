@@ -26,6 +26,14 @@ CustomerBase::CustomerBase(void)
 	isVisible_ = false;
 
 	stepRotTime_ = -1.0f;
+
+	effektHappyResId_ = -1;
+	effektHappyPlayId_ = -1;
+	effektBadResId_ = -1;
+	effektBadPlayId_ = -1;
+	effektSosoResId_ = -1;
+	effektSosoPlayId_ = -1;
+	chestFrmNo_ = -1;
 }
 
 void CustomerBase::Init(const VECTOR pos)
@@ -45,6 +53,12 @@ void CustomerBase::Init(const VECTOR pos)
 
 	effektHappyResId_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::HAPPY_STAR).handleId_;
+	
+	effektBadResId_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::GURU).handleId_;
+		
+	effektSosoResId_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::ORB).handleId_;
 
 	chestFrmNo_ = MV1SearchFrame(transform_.modelId, L"mixamorig:Head");
 }
@@ -149,12 +163,13 @@ void CustomerBase::StateReaction(void)
 		break;
 
 	case CustomerBase::REACTION::BAD:
-		
+		EffektBad();
 		break;
 
 	case CustomerBase::REACTION::SOSO:
-		
+		EffektOrb();
 		break;
+
 	case CustomerBase::REACTION::GOOD:
 		EffektHappyStar();
 		break;
@@ -168,7 +183,7 @@ void CustomerBase::EffektHappyStar(void)
 {
 	effektHappyPlayId_ = PlayEffekseer3DEffect(effektHappyResId_);
 
-	SetSpeedPlayingEffekseer3DEffect(effektHappyPlayId_, 2.5f);
+	SetSpeedPlayingEffekseer3DEffect(effektHappyPlayId_, 2.0f);
 
 	float scale = 30.0f;
 	SetScalePlayingEffekseer3DEffect(
@@ -184,6 +199,59 @@ void CustomerBase::EffektHappyStar(void)
 	// à íuÇÃê›íË
 	SetPosPlayingEffekseer3DEffect(
 		effektHappyPlayId_,
+		pos.x,
+		pos.y,
+		pos.z);
+
+	SetReaction(REACTION::NONE);
+}
+
+void CustomerBase::EffektBad(void)
+{
+	effektBadPlayId_ = PlayEffekseer3DEffect(effektBadResId_);
+
+	SetSpeedPlayingEffekseer3DEffect(effektBadPlayId_, 2.0f);
+
+	float scale = 30.0f;
+	SetScalePlayingEffekseer3DEffect(
+		effektBadPlayId_,
+		scale,
+		scale,
+		scale
+	);
+
+	VECTOR pos = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
+	//VECTOR pos = transform_.pos;
+
+	// à íuÇÃê›íË
+	SetPosPlayingEffekseer3DEffect(
+		effektBadPlayId_,
+		pos.x,
+		pos.y,
+		pos.z);
+
+	SetReaction(REACTION::NONE);
+}
+
+void CustomerBase::EffektOrb(void)
+{
+	effektSosoPlayId_ = PlayEffekseer3DEffect(effektSosoResId_);
+
+	SetSpeedPlayingEffekseer3DEffect(effektSosoPlayId_, 2.0f);
+
+	float scale = 30.0f;
+	SetScalePlayingEffekseer3DEffect(
+		effektSosoPlayId_,
+		scale,
+		scale,
+		scale
+	);
+
+	VECTOR pos = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
+
+	// à íuÇÃê›íË
+	SetPosPlayingEffekseer3DEffect(
+		effektSosoPlayId_,
 		pos.x,
 		pos.y,
 		pos.z);

@@ -39,6 +39,9 @@ private:
 
 	//アイコンUI
 	std::unique_ptr<IconUI> iconUI_;
+	
+	//アイコンUI
+	std::unique_ptr<IconUI> stockIconUI_;
 
 	Transform sweetsOfRack_[SWEETS_STOCK_MAX];
 	Transform cupesOfRack_[CUP_STOCK_MAX];

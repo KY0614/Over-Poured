@@ -109,6 +109,7 @@ void RackObject::AddStock(int addStockNum)
 		{
 			hasStock_ = true;
 			gaugeUI_->Reset();
+			stockIconUI_->SetActive(false);
 			return;
 		}
 	}
@@ -127,6 +128,7 @@ void RackObject::AddStock(int addStockNum)
 		{
 			hasStock_ = true;
 			gaugeUI_->Reset();
+			stockIconUI_->SetActive(false);
 			return;
 		}
 	}
@@ -143,6 +145,14 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	iconUI_->Init();
 	iconUI_->SetUISize(70.0f);
 	UIManager::GetInstance().AddIconUI(iconUI_.get());
+
+	stockIconUI_ = std::make_unique<IconUI>(VGet(0.0f, height_ + 60.0f, 0.0f),
+	transform_.pos, ResourceManager::SRC::STOCK_ICON);
+	stockIconUI_->SetActive(false);
+	stockIconUI_->Init();
+	stockIconUI_->SetUISize(70.0f);
+	UIManager::GetInstance().AddIconUI(stockIconUI_.get());
+
 	//•¶Žš—ñ‚ðSRC‚É•ÏŠ·‚µ‚Äƒ‚ƒfƒ‹Ý’è
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
 	if (param_.id_ == "Sweets_Strawberry_Rack")
@@ -244,6 +254,7 @@ void RackObject::Update(void)
 	else iconUI_->SetActive(false);
 	if(sweetsStockCnt_ <= 0 && cupsStockCnt_ <= 0)
 	{
+		stockIconUI_->SetActive(true);
 		hasStock_ = false;
 	}
 

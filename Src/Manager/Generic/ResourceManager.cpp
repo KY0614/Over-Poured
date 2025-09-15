@@ -359,6 +359,18 @@ void ResourceManager::InitGame(void)
 	//ïXâÊëú
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "ice.png");
 	resourcesMap_.emplace(SRC::ICE_IN, std::move(res));
+		
+	//
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Hot_Icon.png");
+	resourcesMap_.emplace(SRC::HOT_ICON, std::move(res));
+			
+	//
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Ice_Icon.png");
+	resourcesMap_.emplace(SRC::ICE_ICON, std::move(res));
+				
+	//
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "stock.png");
+	resourcesMap_.emplace(SRC::STOCK_ICON, std::move(res));
 
 	//íçï∂ópUI---------------------------------------------------------------------
 	//îwåióp
@@ -484,6 +496,12 @@ void ResourceManager::InitGame(void)
 	//
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Star/star.efkefc");
 	resourcesMap_.emplace(SRC::HAPPY_STAR, std::move(res));
+	//
+	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Guru/guru.efkefc");
+	resourcesMap_.emplace(SRC::GURU, std::move(res));	
+	//
+	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Orb/orb.efkefc");
+	resourcesMap_.emplace(SRC::ORB, std::move(res));
 }
 
 void ResourceManager::InitPause(void)

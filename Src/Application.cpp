@@ -40,7 +40,7 @@ void Application::Init(void)
 	//ウィンドウサイズ
 	windowSize_ = { SCREEN_SIZE_X ,SCREEN_SIZE_Y };
 	SetGraphMode(windowSize_.width_, windowSize_.height_, 32);
-	ChangeWindowMode(true);
+	ChangeWindowMode(false);
 
 	//DxLibの初期化
 	SetUseDirect3DVersion(DX_DIRECT3D_11);

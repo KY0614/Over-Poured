@@ -91,6 +91,18 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 	iconUI_->Init();
 	iconUI_->SetActive(false);
 	UIManager::GetInstance().AddIconUI(iconUI_.get());
+	
+	hotIconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
+		transform_.pos, ResourceManager::SRC::HOT_ICON);
+	hotIconUI_->Init();
+	hotIconUI_->SetActive(false);
+	UIManager::GetInstance().AddIconUI(hotIconUI_.get());
+		
+	iceIconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
+		transform_.pos, ResourceManager::SRC::ICE_ICON);
+	iceIconUI_->Init();
+	iceIconUI_->SetActive(false);
+	UIManager::GetInstance().AddIconUI(iceIconUI_.get());
 
 	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
 	gaugeUI_->Init();
@@ -102,7 +114,10 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 
 void Machine::UpdateInActive(void)
 {
+	hotIconUI_->SetActive(false);
+	iceIconUI_->SetActive(false);
 	iconUI_->SetActive(false);
+	gaugeUI_->SetActive(false);
 	SetInteractTime(COFFEE_PRODUCES_TIME);
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
@@ -116,6 +131,14 @@ void Machine::UpdateInActive(void)
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
+			if (obj->GetParam().id_ == HOT_COFFEE)
+			{
+				hotIconUI_->SetActive(true);
+			}
+			else
+			{
+				iceIconUI_->SetActive(true);
+			}
 			hasPlacedCup = true;
 			break;
 		}
@@ -130,6 +153,8 @@ void Machine::UpdateInActive(void)
 void Machine::UpdateActive(void)
 {
 	iconUI_->SetActive(false);
+	hotIconUI_->SetActive(false);
+	iceIconUI_->SetActive(false);
 	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	gaugeUI_->Update();

@@ -75,6 +75,9 @@ public:
 		INTERACT,
 		BREW_COFFEE,
 		ICE_IN,
+		HOT_ICON,
+		ICE_ICON,
+		STOCK_ICON,
 
 		//íçï∂ì‡óeÇÃUI
 		UI_ORDER_BACK,
@@ -145,6 +148,8 @@ public:
 		RANKING_BACK,
 
 		HAPPY_STAR,
+		GURU,
+		ORB,
 
 	};
 

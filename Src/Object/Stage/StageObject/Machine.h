@@ -33,5 +33,7 @@ private:
 	std::unique_ptr<GaugeUI> gaugeUI_;
 	//ÉAÉCÉRÉìÇÃUI
 	std::unique_ptr<IconUI> iconUI_;
+	std::unique_ptr<IconUI> hotIconUI_;
+	std::unique_ptr<IconUI> iceIconUI_;
 };
 
