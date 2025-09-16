@@ -13,6 +13,7 @@ public:
 
 	//コンストラクタ
 	CustomerManager(void);
+
 	//デストラクタ
 	~CustomerManager(void);
 

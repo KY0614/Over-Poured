@@ -2,6 +2,12 @@
 #include "Order.h"
 #include "OrderManager.h"
 
+namespace 
+{
+	//注文関連
+	const int MAX_CREATE_NUM = 6;	//最大注文生成数
+}
+
 OrderManager::OrderManager(void)
 {
 	orders_.clear();
@@ -16,6 +22,7 @@ void OrderManager::Init(void)
 {
 	//配列の初期化
 	orders_.clear();
+
 	//注文を最大数まで生成する
 	CreateOrderMaxNum();
 }
@@ -31,7 +38,7 @@ void OrderManager::FirstOrderUpdate(void)
 
 void OrderManager::AddCreateOrder(void)
 {
-	//最大注文生成数を超えそうだったらreturn
+	//最大注文生成数を超えそうだったら処理しない
 	if (orders_.size() >= MAX_CREATE_NUM) return;
 
 	//注文が最大数未満になったら１つ追加
@@ -49,8 +56,8 @@ void OrderManager::ClearFirstOrder(void)
 
 bool OrderManager::IsFirstOrderTimeOut(void)
 {
-	// 制限時間が切れたらtrueを返す
-	if (orders_.front()->GetOrderTime() < 0.1f)
+	//制限時間が切れたらtrueを返す
+	if (orders_.front()->GetOrderTime() < 0.1f)	//0.0f以下だと誤差でマイナスになる可能性があるため0.1f以下にしている
 	{
 		return true;
 	}
@@ -59,7 +66,7 @@ bool OrderManager::IsFirstOrderTimeOut(void)
 
 std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
 {
-	//全ての注文データを返す
+	//現在の全ての注文データを返す
 	std::vector<Order::OrderData> retData;
 	for (const auto& order : orders_)
 	{
@@ -70,6 +77,7 @@ std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
 
 Order::OrderData OrderManager::GetLastOrderData(void) const
 {
+	//最後の注文データを返す
 	return orders_.back()->GetOrder();
 }
 
@@ -91,6 +99,7 @@ void OrderManager::CreateSingleOrder(void)
 {
 	//最大注文生成数を超えそうだったら生成しない
 	if (orders_.size() >= MAX_CREATE_NUM) return;
+
 	//注文を生成する
 	std::unique_ptr<Order> order = std::make_unique<Order>();
 	order->CreateOrder();		//注文を生成

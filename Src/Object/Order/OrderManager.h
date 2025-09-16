@@ -8,11 +8,10 @@ class Order;
 class OrderManager
 {
 public:
-	//注文関連
-	static constexpr int MAX_CREATE_NUM = 6;	//最大注文生成数
 
 	//コンストラクタ
 	OrderManager(void);
+
 	//デストラクタ
 	~OrderManager(void);
 
@@ -43,6 +42,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	void ClearFirstOrder(void);
+
 	//---------------------------------------------------------------
 	//取得関数-------------------------------------------------------
 
@@ -72,7 +72,9 @@ public:
 	/// <param name=""></param>
 	/// <returns>最後尾の注文データ</returns>
 	Order::OrderData GetLastOrderData(void) const;
+
 	//----------------------------------------------------------------
+
 private:
 
 	//注文管理用
@@ -91,6 +93,5 @@ private:
 	/// </summary>
 	/// <param name="">Orderクラスを１つ生成し、配列に格納</param>
 	void CreateSingleOrder(void);
-
 };
 
