@@ -6,16 +6,14 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":["Hot_Cup","Cup_With_Ice"],
-    "produces": ["Hot_Coffee","Ice_Coffee"]
+    "acceptedItems":["Hot_Cup","Cup_With_Ice"]
     },
     "Ice_Dispenser": {
     "id": "Ice_Dispenser",
     "interactable": true,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":["Ice_Cup"],
-    "produces": ["Cup_With_Ice"]
+    "acceptedItems":["Ice_Cup"]
     },
     "Table": {
     "id": "Table",
@@ -37,8 +35,7 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[],
-    "produces": ["Sweets_Choco"]
+    "acceptedItems":[]
     },
     "Sweets_Strawberry_Rack": {
     "id": "Sweets_Strawberry_Rack",
@@ -46,8 +43,7 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[],
-    "produces": ["Sweets_Strawberry"]
+    "acceptedItems":[]
     },
     "Sweets_Choco": {
     "id": "Sweets_Choco",
@@ -68,24 +64,21 @@
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Ice_Cup": {
     "id": "Ice_Cup",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Cup_With_Ice": {
     "id": "Cup_With_Ice",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Cup_Hot_Rack": {
     "id": "Cup_Hot_Rack",
@@ -93,8 +86,7 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[],
-    "produces": ["Hot_Cup"]
+    "acceptedItems":[]
     },
     "Cup_Ice_Rack": {
     "id": "Cup_Ice_Rack",
@@ -102,24 +94,21 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[],
-    "produces": ["Ice_Cup"]
+    "acceptedItems":[]
     },
     "Hot_Coffee": {
     "id": "Hot_Coffee",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Ice_Coffee": {
     "id": "Ice_Coffee",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Cup_Lid_Rack": {
     "id": "Cup_Lid_Rack",
@@ -127,39 +116,34 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":["Hot_Coffee","Ice_Coffee"],
-    "produces": ["Hot_Coffee_With_Lid","Ice_Coffee_With_Lid"]
+    "acceptedItems":["Hot_Coffee","Ice_Coffee"]
     },
     "Hot_Cup_Lid": {
     "id": "Hot_Cup_Lid",
     "interactable": false,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Ice_Cup_Lid": {
     "id": "Ice_Cup_Lid",
     "interactable": false,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Ice": {
     "id": "Ice",
     "interactable": false,
     "placeable": true,
     "carryable": true,
-    "acceptedItems":[],
-    "produces": []
+    "acceptedItems":[]
     },
     "Dust_Box": {
     "id": "Dust_Box",
     "interactable": true,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco","Hot_Cup_Lid","Ice_Cup_Lid","Ice"],
-    "produces": []
+    "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco","Hot_Cup_Lid","Ice_Cup_Lid","Ice"]
     }
 }
