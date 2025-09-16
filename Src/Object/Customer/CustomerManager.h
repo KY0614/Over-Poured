@@ -96,7 +96,7 @@ public:
 	void IsCheckUI(const int index,const bool isActive);
 
 private:
-	// 静的インスタンス
+	//静的インスタンス
 	static CustomerManager* instance_;
 	
 	//お客生成用
@@ -105,9 +105,11 @@ private:
 	//注文UI用
 	std::vector<std::unique_ptr<OrderUI>> orderUI_;
 
+	//お客が動いているかどうか(true:動いている false:止まってる)
 	bool isCustomersMove_;
-	int cnt_;
 
+	//先頭のお客の番号
+	int firstCustomerIdx_;
 
 	/// <summary>
 	/// 最初の5人の座標を初期化

@@ -1,7 +1,6 @@
 #pragma once
 #include "../Customer/CustomerBase.h"
 
-
 class IceCustomer : public CustomerBase
 {
 public:

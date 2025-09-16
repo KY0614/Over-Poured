@@ -1,10 +1,9 @@
-//#pragma once
+#pragma once
 #include "../Customer/CustomerBase.h"
 
 class HotCustomer : public CustomerBase
 {
 public:
-
 	//コンストラクタ
 	HotCustomer(void);
 
@@ -14,7 +13,6 @@ public:
 	void Draw(void) override;
 
 protected:
-
 	/// <summary>
 	/// パラメーターを設定する
 	/// </summary>
