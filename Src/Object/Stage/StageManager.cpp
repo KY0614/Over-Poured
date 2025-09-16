@@ -183,7 +183,7 @@ void StageManager::Draw(void)
 void StageManager::SetCurrentOrder(const Order::OrderData& order)
 {
 	//注文数文の配列を確保し、初期化＆お客の注文内容を受け取る
-	size_t size = static_cast<size_t>(order.num_);
+	size_t size = static_cast<size_t>(order.orderNum_);
 	isServedItems_.resize(size);
 	for(bool isSuved : isServedItems_)
 	{

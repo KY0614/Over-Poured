@@ -9,11 +9,19 @@
 namespace//このcpp内でしか使わない定数
 {
 	const VECTOR CUSTOMER_SCALE = { 0.7f, 0.7f, 0.7f };	//お客の大きさ
+
 	const VECTOR COUNTER_POS = { 221.0f, 0.0f, 271.0f };//カウンターの位置
+
 	const float CUSTOMER_ROT_Y = -90.0f;	//お客の初期Y軸回転角度
+
 	const float MOVE_SPEED = 1.5f;			//お客の移動速度
+
 	const float COUNTER_RADIUS = 30.0f;		//カウンターの球体当たり判定の半径
+
 	const float ROT_TIME = 1.0f;			//回転完了までの時間
+
+	const float EFFEKT_SCALE = 30.0f;		//エフェクトの大きさ
+	const float EFFEKT_SPEED = 2.0f;		//エフェクトの再生速度
 }
 
 CustomerBase::CustomerBase(void)
@@ -40,8 +48,10 @@ void CustomerBase::Init(const VECTOR pos)
 {
 	//お客のパラメーター設定
 	SetParam();
+
 	//アニメーション初期化
 	InitAnimation();
+
 	//モデル情報初期化
 	transform_.scl = CUSTOMER_SCALE;	//大きさ
 	transform_.pos = pos;				//位置を引数で指定
@@ -51,21 +61,27 @@ void CustomerBase::Init(const VECTOR pos)
 	//モデル情報を更新
 	transform_.Update();
 
+	//星のエフェクトのリソース読み込み
 	effektHappyResId_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::HAPPY_STAR).handleId_;
-	
+
+	//紫のぐるぐるエフェクトのリソース読み込み
 	effektBadResId_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::GURU).handleId_;
-		
+
+	//緑のオーブエフェクトのリソース読み込み
 	effektSosoResId_ = ResourceManager::GetInstance().Load(
 		ResourceManager::SRC::ORB).handleId_;
 
+	//お客のモデルの胸の位置のフレーム番号を取得
 	chestFrmNo_ = MV1SearchFrame(transform_.modelId, L"mixamorig:Head");
 }
 
 void CustomerBase::Update(void)
 {
+	//モデル情報更新
 	transform_.Update();
+	//アニメーション更新
 	animationController_->Update();
 
 	//状態ごとのアニメーション
@@ -159,19 +175,21 @@ void CustomerBase::StateReaction(void)
 	switch (reaction_)
 	{
 	case CustomerBase::REACTION::NONE:
-		
 		break;
 
 	case CustomerBase::REACTION::BAD:
-		EffektBad();
+		//BAD用のエフェクト再生
+		ReactionEffektPlay(effektBadPlayId_, effektBadResId_);
 		break;
 
 	case CustomerBase::REACTION::SOSO:
-		EffektOrb();
+		//SOSO用のエフェクト再生
+		ReactionEffektPlay(effektSosoPlayId_, effektSosoResId_);
 		break;
 
 	case CustomerBase::REACTION::GOOD:
-		EffektHappyStar();
+		//GOOD用のエフェクト再生
+		ReactionEffektPlay(effektHappyPlayId_, effektHappyResId_);
 		break;
 
 	default:
@@ -179,82 +197,30 @@ void CustomerBase::StateReaction(void)
 	}
 }
 
-void CustomerBase::EffektHappyStar(void)
+void CustomerBase::ReactionEffektPlay(int playId, int resId)
 {
-	effektHappyPlayId_ = PlayEffekseer3DEffect(effektHappyResId_);
+	//再生Idを取得
+	playId = PlayEffekseer3DEffect(resId);
 
-	SetSpeedPlayingEffekseer3DEffect(effektHappyPlayId_, 2.0f);
+	//再生速度の設定(少し早めに設定）
+	SetSpeedPlayingEffekseer3DEffect(playId, EFFEKT_SPEED);
 
-	float scale = 30.0f;
+	//大きさの設定
 	SetScalePlayingEffekseer3DEffect(
-		effektHappyPlayId_,
-		scale,
-		scale,
-		scale
+		playId,
+		EFFEKT_SCALE,
+		EFFEKT_SCALE,
+		EFFEKT_SCALE
 	);
 
+	//エフェクトの位置をお客の胸の位置に設定
 	VECTOR pos = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
-	//VECTOR pos = transform_.pos;
-
-	// 位置の設定
 	SetPosPlayingEffekseer3DEffect(
-		effektHappyPlayId_,
+		playId,
 		pos.x,
 		pos.y,
 		pos.z);
 
-	SetReaction(REACTION::NONE);
-}
-
-void CustomerBase::EffektBad(void)
-{
-	effektBadPlayId_ = PlayEffekseer3DEffect(effektBadResId_);
-
-	SetSpeedPlayingEffekseer3DEffect(effektBadPlayId_, 2.0f);
-
-	float scale = 30.0f;
-	SetScalePlayingEffekseer3DEffect(
-		effektBadPlayId_,
-		scale,
-		scale,
-		scale
-	);
-
-	VECTOR pos = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
-	//VECTOR pos = transform_.pos;
-
-	// 位置の設定
-	SetPosPlayingEffekseer3DEffect(
-		effektBadPlayId_,
-		pos.x,
-		pos.y,
-		pos.z);
-
-	SetReaction(REACTION::NONE);
-}
-
-void CustomerBase::EffektOrb(void)
-{
-	effektSosoPlayId_ = PlayEffekseer3DEffect(effektSosoResId_);
-
-	SetSpeedPlayingEffekseer3DEffect(effektSosoPlayId_, 2.0f);
-
-	float scale = 30.0f;
-	SetScalePlayingEffekseer3DEffect(
-		effektSosoPlayId_,
-		scale,
-		scale,
-		scale
-	);
-
-	VECTOR pos = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
-
-	// 位置の設定
-	SetPosPlayingEffekseer3DEffect(
-		effektSosoPlayId_,
-		pos.x,
-		pos.y,
-		pos.z);
-
+	//1回だけ再生したいのでREACTIONをNONEに戻す
 	SetReaction(REACTION::NONE);
 }

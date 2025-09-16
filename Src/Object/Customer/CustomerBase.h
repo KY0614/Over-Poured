@@ -135,8 +135,10 @@ protected:
 
 	//お客の種類
 	TYPE type_;
+
 	//お客の状態
 	STATE state_;
+
 	//お客の反応
 	REACTION reaction_;
 
@@ -165,12 +167,19 @@ private:
 	//回転時間
 	float stepRotTime_;
 
-	int effektHappyResId_;
-	int effektHappyPlayId_;
-	int effektBadResId_;
-	int effektBadPlayId_;
-	int effektSosoResId_;
-	int effektSosoPlayId_;
+	//リアクション：HAPPYのエフェクト
+	int effektHappyResId_;	//エフェクトのリソースID
+	int effektHappyPlayId_;	//エフェクトの再生ID
+
+	//リアクション：SOSOのエフェクト
+	int effektSosoResId_;	//エフェクトのリソースID
+	int effektSosoPlayId_;	//エフェクトの再生ID
+
+	//リアクション：BADのエフェクト
+	int effektBadResId_;	//エフェクトのリソースID
+	int effektBadPlayId_;	//エフェクトの再生ID
+
+	//チェストのフレーム番号（エフェクトの座標用)
 	int chestFrmNo_;
 
 	/// <summary>
@@ -184,10 +193,17 @@ private:
 	/// <param name="">アニメーション再生</param>
 	void StateAnimation(void);
 
+	/// <summary>
+	/// リアクションごとの処理
+	/// </summary>
+	/// <param name=""></param>
 	void StateReaction(void);
 
-	void EffektHappyStar(void);
-	void EffektBad(void);
-	void EffektOrb(void);
+	/// <summary>
+	/// リアクション毎のエフェクトの再生
+	/// </summary>
+	/// <param name="playId">エフェクトの再生Id</param>
+	/// <param name="resId">エフェクトのリソースID</param>
+	void ReactionEffektPlay(int playId, int resId);
 };
 

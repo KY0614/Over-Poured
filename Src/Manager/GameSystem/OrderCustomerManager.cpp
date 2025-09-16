@@ -146,12 +146,12 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 		}
 	}
 	// 時間ボーナス
-	if (order.num_ == 1) 
+	if (order.orderNum_ == 1) 
 	{
 		if (order.time_ > TIME_EARLY_LIMIT) score += TIME_EARLY_BONUS;
 		else if (order.time_ > TIME_LIMIT) score += TIME_BONUS;
 	}
-	else if (order.num_ == 2) 
+	else if (order.orderNum_ == 2) 
 	{
 		if (order.time_ > (TIME_EARLY_LIMIT * 2.0f)) score += TIME_EARLY_BONUS;
 		else if (order.time_ > (TIME_LIMIT * 2.0f)) score += TIME_BONUS;

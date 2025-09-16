@@ -6,9 +6,21 @@
 #include "OrderManager.h"
 #include "Order.h"
 
-Order::Order(void):
-	orderData_(),
-	orderNum_(-1)
+namespace 
+{
+	//注文関連
+	const int ORDER_MAX_NUM = 2;			//注文の最大数
+	const int ORDER_MIN_NUM = 1;			//注文の最小数
+
+	const float ONE_ORDER_TIME = 25.0f;	//注文の制限時間(1つ)
+	const float TWO_ORDER_TIME = 33.0f;	//注文の制限時間(２つ)
+
+	//商品関連
+	const int DRINK_MAX_NUM = 2;			//飲み物類の最大数
+	const int FOOD_MAX_NUM = 2;			//食べ物類の最大数
+}
+
+Order::Order(void): orderData_()
 {
 }
 
@@ -26,57 +38,52 @@ void Order::CreateOrder(void)
 {
 	int drinkType = 0;
 	int sweetsType = 0;
+	int orderNum = 0;
 
 	//注文数を決める
-	orderNum_ = GetRand(ORDER_MAX_NUM);
-	while(orderNum_ <= 0)
+	orderNum = GetRand(ORDER_MAX_NUM);
+	while(orderNum <= 0)
 	{
 		//乱数が0以下だったらもう一度乱数を取得する
-		orderNum_ = GetRand(ORDER_MAX_NUM);
+		orderNum = GetRand(ORDER_MAX_NUM);
 	}
 
-	//注文内容を決める
-	switch (orderNum_)
+	//注文数を設定
+	SetOrderNum(orderNum);	
+
+	//飲み物の種類を乱数で取得
+	while (drinkType <= 0)	//NONE(0)以下だったら乱数取得しなおす
 	{
-	case ORDER_MIN_NUM:
-		//飲み物の種類がNONE(0)以下だったら乱数取得しなおす
-		while (drinkType <= 0)	
-		{
-			drinkType = GetRand(DRINK_MAX_NUM);
-		}
-		sweetsType = 0;		//注文数が１の時はスイーツは頼まないようにする
-		//注文数を設定
-		SetOrderNum(ORDER_MIN_NUM);
-		//飲み物の種類を設定
-		SetDrink(static_cast<DRINK>(drinkType));	
-		//食べ物の種類を設定
-		SetSweets(static_cast<SWEETS>(sweetsType));	
-		//制限時間を設定
-		SetOrderTime(ONE_ORDER_TIME);				
-		break;
-
-	case ORDER_MAX_NUM:
-		//飲み物の種類がNONE(0)以下だったら乱数取得しなおす
-		while (drinkType <= 0)	
-		{
-			drinkType = GetRand(DRINK_MAX_NUM);
-		}
-
-		while (sweetsType <= 0)	//スイーツの種類がNONE(0)以下だったら乱数取得しなおす
-		{
-			sweetsType = GetRand(FOOD_MAX_NUM);
-		} 
-		//注文数を設定
-		SetOrderNum(ORDER_MAX_NUM);
-		//飲み物の種類を設定
-		SetDrink(static_cast<DRINK>(drinkType));
-		//食べ物の種類を設定
-		SetSweets(static_cast<SWEETS>(sweetsType));	
-		//制限時間を設定
-		SetOrderTime(TWO_ORDER_TIME);				
-		break;
-
-	default:
-		break;
+		drinkType = GetRand(DRINK_MAX_NUM);
 	}
+
+	//飲み物の種類を設定
+	SetDrink(static_cast<DRINK>(drinkType));
+
+	//注文数ごとの制限時間を設定
+	if (orderNum > 0)
+	{
+		//制限時間を設定（注文数が1の時）
+		SetOrderTime(ONE_ORDER_TIME);
+	}
+	else if(orderNum > ORDER_MIN_NUM)
+	{
+		//制限時間を設定（注文数が2の時）
+		SetOrderTime(TWO_ORDER_TIME);
+	}
+
+	if (orderNum < ORDER_MAX_NUM)
+	{
+		//注文数が1の時はスイーツは頼まないようにする
+		return;
+	}
+
+	//スイーツの種類を乱数で取得
+	while (sweetsType <= 0)	//スイーツの種類がNONE(0)以下だったら乱数取得しなおす
+	{
+		sweetsType = GetRand(FOOD_MAX_NUM);
+	}
+
+	//食べ物の種類を設定
+	SetSweets(static_cast<SWEETS>(sweetsType));
 }
