@@ -5,7 +5,6 @@
 #include "../Manager/GameSystem/OrderCustomerManager.h"
 #include "StageObjectLibrary.h"
 
-class Cube;
 class Sphere;
 class Player;
 
@@ -33,6 +32,11 @@ public:
 	static constexpr float CUPS_HALF_WIDTH = 15.0f;
 	static constexpr float CUPS_HEIGHT_OFFSET = 35.0f;
 	static constexpr float CUPS_Z_OFFSET = 0.0f;
+
+	static constexpr std::string HOT_COFFEE_ID = "Hot_Coffee";
+	static constexpr std::string ICE_COFFEE_ID = "Hot_Coffee";
+	static constexpr std::string HOT_CUP_ID = "Hot_Cup";
+	static constexpr std::string ICE_CUP_ID = "Ice_Cup";
 
 	//アイテムオブジェクトの状態
 	enum class ITEM_STATE {
@@ -194,14 +198,6 @@ public:
 
 	virtual void AddStock(int addStockNum);
 
-	/// <summary>
-	/// 座標や拡大率を調整する用のGUI
-	/// </summary>
-	/// <param name=""></param>
-	void UpdateDebugImGui(void);
-
-	void UpdateDebugImGui2(void);
-
 protected:
 
 	//オブジェクトのパラメータ
@@ -210,10 +206,10 @@ protected:
 	//テーブル用のコライダー
 	Transform colTran_;
 
+	//プレイヤーの参照
 	Player& player_;
 
 	//仮モデルの立方体
-	std::unique_ptr<Cube> cube_;
 	float width_;	//横幅
 	float height_;	//高さ
 	float depth_;	//奥行
@@ -222,7 +218,7 @@ protected:
 	std::unique_ptr<Sphere> sphere_;
 
 	//当たり判定用球体の半径
-	float rad_;
+	float collisionRad_;
 
 	//プレイヤーがアクションを行ったかどうか
 	bool isActioned_;	
@@ -254,9 +250,9 @@ protected:
 	bool isInteract_;
 
 private:
-
+	//アイテムオブジェクトの状態
 	ITEM_STATE itemState_;
-	MACHINE_STATE machineState_;
 
-	void DrawDebug(void);
+	//マシンの稼働状態
+	MACHINE_STATE machineState_;
 };

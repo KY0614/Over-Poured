@@ -16,9 +16,9 @@ void FollowingObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	StageObject::Init(pos, rotY, scale);
 
 	//テーブルとオブジェクトの判定の邪魔にならないように
-	rad_ = 0.0f;
+	collisionRad_ = 0.0f;
 	sphere_->SetLocalPos({0.0f,30.0f,0.0f});
-	sphere_->SetRadius(rad_);
+	sphere_->SetRadius(collisionRad_);
 }
 
 void FollowingObject::Update(void)

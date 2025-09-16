@@ -28,6 +28,7 @@ StageObjectLibrary::LoadData(const std::string& objName)
     obj.carryable_ = value.value("carryable", false);
     obj.interactable_ = value.value("interactable", false);
     obj.interactTime_ = value.value("interactTime", 0.0f);
+	obj.collisionRadius_ = value.value("collisionRadius", 0.0f);
 
 	//acceptedItemsは配列なので、containsで存在を確認してから取得
     if (value.contains("acceptedItems"))

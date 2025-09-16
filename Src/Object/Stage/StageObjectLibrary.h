@@ -17,6 +17,8 @@ public:
         float interactTime_ = 0.0f;         //インタラクトにかかる時間（例：注ぐ時間）
 
         std::vector<std::string> acceptedItems_;   //インタラクト対象にできるアイテム（例：コップだけなど）
+
+		float collisionRadius_ = 0.0f;    //当たり判定の半径
     };
 
     /// <summary>

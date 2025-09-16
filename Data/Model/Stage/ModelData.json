@@ -6,28 +6,32 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":["Hot_Cup","Cup_With_Ice"]
+    "acceptedItems":["Hot_Cup","Cup_With_Ice"],
+    "collisionRadius":35.0
     },
     "Ice_Dispenser": {
     "id": "Ice_Dispenser",
     "interactable": true,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":["Ice_Cup"]
+    "acceptedItems":["Ice_Cup"],
+    "collisionRadius":35.0
     },
     "Table": {
     "id": "Table",
     "interactable": true,
     "placeable": true,
     "carryable": false,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Counter": {
     "id": "Counter",
     "interactable": true,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":["Hot_Coffee","Ice_Coffee","Sweets_Choco","Sweets_Strawberry"]
+    "acceptedItems":["Hot_Coffee","Ice_Coffee","Sweets_Choco","Sweets_Strawberry"],
+    "collisionRadius":30.0
     },
     "Sweets_Choco_Rack": {
     "id": "Sweets_Choco_Rack",
@@ -35,7 +39,8 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Sweets_Strawberry_Rack": {
     "id": "Sweets_Strawberry_Rack",
@@ -43,42 +48,48 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Sweets_Choco": {
     "id": "Sweets_Choco",
     "interactable": false,
     "placeable": true,
     "carryable": true,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Sweets_Strawberry": {
     "id": "Sweets_Strawberry",
     "interactable": false,
     "placeable": true,
     "carryable": true,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Hot_Cup": {
     "id": "Hot_Cup",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":20.0
     },
     "Ice_Cup": {
     "id": "Ice_Cup",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":20.0
     },
     "Cup_With_Ice": {
     "id": "Cup_With_Ice",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":20.0
     },
     "Cup_Hot_Rack": {
     "id": "Cup_Hot_Rack",
@@ -86,7 +97,8 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Cup_Ice_Rack": {
     "id": "Cup_Ice_Rack",
@@ -94,21 +106,24 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Hot_Coffee": {
     "id": "Hot_Coffee",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":20.0
     },
     "Ice_Coffee": {
     "id": "Ice_Coffee",
     "interactable": false,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":20.0
     },
     "Cup_Lid_Rack": {
     "id": "Cup_Lid_Rack",
@@ -116,21 +131,24 @@
     "placeable": false,
     "carryable": false,
     "interactTime": 3.0,
-    "acceptedItems":["Hot_Coffee","Ice_Coffee"]
+    "acceptedItems":["Hot_Coffee","Ice_Coffee"],
+    "collisionRadius":30.0
     },
     "Hot_Cup_Lid": {
     "id": "Hot_Cup_Lid",
     "interactable": false,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":30.0
     },
     "Ice_Cup_Lid": {
     "id": "Ice_Cup_Lid",
     "interactable": false,
     "placeable": false,
     "carryable": false,
-    "acceptedItems":[]
+    "acceptedItems":[],
+    "collisionRadius":10.0
     },
     "Ice": {
     "id": "Ice",
@@ -144,6 +162,7 @@
     "interactable": true,
     "placeable": false,
     "carryable": true,
-    "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco","Hot_Cup_Lid","Ice_Cup_Lid","Ice"]
+    "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco","Hot_Cup_Lid","Ice_Cup_Lid","Ice"],
+    "collisionRadius":30.0
     }
 }
