@@ -1,8 +1,6 @@
 {
     "Coffee_Machine": {
     "id": "Coffee_Machine",
-    "type": "machine",
-    "name": "Coffee_Machine",
     "model": "models/coffee_machine.mv1",
     "interactable": true,
     "placeable": false,
@@ -13,8 +11,6 @@
     },
     "Ice_Dispenser": {
     "id": "Ice_Dispenser",
-    "type": "machine",
-    "name": "IceDispenser",
     "interactable": true,
     "placeable": false,
     "carryable": false,
@@ -23,8 +19,6 @@
     },
     "Table": {
     "id": "Table",
-    "type": "surface",
-    "name": "Table",
     "interactable": true,
     "placeable": true,
     "carryable": false,
@@ -32,8 +26,6 @@
     },
     "Counter": {
     "id": "Counter",
-    "type": "surface",
-    "name": "Counter",
     "interactable": true,
     "placeable": false,
     "carryable": false,
@@ -41,8 +33,6 @@
     },
     "Sweets_Choco_Rack": {
     "id": "Sweets_Choco_Rack",
-    "type": "sweets",
-    "name": "ChocoRack",
     "interactable": true,
     "placeable": false,
     "carryable": false,
@@ -52,8 +42,6 @@
     },
     "Sweets_Strawberry_Rack": {
     "id": "Sweets_Strawberry_Rack",
-    "type": "sweets",
-    "name": "StrawberryRack",
     "interactable": true,
     "placeable": false,
     "carryable": false,
@@ -63,8 +51,6 @@
     },
     "Sweets_Choco": {
     "id": "Sweets_Choco",
-    "type": "sweets",
-    "name": "Choco_Sweets",
     "interactable": false,
     "placeable": true,
     "carryable": true,
@@ -72,8 +58,6 @@
     },
     "Sweets_Strawberry": {
     "id": "Sweets_Strawberry",
-    "type": "sweets",
-    "name": "Strawberry_Sweets",
     "interactable": false,
     "placeable": true,
     "carryable": true,
@@ -81,8 +65,6 @@
     },
     "Hot_Cup": {
     "id": "Hot_Cup",
-    "type": "item",
-    "name": "HotCup",
     "interactable": false,
     "placeable": false,
     "carryable": true,
@@ -91,8 +73,6 @@
     },
     "Ice_Cup": {
     "id": "Ice_Cup",
-    "type": "item",
-    "name": "IceCup",
     "interactable": false,
     "placeable": false,
     "carryable": true,
@@ -101,8 +81,6 @@
     },
     "Cup_With_Ice": {
     "id": "Cup_With_Ice",
-    "type": "item",
-    "name": "CupWithIce",
     "interactable": false,
     "placeable": false,
     "carryable": true,
@@ -111,8 +89,6 @@
     },
     "Cup_Hot_Rack": {
     "id": "Cup_Hot_Rack",
-    "type": "item",
-    "name": "HotCupRack",
     "interactable": true,
     "placeable": false,
     "carryable": false,
@@ -122,8 +98,6 @@
     },
     "Cup_Ice_Rack": {
     "id": "Cup_Ice_Rack",
-    "type": "item",
-    "name": "IceCupRack",
     "interactable": true,
     "placeable": false,
     "carryable": false,
@@ -133,8 +107,6 @@
     },
     "Hot_Coffee": {
     "id": "Hot_Coffee",
-    "type": "coffee",
-    "name": "HotCoffee",
     "interactable": false,
     "placeable": false,
     "carryable": true,
@@ -143,8 +115,6 @@
     },
     "Ice_Coffee": {
     "id": "Ice_Coffee",
-    "type": "item",
-    "name": "IceCoffee",
     "interactable": false,
     "placeable": false,
     "carryable": true,
@@ -153,8 +123,6 @@
     },
     "Cup_Lid_Rack": {
     "id": "Cup_Lid_Rack",
-    "type": "item",
-    "name": "CupLidRack",
     "interactable": true,
     "placeable": false,
     "carryable": false,
@@ -164,8 +132,6 @@
     },
     "Hot_Cup_Lid": {
     "id": "Hot_Cup_Lid",
-    "type": "follow",
-    "name": "HotCupLid",
     "interactable": false,
     "placeable": false,
     "carryable": false,
@@ -174,8 +140,6 @@
     },
     "Ice_Cup_Lid": {
     "id": "Ice_Cup_Lid",
-    "type": "follow",
-    "name": "IceCupLid",
     "interactable": false,
     "placeable": false,
     "carryable": false,
@@ -184,8 +148,6 @@
     },
     "Ice": {
     "id": "Ice",
-    "type": "follow",
-    "name": "Ice",
     "interactable": false,
     "placeable": true,
     "carryable": true,
@@ -194,8 +156,6 @@
     },
     "Dust_Box": {
     "id": "Dust_Box",
-    "type": "item",
-    "name": "DustBox",
     "interactable": true,
     "placeable": false,
     "carryable": true,

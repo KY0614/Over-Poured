@@ -21,20 +21,17 @@ StageObjectLibrary::LoadData(const std::string& objName)
     const auto& value = data[objName];
     ObjectParams obj;
     
-    obj.id_ = value.value("id", "");
-    obj.name_ = value.value("name", "");
+	//各パラメータを取得し、objに格納
+	//存在しない場合はデフォルト値（右側の値)を設定
+	obj.id_ = value.value("id", "");        
     obj.placeable_ = value.value("placeable", false);
     obj.carryable_ = value.value("carryable", false);
     obj.interactable_ = value.value("interactable", false);
-    obj.interactType_ = value.value("type", "");
     obj.interactTime_ = value.value("interactTime", 0.0f);
-    obj.category_ = value.value("type", "");
 
+	//acceptedItemsは配列なので、containsで存在を確認してから取得
     if (value.contains("acceptedItems"))
         obj.acceptedItems_ = value["acceptedItems"].get<std::vector<std::string>>();
-
-    if (value.contains("produces"))
-        obj.produces_ = value["produces"].get<std::vector<std::string>>();
 
     ifs.close();
 
