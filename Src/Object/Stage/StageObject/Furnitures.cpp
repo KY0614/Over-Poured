@@ -1,4 +1,3 @@
-#include "../../../Libs/ImGui/imgui.h"
 #include "../../../Manager/Generic/ResourceManager.h"
 #include "../../../Utility/AsoUtility.h"
 #include "../../../Renderer/ModelMaterial.h"
@@ -33,21 +32,18 @@ void Furnitures::Init(void)
 		FRONT_SHELVES_POS, Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(90.0f), 0.0f }));
 }
 
-void Furnitures::Update(void)
-{
-	//動かす予定特にないので何も処理しない
-}
-
 void Furnitures::Draw(void)
 {
+	//床の描画
 	renderer_->Draw();
-	MV1DrawModel(deskL_.modelId);
-	MV1DrawModel(deskR_.modelId);
-	MV1DrawModel(sidePlant_.modelId);
-	MV1DrawModel(frontPlant_.modelId);
-	MV1DrawModel(sideShelves_.modelId);
-	MV1DrawModel(frontLShelves_.modelId);
-	MV1DrawModel(frontRShelves_.modelId);
+	//その他家具の描画
+	MV1DrawModel(deskL_.modelId);			//左の机
+	MV1DrawModel(deskR_.modelId);			//右の机
+	MV1DrawModel(sidePlant_.modelId);		//横の観葉植物
+	MV1DrawModel(frontPlant_.modelId);		//前の観葉植物
+	MV1DrawModel(sideShelves_.modelId);		//横の棚
+	MV1DrawModel(frontLShelves_.modelId);	//前の左の棚
+	MV1DrawModel(frontRShelves_.modelId);	//前の右の棚
 }
 
 void Furnitures::SetupFurniture(Transform& transform,
@@ -84,6 +80,6 @@ void Furnitures::InitMaterial(void)
 	//環境光
 	material_->AddConstBufPS({ AMBIENT_COLOR,AMBIENT_COLOR,AMBIENT_COLOR,AMBIENT_COLOR });
 
+	//レンダラーの生成
 	renderer_ = std::make_unique<ModelRenderer>(floor_.modelId, *material_);
-
 }

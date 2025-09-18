@@ -29,7 +29,6 @@ public:
 	~Furnitures(void);
 
 	void Init(void) override;
-	void Update(void) override;
 	void Draw(void) override;
 
 	const Transform GetFloorTran(void)const { return floor_; }
@@ -49,7 +48,7 @@ private:
 	Transform frontRShelves_;
 
 	/// <summary>
-	/// モデルセットアップ用関数
+	/// モデルセットアップ
 	/// </summary>
 	/// <param name="transform">モデルのTransform</param>
 	/// <param name="modelSrc">モデルのソースタイプ</param>
@@ -59,6 +58,9 @@ private:
 		ResourceManager::SRC modelSrc, const VECTOR& pos,
 		const Quaternion& quaRotLocal = Quaternion());
 
+	/// <summary>
+	/// マテリアル初期化
+	/// </summary>
 	void InitMaterial(void);
 };
 

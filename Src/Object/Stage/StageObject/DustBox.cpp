@@ -3,16 +3,10 @@
 #include "ItemObject.h"
 #include "DustBox.h"
 
-namespace {
-	const std::string HOT_COFFEE = "Hot_Coffee";		//ホットコーヒー
-	const std::string ICE_COFFEE = "Ice_Coffee";		//アイスコーヒー
-	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイスコーヒー
-}
-
-DustBox::DustBox(const std::string objId, const float width,
-	const float height, const float depth, Player& player,
+DustBox::DustBox(const std::string objId,
+	const float height, Player& player,
 	std::vector<std::unique_ptr<StageObject>>& objects) :
-	StageObject(objId, width, height, depth, player), objects_(objects)
+	StageObject(objId, height, player), objects_(objects)
 {
 }
 

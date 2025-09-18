@@ -11,8 +11,8 @@ public:
 	static constexpr float SWEETS_UI_OFFSET_Y = 110.0f;
 	static constexpr float CUP_UI_OFFSET_Y = 30.0f;
 
-	RackObject(const std::string objId, const float width,
-		const float height, const float depth, Player& player);
+	RackObject(const std::string objId,
+		const float height, Player& player);
 
 	~RackObject(void) = default;
 

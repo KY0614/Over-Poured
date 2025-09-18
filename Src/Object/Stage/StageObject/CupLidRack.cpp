@@ -1,4 +1,3 @@
-#include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
@@ -7,15 +6,10 @@
 #include "../../UI/UIManager.h"
 #include "CupLidRack.h"
 
-namespace {
-	const std::string HOT_COFFEE = "Hot_Coffee";	//ホットコーヒー
-	const std::string ICE_COFFEE = "Ice_Coffee";	//アイスコーヒー
-}
-
-CupLidRack::CupLidRack(const std::string objId, const float width,
-	const float height, const float depth, Player& player,
+CupLidRack::CupLidRack(const std::string objId,
+	const float height,Player& player,
 	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId, width, height, depth, player), objects_(object)
+	StageObject(objId, height, player), objects_(object)
 {
 }
 

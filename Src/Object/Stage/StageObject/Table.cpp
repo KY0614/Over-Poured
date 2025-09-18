@@ -6,10 +6,10 @@
 #include "../Object/Stage/StageManager.h"
 #include "Table.h"
 
-Table::Table(const std::string objId, const float width,
-	const float height, const float depth, Player& player,
+Table::Table(const std::string objId,
+	const float height, Player& player,
 	std::vector<std::unique_ptr<StageObject>>& objects) :
-	StageObject(objId, width, height, depth, player),objects_(objects)
+	StageObject(objId, height, player),objects_(objects)
 {
 }
 

@@ -7,9 +7,8 @@
 #include "ItemObject.h"
 
 ItemObject::ItemObject(const std::string objId,
-	const float width, const float height,
-	const float depth, Player& player) :
-	StageObject(objId, width, height, depth, player)
+	const float height,Player& player) :
+	StageObject(objId, height, player)
 {
 	isIced_ = false;   
 }

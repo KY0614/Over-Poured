@@ -8,10 +8,9 @@
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const std::string objId, const float width,
-	const float height, const float depth,Player& player):
-	objId_(objId),width_(width),height_(height),
-	depth_(depth),player_(player)
+StageObject::StageObject(const std::string objId,
+	const float height, Player& player):
+	objId_(objId),height_(height),player_(player)
 {
 	isActioned_ = false;
 	itemState_ = ITEM_STATE::NONE;
@@ -122,7 +121,6 @@ void StageObject::Update(void)
 	}
 	colTran_.Update();
 	transform_.Update();
-
 }
 
 void StageObject::Draw(void)

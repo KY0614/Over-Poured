@@ -8,8 +8,8 @@ class CupLidRack : public StageObject
 public:
 	static constexpr float LID_PRODUCES_TIME = 3.0f;
 
-	CupLidRack(const std::string objId, const float width,
-		const float height, const float depth, Player& player,
+	CupLidRack(const std::string objId, 
+		const float height, Player& player,
 		std::vector<std::unique_ptr<StageObject>>& object);
 
 	~CupLidRack(void) = default;

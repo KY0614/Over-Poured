@@ -12,9 +12,8 @@
 #include "RackObject.h"
 
 RackObject::RackObject(const std::string objId,
-	const float width, const float height,
-	const float depth, Player& player) :
-	StageObject(objId, width, height, depth, player)
+	const float height,Player& player) :
+	StageObject(objId, height, player)
 {
 	sweetsStockCnt_ = SWEETS_STOCK_MAX;
 	cupsStockCnt_ = CUP_STOCK_MAX;
@@ -32,7 +31,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	if (rackName == "Cup_Hot_Rack" && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
-		object.emplace_back(std::make_unique<ItemObject>("Hot_Cup", 40.0f, 30.0f, 40.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>("Hot_Cup", 30.0f,player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
@@ -44,7 +43,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	if (rackName == "Cup_Ice_Rack" && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
-		object.emplace_back(std::make_unique<ItemObject>("Ice_Cup", 40.0f, 30.0f, 40.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>("Ice_Cup", 30.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
@@ -57,7 +56,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
-		object.emplace_back(std::make_unique<ItemObject>("Sweets_Strawberry", 40.0f, 30.0f, 40.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>("Sweets_Strawberry", 30.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);
@@ -71,7 +70,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
-		object.emplace_back(std::make_unique<ItemObject>("Sweets_Choco", 40.0f, 30.0f, 40.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>("Sweets_Choco",30.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);

@@ -10,15 +10,10 @@
 #include "../../UI/UIManager.h"
 #include "IceDispenser.h"
 
-namespace {
-	const std::string ICE_CUP = "Ice_Cup";	//アイス用カップ
-	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
-}
-
-IceDispenser::IceDispenser(const std::string objId, const float width,
-	const float height, const float depth, Player& player,
+IceDispenser::IceDispenser(const std::string objId,
+	const float height, Player& player,
 	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId, width, height, depth, player), objects_(object)
+	StageObject(objId, height, player), objects_(object)
 {
 }
 

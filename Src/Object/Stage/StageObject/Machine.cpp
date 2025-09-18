@@ -1,5 +1,3 @@
-#include "../Libs/ImGui/imgui.h"
-#include "../Common/DebugDrawFormat.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
@@ -11,17 +9,10 @@
 #include "../../UI/UIManager.h"
 #include "Machine.h"
 
-namespace {
-	const std::string HOT_CUP = "Hot_Cup";	//ホット用カップ
-	const std::string CUP_WITH_ICE = "Cup_With_Ice";		//アイス用カップ
-	const std::string HOT_COFFEE = "Hot_Coffee";		//ホットコーヒー
-	const std::string ICE_COFFEE = "Ice_Coffee";		//アイスコーヒー
-}
-
-Machine::Machine(const std::string objId, const float width,
-	const float height, const float depth,Player& player,
+Machine::Machine(const std::string objId,
+	const float height,Player& player,
 	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId, width, height, depth,player),objects_(object)
+	StageObject(objId, height,player),objects_(object)
 {
 }
 

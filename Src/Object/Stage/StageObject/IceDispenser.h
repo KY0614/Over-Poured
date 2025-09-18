@@ -10,8 +10,8 @@ public:
 
 	static constexpr float ICE_PRODUCES_TIME = 3.0f;
 
-	IceDispenser(const std::string objId, const float width,
-		const float height, const float depth, Player& player,
+	IceDispenser(const std::string objId,
+		const float height, Player& player,
 		std::vector<std::unique_ptr<StageObject>>& object);
 	~IceDispenser(void) = default;
 

@@ -4,10 +4,9 @@
 #include "FollowingObject.h"
 
 FollowingObject::FollowingObject(const std::string objId,
-	const float width, const float height,
-	const float depth, Player& player,
+	const float height,Player& player,
 	StageObject& followObject) : 
-	StageObject(objId, width, height, depth, player), followObj_(followObject)
+	StageObject(objId, height, player), followObj_(followObject)
 {
 }
 

@@ -71,8 +71,8 @@ public:
 		ACTIVE,
 	};
 
-	StageObject(const std::string objId,const float width,
-		const float height, const float depth,Player& player);
+	StageObject(const std::string objId,
+		const float height,Player& player);
 
 	~StageObject(void);
 
@@ -229,9 +229,7 @@ protected:
 	Player& player_;
 
 	//‰¼ƒ‚ƒfƒ‹‚Ì—§•û‘Ì
-	float width_;	//‰¡•
 	float height_;	//‚‚³
-	float depth_;	//‰œs
 
 	//“–‚½‚è”»’è—p‹…‘Ì
 	std::unique_ptr<Sphere> sphere_;
