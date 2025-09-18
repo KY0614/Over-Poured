@@ -20,9 +20,10 @@ public:
 	static constexpr int SWEETS_STOCK_MAX = 4;	//スイーツのラックの最大在庫数
 	static constexpr int CUP_STOCK_MAX = 5;		//カップのラックの最大在庫数
 
-	//追加間隔
-	static constexpr float ADD_INTERVAL = 0.7f;	
+	//１つずつ追加（補充）する間隔
+	static constexpr float ADD_INTERVAL = 0.7f;		
 
+	//オブジェクトの当たり判定用球体の半径
 	static constexpr float SWEETS_HALF_WIDTH = 18.0f;
 	static constexpr float SWEETS_HEIGHT_OFFSET = 12.0f;
 	static constexpr float SWEETS_Z_FRONT_OFFSET = 2.0f;
@@ -33,20 +34,38 @@ public:
 	static constexpr float CUPS_HEIGHT_OFFSET = 35.0f;
 	static constexpr float CUPS_Z_OFFSET = 0.0f;
 
-	static constexpr std::string HOT_COFFEE_ID = "Hot_Coffee";
-	static constexpr std::string ICE_COFFEE_ID = "Hot_Coffee";
-	static constexpr std::string HOT_CUP_ID = "Hot_Cup";
-	static constexpr std::string ICE_CUP_ID = "Ice_Cup";
+	//オブジェクトID
+	static constexpr const char* HOT_COFFEE = "Hot_Coffee";					//ホットコーヒー
+	static constexpr const char* ICE_COFFEE = "Ice_Coffee";					//アイスコーヒー
+	static constexpr const char* HOT_CUP = "Hot_Cup";						//ホット用カップ
+	static constexpr const char* ICE_CUP = "Ice_Cup";						//アイス用カップ
+	static constexpr const char* CUP_WITH_ICE = "Cup_With_Ice";				//氷入りのアイス用カップ
+	static constexpr const char* TABLE = "Table";							//テーブル
+	static constexpr const char* COUNTER = "Counter";						//カウンター
+	static constexpr const char* HOT_CUP_RACK = "Cup_Hot_Rack";				//ホットカップ用ラック
+	static constexpr const char* ICE_CUP_RACK = "Cup_Ice_Rack";				//アイスカップ用ラック
+    static constexpr const char* CHOCO_SWEETSRACK = "Sweets_Choco_Rack";	//チョコスイーツ用ラック
+	static constexpr const char* BERRY_SWEETSRACK = "Sweets_Strawberry_Rack";//ベリースイーツ用ラック
+	static constexpr const char* CHOCO_SWEETS = "Sweets_Choco";				//チョコスイーツ
+	static constexpr const char* BERRY_SWEETS = "Sweets_Strawberry";		//ベリースイーツ
+	static constexpr const char* COFFEE_MACHINE = "Coffee_Machine";			//コーヒーマシン
+	static constexpr const char* CUP_LID_RACK = "Cup_Lid_Rack";				//蓋のラック
+	static constexpr const char* HOTCUP_LID = "Hot_Cup_Lid";				//蓋（ホット）
+	static constexpr const char* ICECUP_LID = "Ice_Cup_Lid";				//蓋
+	static constexpr const char* ICE_DISPENSER = "Ice_Dispenser";			//製氷機
+	static constexpr const char* DUST_BOX = "Dust_Box";						//ゴミ箱
 
 	//アイテムオブジェクトの状態
-	enum class ITEM_STATE {
+	enum class ITEM_STATE 
+	{
 		NONE,
 		PLACED,
 		HOLD,
 	};
 
 	//マシンの稼働状態
-	enum class MACHINE_STATE {
+	enum class MACHINE_STATE 
+	{
 		NONE,
 		INACTIVE,
 		ACTIVE,

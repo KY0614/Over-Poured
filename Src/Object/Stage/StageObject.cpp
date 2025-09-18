@@ -17,7 +17,7 @@ StageObject::StageObject(const std::string objId, const float width,
 	itemState_ = ITEM_STATE::NONE;
 	machineState_ = MACHINE_STATE::NONE;
 	param_ = StageObjectLibrary::ObjectParams();
-	collisionRad_ = 0.0f;
+	collisionRad_ = -1.0f;
 	isLid_ = false;
 	drink_ = Order::DRINK::NONE;
 	sweets_ = Order::SWEETS::NONE;
@@ -53,10 +53,13 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 	//当たり判定の半径を設定
 	collisionRad_ = param_.collisionRadius_;
 
-	if (objId_ == HOT_COFFEE_ID)drink_ = Order::DRINK::HOT;
-	if (objId_ == ICE_COFFEE_ID)drink_ = Order::DRINK::ICE;
+	//ホットコーヒーもしくはアイスコーヒーの場合はドリンクの種類を設定
+	if (objId_ == HOT_COFFEE)drink_ = Order::DRINK::HOT;
+	if (objId_ == ICE_COFFEE)drink_ = Order::DRINK::ICE;
 
+	//当たり判定用の球を作成
 	sphere_ = std::make_unique<Sphere>(transform_);
+	//
 	sphere_->SetLocalPos(AsoUtility::VECTOR_ZERO);
 	sphere_->SetRadius(collisionRad_);
 

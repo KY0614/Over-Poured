@@ -1,7 +1,6 @@
 {
     "Coffee_Machine": {
     "id": "Coffee_Machine",
-    "model": "models/coffee_machine.mv1",
     "interactable": true,
     "placeable": false,
     "carryable": false,

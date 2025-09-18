@@ -8,7 +8,11 @@ class StageObjectLibrary
 {
 public:
 
-    struct ObjectParams {
+    /// <summary>
+    /// オブジェクトの属性を保持する構造体
+    /// </summary>
+    struct ObjectParams 
+    {
         std::string id_ = "";               //識別子
         bool placeable_ = false;            //上に物を置けるか（例：机）
         bool carryable_ = false;            //持ち運びできるか（例：カップ）

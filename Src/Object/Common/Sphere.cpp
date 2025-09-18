@@ -8,37 +8,30 @@ Sphere::Sphere(const Transform& parent) : transformParent_(parent)
 	localPos_ = { 0.0f, 0.0f, 0.0f };
 }
 
-Sphere::Sphere(const VECTOR& parentPos,const Transform& parent) : parentPos_(parentPos), transformParent_(parent)
-{
-	radius_ = 0.0f;
-	localPos_ = { 0.0f, 0.0f, 0.0f };
-}
-
-Sphere::Sphere(const Sphere& base, const Transform& parent) : transformParent_(parent)
-{
-	radius_ = base.GetRadius();
-	localPos_ = base.GetLocalPos();
-}
-
 Sphere::~Sphere(void)
 {
 }
 
 void Sphere::Draw(void)
 {
-	//上の球体
+	//ワールド座標を取得
 	VECTOR pos = GetPos();
-	DrawSphere3D(pos, radius_, 5, COLOR, COLOR, false);
+	//描画
+	DrawSphere3D(pos, radius_, DIV_NUM, COLOR, COLOR, false);
 }
 
 void Sphere::Draw(int col)
 {
+	//ワールド座標を取得
 	VECTOR pos = GetPos();
-	DrawSphere3D(pos, radius_, 5, col, col, false);
+	//色を指定して描画
+	DrawSphere3D(pos, radius_, DIV_NUM, col, col, false);
 }
 
 VECTOR Sphere::GetRotPos(const VECTOR& localPos) const
 {
+	//相対座標を親の回転に合わせて回転させる
 	VECTOR localRotPos = transformParent_.quaRot.PosAxis(localPos);
+	//親の位置を足してワールド座標に変換して返す
 	return VAdd(transformParent_.pos, localRotPos);
 }
