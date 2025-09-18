@@ -11,6 +11,10 @@ class Player;
 class StageObject : public ActorBase
 {
 public:
+	//設置可能オブジェクトの高さ
+	static constexpr float TABLE_HEIGHT = 76.0f;		//テーブルの高さ
+	static constexpr float DUST_BOX_HEIGHT = 105.0f;	//ゴミ箱の高さ
+
 	//マシンのY座標オフセット(マシンの上に置くようにしたいため)
 	static constexpr float MACHINE_OFSET_Z = 15.0f;	
 	static constexpr float DISPENSER_OFSET_Z = 17.0f;	
@@ -34,7 +38,8 @@ public:
 	static constexpr float CUPS_HEIGHT_OFFSET = 35.0f;
 	static constexpr float CUPS_Z_OFFSET = 0.0f;
 
-	static constexpr float LID_RACK_INTERACT_TIME = 3.0f;
+	//インタラクトする時間
+	static constexpr float LID_RACK_INTERACT_TIME = 3.0f;		//蓋のラックの時間
 
 	//オブジェクトID
 	static constexpr const char* HOT_COFFEE = "Hot_Coffee";					//ホットコーヒー
@@ -60,21 +65,21 @@ public:
 	//アイテムオブジェクトの状態
 	enum class ITEM_STATE 
 	{
-		NONE,
-		PLACED,
-		HOLD,
+		NONE,	//初期化用
+		PLACED,	//設置中
+		HOLD,	//所持中
 	};
 
 	//マシンの稼働状態
 	enum class MACHINE_STATE 
 	{
-		NONE,
-		INACTIVE,
-		ACTIVE,
+		NONE,		//初期状態
+		INACTIVE,	//非稼働
+		ACTIVE,		//稼働中
 	};
 
 	//コンストラクタ
-	StageObject(const std::string objId,const float height,Player& player);
+	StageObject(const std::string objId,Player& player);
 
 	//デストラクタ
 	~StageObject(void);
@@ -174,12 +179,8 @@ public:
 	/// <returns>マシンオブジェクトの状態</returns>
 	MACHINE_STATE GetMachineState(void)const { return machineState_; }
 
-	/// <summary>
-	/// モデルの上部中央座標を取得する(テーブル用)
-	/// </summary>
-	/// <param name="">transformのpos.yにheight_を足して返す</param>
-	/// <returns>上部中央座標</returns>
-	VECTOR GetTopCenter(void)const;
+	///
+	VECTOR GetSphereCenter(void)const;
 
 	/// <summary>
 	/// 当たり判定用球体の半径を取得する
@@ -258,9 +259,6 @@ protected:
 	//プレイヤーの参照
 	Player& player_;
 
-	//仮モデルの立方体
-	float height_;	//高さ
-
 	//当たり判定用球体
 	std::unique_ptr<Sphere> sphere_;
 
@@ -311,5 +309,8 @@ private:
 	//マシンの稼働状態
 	MACHINE_STATE machineState_;
 
+	/// <summary>
+	/// テーブルのコライダー用モデルを初期化する処理
+	/// </summary>
 	void InitTableColliderModel(void);
 };

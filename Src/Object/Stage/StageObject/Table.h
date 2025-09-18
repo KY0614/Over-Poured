@@ -5,8 +5,7 @@ class Table : public StageObject
 {
 public:
 
-	Table(const std::string objId,
-		const float height, Player& player,
+	Table(const std::string objId, Player& player,
 		std::vector<std::unique_ptr<StageObject>>& objects);
 
 	~Table(void) = default;

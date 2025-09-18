@@ -244,7 +244,7 @@ void StageManager::Init3DModel(void)
 	{
 		firstPos = TABLE_POS_BACK;
 		firstPos.x += (x * TABLE_WIDTH);
-		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, 76.0f, player_, objects_));
+		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
 		tables_.back()->Init(firstPos, 180.0f);
 	}
 
@@ -253,7 +253,7 @@ void StageManager::Init3DModel(void)
 	{
 		firstPos = COLUMN_TABLE_LEFT_POS;
 		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
-		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, 76.0f, player_, objects_));
+		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
 		tables_.back()->Init(firstPos, -90.0f);
 	}
 
@@ -262,7 +262,7 @@ void StageManager::Init3DModel(void)
 	{
 		firstPos = COLUMN_TABLE_RIGHT_POS;
 		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
-		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, 76.0f, player_, objects_));
+		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
 		tables_.back()->Init(firstPos, 90.0f);
 	}
 
@@ -272,7 +272,7 @@ void StageManager::Init3DModel(void)
 		firstPos = CENTER_TABLE_POS;
 		firstPos.x += i * 90.0f;
 		//奥側のテーブル２つ
-		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, 76.0f, player_, objects_));
+		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
 		tables_.back()->Init(firstPos, 0.0f);
 	}
 	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
@@ -281,7 +281,7 @@ void StageManager::Init3DModel(void)
 		firstPos.x += i * 90.0f;
 		firstPos.z += 60.0f;
 		//手前側のテーブル２つ
-		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, 76.0f, player_, objects_));
+		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
 		tables_.back()->Init(firstPos, 180.0f);
 	}
 
@@ -290,62 +290,59 @@ void StageManager::Init3DModel(void)
 	{
 		firstPos = TABLE_POS_FRONT;
 		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
-		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, 76.0f, player_, objects_));
+		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
 		tables_.back()->Init(firstPos);
 	}
 
 	//カウンター用テーブル
-	counter_ = std::make_unique<Table>(StageObject::COUNTER, 76.0f, player_, objects_);
+	counter_ = std::make_unique<Table>(StageObject::COUNTER, player_, objects_);
 	counter_->Init(COUNTER_POS);
 
-	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
+	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetSphereCenter();
 	//ホット用カップのラック
-	objects_.emplace_back(std::make_unique<RackObject>(StageObject::HOT_CUP_RACK, 20.0f, player_));
+	objects_.emplace_back(std::make_unique<RackObject>(StageObject::HOT_CUP_RACK, player_));
 	objects_.back()->Init(pos, -90.0f);
 
 	//アイス用カップのラック
-	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(StageObject::ICE_CUP_RACK, 20.0f, player_));
+	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<RackObject>(StageObject::ICE_CUP_RACK, player_));
 	objects_.back()->Init(pos, 90.0f);
 
 	//チョコスイーツ用のラック
-	pos = tables_[tables_.size() - 2]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(StageObject::CHOCO_SWEETS_RACK, 20.0f, player_));
+	pos = tables_[tables_.size() - 2]->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<RackObject>(StageObject::CHOCO_SWEETS_RACK, player_));
 	objects_.back()->Init(pos);
 
 	//ベリースイーツ用のラック
-	pos = tables_.back()->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(StageObject::BERRY_SWEETS_RACK, 20.0f, player_));
+	pos = tables_.back()->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<RackObject>(StageObject::BERRY_SWEETS_RACK, player_));
 	objects_.back()->Init(pos);
 
 	//カップ用の蓋
-	pos = tables_[2]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<CupLidRack>(StageObject::CUP_LID_RACK, 20.0f, player_, objects_));
+	pos = tables_[2]->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<CupLidRack>(StageObject::CUP_LID_RACK, player_, objects_));
 	objects_.back()->Init(pos);
 
 	//コーヒーマシン
-	pos = tables_[MAX_TABLE_NUM - 2]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE, 60.0f, player_, objects_));
+	pos = tables_[MAX_TABLE_NUM - 2]->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE, player_, objects_));
 	objects_.back()->Init(pos, 90.0f);
 	//コーヒーマシン２個目
-	pos = tables_[MAX_TABLE_NUM - 4]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE, 60.0f,player_, objects_));
+	pos = tables_[MAX_TABLE_NUM - 4]->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE,player_, objects_));
 	objects_.back()->Init(pos, 90.0f);
 
 	//アイスディスペンサー
-	pos = tables_[MAX_TABLE_NUM - 1]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER, 75.0f,
-		player_, objects_));
+	pos = tables_[MAX_TABLE_NUM - 1]->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
 	objects_.back()->Init(pos, -90.0f);
 	//アイスディスペンサー２個目
-	pos = tables_[MAX_TABLE_NUM - 3]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER, 75.0f,
-		player_, objects_));
+	pos = tables_[MAX_TABLE_NUM - 3]->GetSphereCenter();
+	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
 	objects_.back()->Init(pos, -90.0f);
 
 	//ゴミ箱
-	objects_.emplace_back(std::make_unique<DustBox>(StageObject::DUST_BOX, 75.0f,
-		player_, objects_));
+	objects_.emplace_back(std::make_unique<DustBox>(StageObject::DUST_BOX,player_, objects_));
 	objects_.back()->Init(DUSTBOX_POS, -180.0f, { 1.0f,0.8f,1.0f });
 	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
 
@@ -477,7 +474,7 @@ void StageManager::CarryableObjInteract(void)
 				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
 				if (!isAccepted)continue;	//存在しなかったら処理しない
 
-				obj->ItemPlaced(counter_->GetTopCenter());
+				obj->ItemPlaced(counter_->GetSphereCenter());
 			}
 
 			for (const auto& table : tables_)
@@ -488,7 +485,7 @@ void StageManager::CarryableObjInteract(void)
 						table->GetSpherePos(), table->GetSphereRad()
 					))
 				{
-					obj->ItemPlaced(table->GetTopCenter());
+					obj->ItemPlaced(table->GetSphereCenter());
 				}
 
 				if (obj->IsActioned())
@@ -642,7 +639,7 @@ void StageManager::MakeCoffee(int index, StageObject& obj, std::string objName)
 	}
 
 	//設置されているカップをコーヒーに上書きする
-	objects_[index] = std::make_unique<ItemObject>(objName, 30.0f,player_);
+	objects_[index] = std::make_unique<ItemObject>(objName,player_);
 	//マシンの上に乗るようにカップを配置する
 	VECTOR cupPos = obj.GetTransform().pos;
 	cupPos = VAdd(cupPos,
@@ -678,7 +675,7 @@ void StageManager::DispenseIce2Cup(int index)
 				iceCup->PouredIce();
 
 				//氷を生成＆追従させる
-				objects_.emplace_back(std::make_unique<FollowingObject>("Ice",5.0f, player_, *objects_[i]));
+				objects_.emplace_back(std::make_unique<FollowingObject>("Ice",player_, *objects_[i]));
 				objects_.back()->Init(AsoUtility::VECTOR_ZERO);
 				objects_.back()->Update();
 				break;
@@ -689,7 +686,6 @@ void StageManager::DispenseIce2Cup(int index)
 
 void StageManager::LidFollowCup(void)
 {
-	//bool isCreate = false;
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//コーヒー以外のオブジェクトは判定しない
@@ -713,14 +709,12 @@ void StageManager::LidFollowCup(void)
 				if(objects_[i]->GetParam().id_ == StageObject::HOT_COFFEE)lidType = StageObject::HOTCUP_LID;
 				else if (objects_[i]->GetParam().id_ == StageObject::ICE_COFFEE)lidType = StageObject::ICECUP_LID;
 				//蓋を生成＆追従させる
-				objects_.emplace_back(std::make_unique<FollowingObject>(lidType, 5.0f, player_, *objects_[i]));
+				objects_.emplace_back(std::make_unique<FollowingObject>(lidType, player_, *objects_[i]));
 				objects_.back()->Init(AsoUtility::VECTOR_ZERO);
 				objects_.back()->Update();
-				//isCreate = true;
 				break;
 			}
 		}
-		//if (isCreate)break;
 	}
 }
 

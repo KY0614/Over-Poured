@@ -1,5 +1,3 @@
-#include "../Libs/ImGui/imgui.h"
-#include "../../Common/DebugDrawFormat.h"
 #include "../Manager/Generic/ResourceManager.h"
 #include "../Common/Sphere.h"
 #include "../Common/Cube.h"
@@ -8,9 +6,8 @@
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const std::string objId,
-	const float height, Player& player):
-	objId_(objId),height_(height),player_(player)
+StageObject::StageObject(const std::string objId,Player& player):
+	objId_(objId),player_(player)
 {
 	isActioned_ = false;
 	itemState_ = ITEM_STATE::NONE;
@@ -50,9 +47,9 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 	sphere_->SetRadius(param_.collisionRadius_);
 
 	//テーブルとカウンターの当たり判定用の球体の高さを高めにしておく（テーブルから半分球体が出るくらい）
-	if (objId_ == TABLE || objId_ == COUNTER)sphere_->SetLocalPos({ 0.0f, height_, 0.0f });
+	if (objId_ == TABLE || objId_ == COUNTER)sphere_->SetLocalPos({ 0.0f, TABLE_HEIGHT, 0.0f });
 	//ゴミ箱も同様
-	if (objId_ == DUST_BOX)sphere_->SetLocalPos({ 0.0f, height_ + sphere_->GetRadius(), 0.0f });
+	if (objId_ == DUST_BOX)sphere_->SetLocalPos({ 0.0f, DUST_BOX_HEIGHT, 0.0f });
 
 	//アイテムの初期状態は設置状態
 	ChangeItemState(ITEM_STATE::PLACED);
@@ -110,6 +107,7 @@ void StageObject::Draw(void)
 {
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
+	sphere_->Draw();
 }
 
 void StageObject::SetPos(VECTOR pos)
@@ -127,13 +125,9 @@ VECTOR StageObject::GetSpherePos(void) const
 	return sphere_->GetPos();
 }
 
-VECTOR StageObject::GetTopCenter(void) const
+VECTOR StageObject::GetSphereCenter(void) const
 {
-	VECTOR center = transform_.pos;
-	center.y = height_;
-
 	return sphere_->GetPos();
-	//return center;
 }
 
 float StageObject::GetSphereRad(void) const

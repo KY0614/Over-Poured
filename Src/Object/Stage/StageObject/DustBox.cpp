@@ -3,10 +3,9 @@
 #include "ItemObject.h"
 #include "DustBox.h"
 
-DustBox::DustBox(const std::string objId,
-	const float height, Player& player,
+DustBox::DustBox(const std::string objId,Player& player,
 	std::vector<std::unique_ptr<StageObject>>& objects) :
-	StageObject(objId, height, player), objects_(objects)
+	StageObject(objId, player), objects_(objects)
 {
 }
 

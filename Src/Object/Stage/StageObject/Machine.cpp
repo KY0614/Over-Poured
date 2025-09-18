@@ -9,10 +9,9 @@
 #include "../../UI/UIManager.h"
 #include "Machine.h"
 
-Machine::Machine(const std::string objId,
-	const float height,Player& player,
+Machine::Machine(const std::string objId,Player& player,
 	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId, height,player),objects_(object)
+	StageObject(objId,player),objects_(object)
 {
 }
 

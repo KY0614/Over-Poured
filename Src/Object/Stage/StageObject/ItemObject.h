@@ -5,8 +5,7 @@ class ItemObject : public StageObject
 {
 public:
 
-	ItemObject(const std::string objId,
-		const float height, Player& player);
+	ItemObject(const std::string objId, Player& player);
 
 	~ItemObject(void) = default;
 

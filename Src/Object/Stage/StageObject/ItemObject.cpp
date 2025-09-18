@@ -6,9 +6,8 @@
 #include "../Object/Player.h"
 #include "ItemObject.h"
 
-ItemObject::ItemObject(const std::string objId,
-	const float height,Player& player) :
-	StageObject(objId, height, player)
+ItemObject::ItemObject(const std::string objId,Player& player) :
+	StageObject(objId, player)
 {
 	isIced_ = false;   
 }

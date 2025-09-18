@@ -11,9 +11,8 @@
 #include "ItemObject.h"
 #include "RackObject.h"
 
-RackObject::RackObject(const std::string objId,
-	const float height,Player& player) :
-	StageObject(objId, height, player)
+RackObject::RackObject(const std::string objId,Player& player) :
+	StageObject(objId, player)
 {
 	sweetsStockCnt_ = SWEETS_STOCK_MAX;
 	cupsStockCnt_ = CUP_STOCK_MAX;
@@ -32,7 +31,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	if (rackName == HOT_CUP_RACK && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
-		object.emplace_back(std::make_unique<ItemObject>(HOT_CUP, 30.0f,player_));
+		object.emplace_back(std::make_unique<ItemObject>(HOT_CUP,player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
@@ -44,7 +43,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	if (rackName == ICE_CUP_RACK && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
-		object.emplace_back(std::make_unique<ItemObject>(ICE_CUP, 30.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>(ICE_CUP, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
@@ -57,7 +56,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
-		object.emplace_back(std::make_unique<ItemObject>(BERRY_SWEETS, 30.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>(BERRY_SWEETS, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);
@@ -71,7 +70,7 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
-		object.emplace_back(std::make_unique<ItemObject>(CHOCO_SWEETS,30.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>(CHOCO_SWEETS, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);
@@ -140,14 +139,14 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	StageObject::Init(pos, rotY, scale);
 
 	//スイーツ用UIの初期化
-	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, height_ + 60.0f, 0.0f),
+	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, 60.0f, 0.0f),
 		transform_.pos, ResourceManager::SRC::INTERACT);
 	iconUI_->SetActive(false);
 	iconUI_->Init();
 	iconUI_->SetUISize(70.0f);
 	UIManager::GetInstance().AddIconUI(iconUI_.get());
 
-	stockIconUI_ = std::make_unique<IconUI>(VGet(0.0f, height_ + 60.0f, 0.0f),
+	stockIconUI_ = std::make_unique<IconUI>(VGet(0.0f, 60.0f, 0.0f),
 	transform_.pos, ResourceManager::SRC::STOCK_ICON);
 	stockIconUI_->SetActive(false);
 	stockIconUI_->Init();

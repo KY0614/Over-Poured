@@ -5,8 +5,7 @@ class DustBox : public StageObject
 {
 public:
 
-	DustBox(const std::string objId,
-		const float height, Player& player,
+	DustBox(const std::string objId,Player& player,
 		std::vector<std::unique_ptr<StageObject>>& objects);
 
 	~DustBox(void) = default;

@@ -5,8 +5,7 @@ class FollowingObject : public StageObject
 {
 public:
 
-	FollowingObject(const std::string objId,
-		const float height,Player& player,
+	FollowingObject(const std::string objId,Player& player,
 		StageObject& followObject);
 
 	~FollowingObject(void) = default;

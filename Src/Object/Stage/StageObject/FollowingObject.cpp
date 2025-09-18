@@ -3,10 +3,9 @@
 #include "../../Common/Sphere.h"
 #include "FollowingObject.h"
 
-FollowingObject::FollowingObject(const std::string objId,
-	const float height,Player& player,
+FollowingObject::FollowingObject(const std::string objId,Player& player,
 	StageObject& followObject) : 
-	StageObject(objId, height, player), followObj_(followObject)
+	StageObject(objId, player), followObj_(followObject)
 {
 }
 
