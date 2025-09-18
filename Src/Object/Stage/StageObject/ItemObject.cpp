@@ -45,9 +45,8 @@ void ItemObject::ItemPlaced(VECTOR pos)
 void ItemObject::PouredIce(void)
 {
     isIced_ = true;
-    objId_ = "Cup_With_Ice"; //氷が入ったカップのオブジェクトIDに変更
-    object_ = StageObjectLibrary::LoadData(objId_);
-    param_ = object_.second;
+    objId_ = CUP_WITH_ICE; //氷が入ったカップのオブジェクトIDに変更
+    param_ = StageObjectLibrary::LoadData(objId_).second;
     return;
 }
 
@@ -62,5 +61,6 @@ void ItemObject::UpdatePlaced(void)
 
 void ItemObject::UpdateHold(void)
 {
+    //HOLD状態のアイテムはプレイヤーの座標を追従する
     transform_.pos = player_.GetSphere().GetPos();
 }

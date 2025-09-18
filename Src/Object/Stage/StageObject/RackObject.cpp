@@ -24,14 +24,15 @@ RackObject::RackObject(const std::string objId,
 void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
 {
 	if (!hasStock_)return;
-	isInteract_ = true;
+	//isInteract_ = true;
+	iconUI_->SetActive(true);
 	auto& ins = InputManager::GetInstance();
 	auto& sound = SoundManager::GetInstance();
 	//ホットカップ用ラックにインタラクトしたときの処理
-	if (rackName == "Cup_Hot_Rack" && ins.IsInputTriggered("Interact"))
+	if (rackName == HOT_CUP_RACK && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
-		object.emplace_back(std::make_unique<ItemObject>("Hot_Cup", 30.0f,player_));
+		object.emplace_back(std::make_unique<ItemObject>(HOT_CUP, 30.0f,player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
@@ -40,10 +41,10 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	}
 
 	//アイスカップ用ラックにインタラクトしたときの処理
-	if (rackName == "Cup_Ice_Rack" && ins.IsInputTriggered("Interact"))
+	if (rackName == ICE_CUP_RACK && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
-		object.emplace_back(std::make_unique<ItemObject>("Ice_Cup", 30.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>(ICE_CUP, 30.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
 		object.back()->ChangeItemState(ITEM_STATE::HOLD);
@@ -52,11 +53,11 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	}
 
 	//スイーツ（ベリー）用ラックにインタラクトしたときの処理
-	if (rackName == "Sweets_Strawberry_Rack" && ins.IsInputTriggered("Interact"))
+	if (rackName == BERRY_SWEETS_RACK && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
-		object.emplace_back(std::make_unique<ItemObject>("Sweets_Strawberry", 30.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>(BERRY_SWEETS, 30.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);
@@ -66,11 +67,11 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	}
 
 	//スイーツ（チョコ）用ラックにインタラクトしたときの処理
-	if (rackName == "Sweets_Choco_Rack" && ins.IsInputTriggered("Interact"))
+	if (rackName == CHOCO_SWEETS_RACK && ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
-		object.emplace_back(std::make_unique<ItemObject>("Sweets_Choco",30.0f, player_));
+		object.emplace_back(std::make_unique<ItemObject>(CHOCO_SWEETS,30.0f, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);
@@ -80,8 +81,9 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	}
 }
 
-void RackObject::AddStock(int addStockNum)
+void RackObject::AddStock(void)
 {
+	//在庫がある場合は処理しない
 	if (hasStock_) return;
 	
 	auto& ins = InputManager::GetInstance();
@@ -93,8 +95,8 @@ void RackObject::AddStock(int addStockNum)
 		gaugeUI_->Update();
 	}
 
-	if(GetParam().id_ == "Sweets_Strawberry_Rack" ||
-		GetParam().id_ == "Sweets_Choco_Rack")
+	if(GetParam().id_ == BERRY_SWEETS_RACK ||
+		GetParam().id_ == CHOCO_SWEETS_RACK)
 	{
 		//スイーツの在庫を追加
 		if (addInterval_ > ADD_INTERVAL)
@@ -112,8 +114,8 @@ void RackObject::AddStock(int addStockNum)
 			return;
 		}
 	}
-	else if(GetParam().id_ == "Cup_Hot_Rack" ||
-			GetParam().id_ == "Cup_Ice_Rack")
+	else if(GetParam().id_ == HOT_CUP_RACK ||
+			GetParam().id_ == ICE_CUP_RACK)
 	{
 		//カップの在庫を追加
 		if (addInterval_ > ADD_INTERVAL)
@@ -154,12 +156,12 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
-	if (param_.id_ == "Sweets_Strawberry_Rack")
+	if (param_.id_ == BERRY_SWEETS_RACK)
 	{
 		srcType = ResourceManager::SRC::SWEETS_BERRY; // デフォルトのラックIDを設定
 		cupsStockCnt_ = 0;
 	}
-	else if (param_.id_ == "Sweets_Choco_Rack")
+	else if (param_.id_ == CHOCO_SWEETS_RACK)
 	{
 		srcType = ResourceManager::SRC::SWEETS_CHOCO; // チョコレートラックIDを設定
 		cupsStockCnt_ = 0;
@@ -209,12 +211,12 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
 	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 	//設定されていなかったらカップモデルを設定する
-	if (param_.id_ == "Cup_Hot_Rack")
+	if (param_.id_ == HOT_CUP_RACK)
 	{
 		srcType = ResourceManager::SRC::HOTCUP; // ホットカップラックIDを設定
 		sweetsStockCnt_ = 0;
 	}
-	else if (param_.id_ == "Cup_Ice_Rack")
+	else if (param_.id_ == ICE_CUP_RACK)
 	{
 		srcType = ResourceManager::SRC::ICECUP; // アイスカップラックIDを設定
 		sweetsStockCnt_ = 0;
@@ -249,8 +251,7 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 
 void RackObject::Update(void)
 {
-	if (isInteract_)iconUI_->SetActive(true);
-	else iconUI_->SetActive(false);
+	iconUI_->SetActive(false);
 	if(sweetsStockCnt_ <= 0 && cupsStockCnt_ <= 0)
 	{
 		stockIconUI_->SetActive(true);
@@ -285,5 +286,4 @@ void RackObject::Draw(void)
 		//モデルの描画
 		MV1DrawModel(sweetsOfRack_[i].modelId);
 	}
-
 }

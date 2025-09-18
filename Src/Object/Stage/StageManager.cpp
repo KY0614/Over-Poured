@@ -102,12 +102,12 @@ void StageManager::Update(void)
 			if (obj->GetParam().id_ == StageObject::HOT_CUP_RACK ||
 				obj->GetParam().id_ == StageObject::ICE_CUP_RACK)
 			{
-				obj->AddStock(StageObject::CUP_STOCK_MAX);
+				obj->AddStock();
 			}
-			else if (obj->GetParam().id_ == StageObject::BERRY_SWEETSRACK ||
-				obj->GetParam().id_ == StageObject::CHOCO_SWEETSRACK)
+			else if (obj->GetParam().id_ == StageObject::BERRY_SWEETS_RACK ||
+				obj->GetParam().id_ == StageObject::CHOCO_SWEETS_RACK)
 			{
-				obj->AddStock(StageObject::SWEETS_STOCK_MAX);
+				obj->AddStock();
 			}
 			break;
 		}
@@ -310,12 +310,12 @@ void StageManager::Init3DModel(void)
 
 	//チョコスイーツ用のラック
 	pos = tables_[tables_.size() - 2]->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(StageObject::CHOCO_SWEETSRACK, 20.0f, player_));
+	objects_.emplace_back(std::make_unique<RackObject>(StageObject::CHOCO_SWEETS_RACK, 20.0f, player_));
 	objects_.back()->Init(pos);
 
 	//ベリースイーツ用のラック
 	pos = tables_.back()->GetTopCenter();
-	objects_.emplace_back(std::make_unique<RackObject>(StageObject::BERRY_SWEETSRACK, 20.0f, player_));
+	objects_.emplace_back(std::make_unique<RackObject>(StageObject::BERRY_SWEETS_RACK, 20.0f, player_));
 	objects_.back()->Init(pos);
 
 	//カップ用の蓋
@@ -554,23 +554,25 @@ void StageManager::MachineInteract(void)
 void StageManager::LidRackInteract(void)
 {
 	auto& pSphere = player_.GetSphere();
-	//コーヒーと蓋の処理
+	//コーヒーと蓋のラックとの処理
 	for (const auto& obj : objects_)
 	{
 		if (obj->GetParam().id_ != StageObject::CUP_LID_RACK)continue;
 
 		//持っているコーヒーに蓋をつける処理
+		//プレイヤーが何か持っている状態で蓋のラックに近づいたら処理する
 		if (player_.GetIsHolding() &&
 			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				obj->GetSpherePos(), obj->GetSphereRad()))
 		{
+			//蓋のラックのインタラクト処理
 			obj->Interact(player_.GetHoldItem());
 		}
 		else
 		{
 			//判定外の場合は初期値に戻す
-			obj->IsNotActioned();
-			obj->SetInteractTime(3.0f);
+			obj->IsNotActioned();	//
+			obj->SetInteractTime(StageObject::LID_RACK_INTERACT_TIME);
 		}
 
 		//インタラクトし続けて一定時間経ったら蓋をする
@@ -687,7 +689,7 @@ void StageManager::DispenseIce2Cup(int index)
 
 void StageManager::LidFollowCup(void)
 {
-	bool isCreate = false;
+	//bool isCreate = false;
 	for (size_t i = 0; i < objects_.size(); ++i)
 	{
 		//コーヒー以外のオブジェクトは判定しない
@@ -702,9 +704,8 @@ void StageManager::LidFollowCup(void)
 			//蓋の判定だけさせたい
 			if (lid->GetParam().id_ != StageObject::CUP_LID_RACK)continue;
 
-			//蓋の球体と当たっているカップだけ処理する
-			if (AsoUtility::IsHitSpheres(lid->GetPos(), lid->GetSphereRad(),
-				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+			//持っているコーヒーに蓋をする
+			if (objects_[i]->GetItemState()== StageObject::ITEM_STATE::HOLD)
 			{
 				//コーヒーオブジェクトに蓋をする
 				objects_[i]->PutOnTheLid();
@@ -715,11 +716,11 @@ void StageManager::LidFollowCup(void)
 				objects_.emplace_back(std::make_unique<FollowingObject>(lidType, 5.0f, player_, *objects_[i]));
 				objects_.back()->Init(AsoUtility::VECTOR_ZERO);
 				objects_.back()->Update();
-				isCreate = true;
+				//isCreate = true;
 				break;
 			}
 		}
-		if (isCreate)break;
+		//if (isCreate)break;
 	}
 }
 

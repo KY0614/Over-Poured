@@ -22,7 +22,7 @@
     "placeable": true,
     "carryable": false,
     "acceptedItems":[],
-    "collisionRadius":30.0
+    "collisionRadius":35.0
     },
     "Counter": {
     "id": "Counter",
@@ -72,7 +72,7 @@
     "placeable": false,
     "carryable": true,
     "acceptedItems":[],
-    "collisionRadius":20.0
+    "collisionRadius":25.0
     },
     "Ice_Cup": {
     "id": "Ice_Cup",
@@ -80,7 +80,7 @@
     "placeable": false,
     "carryable": true,
     "acceptedItems":[],
-    "collisionRadius":20.0
+    "collisionRadius":25.0
     },
     "Cup_With_Ice": {
     "id": "Cup_With_Ice",
@@ -88,7 +88,7 @@
     "placeable": false,
     "carryable": true,
     "acceptedItems":[],
-    "collisionRadius":20.0
+    "collisionRadius":25.0
     },
     "Cup_Hot_Rack": {
     "id": "Cup_Hot_Rack",
@@ -97,7 +97,7 @@
     "carryable": false,
     "interactTime": 3.0,
     "acceptedItems":[],
-    "collisionRadius":30.0
+    "collisionRadius":25.0
     },
     "Cup_Ice_Rack": {
     "id": "Cup_Ice_Rack",
@@ -106,7 +106,7 @@
     "carryable": false,
     "interactTime": 3.0,
     "acceptedItems":[],
-    "collisionRadius":30.0
+    "collisionRadius":25.0
     },
     "Hot_Coffee": {
     "id": "Hot_Coffee",
@@ -114,7 +114,7 @@
     "placeable": false,
     "carryable": true,
     "acceptedItems":[],
-    "collisionRadius":20.0
+    "collisionRadius":25.0
     },
     "Ice_Coffee": {
     "id": "Ice_Coffee",
@@ -122,7 +122,7 @@
     "placeable": false,
     "carryable": true,
     "acceptedItems":[],
-    "collisionRadius":20.0
+    "collisionRadius":25.0
     },
     "Cup_Lid_Rack": {
     "id": "Cup_Lid_Rack",
@@ -131,7 +131,7 @@
     "carryable": false,
     "interactTime": 3.0,
     "acceptedItems":["Hot_Coffee","Ice_Coffee"],
-    "collisionRadius":30.0
+    "collisionRadius":35.0
     },
     "Hot_Cup_Lid": {
     "id": "Hot_Cup_Lid",

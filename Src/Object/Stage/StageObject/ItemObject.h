@@ -22,6 +22,7 @@ public:
 
 private:
 
+	//
 	bool isIced_;
 
 	void UpdatePlaced(void)override;

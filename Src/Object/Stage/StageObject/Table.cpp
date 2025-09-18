@@ -16,7 +16,7 @@ Table::Table(const std::string objId,
 void Table::Update(void)
 {
 	StageObject::Update();
-	colTran_.Update();
+	tableColliderTran_.Update();
 	//テーブルの上にオブジェクトが置かれていないかどうか
 	for (const auto& obj : objects_)
 	{

@@ -16,14 +16,8 @@ StageObject::StageObject(const std::string objId,
 	itemState_ = ITEM_STATE::NONE;
 	machineState_ = MACHINE_STATE::NONE;
 	param_ = StageObjectLibrary::ObjectParams();
-	collisionRad_ = -1.0f;
 	isLid_ = false;
-	drink_ = Order::DRINK::NONE;
-	sweets_ = Order::SWEETS::NONE;
-
 	hasStock_ = false;
-	interactImg_ = -1;
-	isInteract_ = false;
 }
 
 StageObject::~StageObject(void)
@@ -33,8 +27,7 @@ StageObject::~StageObject(void)
 void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 {
 	//作成するオブジェクトのパラメータをjsonファイルから読み込む
-	object_ = StageObjectLibrary::LoadData(objId_);
-	param_ = object_.second;
+	param_ = StageObjectLibrary::LoadData(objId_).second;
 
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::GetInstance().StringToSRC(param_.id_);
@@ -49,42 +42,32 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
-	//当たり判定の半径を設定
-	collisionRad_ = param_.collisionRadius_;
-
-	//ホットコーヒーもしくはアイスコーヒーの場合はドリンクの種類を設定
-	if (objId_ == HOT_COFFEE)drink_ = Order::DRINK::HOT;
-	if (objId_ == ICE_COFFEE)drink_ = Order::DRINK::ICE;
-
 	//当たり判定用の球を作成
 	sphere_ = std::make_unique<Sphere>(transform_);
-	//
+	//オブジェクトからの相対座標を設定
 	sphere_->SetLocalPos(AsoUtility::VECTOR_ZERO);
-	sphere_->SetRadius(collisionRad_);
+	//半径を設定
+	sphere_->SetRadius(param_.collisionRadius_);
 
-	if (objId_ == "Table" || objId_ == "Counter")sphere_->SetLocalPos({ 0.0f, height_, 0.0f });
-	if (objId_ == "Dust_Box")sphere_->SetLocalPos({ 0.0f, height_ + sphere_->GetRadius(), 0.0f });
+	//テーブルとカウンターの当たり判定用の球体の高さを高めにしておく（テーブルから半分球体が出るくらい）
+	if (objId_ == TABLE || objId_ == COUNTER)sphere_->SetLocalPos({ 0.0f, height_, 0.0f });
+	//ゴミ箱も同様
+	if (objId_ == DUST_BOX)sphere_->SetLocalPos({ 0.0f, height_ + sphere_->GetRadius(), 0.0f });
 
-	itemState_ = ITEM_STATE::PLACED;
-	machineState_ = MACHINE_STATE::INACTIVE;
+	//アイテムの初期状態は設置状態
+	ChangeItemState(ITEM_STATE::PLACED);
 
-	if (objId_ != "Table")return;
+	//マシンの初期状態は非稼働状態
+	ChangeMachineState(MACHINE_STATE::INACTIVE);
 
-	//モデルの基本設定（テーブルのコライダー用モデル)
-	colTran_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
-	ResourceManager::SRC::TABLE_COL));
-	colTran_.scl = transform_.scl;
-	colTran_.pos = transform_.pos;
-	colTran_.quaRot = transform_.quaRot;
-	colTran_.quaRotLocal = transform_.quaRotLocal;
-	colTran_.MakeCollider(Collider::TYPE::STAGE);
-	colTran_.Update();
+	//テーブルじゃなかったらモデルを読み込まない
+	if (objId_ != TABLE)return;
+	InitTableColliderModel();
 }
 
 void StageObject::Update(void)
 {
 	isActioned_ = false;
-	isInteract_ = false;
 
 	switch (itemState_)
 	{
@@ -119,7 +102,7 @@ void StageObject::Update(void)
 	default:
 		break;
 	}
-	colTran_.Update();
+	tableColliderTran_.Update();
 	transform_.Update();
 }
 
@@ -139,11 +122,6 @@ void StageObject::SetScale(VECTOR scale)
 	transform_.scl = scale;
 }
 
-void StageObject::SetQuaRotY(const float localRotY)
-{
-	transform_.quaRot = Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(localRotY), 0.0f });
-}
-
 VECTOR StageObject::GetSpherePos(void) const
 {
 	return sphere_->GetPos();
@@ -153,17 +131,14 @@ VECTOR StageObject::GetTopCenter(void) const
 {
 	VECTOR center = transform_.pos;
 	center.y = height_;
-	return center;
+
+	return sphere_->GetPos();
+	//return center;
 }
 
 float StageObject::GetSphereRad(void) const
 {
 	return sphere_->GetRadius();
-}
-
-bool StageObject::IsActioned(void) const
-{
-	return isActioned_;
 }
 
 void StageObject::ItemCarry(void)
@@ -182,7 +157,7 @@ void StageObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageO
 {
 }
 
-void StageObject::AddStock(int addStockNum)
+void StageObject::AddStock(void)
 {
 }
 
@@ -200,4 +175,17 @@ void StageObject::UpdateInActive(void)
 
 void StageObject::UpdateActive(void)
 {
+}
+
+void StageObject::InitTableColliderModel(void)
+{
+	//モデルの基本設定（テーブルのコライダー用モデル)
+	tableColliderTran_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
+		ResourceManager::SRC::TABLE_COL));
+	tableColliderTran_.scl = transform_.scl;
+	tableColliderTran_.pos = transform_.pos;
+	tableColliderTran_.quaRot = transform_.quaRot;
+	tableColliderTran_.quaRotLocal = transform_.quaRotLocal;
+	tableColliderTran_.MakeCollider(Collider::TYPE::STAGE);
+	tableColliderTran_.Update();
 }

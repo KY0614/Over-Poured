@@ -34,6 +34,8 @@ public:
 	static constexpr float CUPS_HEIGHT_OFFSET = 35.0f;
 	static constexpr float CUPS_Z_OFFSET = 0.0f;
 
+	static constexpr float LID_RACK_INTERACT_TIME = 3.0f;
+
 	//オブジェクトID
 	static constexpr const char* HOT_COFFEE = "Hot_Coffee";					//ホットコーヒー
 	static constexpr const char* ICE_COFFEE = "Ice_Coffee";					//アイスコーヒー
@@ -44,8 +46,8 @@ public:
 	static constexpr const char* COUNTER = "Counter";						//カウンター
 	static constexpr const char* HOT_CUP_RACK = "Cup_Hot_Rack";				//ホットカップ用ラック
 	static constexpr const char* ICE_CUP_RACK = "Cup_Ice_Rack";				//アイスカップ用ラック
-    static constexpr const char* CHOCO_SWEETSRACK = "Sweets_Choco_Rack";	//チョコスイーツ用ラック
-	static constexpr const char* BERRY_SWEETSRACK = "Sweets_Strawberry_Rack";//ベリースイーツ用ラック
+    static constexpr const char* CHOCO_SWEETS_RACK = "Sweets_Choco_Rack";	//チョコスイーツ用ラック
+	static constexpr const char* BERRY_SWEETS_RACK = "Sweets_Strawberry_Rack";//ベリースイーツ用ラック
 	static constexpr const char* CHOCO_SWEETS = "Sweets_Choco";				//チョコスイーツ
 	static constexpr const char* BERRY_SWEETS = "Sweets_Strawberry";		//ベリースイーツ
 	static constexpr const char* COFFEE_MACHINE = "Coffee_Machine";			//コーヒーマシン
@@ -71,13 +73,28 @@ public:
 		ACTIVE,
 	};
 
-	StageObject(const std::string objId,
-		const float height,Player& player);
+	//コンストラクタ
+	StageObject(const std::string objId,const float height,Player& player);
 
+	//デストラクタ
 	~StageObject(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
+	/// <param name="pos">オブジェクトを生成する初期座標</param>
+	/// <param name="rotY">オブジェクトのY軸角度（入力がない場合は0）</param>
+	/// <param name="scale">オブジェクトの大きさ（入力がない場合は１）</param>
 	virtual void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = {1.0f,1.0f,1.0f});
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	virtual void Update(void)override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	virtual void Draw(void)override;
 
 	//設定用、変更用関数-------------------------------------------------------------
@@ -88,21 +105,27 @@ public:
 	/// <param name="pos">設定座標</param>
 	void SetPos(VECTOR pos);
 
+	/// <summary>
+	/// 大きさを設定する
+	/// </summary>
+	/// <param name="scale">オブジェクトの大きさ</param>
 	void SetScale(VECTOR scale);
 
 	/// <summary>
-	/// 初期の回転を設定する(入れるときはEuler角で設定する)
+	/// オブジェクトのインタラクト時間を設定する
 	/// </summary>
-	/// <param name="pos">回転</param>
-	void SetQuaRotY(const float localRotY);
-
+	/// <param name="time">設定する時間</param>
 	void SetInteractTime(const float time) { param_.interactTime_ = time; }
 
+	/// <summary>
+	/// オブジェクトに対してプレイヤーがアクションを行っていない状態にする
+	/// </summary>
 	void IsNotActioned(void) { isActioned_ = false; }
 
+	/// <summary>
+	/// 蓋を乗せている状態にする
+	/// </summary>
 	void PutOnTheLid(void) { isLid_ = true; }
-
-	void SetLidOn(const bool isLid) { isLid_ = isLid; }
 
 	/// <summary>
 	/// アイテムオブジェクトの状態を変更する
@@ -131,8 +154,10 @@ public:
 	/// <returns>球体の座標</returns>
 	VECTOR GetSpherePos(void)const;
 
-	float GetObjHeight(void)const { return height_; }
-
+	/// <summary>
+	/// オブジェクトのパラメータを取得する
+	/// </summary>
+	/// <returns>オブジェクトのパラメータ</returns>
 	StageObjectLibrary::ObjectParams GetParam(void)const { return param_; }
 
 	/// <summary>
@@ -164,11 +189,11 @@ public:
 	float GetSphereRad(void)const;
 
 	/// <summary>
-	/// 
+	/// オブジェクトがプレイヤーからアクションを行われているかどうかを取得
 	/// </summary>
 	/// <param name=""></param>
-	/// <returns></returns>
-	bool IsActioned(void) const;
+	/// <returns>アクションさているかどうか</returns>
+	bool IsActioned(void) const{ return isActioned_; }
 
 	/// <summary>
 	/// 蓋が乗っているかどうか
@@ -184,10 +209,10 @@ public:
 	/// <returns>ture:ある　false:ない</returns>
 	bool GetHasStock(void) const { return hasStock_; }
 
-	Order::DRINK GetDrinkType(void) const { return drink_; }
-	Order::SWEETS GetSweetsType(void) const { return sweets_; }
-
-	const Transform& GetTalbeColTran(void) const{ return colTran_; }
+	/// <summary>
+	/// テーブルコライダー用の情報を取得
+	/// </summary>
+	const Transform& GetTalbeColTran(void) const{ return tableColliderTran_; }
 
 	//-------------------------------------------------------------------------
 
@@ -215,15 +240,20 @@ public:
 	/// <param name="object"></param>
 	virtual void PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object);
 
-	virtual void AddStock(int addStockNum);
+	/// <summary>
+	/// 在庫を補充する処理
+	/// </summary>
+	virtual void AddStock(void);
 
 protected:
+	//オブジェクトのID
+	std::string objId_;
 
 	//オブジェクトのパラメータ
 	StageObjectLibrary::ObjectParams param_;
 
-	//テーブル用のコライダー
-	Transform colTran_;
+	//テーブルのコライダー用のモデル情報
+	Transform tableColliderTran_;
 
 	//プレイヤーの参照
 	Player& player_;
@@ -234,37 +264,45 @@ protected:
 	//当たり判定用球体
 	std::unique_ptr<Sphere> sphere_;
 
-	//当たり判定用球体の半径
-	float collisionRad_;
-
 	//プレイヤーがアクションを行ったかどうか
 	bool isActioned_;	
 
-	//蓋をしているかどうか(コーヒー以外のオブジェクトはfalse）
+	//コーヒー用---------------------------------------------------
+
+	//蓋をしているかどうか(コーヒー以外のオブジェクトは基本false）
 	bool isLid_;
 
-	//ラック用------------------------
+	//ラック用-----------------------------------------------------
 
 	//ラックに在庫があるかどうか
 	bool hasStock_;
 
-	//--------------------------------
+	//アイテムオブジェクト用関数-----------------------------------
 
-	Order::DRINK drink_;
-	Order::SWEETS sweets_;
-
+	/// <summary>
+	///　アイテムが設置状態の時の更新処理
+	/// </summary>
 	virtual void UpdatePlaced(void);
+
+	/// <summary>
+	/// アイテムが所持状態の時の更新処理
+	/// </summary>
+	/// <param name=""></param>
 	virtual void UpdateHold(void);
+
+	//マシンオブジェクト用関数-------------------------------------
 	
+	/// <summary>
+	/// 非稼働状態の時の更新処理
+	/// </summary>
+	/// <param name=""></param>
 	virtual void UpdateInActive(void);
+
+	/// <summary>
+	///　稼働状態の時の更新処理
+	/// </summary>
+	/// <param name=""></param>
 	virtual void UpdateActive(void);
-
-	std::string objId_;
-	std::pair<std::string, StageObjectLibrary::ObjectParams> object_;
-
-	int interactImg_;
-
-	bool isInteract_;
 
 private:
 	//アイテムオブジェクトの状態
@@ -272,4 +310,6 @@ private:
 
 	//マシンの稼働状態
 	MACHINE_STATE machineState_;
+
+	void InitTableColliderModel(void);
 };

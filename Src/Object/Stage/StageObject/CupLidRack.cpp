@@ -4,6 +4,7 @@
 #include "../Object/Player.h"
 #include "../../UI/GaugeUI.h"
 #include "../../UI/UIManager.h"
+#include "../../Common/Sphere.h"
 #include "CupLidRack.h"
 
 CupLidRack::CupLidRack(const std::string objId,
@@ -30,14 +31,14 @@ void CupLidRack::Interact(const std::string& objId)
 		//既に蓋されているコーヒーは判定しない
 		if (obj->IsLidOn())continue;
 		
-		bool isHoldingHotCoffee = obj->GetItemState()==ITEM_STATE::HOLD;
+		//所持状態のコーヒーかどうかのフラグ
+		bool isHoldingCoffee = obj->GetItemState()==ITEM_STATE::HOLD;
 
 		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
 			//スペースキーを押下し続けるとゲージがたまっていく
-			if (isHoldingHotCoffee &&
-				ins.IsInputPressed("Interact"))
+			if (isHoldingCoffee && ins.IsInputPressed("Interact"))
 			{
 				param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 				isActioned_ = true;
@@ -58,6 +59,7 @@ void CupLidRack::Interact(const std::string& objId)
 void CupLidRack::Init(VECTOR pos, float rotY, VECTOR scale)
 {
 	StageObject::Init(pos,rotY, scale);
+	sphere_->SetLocalPos(VGet(0.0f,30.0f,0.0f));
 
 	gaugeUI_ = std::make_unique<GaugeUI>(false, LID_PRODUCES_TIME);
 	gaugeUI_->Init();
@@ -87,7 +89,6 @@ void CupLidRack::Update(void)
 
 void CupLidRack::Draw(void)
 {
-
+	//モデルを描画
 	StageObject::Draw();
-
-}
+	}

@@ -18,7 +18,7 @@ public:
 
 	void PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object) override;
 
-	void AddStock(int addStockNum) override;
+	void AddStock(void) override;
 
 	void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = { 1.0f,1.0f,1.0f }) override;
 

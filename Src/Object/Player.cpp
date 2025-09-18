@@ -68,7 +68,7 @@ void Player::Init(void)
 	
 	//オブジェクト用コライダ
 	sphere_ = std::make_unique<Sphere>(transform_);
-	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 50.0f });
+	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 40.0f });
 	sphere_->SetRadius(20.0f);
 
 	//足煙エフェクト
@@ -89,7 +89,7 @@ void Player::Init(void)
 void Player::Update(void)
 {
 	chestPos_ = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
-	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 50.0f });
+	//sphere_->SetLocalPos({ 0.0f, chestPos_.y, 50.0f });
 	transform_.pos.y = 30.0f;
 
 	//更新ステップ
@@ -359,11 +359,11 @@ void Player::ProcessMove(void)
 	}
 	else
 	{
-		if (IsEndLanding() && !isHolding_)
+		if (!isHolding_)
 		{
 			animationController_->Play((int)ANIM_TYPE::IDLE);
 		}
-		else if (IsEndLanding() && isHolding_)
+		else
 		{
 			animationController_->Play((int)ANIM_TYPE::IDLE_HOLD);
 		}
@@ -414,18 +414,6 @@ void Player::Collision(void)
 bool Player::IsEndLanding(void)
 {
 	bool ret = true;
-
-	//アニメーションがジャンプではない
-	//if (animationController_->GetPlayType() != (int)ANIM_TYPE::JUMP)
-	//{
-	//	return ret;
-	//}
-	//
-	////アニメーションが終了しているか
-	//if (animationController_->IsEnd())
-	//{
-	//	return ret;
-	//}
 
 	return true;
 }
