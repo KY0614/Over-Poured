@@ -1,6 +1,5 @@
 #include "../Manager/Generic/ResourceManager.h"
 #include "../Common/Sphere.h"
-#include "../Common/Cube.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/StringUtility.h"
 #include "StageObjectLibrary.h"
@@ -59,13 +58,16 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 
 	//テーブルじゃなかったらモデルを読み込まない
 	if (objId_ != TABLE)return;
+	//テーブルのコライダー用モデルの初期化
 	InitTableColliderModel();
 }
 
 void StageObject::Update(void)
 {
+	//アクションされたかどうかのフラグをリセット
 	isActioned_ = false;
 
+	//状態に応じた更新処理
 	switch (itemState_)
 	{
 	case StageObject::ITEM_STATE::NONE:
@@ -83,6 +85,7 @@ void StageObject::Update(void)
 		break;
 	}
 
+	//状態に応じた更新処理
 	switch (machineState_)
 	{
 	case StageObject::MACHINE_STATE::NONE:
@@ -99,6 +102,8 @@ void StageObject::Update(void)
 	default:
 		break;
 	}
+
+	//モデル情報の更新
 	tableColliderTran_.Update();
 	transform_.Update();
 }
@@ -107,7 +112,6 @@ void StageObject::Draw(void)
 {
 	//モデルの描画
 	MV1DrawModel(transform_.modelId);
-	sphere_->Draw();
 }
 
 void StageObject::SetPos(VECTOR pos)
@@ -122,53 +126,50 @@ void StageObject::SetScale(VECTOR scale)
 
 VECTOR StageObject::GetSpherePos(void) const
 {
-	return sphere_->GetPos();
-}
-
-VECTOR StageObject::GetSphereCenter(void) const
-{
+	//当たり判定用の球の中心座標を返す
 	return sphere_->GetPos();
 }
 
 float StageObject::GetSphereRad(void) const
-{
+{	
+	//当たり判定用の球の半径を返す
 	return sphere_->GetRadius();
 }
 
 void StageObject::ItemCarry(void)
-{
+{	//アイテムじゃないオブジェクトは何もしない
 }
 
 void StageObject::ItemPlaced(VECTOR pos)
-{
+{	//アイテムじゃないオブジェクトは何もしない
 }
 
 void StageObject::Interact(const std::string& objId)
-{
+{	//インタラクトできないオブジェクトは何もしない
 }
 
 void StageObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
-{
+{	//ラックじゃないオブジェクトは何もしない
 }
 
 void StageObject::AddStock(void)
-{
+{	//インタラクトできないオブジェクトは何もしない
 }
 
 void StageObject::UpdatePlaced(void)
-{
+{	//アイテムじゃないオブジェクトは何もしない
 }
 
 void StageObject::UpdateHold(void)
-{
+{	//アイテムじゃないオブジェクトは何もしない
 }
 
 void StageObject::UpdateInActive(void)
-{
+{	//マシンじゃないオブジェクトは何もしない
 }
 
 void StageObject::UpdateActive(void)
-{
+{	//マシンじゃないオブジェクトは何もしない
 }
 
 void StageObject::InitTableColliderModel(void)

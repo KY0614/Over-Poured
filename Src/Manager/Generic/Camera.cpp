@@ -23,7 +23,7 @@ Camera::~Camera(void)
 
 void Camera::Init(void)
 {
-
+	//カメラの初期設定
 	ChangeMode(MODE::FIXED_POINT);
 }
 
@@ -36,10 +36,11 @@ void Camera::SetBeforeDraw(void)
 	//クリップ距離を設定する(SetDrawScreenでリセットされる)
 	SetCameraNearFar(CAMERA_NEAR, CAMERA_FAR);
 
+	//モードごとの更新処理
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
-		SetBeforeDrawFixedPoint();
+		SetBeforeDrawFixedPoint();	
 		break;
 
 	case Camera::MODE::TOP_FIXED:

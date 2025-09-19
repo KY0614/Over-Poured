@@ -19,6 +19,11 @@
 #include "StageObject/IceDispenser.h"
 #include "StageManager.h"
 
+namespace
+{
+	const float ANIM_SPEED = 30.0f; // アニメーションの再生速度
+}
+
 StageManager::StageManager(Player& player):player_(player)
 {
 	servedItems_ = {};
@@ -232,7 +237,8 @@ void StageManager::Init3DModel(void)
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
-	InitAnimation(); // アニメーションの初期化
+	//アニメーションの初期化
+	InitAnimation();
 
 	//家具の初期化
 	furnitures_ = std::make_unique<Furnitures>();
@@ -298,46 +304,52 @@ void StageManager::Init3DModel(void)
 	counter_ = std::make_unique<Table>(StageObject::COUNTER, player_, objects_);
 	counter_->Init(COUNTER_POS);
 
-	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetSphereCenter();
+	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetSpherePos();
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::HOT_CUP_RACK, player_));
 	objects_.back()->Init(pos, -90.0f);
 
 	//アイス用カップのラック
-	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetSphereCenter();
+	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::ICE_CUP_RACK, player_));
 	objects_.back()->Init(pos, 90.0f);
 
 	//チョコスイーツ用のラック
-	pos = tables_[tables_.size() - 2]->GetSphereCenter();
+	pos = tables_[tables_.size() - 2]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::CHOCO_SWEETS_RACK, player_));
 	objects_.back()->Init(pos);
 
 	//ベリースイーツ用のラック
-	pos = tables_.back()->GetSphereCenter();
+	pos = tables_.back()->GetSpherePos();
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::BERRY_SWEETS_RACK, player_));
 	objects_.back()->Init(pos);
 
 	//カップ用の蓋
-	pos = tables_[2]->GetSphereCenter();
+	pos = tables_[2]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<CupLidRack>(StageObject::CUP_LID_RACK, player_, objects_));
 	objects_.back()->Init(pos);
 
 	//コーヒーマシン
-	pos = tables_[MAX_TABLE_NUM - 2]->GetSphereCenter();
+	int machineTableIdx = MAX_TABLE_NUM - 2;
+	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE, player_, objects_));
 	objects_.back()->Init(pos, 90.0f);
+
 	//コーヒーマシン２個目
-	pos = tables_[MAX_TABLE_NUM - 4]->GetSphereCenter();
+	machineTableIdx = MAX_TABLE_NUM - 4;
+	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE,player_, objects_));
 	objects_.back()->Init(pos, 90.0f);
 
 	//アイスディスペンサー
-	pos = tables_[MAX_TABLE_NUM - 1]->GetSphereCenter();
+	machineTableIdx = MAX_TABLE_NUM - 1;
+	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
 	objects_.back()->Init(pos, -90.0f);
+
 	//アイスディスペンサー２個目
-	pos = tables_[MAX_TABLE_NUM - 3]->GetSphereCenter();
+	machineTableIdx = MAX_TABLE_NUM - 3;
+	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
 	objects_.back()->Init(pos, -90.0f);
 
@@ -345,7 +357,6 @@ void StageManager::Init3DModel(void)
 	objects_.emplace_back(std::make_unique<DustBox>(StageObject::DUST_BOX,player_, objects_));
 	objects_.back()->Init(DUSTBOX_POS, -180.0f, { 1.0f,0.8f,1.0f });
 	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
-
 }
 
 void StageManager::InitAnimation(void)
@@ -353,17 +364,14 @@ void StageManager::InitAnimation(void)
 	std::string path = Application::PATH_MODEL + "Stage/";
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
 
-	animationController_->Add((int)ANIM_TYPE::CREATE, path + "create_register.mv1", 30.0f);
-
-	animationController_->Add((int)ANIM_TYPE::PAYING, path + "paying.mv1", 30.0f);
+	animationController_->Add((int)ANIM_TYPE::CREATE, path + "create_register.mv1", ANIM_SPEED);
+	animationController_->Add((int)ANIM_TYPE::PAYING, path + "paying.mv1", ANIM_SPEED);
 	animationController_->Play((int)ANIM_TYPE::IDLE);
 }
 
 void StageManager::SurveItem(StageObject& obj)
 {
-	// 商品情報をOrderDataに変換
-	Order::OrderData data;
-	// 例: objのIDや状態からOrderDataをセット
+	//objのIDや状態からOrderDataをセット
 	if (obj.GetParam().id_ == StageObject::HOT_COFFEE)
 	{
 		servedItems_.drink_ = Order::DRINK::HOT;
@@ -474,7 +482,7 @@ void StageManager::CarryableObjInteract(void)
 				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
 				if (!isAccepted)continue;	//存在しなかったら処理しない
 
-				obj->ItemPlaced(counter_->GetSphereCenter());
+				obj->ItemPlaced(counter_->GetSpherePos());
 			}
 
 			for (const auto& table : tables_)
@@ -485,7 +493,7 @@ void StageManager::CarryableObjInteract(void)
 						table->GetSpherePos(), table->GetSphereRad()
 					))
 				{
-					obj->ItemPlaced(table->GetSphereCenter());
+					obj->ItemPlaced(table->GetSpherePos());
 				}
 
 				if (obj->IsActioned())
@@ -506,7 +514,7 @@ void StageManager::MachineInteract(void)
 	auto& pSphere = player_.GetSphere();
 
 	//マシンとカップの処理
-	for (size_t i = 0; i < objects_.size(); ++i)
+	for (int i = 0; i < static_cast<int>(objects_.size()); ++i)
 	{
 		//コーヒーマシンの判定だけさせたい
 		if (objects_[i]->GetParam().id_ != StageObject::COFFEE_MACHINE)continue;
@@ -521,13 +529,13 @@ void StageManager::MachineInteract(void)
 		//設置して一定時間経ったら氷入りカップを出力する
 		if (objects_[i]->GetParam().interactTime_ <= 0.0f)
 		{
-			ProduceCoffee(static_cast<int>(i));
+			ProduceCoffee(i);
 			break;
 		}
 	}
 
 	//ディスペンサーとカップの処理
-	for (size_t i = 0; i < objects_.size(); ++i)
+	for (int i = 0; i < static_cast<int>(objects_.size()); ++i)
 	{
 		//ディスペンサーの判定だけさせたい
 		if (objects_[i]->GetParam().id_ != StageObject::ICE_DISPENSER)continue;
@@ -586,7 +594,7 @@ void StageManager::ProduceCoffee(int index)
 	//コーヒーマシン以外のオブジェクトは判定しない
 	if (objects_[index]->GetParam().id_ != StageObject::COFFEE_MACHINE) return;
 	const auto& machine = objects_[index];
-	for (size_t i = 0; i < objects_.size(); ++i)
+	for (int i = 0; i < static_cast<int>(objects_.size()); ++i)
 	{
 		//ホット用カップ以外のオブジェクトは判定しない
 		if (objects_[i]->GetParam().id_ != StageObject::HOT_CUP &&

@@ -179,9 +179,6 @@ public:
 	/// <returns>マシンオブジェクトの状態</returns>
 	MACHINE_STATE GetMachineState(void)const { return machineState_; }
 
-	///
-	VECTOR GetSphereCenter(void)const;
-
 	/// <summary>
 	/// 当たり判定用球体の半径を取得する
 	/// </summary>
@@ -303,6 +300,7 @@ protected:
 	virtual void UpdateActive(void);
 
 private:
+
 	//アイテムオブジェクトの状態
 	ITEM_STATE itemState_;
 
