@@ -180,7 +180,10 @@ void GameScene::UpdateGame(void)
 		//ポーズボタンが押されたらポーズシーンへ遷移
 		SceneManager::GetInstance().PushScene(std::make_unique<PauseScene>());
 	}
+
+	//ポップアップUIの更新
 	UIManager::GetInstance().PopUpUIUpdate();
+
 	//注文数分の商品が提供されたら
 	if (stage_->IsServed())
 	{
@@ -192,6 +195,7 @@ void GameScene::UpdateGame(void)
 		UIManager::GetInstance().AddPopUpUI(addScore, screenPos);
 		stage_->ResetServeData();	//サーブしたアイテムをリセット
 	}
+	//注文がタイムアウトしたら
 	if (customer_->IsTimeOutOrder())
 	{
 		stage_->ResetServeData();	//サーブしたアイテムをリセット
