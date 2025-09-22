@@ -77,49 +77,50 @@ public:
 
 private:
 
-	// 静的インスタンス
+	//静的インスタンス
 	static SceneManager* instance_;
 
 	SCENE_ID sceneId_;
 	SCENE_ID waitSceneId_;
 
-	// フェード
+	//フェード
 	std::unique_ptr<SceneBase> scene_;
+
+	//シーンのスタック
 	std::list<std::unique_ptr<SceneBase>>scenes_;
 
-	// 各種シーン
+	//各種シーン
 	std::unique_ptr<Fader> fader_;
 
-	// カメラ
+	//カメラ
 	std::shared_ptr<Camera> camera_;
 
-	// シーン遷移中判定
+	//シーン遷移中判定
 	bool isSceneChanging_;
 
-	// デルタタイム
+	//デルタタイム
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 
 	VECTOR lightDir_;
 	
-	// デフォルトコンストラクタをprivateにして、
-	// 外部から生成できない様にする
+	//デフォルトコンストラクタをprivateにして、
+	//外部から生成できない様にする
 	SceneManager(void);
-	// コピーコンストラクタも同様
+	//コピーコンストラクタも同様
 	SceneManager(const SceneManager& manager) = default;
-	// デストラクタも同様
+	//デストラクタも同様
 	~SceneManager(void) = default;
 
-	// デルタタイムをリセットする
+	//デルタタイムをリセットする
 	void ResetDeltaTime(void);
 
-	// シーン遷移
+	//シーン遷移
 	void DoChangeScene(SCENE_ID sceneId);
 
-	// フェード
+	//フェード
 	void Fade(void);
 
 	void MakeScene(SCENE_ID sceneId);
 
-	void UpdateDebugImGui(void);
 };

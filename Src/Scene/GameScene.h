@@ -78,6 +78,7 @@ private:
 	using UpdateFunc_t = void(GameScene::*)();
 	using DrawFunc_t = void(GameScene::*)();
 
+	//ŠÖ”ƒ|ƒCƒ“ƒ^•Ï”
 	UpdateFunc_t update_;
 	DrawFunc_t draw_;
 

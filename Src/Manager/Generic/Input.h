@@ -10,28 +10,28 @@
 /// 周辺機器種別
 /// </summary>
 enum class PeripheralType {
-	keyboard,	//キーボード
-	gamepad,	//ゲームパッド
-	mouse,		//マウス
-	x_analog,	//Xboxコントローラーのアナログ入力
-	end			//for文で回すとき用に定義
+	KEYBOARD,	//キーボード
+	GAMEPAD,	//ゲームパッド
+	MOUSE,		//マウス
+	X_ANALOG,	//Xboxコントローラーのアナログ入力
+	END			//for文で回すとき用に定義
 };
 
 /// <summary>
 /// アナログ入力種別
 /// </summary>
 enum class AnalogInputType {
-	none,	//押してない
-	l_up,	//左スティックの上
-	l_down,	//左スティックの下
-	l_left,	//左スティックの左
-	l_right,//左スティックの右
-	r_up,	//右スティックの上
-	r_down,	//右スティックの下
-	r_left,	//右スティックの左
-	r_right,//右スティックの右
-	l_trigger,
-	r_trigger
+	NONE,	//押してない
+	L_UP,	//左スティックの上
+	L_DOWN,	//左スティックの下
+	L_LEFT,	//左スティックの左
+	L_RIGHT,//左スティックの右
+	R_UP,	//右スティックの上
+	R_DOWN,	//右スティックの下
+	R_LEFT,	//右スティックの左
+	R_RIGHT,//右スティックの右
+	L_TRIGGER,
+	R_TRIGGER
 };
 
 class KeyConfigScene;
@@ -74,8 +74,6 @@ private:
 	using InputData_t = std::unordered_map<std::string, bool>;
 	InputData_t currentInput_;	//そのイベントに対応するボタンが押されている状態か
 	InputData_t lastInput_;		//そのイベントに対応するボタンが押されている状態か(直前)
-
-	std::vector<std::string> inputlistForDisplay_;
 
 	using AnalogInputTable_t = 
 		std::unordered_map < AnalogInputType, std::function<bool(const XINPUT_STATE&)>>;

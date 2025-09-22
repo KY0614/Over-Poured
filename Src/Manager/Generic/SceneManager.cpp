@@ -362,20 +362,3 @@ void SceneManager::MakeScene(SCENE_ID sceneId)
 		scenes_.back() = std::move(scene);
 	}
 }
-
-void SceneManager::UpdateDebugImGui(void)
-{
-	//ウィンドウタイトル&開始処理
-	ImGui::Begin("Camera");
-
-	//位置
-	ImGui::Text("position");
-	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &lightDir_.x);
-	ImGui::SliderFloat("PosX", &lightDir_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("PosY", &lightDir_.y, -10.0f, 10.0f);
-	ImGui::SliderFloat("PosZ", &lightDir_.z, -10.0f, 10.0f);
-
-	//終了処理
-	ImGui::End();
-}

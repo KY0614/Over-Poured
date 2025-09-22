@@ -21,8 +21,6 @@ public:
 
 	//
 	void LoadScore(void);
-	//void LoadCurrentScore(void);
-	//void LoadAggScore(void);
 
 	//ゲーム終了時のスコア保存用
 	void SaveScore(int score);

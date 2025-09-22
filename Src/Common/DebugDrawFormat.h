@@ -15,12 +15,13 @@ public:
         : x(startX), y(startY), color(textColor),lineHeight(lineHeight) {}
 
     // デバッグ用に文字列を出力するメソッド
-    void String(const std::string& str) {
+    void String(const std::string& str) 
+    {
         DrawString(x, y, StringUtility::StringToWstring(str).c_str(), 0xFFFFFF);
         y += lineHeight; // 次の行に移動
     }
 
-    //値が１つまでのDrawFormat
+	//値が１つまでのデバッグ用DrawFormat
     template <typename Value>
     static void FormatString(const TCHAR* format, const Value val, int& line, const int lineH = 20)
     {
@@ -31,20 +32,21 @@ public:
     template <typename Value>
     static void FormatStringRight(const TCHAR* format, const Value val, int& line, const int lineH = 20)
     {
-        int strWidth = GetDrawFormatStringWidth(format, val); // 文字列の幅を取得
-        int screenWidth = Application::SCREEN_SIZE_X; // 画面の幅 (適宜変更してください)
-        int rightX = screenWidth - strWidth; // X座標を計算
+        int strWidth = GetDrawFormatStringWidth(format, val);   //文字列の幅を取得
+        int screenWidth = Application::SCREEN_SIZE_X;           //画面の幅 (適宜変更してください)
+        int rightX = screenWidth - strWidth;    //X座標を計算
         DrawFormatString(rightX, line * lineH, 0xFFFFFF, format, val);
         line++;
     }
 
+	//文字列の幅を取得
     template <typename Value>
     static int GetFormatSize(const TCHAR* format, const Value val, const int line)
     {
         return GetDrawFormatStringWidth(format, val);
     }
 
-    //値が２つまでのDrawFormat
+	//値が2つまでのDrawFormat
     template <typename ValA,typename ValB>
     static void FormatString(const TCHAR* format, const ValA valA, const ValB valB , int& line, const int lineH = 20)
     {
