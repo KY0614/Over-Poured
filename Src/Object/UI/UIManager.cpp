@@ -29,6 +29,8 @@ UIManager::UIManager(void)
 
 UIManager::~UIManager(void)
 {
+	uis_.clear();
+	popUpUIs_.clear();
 }
 
 void UIManager::Init(void)

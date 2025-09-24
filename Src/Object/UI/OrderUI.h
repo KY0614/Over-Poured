@@ -6,11 +6,12 @@
 class OrderUI :  public UIBase
 {
 public:
-	static constexpr int ORDER_NUM = 2; //オーダーの数
+    //オーダーの数
+	static constexpr int ORDER_NUM = 2; 
 
 	//背景UIのサイズ
-    static constexpr float BACK_IMG_SIZE = 300.0f;
-    static constexpr float IMG_SIZE = 100.0f;
+	static constexpr float BACK_IMG_SIZE = 300.0f;  //背景画像のサイズ
+	static constexpr float IMG_SIZE = 100.0f;       //ドリンクとスイーツの画像サイズ
 
     struct OrderUIData
     {
@@ -26,15 +27,28 @@ public:
 
 		int checkImg_;     //チェックの画像
 
-        float currentRate_ = 0.0f;	
-        float displayedRate_ = 0.0f;
+		float currentRate_ = 0.0f;	    //現在のゲージの割合
+		float displayedRate_ = 0.0f;    //表示されているゲージの割合
     };
 
+	//コンストラクタ
     OrderUI(Order::DRINK drink,Order::SWEETS sweets,float maxTime);
+	//デストラクタ
     virtual ~OrderUI() = default;
 
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
     void Init(void) override;
+
+    /// <summary>
+    /// 更新処理
+    /// </summary>
     void Update(void) override;
+
+    /// <summary>
+    /// 描画処理
+    /// </summary>
     void Draw(void) override;
 
     /// <summary>
@@ -68,5 +82,10 @@ private:
 
 	//注文内容画像のサイズ
     float size_;
+
+    /// <summary>
+    /// 画像の読み込み処理
+    /// </summary>
+    void LoadImages(void);
 };
 
