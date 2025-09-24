@@ -1,4 +1,4 @@
-#include "../Utility/AsoUtility.h"
+#include "../Utility/CommonUtility.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
 #include "Table.h"
@@ -16,7 +16,7 @@ void Table::Update(void)
 	//テーブルの上にオブジェクトが置かれていないかどうか
 	for (const auto& obj : objects_)
 	{
-		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) && obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
 		{
 			//置かれている場合は、置けない状態にする

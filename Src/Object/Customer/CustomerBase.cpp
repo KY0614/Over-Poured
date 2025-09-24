@@ -3,7 +3,7 @@
 #include "../../Manager/Generic/SceneManager.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "../Common/AnimationController.h"
-#include "../../Utility/AsoUtility.h"
+#include "../../Utility/CommonUtility.h"
 #include "CustomerBase.h"
 
 namespace//このcpp内でしか使わない定数
@@ -57,7 +57,7 @@ void CustomerBase::Init(const VECTOR pos)
 	transform_.pos = pos;				//位置を引数で指定
 	transform_.quaRot = Quaternion();	//回転は初期化
 	transform_.quaRotLocal =			//ローカル回転設定
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(CUSTOMER_ROT_Y), 0.0f });
+		Quaternion::Euler({ 0.0f, CommonUtility::Deg2RadF(CUSTOMER_ROT_Y), 0.0f });
 	//モデル情報を更新
 	transform_.Update();
 
@@ -106,7 +106,7 @@ void CustomerBase::SetGoalRotate(double rotRad)
 	//回転軸をY軸に設定して回転角度を設定
 	Quaternion axis =
 		Quaternion::AngleAxis(
-			rotRad, AsoUtility::AXIS_Y);
+			rotRad, CommonUtility::AXIS_Y);
 
 	//現在設定されている回転との角度差を取る
 	double angleDiff = Quaternion::Angle(axis, goalQuaRot_);
@@ -123,7 +123,7 @@ void CustomerBase::SetGoalRotate(double rotRad)
 bool CustomerBase::CollisionCounter(void)
 {
 	//表示中のお客がカウンターの球体当たり判定に当たっているか
-	if (AsoUtility::IsHitSpherePoint(COUNTER_POS, COUNTER_RADIUS,
+	if (CommonUtility::IsHitSpherePoint(COUNTER_POS, COUNTER_RADIUS,
 		GetTransform().pos) && isVisible_)
 	{
 		//当たっていたらtrueを返す

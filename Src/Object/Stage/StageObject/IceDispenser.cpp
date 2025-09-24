@@ -1,4 +1,4 @@
-#include "../Utility/AsoUtility.h"
+#include "../Utility/CommonUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Manager/Generic/ResourceManager.h"
@@ -65,7 +65,7 @@ void IceDispenser::Interact(const std::string& objId)
 	{
 		//アイスカップまたはアイスコーヒー
 		if ((obj->GetParam().id_ == ICE_CUP || obj->GetParam().id_ == CUP_WITH_ICE) &&
-			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
+			CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
@@ -80,7 +80,7 @@ void IceDispenser::Interact(const std::string& objId)
 		//アイス用カップ以外のオブジェクトは判定しない
 		if (obj->GetParam().id_ != ICE_CUP) continue;
 
-		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
+		if (CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
 			iconUI_->SetActive(true);
@@ -93,7 +93,7 @@ void IceDispenser::Interact(const std::string& objId)
 				cupPos = VAdd(cupPos, { 0.0f,MACHINE_OFSET_Y ,DISPENSER_OFSET_Z });
 
 				//マシンの回転に合わせてカップの位置を調整
-				VECTOR rotPos = AsoUtility::RotXZPos(GetTransform().pos, cupPos,
+				VECTOR rotPos = CommonUtility::RotXZPos(GetTransform().pos, cupPos,
 					Quaternion::ToEuler(GetTransform().quaRotLocal).y);
 				//設置する座標を設定
 				obj->ItemPlaced(rotPos);
@@ -118,7 +118,7 @@ void IceDispenser::UpdateInActive(void)
 		//氷入りカップ以外は判定しない
 		if (obj->GetParam().id_ != CUP_WITH_ICE)continue;
 		//マシンの中にPLACED状態のカップがあったらtrueにする
-		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
@@ -148,7 +148,7 @@ void IceDispenser::UpdateActive(void)
 		if (obj->GetParam().id_ != ICE_CUP)continue;
 
 		//マシンの中にPLACED状態のカップがあったらtrueにする
-		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED &&
 			param_.interactTime_ >= 0.0f)

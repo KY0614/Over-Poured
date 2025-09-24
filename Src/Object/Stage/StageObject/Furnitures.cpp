@@ -1,5 +1,5 @@
 #include "../../../Manager/Generic/ResourceManager.h"
-#include "../../../Utility/AsoUtility.h"
+#include "../../../Utility/CommonUtility.h"
 #include "../../../Renderer/ModelMaterial.h"
 #include "../../../Renderer/ModelRenderer.h"
 #include "Furnitures.h"
@@ -17,7 +17,7 @@ Furnitures::~Furnitures(void)
 void Furnitures::Init(void)
 {
 	//床の基本設定
-	SetupFurniture(floor_, ResourceManager::SRC::FLOOR, AsoUtility::VECTOR_ZERO);
+	SetupFurniture(floor_, ResourceManager::SRC::FLOOR, CommonUtility::VECTOR_ZERO);
 	floor_.MakeCollider(Collider::TYPE::STAGE);
 
 	//床用のマテリアル初期化
@@ -32,7 +32,7 @@ void Furnitures::Init(void)
 	SetupFurniture(frontLShelves_, ResourceManager::SRC::SHELVES_FRONT,			//前の左の棚
 		{ FRONT_SHELVES_R_POS_X,FRONT_SHELVES_POS.y,FRONT_SHELVES_POS.z });
 	SetupFurniture(frontRShelves_, ResourceManager::SRC::SHELVES,		//前の右の棚
-		FRONT_SHELVES_POS, Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(90.0f), 0.0f }));
+		FRONT_SHELVES_POS, Quaternion::Euler({ 0.0f, CommonUtility::Deg2RadF(90.0f), 0.0f }));
 }
 
 void Furnitures::Draw(void)
@@ -54,7 +54,7 @@ void Furnitures::SetupFurniture(Transform& transform,
 {
 	//モデルの読み込みと基本設定
 	transform.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(modelSrc));
-	transform.scl = AsoUtility::VECTOR_ONE;
+	transform.scl = CommonUtility::VECTOR_ONE;
 	transform.pos = pos;
 	transform.quaRot = Quaternion();
 	transform.quaRotLocal = quaRotLocal;

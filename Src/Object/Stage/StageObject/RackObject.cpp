@@ -2,7 +2,7 @@
 #include "../../../Manager/Generic/SceneManager.h"
 #include "../../../Manager/Generic/InputManager.h"
 #include "../../../Manager/Generic/ResourceManager.h"
-#include "../../../Utility/AsoUtility.h"
+#include "../../../Utility/CommonUtility.h"
 #include "../../Common/Sphere.h"
 #include "../Object/Player.h"
 #include "../../UI/GaugeUI.h"
@@ -205,13 +205,13 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 		{
 			//モデルの基本設定
 			sweetsOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
-			sweetsOfRack_[i].scl = AsoUtility::VECTOR_ONE;
+			sweetsOfRack_[i].scl = CommonUtility::VECTOR_ONE;
 			VECTOR sweetsPos = VAdd(pos, sweetsOffsets[i]);
-			VECTOR rotPos = AsoUtility::RotXZPos(transform_.pos, sweetsPos, AsoUtility::Deg2RadF(rotY));
+			VECTOR rotPos = CommonUtility::RotXZPos(transform_.pos, sweetsPos, CommonUtility::Deg2RadF(rotY));
 			sweetsOfRack_[i].pos = rotPos;
 			sweetsOfRack_[i].quaRot = Quaternion();
 			sweetsOfRack_[i].quaRotLocal =
-				Quaternion::Euler({ AsoUtility::Deg2RadF(SWEETS_ROT_X),AsoUtility::Deg2RadF(rotY), 0.0f });
+				Quaternion::Euler({ CommonUtility::Deg2RadF(SWEETS_ROT_X),CommonUtility::Deg2RadF(rotY), 0.0f });
 			sweetsOfRack_[i].Update();
 		}
 	}
@@ -257,13 +257,13 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	{
 		//モデルの基本設定
 		cupesOfRack_[i].SetModel(ResourceManager::GetInstance().LoadModelDuplicate(srcType));
-		cupesOfRack_[i].scl = AsoUtility::VECTOR_ONE;
+		cupesOfRack_[i].scl = CommonUtility::VECTOR_ONE;
 		VECTOR cupsPos = VAdd(pos, cupOffsets[i]);
-		VECTOR rotPos = AsoUtility::RotXZPos(transform_.pos, cupsPos, AsoUtility::Deg2RadF(rotY));
+		VECTOR rotPos = CommonUtility::RotXZPos(transform_.pos, cupsPos, CommonUtility::Deg2RadF(rotY));
 		cupesOfRack_[i].pos = rotPos;
 		cupesOfRack_[i].quaRot = Quaternion();
 		cupesOfRack_[i].quaRotLocal =
-			Quaternion::Euler({ AsoUtility::Deg2RadF(180.0f), AsoUtility::Deg2RadF(rotY), 0.0f });
+			Quaternion::Euler({ CommonUtility::Deg2RadF(180.0f), CommonUtility::Deg2RadF(rotY), 0.0f });
 		cupesOfRack_[i].Update();
 	}
 }

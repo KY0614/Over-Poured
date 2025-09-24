@@ -1,4 +1,4 @@
-#include "../../Utility/AsoUtility.h"
+#include "../../Utility/CommonUtility.h"
 #include "../../Object/Order/Order.h"
 #include "../../Object/Customer/HotCustomer.h"
 #include "../../Object/Customer/IceCustomer.h"
@@ -85,7 +85,7 @@ void CustomerManager::Update(float orderTime)
 		if (customers_[firstCustomerIdx_]->CheckCounterToCustomer())
 		{
 			//回転させ、移動を止める
-			customers_[firstCustomerIdx_]->SetGoalRotate(AsoUtility::Deg2RadF(CUSTOMER_ROTATE_ANGLE));
+			customers_[firstCustomerIdx_]->SetGoalRotate(CommonUtility::Deg2RadF(CUSTOMER_ROTATE_ANGLE));
 			isCustomersMove_ = false;
 			orderUI_[firstCustomerIdx_]->SetActive(true);	//UIをアクティブにする
 			for (auto& c : customers_)

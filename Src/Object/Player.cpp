@@ -2,7 +2,7 @@
 #include <cassert>
 #include<EffekseerForDXLib.h>
 #include "../Application.h"
-#include "../Utility/AsoUtility.h"
+#include "../Utility/CommonUtility.h"
 #include "../Libs/ImGui/imgui.h"
 #include "../Common/DebugDrawFormat.h"
 #include "../Manager/Generic/SceneManager.h"
@@ -28,8 +28,8 @@ Player::Player(void)
 	stateChanges_.emplace(STATE::STOP, std::bind(&Player::ChangeStateStop, this));
 
 	//Õ“Ëƒ`ƒFƒbƒN
-	gravHitPosDown_ = AsoUtility::VECTOR_ZERO;
-	gravHitPosUp_ = AsoUtility::VECTOR_ZERO;
+	gravHitPosDown_ = CommonUtility::VECTOR_ZERO;
+	gravHitPosUp_ = CommonUtility::VECTOR_ZERO;
 
 	isHolding_ = false;
 	holdItemId_ = "";
@@ -50,7 +50,7 @@ void Player::Init(void)
 	transform_.pos = { -60.0f, 30.0f, 30.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
+		Quaternion::Euler({ 0.0f, CommonUtility::Deg2RadF(180.0f), 0.0f });
 	transform_.Update();
 
 	//ŠÛ‰e‰æ‘œ
@@ -308,19 +308,19 @@ void Player::ProcessMove(void)
 	double rotRad = 0;
 
 	//WASD‚ÅˆÊ’u‚ð•Ï‚¦‚é
-	VECTOR dir = AsoUtility::VECTOR_ZERO;
-	movePow_ = AsoUtility::VECTOR_ZERO;
-	//if (ins.IsInputPressed("Up")) { dir = cameraRot.GetForward();  rotRad = AsoUtility::Deg2RadF(0.0f); }
-	//if (ins.IsInputPressed("Left")){ dir = cameraRot.GetLeft();  rotRad = AsoUtility::Deg2RadF(-90.0f); }
-	//if (ins.IsInputPressed("Down")){ dir = cameraRot.GetBack();  rotRad = AsoUtility::Deg2RadF(180.0f); }
-	//if (ins.IsInputPressed("Right")){dir = cameraRot.GetRight(); rotRad = AsoUtility::Deg2RadF(90.0f);	}
+	VECTOR dir = CommonUtility::VECTOR_ZERO;
+	movePow_ = CommonUtility::VECTOR_ZERO;
+	//if (ins.IsInputPressed("Up")) { dir = cameraRot.GetForward();  rotRad = CommonUtility::Deg2RadF(0.0f); }
+	//if (ins.IsInputPressed("Left")){ dir = cameraRot.GetLeft();  rotRad = CommonUtility::Deg2RadF(-90.0f); }
+	//if (ins.IsInputPressed("Down")){ dir = cameraRot.GetBack();  rotRad = CommonUtility::Deg2RadF(180.0f); }
+	//if (ins.IsInputPressed("Right")){dir = cameraRot.GetRight(); rotRad = CommonUtility::Deg2RadF(90.0f);	}
 
 	if (ins.IsInputPressed("Up"))	dir.z += 1.0f;
 	if (ins.IsInputPressed("Down")) dir.z -= 1.0f;
 	if (ins.IsInputPressed("Right"))dir.x += 1.0f;
 	if (ins.IsInputPressed("Left")) dir.x -= 1.0f;
 
-	if (!AsoUtility::EqualsVZero(dir))
+	if (!CommonUtility::EqualsVZero(dir))
 	{
 		dir = VNorm(dir); //•ûŒü‚ð³‹K‰»
 
@@ -376,7 +376,7 @@ void Player::SetGoalRotate(double rotRad)
 	VECTOR cameraRot = mainCamera->GetAngles();
 	Quaternion axis =
 		Quaternion::AngleAxis(
-			(double)cameraRot.y + rotRad, AsoUtility::AXIS_Y);
+			(double)cameraRot.y + rotRad, CommonUtility::AXIS_Y);
 	
 	//Œ»ÝÝ’è‚³‚ê‚Ä‚¢‚é‰ñ“]‚Æ‚ÌŠp“x·‚ðŽæ‚é
 	double angleDiff = Quaternion::Angle(axis, goalQuaRot_);
@@ -469,7 +469,7 @@ void Player::EffectFootSmoke(void)
 {
 	stepFootSmoke_ -= SceneManager::GetInstance().GetDeltaTime();
 
-	float len = AsoUtility::MagnitudeF(moveDiff_);
+	float len = CommonUtility::MagnitudeF(moveDiff_);
 
 	if (len >= 1.0f &&
 		stepFootSmoke_ < 0.0f)

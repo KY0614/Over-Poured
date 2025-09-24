@@ -16,13 +16,14 @@ void DustBox::Interact(const std::string& objId)
 	bool isAccepted = std::find(items.begin(), items.end(), objId) != items.end();
 	if (!isAccepted)return;	//存在しなかったら処理しない
 
-	// プレイヤーが持っているアイテム名を取得
+	//プレイヤーが持っているアイテム名を取得
 	std::string heldItem = player_.GetHoldItem();
 
-	// コーヒー本体のインデックスを探す
+	//コーヒー本体のインデックスを探す
 	int coffeeIndex = -1;
 	for (int i = 0; i < objects_.size(); ++i)
 	{
+		//持っているのがコーヒー系の場合インデックスを保存
 		if ((objects_[i]->GetParam().id_ == HOT_COFFEE ||
 			objects_[i]->GetParam().id_ == CUP_WITH_ICE||
 			objects_[i]->GetParam().id_ == ICE_COFFEE) &&
@@ -32,7 +33,7 @@ void DustBox::Interact(const std::string& objId)
 			break;
 		}
 	}
-	
+	//氷入りカップの場合
 	if (coffeeIndex != -1)
 	{
 		//氷入りカップの場合は氷も削除
@@ -48,7 +49,7 @@ void DustBox::Interact(const std::string& objId)
 				if (follower && &(follower->GetFollowedObj()) == objects_[coffeeIndex].get())
 				{
 					objects_.erase(objects_.begin() + i);
-					continue; // eraseしたのでiは進めず次のループへ
+					continue; //eraseしたのでiは進めず次のループへ
 				}
 			}
 		}

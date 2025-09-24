@@ -1,4 +1,4 @@
-#include "../Utility/AsoUtility.h"
+#include "../Utility/CommonUtility.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Object/Common/Sphere.h"
@@ -32,7 +32,7 @@ void Machine::Interact(const std::string& objId)
 			obj->GetParam().id_ == HOT_COFFEE ||
 			obj->GetParam().id_ == CUP_WITH_ICE ||
 			obj->GetParam().id_ == ICE_COFFEE) &&
-			AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
+			CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 				obj->GetSpherePos(), obj->GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
@@ -47,7 +47,7 @@ void Machine::Interact(const std::string& objId)
 		//カップ以外のオブジェクトは判定しない
 		if (obj->GetParam().id_ != HOT_CUP && obj->GetParam().id_ != CUP_WITH_ICE) continue;
 
-		if (AsoUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
+		if (CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
 			obj->GetSpherePos(), obj->GetSphereRad()))
 		{
 			iconUI_->SetActive(true);
@@ -61,7 +61,7 @@ void Machine::Interact(const std::string& objId)
 				cupPos = VAdd(cupPos, { 0.0f,MACHINE_OFSET_Y ,MACHINE_OFSET_Z });
 
 				//マシンの回転に合わせてカップの位置を調整
-				VECTOR rotPos = AsoUtility::RotXZPos(GetTransform().pos, cupPos,
+				VECTOR rotPos = CommonUtility::RotXZPos(GetTransform().pos, cupPos,
 					Quaternion::ToEuler(GetTransform().quaRotLocal).y);
 				//カップをマシンの上に置く
 				obj->ItemPlaced(rotPos);
@@ -129,7 +129,7 @@ void Machine::UpdateInActive(void)
 		if (obj->GetParam().id_ != HOT_COFFEE &&
 			obj->GetParam().id_ != ICE_COFFEE)continue;
 
-		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
@@ -173,7 +173,7 @@ void Machine::UpdateActive(void)
 		if (obj->GetParam().id_ != HOT_CUP &&
 			obj->GetParam().id_ != CUP_WITH_ICE)continue;
 		//PLACED状態のカップが存在したらフラグを立ててループを抜ける
-		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
+		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{

@@ -1,6 +1,6 @@
 #include "../Manager/Generic/ResourceManager.h"
 #include "../Common/Sphere.h"
-#include "../../Utility/AsoUtility.h"
+#include "../../Utility/CommonUtility.h"
 #include "../../Utility/StringUtility.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
@@ -34,14 +34,14 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 	transform_.pos = pos;
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(rotY), 0.0f });
+		Quaternion::Euler({ 0.0f, CommonUtility::Deg2RadF(rotY), 0.0f });
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 	transform_.Update();
 
 	//当たり判定用の球を作成
 	sphere_ = std::make_unique<Sphere>(transform_);
 	//オブジェクトからの相対座標を設定
-	sphere_->SetLocalPos(AsoUtility::VECTOR_ZERO);
+	sphere_->SetLocalPos(CommonUtility::VECTOR_ZERO);
 	//半径を設定
 	sphere_->SetRadius(param_.collisionRadius_);
 

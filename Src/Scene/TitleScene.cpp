@@ -2,7 +2,7 @@
 #include <DxLib.h>
 #include "../Application.h"
 #include "../Libs/ImGui/imgui.h"
-#include "../Utility/AsoUtility.h"
+#include "../Utility/CommonUtility.h"
 #include "../Manager/GameSystem/SoundManager.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/ResourceManager.h"
@@ -51,9 +51,9 @@ void TitleScene::Init(void)
 		ResourceManager::GetInstance().
 		LoadModelDuplicate(ResourceManager::SRC::CAFE));
 	cafeTran_.pos = { 250.0f, 0.0f, 300.0f };
-	cafeTran_.scl = AsoUtility::VECTOR_ONE;
+	cafeTran_.scl = CommonUtility::VECTOR_ONE;
 	cafeTran_.quaRot = Quaternion::Euler(
-		0.0f, AsoUtility::Deg2RadF(90.0f), 0.0f);
+		0.0f, CommonUtility::Deg2RadF(90.0f), 0.0f);
 	cafeTran_.Update();
 
 	//地面
@@ -62,7 +62,7 @@ void TitleScene::Init(void)
 		LoadModelDuplicate(ResourceManager::SRC::FLOOR));
 	graoundTran_.pos = { -4500.0f, 0.0f, 6100.0f };
 	graoundTran_.scl = { 2.5f,2.0f,2.2f };
-	graoundTran_.quaRot = AsoUtility::VECTOR_ZERO;
+	graoundTran_.quaRot = CommonUtility::VECTOR_ZERO;
 	graoundTran_.MakeCollider(Collider::TYPE::STAGE);
 	graoundTran_.Update();
 
@@ -73,9 +73,9 @@ void TitleScene::Init(void)
 		ResourceManager::GetInstance().
 		LoadModelDuplicate(ResourceManager::SRC::PLAYER));
 	character_.pos = { -390.0f,0.0f, -265.0f };
-	character_.scl = AsoUtility::VECTOR_ONE;
+	character_.scl = CommonUtility::VECTOR_ONE;
 	character_.quaRot = Quaternion::Euler(
-		0.0f, AsoUtility::Deg2RadF(0.0f), 0.0f);
+		0.0f, CommonUtility::Deg2RadF(0.0f), 0.0f);
 	character_.Update();
 
 	//アニメーションの設定
@@ -166,7 +166,7 @@ void TitleScene::InitMaterial(void)
 	material_->AddConstBufVS({ TILLING_SIZE ,TILLING_SIZE,TILLING_SIZE,TILLING_SIZE });
 
 	//色の影響度
-	material_->AddConstBufPS({ AsoUtility::VECTOR_ONE.x,AsoUtility::VECTOR_ONE.y,AsoUtility::VECTOR_ONE.z,1.0f });
+	material_->AddConstBufPS({ CommonUtility::VECTOR_ONE.x,CommonUtility::VECTOR_ONE.y,CommonUtility::VECTOR_ONE.z,1.0f });
 
 	//ライトの方向
 	VECTOR light = GetLightDirection();
