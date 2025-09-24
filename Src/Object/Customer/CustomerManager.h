@@ -104,7 +104,7 @@ private:
 	std::vector<std::unique_ptr<CustomerBase>> customers_;
 
 	//’•¶UI—p
-	std::vector<std::unique_ptr<OrderUI>> orderUI_;
+	std::vector<std::shared_ptr<OrderUI>> orderUI_;
 
 	//‚¨‹q‚ª“®‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©(true:“®‚¢‚Ä‚¢‚é false:~‚Ü‚Á‚Ä‚é)
 	bool isCustomersMove_;

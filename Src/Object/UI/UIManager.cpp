@@ -46,7 +46,11 @@ void UIManager::Update(void)
 	{
 		ui->Update();
 	}
-
+	// 全てのUIをまとめて更新
+	for (auto& ui : uis_)
+	{
+		ui.lock()->Update();
+	}
 }
 
 void UIManager::PopUpUIUpdate(void)
@@ -59,19 +63,24 @@ void UIManager::PopUpUIUpdate(void)
 
 void UIManager::Draw(void)
 {
-	if (gaugeUIs_.empty() && orderUIs_.empty())return;
+	if (uis_.empty() && popUpUIs_.empty())return;
 
-	for (auto& ui : gaugeUIs_) 
+	//for (auto& ui : gaugeUIs_) 
+	//{
+	//	ui->Draw();
+	//}	
+	//for (auto& ui : orderUIs_) 
+	//{
+	//	ui->Draw();
+	//}
+	//for (auto& ui : iconUIs_)
+	//{
+	//	ui->Draw();
+	//}
+	// 全てのUIをまとめて描画
+	for (auto& ui : uis_)
 	{
-		ui->Draw();
-	}	
-	for (auto& ui : orderUIs_) 
-	{
-		ui->Draw();
-	}
-	for (auto& ui : iconUIs_)
-	{
-		ui->Draw();
+		ui.lock()->Draw();
 	}
 	for (auto& ui : popUpUIs_)
 	{
@@ -84,6 +93,8 @@ void UIManager::Release(void)
 	gaugeUIs_.clear();
 	orderUIs_.clear();
 	iconUIs_.clear();
+
+	uis_.clear();
 	popUpUIs_.clear();
 }
 
@@ -92,6 +103,8 @@ void UIManager::Destroy(void)
 	gaugeUIs_.clear();
 	orderUIs_.clear();
 	iconUIs_.clear();
+
+	uis_.clear();
 	popUpUIs_.clear();
 	delete instance_;
 }

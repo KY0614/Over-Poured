@@ -4,10 +4,13 @@
 
 Cube::Cube(const Transform& parent) : transformParent_(parent)
 {
-}
+    for (int i = 0; i < 36; ++i) 
+    {
+        Vertex[i] = {};
+    }
 
-Cube::Cube(const Cube& base, const Transform& parent) : transformParent_(parent)
-{
+    localPosTop_ = {};  //0埋め
+	localPosDown_ = {}; //0埋め
 }
 
 Cube::~Cube(void)
@@ -29,20 +32,6 @@ void Cube::MakeCube(VECTOR center, float size, COLOR_U8  col)
         VGet(center.x + h, center.y + h, center.z + h), // 6: 右上後
         VGet(center.x - h, center.y + h, center.z + h)  // 7: 左上後
     };
-
-    ////底面座標を中心座標に
-    //VECTOR v[8] = {
-    //    VGet(center.x - h, center.y,     center.z - h), // 下
-    //    VGet(center.x + h, center.y,     center.z - h),
-    //    VGet(center.x + h, center.y + size, center.z - h),
-    //    VGet(center.x - h, center.y + size, center.z - h),
-    //    VGet(center.x - h, center.y,     center.z + h),
-    //    VGet(center.x + h, center.y,     center.z + h),
-    //    VGet(center.x + h, center.y + size, center.z + h),
-    //    VGet(center.x - h, center.y + size, center.z + h)
-    //};
-
-    // 各面ごとに三角形を2枚定義（全6面 → 12三角形）
 
     // 各面の三角形の頂点インデックス（12三角形 * 3）
     int faceIndices[6][2][3] = {
@@ -79,8 +68,9 @@ void Cube::MakeCube(VECTOR center, float size, COLOR_U8  col)
                 vi++;
             }
         }
-
     }
+    //立方体描画（12ポリゴン）
+    DrawPolygon3D(Vertex, 12, DX_NONE_GRAPH, false);
 }
 
 void Cube::MakeBox(VECTOR center, float width, float height, float depth, COLOR_U8 col)
@@ -91,18 +81,6 @@ void Cube::MakeBox(VECTOR center, float width, float height, float depth, COLOR_
     float hw = width / 2.0f;
     float hh = height / 2.0f;
     float hd = depth / 2.0f;
-
-    //VECTOR p[8] =
-    //{
-    //    VGet(center.x - hw, center.y - hh, center.z - hd), // 0: 左下手前
-    //    VGet(center.x + hw, center.y - hh, center.z - hd), // 1: 右下手前
-    //    VGet(center.x + hw, center.y + hh, center.z - hd), // 2: 右上手前
-    //    VGet(center.x - hw, center.y + hh, center.z - hd), // 3: 左上手前
-    //    VGet(center.x - hw, center.y - hh, center.z + hd), // 4: 左下奥
-    //    VGet(center.x + hw, center.y - hh, center.z + hd), // 5: 右下奥
-    //    VGet(center.x + hw, center.y + hh, center.z + hd), // 6: 右上奥
-    //    VGet(center.x - hw, center.y + hh, center.z + hd), // 7: 左上奥
-    //};
 
     //底面中心座標
     VECTOR p[8] =
@@ -149,10 +127,4 @@ void Cube::MakeBox(VECTOR center, float width, float height, float depth, COLOR_
     
     // 描画（12ポリゴン）
     DrawPolygon3D(verts, 12, DX_NONE_GRAPH, true);
-}
-
-void Cube::Draw(void)
-{
-    // 立方体描画（12ポリゴン）
-    DrawPolygon3D(Vertex, 12, DX_NONE_GRAPH, false);
 }

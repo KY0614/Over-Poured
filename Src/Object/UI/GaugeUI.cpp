@@ -1,6 +1,5 @@
 #include "../../Utility/CommonUtility.h"
 #include "../../Manager/Generic/SceneManager.h"
-#include "../../Manager/Generic/Camera.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "GaugeUI.h"
 
@@ -54,9 +53,6 @@ void GaugeUI::Draw(void)
 
     float progress = currentTime_ / activeTime_;
 
-    //SetUseLighting(false);
-    //SetUseZBuffer3D(false);
-
     if (isCircle_) 
     {
         DrawCircleGauge(progress);
@@ -66,14 +62,12 @@ void GaugeUI::Draw(void)
         DrawRectGauge(progress);
     }
 
-    //SetUseZBuffer3D(true);
-    //SetUseLighting(true);
 }
 
 void GaugeUI::Reset(void)
 {
-    currentTime_ = 0.0f;         // ゲージの進捗をリセット（ゼロ）
-    isActive_ = false;        // 非表示・非アクティブに
+    currentTime_ = 0.0f;      //ゲージの進捗をリセット（ゼロ）
+    isActive_ = false;        //非表示・非アクティブに
 }
 
 void GaugeUI::DrawCircleGauge(float progress)
@@ -166,7 +160,9 @@ void GaugeUI::DrawRectGauge(float progress)
         verts[4] = v1;
         verts[5] = v3;
 
-        for (int i = 0; i < 6; ++i) 
+        const int vertexNum = 6;
+		//座標をUI位置にオフセット
+        for (int i = 0; i < vertexNum; ++i)
         {
             verts[i].pos = VAdd(verts[i].pos, pos_);
         }

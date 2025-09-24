@@ -109,7 +109,7 @@ void CustomerManager::Draw(void)
 void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 {
 	//’•¶—pUI‚ğ¶¬
-	orderUI_.emplace_back(std::make_unique<OrderUI>(
+	orderUI_.emplace_back(std::make_shared<OrderUI>(
 		data.drink_, data.sweets_,data.time_));
 
 	//’•¶‚É‰‚¶‚½‚¨‹q‚ğ¶¬
@@ -122,35 +122,29 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 		//HOT‚Ì‚¨‹q‚ğ¶¬
 		customers_.emplace_back(std::make_unique<HotCustomer>());
 		customers_.back()->Init(GetLastCustomerPos());
-
-		{//UI‚ÌˆÊ’u‚ğİ’è
-			VECTOR pos = VAdd(
-				GetLastCustomerPos(),
-				VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
-			orderUI_.back()->Init();
-			orderUI_.back()->SetPos(pos);
-		}
 		break;
 
 	case Order::DRINK::ICE:
 		//ICE‚Ì‚¨‹q‚ğ¶¬
 		customers_.emplace_back(std::move(std::make_unique<IceCustomer>()));
 		customers_.back()->Init(GetLastCustomerPos());
-
-		{//UI‚ÌˆÊ’u‚ğİ’è
-			VECTOR pos = VAdd(
-				GetLastCustomerPos(),
-				VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
-			orderUI_.back()->Init();
-			orderUI_.back()->SetPos(pos);
-		}
 		break;
 
 	default:
 		break;
 	}
+
+	if (!customers_.empty())
+	{
+		VECTOR pos = VAdd(
+			GetLastCustomerPos(),
+			VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
+		orderUI_.back()->Init();
+		orderUI_.back()->SetPos(pos);
+	}
+
 	//UI‚ğManager‚É“o˜^
-	UIManager::GetInstance().AddOrderUI(orderUI_.back().get());
+	UIManager::GetInstance().AddUI(orderUI_.back());
 }
 
 void CustomerManager::ClearFirstCustomers(void)

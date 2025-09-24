@@ -42,9 +42,9 @@ private:
 	std::vector<std::unique_ptr<StageObject>>& objects_;
 
 	//ゲージのUI
-	std::unique_ptr<GaugeUI> gaugeUI_;
+	std::shared_ptr<GaugeUI> gaugeUI_;
 	//アイコンのUI
-	std::unique_ptr<IconUI> iconUI_;
+	std::shared_ptr<IconUI> iconUI_;
 
 
 	/// <summary>

@@ -77,33 +77,33 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 	StageObject::Init(pos, rotY, scale);
 
 	//コーヒーを入れるアイコンの生成と初期化
-	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
+	iconUI_ = std::make_shared<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
 		transform_.pos, ResourceManager::SRC::BREW_COFFEE);
 	iconUI_->Init();
 	iconUI_->SetActive(false);	//最初は非表示にしておく
-	UIManager::GetInstance().AddIconUI(iconUI_.get());
+	UIManager::GetInstance().AddUI(iconUI_);
 	
 	//ホットコーヒーアイコンの生成と初期化
-	hotIconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
+	hotIconUI_ = std::make_shared<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
 		transform_.pos, ResourceManager::SRC::HOT_ICON);
 	hotIconUI_->Init();
 	hotIconUI_->SetActive(false);	//最初は非表示にしておく
-	UIManager::GetInstance().AddIconUI(hotIconUI_.get());
+	UIManager::GetInstance().AddUI(hotIconUI_);
 	
 	//アイスコーヒーアイコンの生成と初期化
-	iceIconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
+	iceIconUI_ = std::make_shared<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
 		transform_.pos, ResourceManager::SRC::ICE_ICON);
 	iceIconUI_->Init();
 	iceIconUI_->SetActive(false);	//最初は非表示にしておく
-	UIManager::GetInstance().AddIconUI(iceIconUI_.get());
+	UIManager::GetInstance().AddUI(iceIconUI_);
 
 	//ゲージUIの生成と初期化
-	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
+	gaugeUI_ = std::make_shared<GaugeUI>(false, COFFEE_PRODUCES_TIME);
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
 	uiPos.y += UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
-	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
+	UIManager::GetInstance().AddUI(gaugeUI_);
 }
 
 void Machine::Draw(void)

@@ -152,19 +152,19 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	const float iconUISize = 70.0f;	//UIのサイズ
 	const VECTOR iconUIPos = { 0.0f, 60.0f, 0.0f };	//UIの位置
 	//スイーツ用UIの初期化
-	iconUI_ = std::make_unique<IconUI>(iconUIPos,
+	iconUI_ = std::make_shared<IconUI>(iconUIPos,
 		transform_.pos, ResourceManager::SRC::INTERACT);
 	iconUI_->SetActive(false);
 	iconUI_->Init();
 	iconUI_->SetUISize(iconUISize);
-	UIManager::GetInstance().AddIconUI(iconUI_.get());	//UI管理に追加
+	UIManager::GetInstance().AddUI(iconUI_);	//UI管理に追加
 
-	stockIconUI_ = std::make_unique<IconUI>(iconUIPos,
+	stockIconUI_ = std::make_shared<IconUI>(iconUIPos,
 	transform_.pos, ResourceManager::SRC::STOCK_ICON);
 	stockIconUI_->SetActive(false);
 	stockIconUI_->Init();
 	stockIconUI_->SetUISize(iconUISize);
-	UIManager::GetInstance().AddIconUI(stockIconUI_.get());	//UI管理に追加
+	UIManager::GetInstance().AddUI(stockIconUI_);	//UI管理に追加
 
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
@@ -185,13 +185,13 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 		const float sweetsGaugeWidth = 50.0f;	//UIの幅	
 		const float sweetsGaugeHeight = 5.0f;	//UIの高さ
 		//スイーツ用UIの初期化
-		gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * SWEETS_STOCK_MAX);
+		gaugeUI_ = std::make_shared<GaugeUI>(false, ADD_INTERVAL * SWEETS_STOCK_MAX);
 		gaugeUI_->Init();
 		gaugeUI_->SetUISize(sweetsGaugeWidth, sweetsGaugeHeight);
 		VECTOR uiPos = transform_.pos;
 		uiPos.y += SWEETS_UI_OFFSET_Y;	//UIの位置を調整
 		gaugeUI_->SetPos(uiPos); // UIの位置を設定
-		UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());	//UI管理に追加
+		UIManager::GetInstance().AddUI(gaugeUI_);	//UI管理に追加
 
 		// 各スイーツの基準座標からのオフセットを配列で定義
 		const VECTOR sweetsOffsets[] = {
@@ -221,13 +221,13 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 	const float cupGaugeWidth = 70.0f;	//UIの幅
 	const float cupGaugeHeight = 10.0f;	//UIの高さ
 	//カップ用UIの初期化
-	gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * CUP_STOCK_MAX);
+	gaugeUI_ = std::make_shared<GaugeUI>(false, ADD_INTERVAL * CUP_STOCK_MAX);
 	gaugeUI_->Init();
 	gaugeUI_->SetUISize(cupGaugeWidth, cupGaugeHeight);
 	VECTOR uiPos = transform_.pos;
 	uiPos.y -= CUP_UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
-	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());	//UI管理に追加
+	UIManager::GetInstance().AddUI(gaugeUI_);	//UI管理に追加
 
 	//設定されていなかったらカップモデルを設定する
 	if (param_.id_ == HOT_CUP_RACK)

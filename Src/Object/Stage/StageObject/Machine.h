@@ -44,12 +44,12 @@ private:
 	std::vector<std::unique_ptr<StageObject>>& objects_;
 
 	//ゲージのUI
-	std::unique_ptr<GaugeUI> gaugeUI_;
+	std::shared_ptr<GaugeUI> gaugeUI_;
 
 	//アイコンのUI
-	std::unique_ptr<IconUI> iconUI_;	//コーヒーを入れるアイコン
-	std::unique_ptr<IconUI> hotIconUI_;	//ホットコーヒーのアイコン
-	std::unique_ptr<IconUI> iceIconUI_;	//アイスコーヒーのアイコン
+	std::shared_ptr<IconUI> iconUI_;	//コーヒーを入れるアイコン
+	std::shared_ptr<IconUI> hotIconUI_;	//ホットコーヒーのアイコン
+	std::shared_ptr<IconUI> iceIconUI_;	//アイスコーヒーのアイコン
 
 	/// <summary>
 	/// 非稼働時の更新処理

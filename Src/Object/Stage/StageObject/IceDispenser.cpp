@@ -30,19 +30,19 @@ void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
 	StageObject::Init(pos, rotY,scale);
 
 	//アイコンUIの初期化
-	iconUI_ = std::make_unique<IconUI>(ICON_UI,
+	iconUI_ = std::make_shared<IconUI>(ICON_UI,
 		transform_.pos, ResourceManager::SRC::ICE_IN);
 	iconUI_->Init();
 	iconUI_->SetActive(false);	//最初は非表示にしておく
-	UIManager::GetInstance().AddIconUI(iconUI_.get());
+	UIManager::GetInstance().AddUI(iconUI_);
 
 	//ゲージUIの初期化
-	gaugeUI_ = std::make_unique<GaugeUI>(false, ICE_PRODUCES_TIME);
+	gaugeUI_ = std::make_shared<GaugeUI>(false, ICE_PRODUCES_TIME);
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
 	uiPos.y += GAUGE_UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos);		//UIの位置を設定
-	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
+	UIManager::GetInstance().AddUI(gaugeUI_);
 }
 
 void IceDispenser::Draw(void)

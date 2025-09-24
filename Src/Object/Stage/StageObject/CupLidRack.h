@@ -44,6 +44,6 @@ private:
 	std::vector<std::unique_ptr<StageObject>>& objects_;
 
 	//ÉQÅ[ÉWÇÃUI
-	std::unique_ptr<GaugeUI> gaugeUI_;
+	std::shared_ptr<GaugeUI> gaugeUI_;
 };
 

@@ -21,7 +21,10 @@ void IconUI::Update(void)
 void IconUI::Draw(void)
 {
 	if (!isActive_) return;
+	const float imageCenter = 0.5f;
+	const float imageAngle = 70.0f;
+	//UI‚Ì•`‰æ
 	DrawBillboard3D(pos_,
-		0.5f, 0.5f, 70.0f,
+		imageCenter, imageCenter, imageAngle,
 		0.0f, uiImg_, true);
 }

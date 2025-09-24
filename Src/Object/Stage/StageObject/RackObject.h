@@ -56,13 +56,13 @@ private:
 	float addInterval_;	
 
 	//ゲージのUI
-	std::unique_ptr<GaugeUI> gaugeUI_;
+	std::shared_ptr<GaugeUI> gaugeUI_;
 
 	//アイコンUI
-	std::unique_ptr<IconUI> iconUI_;
+	std::shared_ptr<IconUI> iconUI_;
 	
 	//在庫がないアイコンUI
-	std::unique_ptr<IconUI> stockIconUI_;
+	std::shared_ptr<IconUI> stockIconUI_;
 
 	//ラックに置かれるスイーツとカップのTransform
 	Transform sweetsOfRack_[SWEETS_STOCK_MAX];	//スイーツ用

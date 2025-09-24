@@ -3,6 +3,7 @@
 #include <memory>
 #include <map>
 
+class UIBase;
 class OrderUI;
 class GaugeUI;
 class IconUI;
@@ -17,30 +18,62 @@ public:
 	//インスタンスの取得
 	static UIManager& GetInstance(void);
 
+	//コンストラクタ
 	UIManager(void);
+	//デストラクタ
 	~UIManager(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void);
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update(void);
+
+	/// <summary>
+	/// ポップアップUIの更新処理
+	/// </summary>
 	void PopUpUIUpdate(void);
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	void Draw(void);
+
+	/// <summary>
+	/// 解放処理
+	/// </summary>
 	void Release(void);
 
-	//リソースの破棄
+	/// <summary>
+	/// リソースの破棄
+	/// </summary>
 	void Destroy(void);
+
+	template <typename T>
+	void AddUI(std::shared_ptr<T> ui)
+	{
+		//UIを追加
+		uis_.emplace_back(ui);
+	}
 
 	void AddGaugeUI(GaugeUI* ui);
 	void AddOrderUI(OrderUI* ui);
 	void AddIconUI(IconUI* ui);
 	void AddPopUpUI(int score, const VECTOR& pos);
 
+
 private:
 	//シングルトン用インスタンス
 	static UIManager* instance_;
+
+	std::vector<std::weak_ptr<UIBase>> uis_;
 
 	std::vector<GaugeUI*> gaugeUIs_;
 	std::vector<OrderUI*> orderUIs_;
 	std::vector<IconUI*> iconUIs_;
 	std::vector<std::unique_ptr<PopUpUI>> popUpUIs_;
 };
-

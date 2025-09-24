@@ -178,16 +178,18 @@ void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 	bool serveDrinkLid = serve.lid_;
 	const auto& order = orderMng_->GetFirstOrder();
 
+	const int drinkIdx = 0;
+	const int sweetsIdx = 1;
 	// ドリンク判定
 	if (order.drink_ != Order::DRINK::NONE)
 	{
 		if (serve.drink_ == order.drink_)
 		{
-			customerMng_->IsCheckUI(0,true);
+			customerMng_->IsCheckUI(drinkIdx,true);
 		}
 		else
 		{
-			customerMng_->IsCheckUI(0, false);
+			customerMng_->IsCheckUI(drinkIdx, false);
 		}
 	}
 	// スイーツ判定
@@ -195,10 +197,10 @@ void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 	{
 		if (serve.sweets_ == order.sweets_)
 		{
-			customerMng_->IsCheckUI(1,true);
+			customerMng_->IsCheckUI(sweetsIdx,true);
 		}
 		else {
-			customerMng_->IsCheckUI(1, false);
+			customerMng_->IsCheckUI(sweetsIdx, false);
 		}
 	}
 }

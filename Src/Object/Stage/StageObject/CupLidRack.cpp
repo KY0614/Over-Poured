@@ -74,12 +74,12 @@ void CupLidRack::Init(VECTOR pos, float rotY, VECTOR scale)
 	sphere_->SetLocalPos(SPHERE_LOCAL_POS);
 	const float uiOffsetY = 50.0f;	//UIの位置調整用のオフセット
 	//ゲージUIの初期化
-	gaugeUI_ = std::make_unique<GaugeUI>(false, LID_PRODUCES_TIME);
+	gaugeUI_ = std::make_shared<GaugeUI>(false, LID_PRODUCES_TIME);
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
 	uiPos.y += uiOffsetY;		//UIの位置を調整
 	gaugeUI_->SetPos(uiPos);	// UIの位置を設定
-	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
+	UIManager::GetInstance().AddUI(gaugeUI_);
 }
 
 void CupLidRack::Update(void)
