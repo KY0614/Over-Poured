@@ -1,12 +1,13 @@
 #include "IconUI.h"
 
 IconUI::IconUI(VECTOR localPos,VECTOR parentPos,ResourceManager::SRC src) :
-	localPos_(localPos), parentPos_(parentPos), imgSrc_(src)
+	localPos_(localPos), parentPos_(parentPos), imgSrc_(src), size_(0.0f)
 {
 }
 
 void IconUI::Init(void)
 {
+	//UI‰æ‘œ‚Ì“Ç‚İ‚İ
 	uiImg_ = ResourceManager::GetInstance().Load(
 		imgSrc_).handleId_;
 
@@ -20,8 +21,11 @@ void IconUI::Update(void)
 
 void IconUI::Draw(void)
 {
+	//”ñ•\¦‚È‚ç•`‰æ‚µ‚È‚¢
 	if (!isActive_) return;
+	//UI‚Ì‰æ‘œ‚Ì’†‰›’l
 	const float imageCenter = 0.5f;
+	//UI‚ÌŠp“x
 	const float imageAngle = 70.0f;
 	//UI‚Ì•`‰æ
 	DrawBillboard3D(pos_,

@@ -101,13 +101,13 @@ void GaugeUI::DrawCircleGauge(float progress)
         v.v = 0.5f - y / (2 * radius);
         verts.push_back(v);
     }
-
+	const float polygonNum = 2; //OŠpŒ`ƒ|ƒŠƒSƒ“”
     // îŒ^‚ğ•`‰æ
     for (int i = 1; i < (int)verts.size() - 1; ++i) 
     {
         VERTEX3D tri[3] = { verts[i], verts[i + 1], verts[0] };
-        DrawPolygon3D(tri, 2, cShadowImg_,true);
-        DrawPolygon3D(tri, 2,circleImg_,true);
+        DrawPolygon3D(tri, polygonNum, cShadowImg_,true);
+        DrawPolygon3D(tri, polygonNum,circleImg_,true);
     }
 }
 
