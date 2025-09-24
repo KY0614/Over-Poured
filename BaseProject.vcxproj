@@ -63,7 +63,6 @@
     <ClCompile Include="Src\Renderer\PixelMaterial.cpp" />
     <ClCompile Include="Src\Renderer\PixelRenderer.cpp" />
     <ClCompile Include="Src\Scene\ResultScene.cpp" />
-    <ClCompile Include="Src\Scene\MovieScene.cpp" />
     <ClCompile Include="Src\Scene\SelectScene.cpp" />
     <ClCompile Include="Src\Object\ActorBase.cpp" />
     <ClCompile Include="Src\Application.cpp" />
@@ -188,7 +187,6 @@
     <ClInclude Include="Src\Renderer\PixelMaterial.h" />
     <ClInclude Include="Src\Renderer\PixelRenderer.h" />
     <ClInclude Include="Src\Scene\ResultScene.h" />
-    <ClInclude Include="Src\Scene\MovieScene.h" />
     <ClInclude Include="Src\Scene\SelectScene.h" />
     <ClInclude Include="Src\Object\ActorBase.h" />
     <ClInclude Include="Src\Application.h" />

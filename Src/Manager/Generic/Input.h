@@ -21,24 +21,24 @@ enum class PeripheralType {
 /// アナログ入力種別
 /// </summary>
 enum class AnalogInputType {
-	NONE,	//押してない
-	L_UP,	//左スティックの上
-	L_DOWN,	//左スティックの下
-	L_LEFT,	//左スティックの左
-	L_RIGHT,//左スティックの右
-	R_UP,	//右スティックの上
-	R_DOWN,	//右スティックの下
-	R_LEFT,	//右スティックの左
-	R_RIGHT,//右スティックの右
-	L_TRIGGER,
-	R_TRIGGER
+	NONE,		//押してない
+	L_UP,		//左スティックの上
+	L_DOWN,		//左スティックの下
+	L_LEFT,		//左スティックの左
+	L_RIGHT,	//左スティックの右
+	R_UP,		//右スティックの上
+	R_DOWN,		//右スティックの下
+	R_LEFT,		//右スティックの左
+	R_RIGHT,	//右スティックの右
+	L_TRIGGER,	//左トリガー
+	R_TRIGGER	//右トリガー
 };
 
 class KeyConfigScene;
 
 class Input
 {
-	friend KeyConfigScene;	//privateもいじていいよ
+	friend KeyConfigScene;	//privateもいじてっいいよ
 
 public:
 	//コンストラクタ
@@ -58,10 +58,16 @@ public:
 	/// <returns>押されている間:true / false :押されていない</returns>
 	bool IsPressed(const std::string& eventcode)const;
 
-	void Update(void);//入力状態を更新する
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	/// <param name=""></param>
+	void Update(void);
 
 private:
-
+	/// <summary>
+	///	入力状態
+	/// </summary>
 	struct InputState {
 		PeripheralType type;	//周辺機器種別
 		uint32_t code;			//入力コード(汎用)
@@ -80,14 +86,9 @@ private:
 
 	AnalogInputTable_t analogInputTable_;
 
-
 	/// <summary>
-	/// 入力テーブルのセーブ
+	/// 入力対応表を初期化する
 	/// </summary>
-	void Save();
-
-	void Load();
-
 	void ResetTable();
 };
 

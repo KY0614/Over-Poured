@@ -1,11 +1,9 @@
 #include <chrono>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
-#include "../../Libs/ImGui/imgui.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Common/Fader.h"
 #include "../../Scene/TitleScene.h"
-#include "../../Scene/MovieScene.h"
 #include "../../Scene/SelectScene.h"
 #include "../../Scene/PauseScene.h"
 #include "../../Scene/TutorialScene.h"
@@ -318,10 +316,6 @@ void SceneManager::MakeScene(SCENE_ID sceneId)
 	case SceneManager::SCENE_ID::TITLE:
 		scene = std::make_unique<TitleScene>();
 		resM.InitTitle();
-		break;
-	
-	case SceneManager::SCENE_ID::MOVIE:
-		scene = std::make_unique<MovieScene>();
 		break;
 	
 	case SceneManager::SCENE_ID::SELECT:

@@ -22,7 +22,6 @@ public:
 	{
 		NONE,
 		TITLE,
-		MOVIE,
 		SELECT,
 		TUTORIAL,
 		GAME,
@@ -80,7 +79,9 @@ private:
 	//静的インスタンス
 	static SceneManager* instance_;
 
+	//現在のシーンID
 	SCENE_ID sceneId_;
+	//遷移先のシーンID
 	SCENE_ID waitSceneId_;
 
 	//フェード
@@ -102,7 +103,8 @@ private:
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 
-	VECTOR lightDir_;
+	//ライトの方向
+	VECTOR lightDir_;	
 	
 	//デフォルトコンストラクタをprivateにして、
 	//外部から生成できない様にする
@@ -121,6 +123,9 @@ private:
 	//フェード
 	void Fade(void);
 
+	/// <summary>
+	/// シーンの生成
+	/// </summary>
+	/// <param name="sceneId">生成したいシーンID</param>
 	void MakeScene(SCENE_ID sceneId);
-
 };

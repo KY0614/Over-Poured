@@ -6,7 +6,6 @@
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Manager/Generic/ResourceManager.h"
-#include"../Manager/GameSystem/OrderCustomerManager.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/Stage/StageManager.h"
 #include "../Object/Player.h"
@@ -40,29 +39,6 @@ TutorialScene::~TutorialScene(void)
 void TutorialScene::Init(void)
 {
 	ImageInit();
-
-	////プレイヤー
-	//player_ = std::make_unique<Player>();
-	//player_->Init();
-
-	////ステージ
-	//stage_ = std::make_unique<StageManager>(*player_);
-	//stage_->Init();
-
-	////ステージのコライダーを追加
-	//player_->AddCollider(stage_->GetCounterTran().collider);
-	//int tableNum = stage_->GetTableNum();
-	//for (int i = 0; i < tableNum; ++i)
-	//{
-	//	player_->AddCollider(stage_->GetTableTran(i).collider);
-	//}
-	//player_->AddCollider(stage_->GetShowCase().collider);
-	//player_->AddCollider(stage_->GetDustBox().collider);
-	//player_->AddCollider(stage_->GetFloorTran().collider);
-
-	////カメラ
-	//mainCamera->SetFollow(&player_->GetTransform());
-	//mainCamera->ChangeMode(Camera::MODE::TOP_FIXED);
 }
 
 void TutorialScene::Update(void)
@@ -78,24 +54,11 @@ void TutorialScene::Draw(void)
 void TutorialScene::UpdateOperation(void)
 {
 	ImageUpdate();
-	//stage_->Update();
-
-	//player_->Update();
-
-	//customer_->Update();
 }
 
 void TutorialScene::DrawOperation(void)
 {
 	ImageDraw();
-	////お客と注文描画
-	//customer_->Draw();
-	////ステージ描画
-	//stage_->Draw();
-	////プレイヤー描画
-	//player_->Draw();
-	////UI描画
-	//UIManager::GetInstance().Draw();
 }
 
 void TutorialScene::ImageInit(void)
