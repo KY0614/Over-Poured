@@ -1,6 +1,3 @@
-#include "OrderUI.h"
-#include "GaugeUI.h"
-#include "IconUi.h"
 #include "PopUpUI.h"
 #include "UIManager.h"
 
@@ -26,6 +23,8 @@ UIManager& UIManager::GetInstance(void)
 
 UIManager::UIManager(void)
 {
+	uis_.clear();
+	popUpUIs_.clear();
 }
 
 UIManager::~UIManager(void)
@@ -34,18 +33,13 @@ UIManager::~UIManager(void)
 
 void UIManager::Init(void)
 {
+	//初期化処理
+	uis_.clear();
+	popUpUIs_.clear();
 }
 
 void UIManager::Update(void)
 {
-	for (auto& ui : gaugeUIs_) 
-	{
-		ui->Update();
-	}	
-	for (auto& ui : orderUIs_) 
-	{
-		ui->Update();
-	}
 	// 全てのUIをまとめて更新
 	for (auto& ui : uis_)
 	{
@@ -55,6 +49,7 @@ void UIManager::Update(void)
 
 void UIManager::PopUpUIUpdate(void)
 {
+	//ポップアップUIをまとめて更新
 	for (auto& ui : popUpUIs_)
 	{
 		ui->Update();
@@ -63,20 +58,9 @@ void UIManager::PopUpUIUpdate(void)
 
 void UIManager::Draw(void)
 {
+	//描画するUIが無ければ処理を抜ける
 	if (uis_.empty() && popUpUIs_.empty())return;
 
-	//for (auto& ui : gaugeUIs_) 
-	//{
-	//	ui->Draw();
-	//}	
-	//for (auto& ui : orderUIs_) 
-	//{
-	//	ui->Draw();
-	//}
-	//for (auto& ui : iconUIs_)
-	//{
-	//	ui->Draw();
-	//}
 	// 全てのUIをまとめて描画
 	for (auto& ui : uis_)
 	{
@@ -90,42 +74,22 @@ void UIManager::Draw(void)
 
 void UIManager::Release(void)
 {
-	gaugeUIs_.clear();
-	orderUIs_.clear();
-	iconUIs_.clear();
-
+	//解放処理
 	uis_.clear();
 	popUpUIs_.clear();
 }
 
 void UIManager::Destroy(void)
 {
-	gaugeUIs_.clear();
-	orderUIs_.clear();
-	iconUIs_.clear();
-
+	//シングルトンの解放
 	uis_.clear();
 	popUpUIs_.clear();
 	delete instance_;
 }
 
-void UIManager::AddGaugeUI(GaugeUI* ui)
-{
-	gaugeUIs_.emplace_back(ui);
-}
-
-void UIManager::AddOrderUI(OrderUI* ui)
-{
-	orderUIs_.emplace_back(ui);
-}
-
-void UIManager::AddIconUI(IconUI* ui)
-{
-	iconUIs_.emplace_back(ui);
-}
-
 void UIManager::AddPopUpUI(int score, const VECTOR& pos)
 {
+	// ポップアップUIを追加(スコア用）
 	popUpUIs_.emplace_back(std::make_unique<PopUpUI>(score, pos));
-	popUpUIs_.back()->Init();
+	popUpUIs_.back()->Init();	//初期化
 }

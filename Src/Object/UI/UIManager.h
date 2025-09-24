@@ -1,12 +1,9 @@
 #pragma once
+#include <DxLib.h>
 #include <vector>
 #include <memory>
-#include <map>
 
 class UIBase;
-class OrderUI;
-class GaugeUI;
-class IconUI;
 class PopUpUI;
 
 class UIManager
@@ -60,20 +57,20 @@ public:
 		uis_.emplace_back(ui);
 	}
 
-	void AddGaugeUI(GaugeUI* ui);
-	void AddOrderUI(OrderUI* ui);
-	void AddIconUI(IconUI* ui);
+	/// <summary>
+	/// ポップアップUIの追加(スコア用）
+	/// </summary>
+	/// <param name="score">スコア</param>
+	/// <param name="pos">表示する座標</param>
 	void AddPopUpUI(int score, const VECTOR& pos);
-
 
 private:
 	//シングルトン用インスタンス
 	static UIManager* instance_;
 
+	//追加されたUIのリスト
 	std::vector<std::weak_ptr<UIBase>> uis_;
 
-	std::vector<GaugeUI*> gaugeUIs_;
-	std::vector<OrderUI*> orderUIs_;
-	std::vector<IconUI*> iconUIs_;
+	//ポップアップUIのリスト
 	std::vector<std::unique_ptr<PopUpUI>> popUpUIs_;
 };
