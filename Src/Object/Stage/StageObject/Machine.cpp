@@ -63,10 +63,10 @@ void Machine::Interact(const std::string& objId)
 				//マシンの回転に合わせてカップの位置を調整
 				VECTOR rotPos = AsoUtility::RotXZPos(GetTransform().pos, cupPos,
 					Quaternion::ToEuler(GetTransform().quaRotLocal).y);
-
+				//カップをマシンの上に置く
 				obj->ItemPlaced(rotPos);
-				gaugeUI_->SetActive(true);
-				ChangeMachineState(MACHINE_STATE::ACTIVE);
+				gaugeUI_->SetActive(true);	//ゲージを表示
+				ChangeMachineState(MACHINE_STATE::ACTIVE);	//マシンをアクティブ状態にする
 			}
 		}
 	}
@@ -76,38 +76,44 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 {
 	StageObject::Init(pos, rotY, scale);
 
+	//コーヒーを入れるアイコンの生成と初期化
 	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
 		transform_.pos, ResourceManager::SRC::BREW_COFFEE);
 	iconUI_->Init();
-	iconUI_->SetActive(false);
+	iconUI_->SetActive(false);	//最初は非表示にしておく
 	UIManager::GetInstance().AddIconUI(iconUI_.get());
 	
+	//ホットコーヒーアイコンの生成と初期化
 	hotIconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
 		transform_.pos, ResourceManager::SRC::HOT_ICON);
 	hotIconUI_->Init();
-	hotIconUI_->SetActive(false);
+	hotIconUI_->SetActive(false);	//最初は非表示にしておく
 	UIManager::GetInstance().AddIconUI(hotIconUI_.get());
-		
+	
+	//アイスコーヒーアイコンの生成と初期化
 	iceIconUI_ = std::make_unique<IconUI>(VGet(0.0f, UI_OFFSET_Y, 0.0f),
 		transform_.pos, ResourceManager::SRC::ICE_ICON);
 	iceIconUI_->Init();
-	iceIconUI_->SetActive(false);
+	iceIconUI_->SetActive(false);	//最初は非表示にしておく
 	UIManager::GetInstance().AddIconUI(iceIconUI_.get());
 
+	//ゲージUIの生成と初期化
 	gaugeUI_ = std::make_unique<GaugeUI>(false, COFFEE_PRODUCES_TIME);
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
 	uiPos.y += UI_OFFSET_Y;	//UIの位置を調整
-	gaugeUI_->SetPos(uiPos); // UIの位置を設定1
+	gaugeUI_->SetPos(uiPos); // UIの位置を設定
 	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
 
 void Machine::UpdateInActive(void)
 {
+	//アイコンは非表示にしておく
 	hotIconUI_->SetActive(false);
 	iceIconUI_->SetActive(false);
 	iconUI_->SetActive(false);
 	gaugeUI_->SetActive(false);
+	//インタラクトにかかる時間を設定
 	SetInteractTime(COFFEE_PRODUCES_TIME);
 
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
@@ -121,19 +127,22 @@ void Machine::UpdateInActive(void)
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
+			//PLACED状態のカップが存在したらアイコンを表示してループを抜ける
 			if (obj->GetParam().id_ == HOT_COFFEE)
 			{
+				//ホットコーヒーアイコンを表示
 				hotIconUI_->SetActive(true);
 			}
 			else
-			{
+			
+				//アイスコーヒーアイコンを表示
 				iceIconUI_->SetActive(true);
 			}
 			hasPlacedCup = true;
 			break;
 		}
 	}
-
+	//PLACED状態のカップがなければゲージをリセット
 	if(!hasPlacedCup)
 	{
 		gaugeUI_->Reset();
@@ -155,7 +164,7 @@ void Machine::UpdateActive(void)
 	{
 		if (obj->GetParam().id_ != HOT_CUP &&
 			obj->GetParam().id_ != CUP_WITH_ICE )continue;
-
+		//PLACED状態のカップが存在したらフラグを立ててループを抜ける
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
@@ -175,5 +184,6 @@ void Machine::UpdateActive(void)
 
 void Machine::Draw(void)
 {
+	//通常の描画処理
 	StageObject::Draw();
 }

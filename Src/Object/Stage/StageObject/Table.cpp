@@ -1,9 +1,6 @@
-#include "../Manager/Generic/InputManager.h"
-#include "../Manager/Generic/ResourceManager.h"
 #include "../Utility/AsoUtility.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
-#include "../Object/Stage/StageManager.h"
 #include "Table.h"
 
 Table::Table(const std::string objId,Player& player,

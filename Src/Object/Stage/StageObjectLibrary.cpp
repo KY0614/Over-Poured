@@ -10,7 +10,7 @@ std::pair<std::string, StageObjectLibrary::ObjectParams>
 StageObjectLibrary::LoadData(const std::string& objName)
 {
     std::pair<std::string, ObjectParams> objects;
-    std::ifstream ifs(Application::PATH_MODEL + "Stage/ModelData.json");
+    std::ifstream ifs(Application::PATH_MODEL + "Stage/Param/ModelData.json");
     if (!ifs)return{};
 
     // ファイルストリームからjsonオブジェクトに変換

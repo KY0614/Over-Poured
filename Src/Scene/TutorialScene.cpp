@@ -33,7 +33,6 @@ TutorialScene::TutorialScene(void) :
 
 TutorialScene::~TutorialScene(void)
 {
-
 }
 
 void TutorialScene::Init(void)

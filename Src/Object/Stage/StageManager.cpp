@@ -21,7 +21,32 @@
 
 namespace
 {
-	const float ANIM_SPEED = 30.0f; // アニメーションの再生速度
+	//アニメーションの再生速度
+	const float ANIM_SPEED = 30.0f; 
+
+	//テーブル関連
+	const int TABLE_COLUMN_NUM = 4;		//横側のテーブルの数（１列）
+	const int TABLE_ROW_BACK_NUM = 4;	//手前側のテーブルの数（１列）
+	const int TABLE_ROW_FRONT_NUM = 2;	//奥側のテーブルの数（ドーナツのラックを載せる用なので表示はしない）
+	const int TABLE_CENTER_NUM = 4;		//中央テーブルの数
+	const int MAX_TABLE_NUM = 16;		//テーブルの最大数
+	const float TABLE_WIDTH = 92.5f;	//テーブルの横幅
+
+	//座標
+	const VECTOR TABLE_POS_BACK = { -150.0f, 0.0f, -270.0f };	//テーブルの座標(手前側）
+	const VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 180.0f };	//テーブルの座標（奥側）
+	const VECTOR COLUMN_TABLE_LEFT_POS = { -250.0f, 0.0f, -192.0f };//列（左）テーブルの座標
+	const VECTOR COLUMN_TABLE_RIGHT_POS = { 320.0f, 0.0f, -192.0f };//列(右）テーブルの座標
+	const VECTOR CENTER_TABLE_POS = { -20.0f,0.0f,-100.0f };		//列(右）テーブルの座標
+	const VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };			//カウンターの座標
+	const VECTOR CASE_POS = { -57.0f, 0.0f, 190.0f };				//ショーケースの座標
+	const VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };			//コーヒーマシンの座標
+	const VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };			//ホット用カップの座標
+	const VECTOR CUPICE_POS = { 45.0f, 76.0f, -175.0f };			//アイス用カップの座標
+	const VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };			//アイスディスペンサーの座標
+	const VECTOR DUSTBOX_POS = { 240.0f, 0.0f, -270.0f };			//ゴミ箱の座標
+
+	const int SOUND_VOLUME = 256; // 効果音の音量(0~256)
 }
 
 StageManager::StageManager(Player& player):player_(player)
@@ -41,30 +66,12 @@ StageManager::StageManager(Player& player):player_(player)
 
 StageManager::~StageManager(void)
 {
-	isServedItems_.clear();
 }
 
 void StageManager::Init(void)
 {
-	auto& sound = SoundManager::GetInstance();
-
-	//se追加
-	//アイテムを取り出す時のSE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PICK_UP,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::PICK_UP).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::PICK_UP, 256);	
-	//アイテムを置く時のSE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PUT_ON,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::PUT_ON).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::PUT_ON, 256);
-	//ストック追加時SE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::ADD_STOCK,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::ADD_STOCK).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, 256);
-	//提供追加時SE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PAYING,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::PAYING).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, 256 / 2);
+	//サウンドの初期化
+	InitSound();	
 
 	//3Dモデルの初期化
 	Init3DModel();
@@ -72,6 +79,7 @@ void StageManager::Init(void)
 
 void StageManager::Update(void)
 {
+	//アニメーションの更新
 	animationController_->Update();
 
 	if (animationController_->IsEnd())
@@ -80,52 +88,23 @@ void StageManager::Update(void)
 		animationController_->Play((int)ANIM_TYPE::IDLE);
 	}
 
-	auto& pSphere = player_.GetSphere();
-
+	//ステージオブジェクトの更新
 	for (const auto& obj : objects_)
 	{
 		obj->Update();
 	}
-
+	//テーブルの更新
 	for (const auto& obj : tables_)
 	{
 		obj->Update();
 	}
-
+	//カウンターのモデル情報更新
 	counter_->Update();
+	//家具の更新
 	furnitures_->Update();
 
 	//ラックからカップを取り出す処理
-	for (const auto& obj : objects_)
-	{
-		//ラックに在庫がないときの処理
-		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
-			!obj->GetHasStock() &&
-			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
-		{
-			if (obj->GetParam().id_ == StageObject::HOT_CUP_RACK ||
-				obj->GetParam().id_ == StageObject::ICE_CUP_RACK)
-			{
-				obj->AddStock();
-			}
-			else if (obj->GetParam().id_ == StageObject::BERRY_SWEETS_RACK ||
-				obj->GetParam().id_ == StageObject::CHOCO_SWEETS_RACK)
-			{
-				obj->AddStock();
-			}
-			break;
-		}
-
-		//プレイヤーが何も持っていないときの処理
-		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
-			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
-		{
-			obj->PickUp(obj->GetParam().id_, objects_);
-			break;
-		}
-	}
+	CupRackInteract();
 
 	//持ち運び可能なオブジェクトのインタラクト処理
 	CarryableObjInteract();
@@ -136,26 +115,34 @@ void StageManager::Update(void)
 	//蓋ラックとのインタラクト処理
 	LidRackInteract();
 
+	//ゴミ箱とのインタラクト処理
 	DustBoxInteract();
 
-	transform_.Update();
+	//3Dモデルの更新
+	registerTran_.Update();
 	caseTran_.Update();
 }
 
 void StageManager::Draw(void)
 {
-	MV1DrawModel(transform_.modelId);
+	//3Dモデルの描画
+	//レジとショーケースのモデル
+	MV1DrawModel(registerTran_.modelId);
 	MV1DrawModel(caseTran_.modelId);
 
+	//家具の描画
 	furnitures_->Draw();
 
+	//テーブルの描画
 	for (const auto& table : tables_)
 	{
 		table->Draw();
 	}
 
+	//カウンターの描画
 	counter_->Draw();
 
+	//ステージオブジェクトの描画
 	for (const auto& obj : objects_)
 	{
 		obj->Draw();
@@ -214,28 +201,26 @@ Transform StageManager::GetFloorTran(void) const
 void StageManager::Init3DModel(void)
 {
 	//モデル制御の基本情報
+	//ショーケースのモデル
 	caseTran_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::SWEETS_CASE));
 	caseTran_.scl = AsoUtility::VECTOR_ONE;
 	caseTran_.pos = CASE_POS;
-	caseTran_.quaRot = Quaternion::Euler(
-		0.0f, 0.0f, 0.0f);
-
+	caseTran_.quaRot = Quaternion();
 	caseTran_.quaRotLocal = Quaternion();
 	caseTran_.MakeCollider(Collider::TYPE::STAGE);
 	caseTran_.Update();
 
-	//モデル制御の基本情報
-	transform_.SetModel(
+	//レジのモデル
+	registerTran_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::REGISTER));
-	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = AsoUtility::VECTOR_ZERO;
-	transform_.quaRot = Quaternion::Euler(AsoUtility::VECTOR_ZERO);
-	transform_.quaRotLocal = Quaternion();
-	transform_.MakeCollider(Collider::TYPE::STAGE);
-	transform_.Update();
+	registerTran_.scl = AsoUtility::VECTOR_ONE;
+	registerTran_.pos = AsoUtility::VECTOR_ZERO;
+	registerTran_.quaRot = Quaternion::Euler(AsoUtility::VECTOR_ZERO);
+	registerTran_.quaRotLocal = Quaternion();
+	registerTran_.Update();
 
 	//アニメーションの初期化
 	InitAnimation();
@@ -244,60 +229,73 @@ void StageManager::Init3DModel(void)
 	furnitures_ = std::make_unique<Furnitures>();
 	furnitures_->Init();
 
-	VECTOR firstPos = {};
+	//初期化でしか使わない定数
+	//オブジェクトの向き(Y軸回転）
+	const float rot_R = -90.0f;	//Y軸-90度回転
+	const float rot_L = 90.0f;	//Y軸90度回転
+	const float rot_B = 180.0f;	//Y軸180度回転
+
+	VECTOR objectPos = {};
+	float rotY = 0.0f;
+
 	//横のテーブル群(手前)
 	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
 	{
-		firstPos = TABLE_POS_BACK;
-		firstPos.x += (x * TABLE_WIDTH);
+		objectPos = TABLE_POS_BACK;
+		objectPos.x += (x * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
-		tables_.back()->Init(firstPos, 180.0f);
+		tables_.back()->Init(objectPos, rot_B);
 	}
 
 	//縦のテーブル群(左側）
 	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
 	{
-		firstPos = COLUMN_TABLE_LEFT_POS;
-		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
+		objectPos = COLUMN_TABLE_LEFT_POS;
+		objectPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
-		tables_.back()->Init(firstPos, -90.0f);
+		tables_.back()->Init(objectPos, rot_R);
 	}
 
 	//縦のテーブル群(右側）
 	for (int z = TABLE_ROW_BACK_NUM; z < TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM; z++)
 	{
-		firstPos = COLUMN_TABLE_RIGHT_POS;
-		firstPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
+		objectPos = COLUMN_TABLE_RIGHT_POS;
+		objectPos.z += ((z - TABLE_ROW_BACK_NUM) * TABLE_WIDTH);
 		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
-		tables_.back()->Init(firstPos, 90.0f);
+		tables_.back()->Init(objectPos, rot_L);
 	}
-
-	//真ん中のテーブル群
+	//テーブルのX方向のオフセット値
+	const float tableOffsetX = 90.0f;
+	//真ん中のテーブル群（２個ずつ生成）
 	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
 	{
-		firstPos = CENTER_TABLE_POS;
-		firstPos.x += i * 90.0f;
+		objectPos = CENTER_TABLE_POS;
+		objectPos.x += i * tableOffsetX;
 		//奥側のテーブル２つ
 		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
-		tables_.back()->Init(firstPos, 0.0f);
-	}
-	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
-	{
-		firstPos = CENTER_TABLE_POS;
-		firstPos.x += i * 90.0f;
-		firstPos.z += 60.0f;
-		//手前側のテーブル２つ
-		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
-		tables_.back()->Init(firstPos, 180.0f);
+		tables_.back()->Init(objectPos);
 	}
 
+	//テーブルのZ方向のオフセット値
+	const float tableOffsetZ = 60.0f;
+	for (int i = 0; i < TABLE_CENTER_NUM / 2; ++i)
+	{
+		//オブジェクトの位置を初期化し、オフセット値を加算
+		objectPos = CENTER_TABLE_POS;
+		objectPos.x += i * tableOffsetX;
+		objectPos.z += tableOffsetZ;
+		//手前側のテーブル２つ
+		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
+		tables_.back()->Init(objectPos, rot_B);
+	}
+	const float caseOffsetX = 20.0f;
 	//ケースのテーブル群(奥側)
 	for (int x = 0; x < TABLE_ROW_FRONT_NUM; x++)
 	{
-		firstPos = TABLE_POS_FRONT;
-		firstPos.x += (x * (TABLE_WIDTH + 20.0f));
+		objectPos = TABLE_POS_FRONT;
+		objectPos.x += (x * (TABLE_WIDTH + caseOffsetX));
 		tables_.emplace_back(std::make_unique<Table>(StageObject::TABLE, player_, objects_));
-		tables_.back()->Init(firstPos);
+		tables_.back()->Init(objectPos);
 	}
 
 	//カウンター用テーブル
@@ -307,12 +305,12 @@ void StageManager::Init3DModel(void)
 	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetSpherePos();
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::HOT_CUP_RACK, player_));
-	objects_.back()->Init(pos, -90.0f);
+	objects_.back()->Init(pos, rot_R);
 
 	//アイス用カップのラック
 	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::ICE_CUP_RACK, player_));
-	objects_.back()->Init(pos, 90.0f);
+	objects_.back()->Init(pos, rot_L);
 
 	//チョコスイーツ用のラック
 	pos = tables_[tables_.size() - 2]->GetSpherePos();
@@ -330,42 +328,67 @@ void StageManager::Init3DModel(void)
 	objects_.back()->Init(pos);
 
 	//コーヒーマシン
-	int machineTableIdx = MAX_TABLE_NUM - 2;
+	int machineTableIdx = MAX_TABLE_NUM - 2;	//コーヒーマシンを置くテーブルのインデックス
 	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE, player_, objects_));
-	objects_.back()->Init(pos, 90.0f);
+	objects_.back()->Init(pos, rot_L);
 
 	//コーヒーマシン２個目
-	machineTableIdx = MAX_TABLE_NUM - 4;
+	machineTableIdx = MAX_TABLE_NUM - 4;	//コーヒーマシンを置くテーブルのインデックス
 	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE,player_, objects_));
-	objects_.back()->Init(pos, 90.0f);
+	objects_.back()->Init(pos, rot_L);
 
 	//アイスディスペンサー
-	machineTableIdx = MAX_TABLE_NUM - 1;
+	machineTableIdx = MAX_TABLE_NUM - 1;	//コーヒーマシンを置くテーブルのインデックス
 	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
-	objects_.back()->Init(pos, -90.0f);
+	objects_.back()->Init(pos, rot_R);
 
 	//アイスディスペンサー２個目
-	machineTableIdx = MAX_TABLE_NUM - 3;
+	machineTableIdx = MAX_TABLE_NUM - 3;	//コーヒーマシンを置くテーブルのインデックス
 	pos = tables_[machineTableIdx]->GetSpherePos();
 	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
-	objects_.back()->Init(pos, -90.0f);
+	objects_.back()->Init(pos, rot_R);
 
+	//ゴミ箱の大きさ（y軸方向を少し潰す）
+	const VECTOR dustBoxScale = { 1.0f,0.8f,1.0f };
 	//ゴミ箱
 	objects_.emplace_back(std::make_unique<DustBox>(StageObject::DUST_BOX,player_, objects_));
-	objects_.back()->Init(DUSTBOX_POS, -180.0f, { 1.0f,0.8f,1.0f });
+	objects_.back()->Init(DUSTBOX_POS, rot_B, dustBoxScale);
 	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
+}
+
+void StageManager::InitSound(void)
+{
+	auto& sound = SoundManager::GetInstance();
+
+	//se追加
+	//アイテムを取り出す時のSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PICK_UP,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PICK_UP).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PICK_UP, SOUND_VOLUME);
+	//アイテムを置く時のSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PUT_ON,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PUT_ON).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PUT_ON, SOUND_VOLUME);
+	//ストック追加時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::ADD_STOCK,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::ADD_STOCK).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, SOUND_VOLUME);
+	//提供完了時SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PAYING,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PAYING).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PAYING, SOUND_VOLUME);
 }
 
 void StageManager::InitAnimation(void)
 {
-	std::string path = Application::PATH_MODEL + "Stage/";
-	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
-
+	std::string path = Application::PATH_MODEL + "Stage/Animation/";
+	animationController_ = std::make_unique<AnimationController>(registerTran_.modelId);
+	//アニメーションの追加
 	animationController_->Add((int)ANIM_TYPE::CREATE, path + "create_register.mv1", ANIM_SPEED);
-	animationController_->Add((int)ANIM_TYPE::PAYING, path + "paying.mv1", ANIM_SPEED);
+	animationController_->Add((int)ANIM_TYPE::PAYING, path + "paying.mv1", ANIM_SPEED);	
 	animationController_->Play((int)ANIM_TYPE::IDLE);
 }
 
@@ -442,6 +465,42 @@ void StageManager::DeleteSurvedItem(void)
 	}
 }
 
+void StageManager::CupRackInteract(void)
+{
+	auto& pSphere = player_.GetSphere();
+
+	//ラックからカップを取り出す処理
+	for (const auto& obj : objects_)
+	{
+		//ラック以外のオブジェクトは判定しない
+		if (obj->GetParam().id_ != StageObject::HOT_CUP_RACK &&
+			obj->GetParam().id_ != StageObject::ICE_CUP_RACK &&
+			obj->GetParam().id_ != StageObject::BERRY_SWEETS_RACK &&
+			obj->GetParam().id_ != StageObject::CHOCO_SWEETS_RACK) continue;
+		//ラックに在庫がないときの処理
+		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
+			!obj->GetHasStock() &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			//在庫を補充する処理
+			obj->AddStock();
+			break;
+		}
+
+		//プレイヤーが何も持っていないときの処理
+		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
+			AsoUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSpherePos(), obj->GetSphereRad()))
+		{
+			//在庫があるときはカップを取り出す処理
+			obj->PickUp(obj->GetParam().id_, objects_);
+			break;
+		}
+	}
+
+}
+
 void StageManager::CarryableObjInteract(void)
 {
 	auto& pSphere = player_.GetSphere();
@@ -481,7 +540,7 @@ void StageManager::CarryableObjInteract(void)
 				//objIdがインタラクト対象物に存在するかどうか
 				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
 				if (!isAccepted)continue;	//存在しなかったら処理しない
-
+				//アイテムを設置する処理
 				obj->ItemPlaced(counter_->GetSpherePos());
 			}
 
@@ -493,15 +552,17 @@ void StageManager::CarryableObjInteract(void)
 						table->GetSpherePos(), table->GetSphereRad()
 					))
 				{
+					//アイテムを設置する処理
 					obj->ItemPlaced(table->GetSpherePos());
 				}
-
+				//既にアクションを行っていたらループを抜ける
 				if (obj->IsActioned())
 				{
 					break;
 				}
 			}
 		}
+		//既にアクションを行っていたらループを抜ける
 		if (obj->IsActioned())
 		{
 			break;
@@ -529,6 +590,7 @@ void StageManager::MachineInteract(void)
 		//設置して一定時間経ったら氷入りカップを出力する
 		if (objects_[i]->GetParam().interactTime_ <= 0.0f)
 		{
+			//コーヒーを生成する処理
 			ProduceCoffee(i);
 			break;
 		}
@@ -550,6 +612,7 @@ void StageManager::MachineInteract(void)
 		//設置して一定時間経ったら氷入りカップを出力する
 		if (objects_[i]->GetParam().interactTime_ <= 0.0f)
 		{
+			//氷入りカップを生成する処理
 			DispenseIce2Cup(i);
 			break;
 		}
@@ -576,13 +639,14 @@ void StageManager::LidRackInteract(void)
 		else
 		{
 			//判定外の場合は初期値に戻す
-			obj->IsNotActioned();	//
+			obj->IsNotActioned();
 			obj->SetInteractTime(StageObject::LID_RACK_INTERACT_TIME);
 		}
 
 		//インタラクトし続けて一定時間経ったら蓋をする
 		if (obj->GetParam().interactTime_ <= 0.0f)
 		{
+			//蓋をする処理
 			LidFollowCup();
 			break;
 		}
@@ -624,7 +688,7 @@ void StageManager::ProduceCoffee(int index)
 
 void StageManager::MakeCoffee(int index, StageObject& obj, std::string objName)
 {
-	//アイスコーヒーを生成する場合は氷を先に削除しておく
+	//アイスコーヒーを作る処理
 	if (objName == StageObject::ICE_COFFEE)
 	{
 		//氷入りカップの場合は氷も削除
@@ -656,8 +720,9 @@ void StageManager::MakeCoffee(int index, StageObject& obj, std::string objName)
 	//マシンの回転に合わせてカップの位置を調整
 	VECTOR rotPos = AsoUtility::RotXZPos(obj.GetTransform().pos, cupPos,
 		Quaternion::ToEuler(obj.GetTransform().quaRotLocal).y);
-
+	//カップ座標を設定して初期化
 	objects_[index]->Init(rotPos);
+	//設置状態に変更
 	objects_[index]->ChangeItemState(StageObject::ITEM_STATE::PLACED);
 }
 
@@ -753,6 +818,7 @@ void StageManager::DustBoxInteract(void)
 
 bool StageManager::IsOrderCompleted(void)
 {
+	//全ての注文が提供されたか確認
 	for(bool isSurved : isServedItems_)
 	{
 		if (!isSurved)

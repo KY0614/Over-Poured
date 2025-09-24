@@ -11,6 +11,12 @@
 #include "ItemObject.h"
 #include "RackObject.h"
 
+namespace 
+{
+	//スイーツの大きさ
+	const float SWEETS_SCALE = 1.2f;				
+}
+
 RackObject::RackObject(const std::string objId,Player& player) :
 	StageObject(objId, player)
 {
@@ -30,39 +36,44 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 	//ホットカップ用ラックにインタラクトしたときの処理
 	if (rackName == HOT_CUP_RACK && ins.IsInputTriggered("Interact"))
 	{
+		//SE再生
 		sound.Play(SoundManager::SOUND::PICK_UP);
+		//ホットカップを取り出す
 		object.emplace_back(std::make_unique<ItemObject>(HOT_CUP,player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
-		object.back()->ChangeItemState(ITEM_STATE::HOLD);
+		object.back()->ChangeItemState(ITEM_STATE::HOLD);	//持っている状態に変更
 		isActioned_ = true;
-		cupsStockCnt_--;
+		cupsStockCnt_--;	//在庫を減らす
 	}
 
 	//アイスカップ用ラックにインタラクトしたときの処理
 	if (rackName == ICE_CUP_RACK && ins.IsInputTriggered("Interact"))
 	{
+		//SE再生
 		sound.Play(SoundManager::SOUND::PICK_UP);
+		//アイスカップを取り出す
 		object.emplace_back(std::make_unique<ItemObject>(ICE_CUP, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
 		player_.SetHoldItem(object.back()->GetParam().id_);
-		object.back()->ChangeItemState(ITEM_STATE::HOLD);
+		object.back()->ChangeItemState(ITEM_STATE::HOLD);	//持っている状態に変更
 		isActioned_ = true;
-		cupsStockCnt_--;
+		cupsStockCnt_--;	//在庫を減らす
 	}
 
 	//スイーツ（ベリー）用ラックにインタラクトしたときの処理
 	if (rackName == BERRY_SWEETS_RACK && ins.IsInputTriggered("Interact"))
 	{
+		//SE再生
 		sound.Play(SoundManager::SOUND::PICK_UP);
 		//スイーツを取り出す
 		object.emplace_back(std::make_unique<ItemObject>(BERRY_SWEETS, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
-		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
+		object.back()->SetScale({ SWEETS_SCALE,SWEETS_SCALE,SWEETS_SCALE }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);
-		object.back()->ChangeItemState(ITEM_STATE::HOLD);
+		object.back()->ChangeItemState(ITEM_STATE::HOLD);	//持っている状態に変更
 		isActioned_ = true;
-		sweetsStockCnt_--;
+		sweetsStockCnt_--;	//在庫を減らす
 	}
 
 	//スイーツ（チョコ）用ラックにインタラクトしたときの処理
@@ -72,11 +83,11 @@ void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageOb
 		//スイーツを取り出す
 		object.emplace_back(std::make_unique<ItemObject>(CHOCO_SWEETS, player_));
 		object.back()->Init(player_.GetSphere().GetPos());
-		object.back()->SetScale({ 1.2f,1.2f,1.2f }); // スイーツのサイズを調整
+		object.back()->SetScale({ SWEETS_SCALE,SWEETS_SCALE,SWEETS_SCALE }); // スイーツのサイズを調整
 		player_.SetHoldItem(object.back()->GetParam().id_);
-		object.back()->ChangeItemState(ITEM_STATE::HOLD);
+		object.back()->ChangeItemState(ITEM_STATE::HOLD);	//持っている状態に変更
 		isActioned_ = true;
-		sweetsStockCnt_--;
+		sweetsStockCnt_--;	//在庫を減らす
 	}
 }
 
@@ -93,7 +104,7 @@ void RackObject::AddStock(void)
 		addInterval_ += SceneManager::GetInstance().GetDeltaTime();
 		gaugeUI_->Update();
 	}
-
+	//スイーツの在庫追加処理
 	if(GetParam().id_ == BERRY_SWEETS_RACK ||
 		GetParam().id_ == CHOCO_SWEETS_RACK)
 	{
@@ -112,7 +123,7 @@ void RackObject::AddStock(void)
 			stockIconUI_->SetActive(false);
 			return;
 		}
-	}
+	}//カップの在庫追加処理
 	else if(GetParam().id_ == HOT_CUP_RACK ||
 			GetParam().id_ == ICE_CUP_RACK)
 	{
@@ -137,45 +148,51 @@ void RackObject::AddStock(void)
 void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 {
 	StageObject::Init(pos, rotY, scale);
-
+	//UIのサイズと位置
+	const float iconUISize = 70.0f;	//UIのサイズ
+	const VECTOR iconUIPos = { 0.0f, 60.0f, 0.0f };	//UIの位置
 	//スイーツ用UIの初期化
-	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, 60.0f, 0.0f),
+	iconUI_ = std::make_unique<IconUI>(iconUIPos,
 		transform_.pos, ResourceManager::SRC::INTERACT);
 	iconUI_->SetActive(false);
 	iconUI_->Init();
-	iconUI_->SetUISize(70.0f);
-	UIManager::GetInstance().AddIconUI(iconUI_.get());
+	iconUI_->SetUISize(iconUISize);
+	UIManager::GetInstance().AddIconUI(iconUI_.get());	//UI管理に追加
 
-	stockIconUI_ = std::make_unique<IconUI>(VGet(0.0f, 60.0f, 0.0f),
+	stockIconUI_ = std::make_unique<IconUI>(iconUIPos,
 	transform_.pos, ResourceManager::SRC::STOCK_ICON);
 	stockIconUI_->SetActive(false);
 	stockIconUI_->Init();
-	stockIconUI_->SetUISize(70.0f);
-	UIManager::GetInstance().AddIconUI(stockIconUI_.get());
+	stockIconUI_->SetUISize(iconUISize);
+	UIManager::GetInstance().AddIconUI(stockIconUI_.get());	//UI管理に追加
 
 	//文字列をSRCに変換してモデル設定
 	ResourceManager::SRC srcType = ResourceManager::SRC::NONE;
 	if (param_.id_ == BERRY_SWEETS_RACK)
 	{
-		srcType = ResourceManager::SRC::SWEETS_BERRY; // デフォルトのラックIDを設定
-		cupsStockCnt_ = 0;
+		srcType = ResourceManager::SRC::SWEETS_BERRY; //ベリーのラックIDを設定
+		cupsStockCnt_ = 0;	//カップの在庫を0にする
 	}
 	else if (param_.id_ == CHOCO_SWEETS_RACK)
 	{
-		srcType = ResourceManager::SRC::SWEETS_CHOCO; // チョコレートラックIDを設定
-		cupsStockCnt_ = 0;
+		srcType = ResourceManager::SRC::SWEETS_CHOCO; //チョコレートラックIDを設定
+		cupsStockCnt_ = 0;	//カップの在庫を0にする
 	}
 
 	if (srcType != ResourceManager::SRC::NONE)
 	{
+		//ゲージUIのサイズ
+		const float sweetsGaugeWidth = 50.0f;	//UIの幅	
+		const float sweetsGaugeHeight = 5.0f;	//UIの高さ
 		//スイーツ用UIの初期化
 		gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * SWEETS_STOCK_MAX);
 		gaugeUI_->Init();
-		gaugeUI_->SetUISize(50.0f, 5.0f);
+		gaugeUI_->SetUISize(sweetsGaugeWidth, sweetsGaugeHeight);
 		VECTOR uiPos = transform_.pos;
 		uiPos.y += SWEETS_UI_OFFSET_Y;	//UIの位置を調整
 		gaugeUI_->SetPos(uiPos); // UIの位置を設定
-		UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
+		UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());	//UI管理に追加
+
 		// 各スイーツの基準座標からのオフセットを配列で定義
 		const VECTOR sweetsOffsets[] = {
 			{SWEETS_HALF_WIDTH,  SWEETS_HEIGHT_OFFSET, SWEETS_Z_BACK_OFFSET},
@@ -201,14 +218,17 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 
 	if (srcType != ResourceManager::SRC::NONE)return;
 
+	const float cupGaugeWidth = 70.0f;	//UIの幅
+	const float cupGaugeHeight = 10.0f;	//UIの高さ
 	//カップ用UIの初期化
 	gaugeUI_ = std::make_unique<GaugeUI>(false, ADD_INTERVAL * CUP_STOCK_MAX);
 	gaugeUI_->Init();
-	gaugeUI_->SetUISize(70.0f, 10.0f);
+	gaugeUI_->SetUISize(cupGaugeWidth, cupGaugeHeight);
 	VECTOR uiPos = transform_.pos;
 	uiPos.y -= CUP_UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos); // UIの位置を設定
-	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
+	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());	//UI管理に追加
+
 	//設定されていなかったらカップモデルを設定する
 	if (param_.id_ == HOT_CUP_RACK)
 	{
@@ -250,39 +270,42 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 
 void RackObject::Update(void)
 {
+	//アイコンは非表示にしておく
 	iconUI_->SetActive(false);
+	//在庫がない場合は!マークのアイコンを表示
 	if(sweetsStockCnt_ <= 0 && cupsStockCnt_ <= 0)
 	{
 		stockIconUI_->SetActive(true);
 		hasStock_ = false;
 	}
-
+	//モデルの更新
 	for(auto& sweets : sweetsOfRack_)
 	{
 		sweets.Update();
 	}
-
+	//モデルの更新
 	for(auto& cups : cupesOfRack_)
 	{
 		cups.Update();
 	}
 
+	//通常の更新処理
 	StageObject::Update();
 }
 
 void RackObject::Draw(void)
 {
+	//親クラスの描画
 	StageObject::Draw();
 
+	//ラックの中のカップモデルを描画
 	for (int i = 0; i < cupsStockCnt_; ++i)
 	{
-		//モデルの描画
 		MV1DrawModel(cupesOfRack_[i].modelId);
 	}
-
+	//ラックの中のスイーツモデルを描画
 	for (int i = 0; i < sweetsStockCnt_; ++i)
 	{
-		//モデルの描画
 		MV1DrawModel(sweetsOfRack_[i].modelId);
 	}
 }

@@ -18,40 +18,13 @@ class StageManager : public ActorBase
 {
 
 public:
-	//オブジェクト関連
 
-	//テーブル関連
-	static constexpr int TABLE_COLUMN_NUM = 4;		//横側のテーブルの数（１列）
-	static constexpr int TABLE_ROW_BACK_NUM = 4;	//手前側のテーブルの数
-	static constexpr int TABLE_ROW_FRONT_NUM = 2;	//奥側のテーブルの数
-	static constexpr int TABLE_CENTER_NUM = 4;	//テーブルの数
-	static constexpr int MAX_TABLE_NUM = 16;	//テーブルの数
-
-	static constexpr float TABLE_WIDTH = 92.5f;	//テーブルの横幅
-
-	//座標
-
-	static constexpr VECTOR TABLE_POS_BACK = { -150.0f, 0.0f, -270.0f };	//テーブルの座標(手前側）
-	static constexpr VECTOR TABLE_POS_FRONT = { -115.0f, 0.0f, 180.0f };	//テーブルの座標（奥側）
-	static constexpr VECTOR COLUMN_TABLE_LEFT_POS = { -250.0f, 0.0f, -192.0f };		//列（左）テーブルの座標
-	static constexpr VECTOR COLUMN_TABLE_RIGHT_POS = { 320.0f, 0.0f, -192.0f };	//列(右）テーブルの座標
-	static constexpr VECTOR CENTER_TABLE_POS = { -20.0f,0.0f,-100.0f };	//列(右）テーブルの座標
-	static constexpr VECTOR COUNTER_POS = { 225.0f, 0.0f, 190.0f };			//カウンターの座標
-	static constexpr VECTOR CASE_POS = { -57.0f, 0.0f, 190.0f };			//ショーケースの座標
-
-	static constexpr VECTOR MACHINE_POS = { -128.0f, 76.0f, -175.0f };	//コーヒーマシンの座標
-	static constexpr VECTOR CUPHOT_POS = { -45.0f, 76.0f, -175.0f };	//ホット用カップの座標
-	static constexpr VECTOR CUPICE_POS = { 45.0f, 76.0f, -175.0f };		//アイス用カップの座標
-	static constexpr VECTOR ICEDIS_POS = { 133.0f, 76.0f, -175.0f };	//アイスディスペンサーの座標
-	static constexpr VECTOR DUSTBOX_POS = { 240.0f, 0.0f, -270.0f };	//ゴミ箱の座標
-
-	//アニメーション種別
+	//アニメーション種別(レジ用)
 	enum class ANIM_TYPE
 	{
 		CREATE,
 		IDLE,
 		PAYING,
-		
 	};
 	
 	//コンストラクタ
@@ -60,8 +33,20 @@ public:
 	//デストラクタ
 	~StageManager(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void) override;
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update(void) override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	/// <param name=""></param>
 	void Draw(void) override;
 
 	/// <summary>
@@ -90,6 +75,11 @@ public:
 	/// <param name=""></param>
 	void ResetServeData(void);
 
+	/// <summary>
+	/// テーブルの数を取得する
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>生成しているテーブルの数</returns>
 	int GetTableNum(void) const { return static_cast<int>(tables_.size()); }
 
 	Transform GetCounterTran(void) const;
@@ -105,6 +95,8 @@ private:
 
 	//スイーツケース用トランスフォーム
 	Transform caseTran_;
+	//レジ用トランスフォーム
+	Transform registerTran_;
 	//ゴミ箱用トランスフォーム
 	Transform dustBoxTran_;
 
@@ -119,7 +111,6 @@ private:
 
 	//カウンター用
 	std::unique_ptr<StageObject> counter_;
-	std::unique_ptr<StageObject> case_;
 
 	//家具用
 	std::unique_ptr<Furnitures> furnitures_;
@@ -136,8 +127,21 @@ private:
 	//各注文が提供されたかどうかのフラグ
 	std::vector<bool> isServedItems_; 
 
+	/// <summary>
+	/// 3Dモデルの初期化
+	/// </summary>
+	/// <param name="">各種3Dモデルの初期化と登録</param>
 	void Init3DModel(void);
 
+	/// <summary>
+	/// SEやBGMの初期化
+	/// </summary>
+	void InitSound(void);
+
+	/// <summary>
+	/// アニメーションの初期化
+	/// </summary>
+	/// <param name="">レジのアニメーション</param>
 	void InitAnimation(void);
 
 	/// <summary>
@@ -151,6 +155,12 @@ private:
 	/// </summary>
 	/// <param name=""></param>
 	void DeleteSurvedItem(void);
+
+	/// <summary>
+	/// ラックとのインタラクト処理
+	/// </summary>
+	/// <param name=""></param>
+	void CupRackInteract(void);
 
 	/// <summary>
 	/// 持ち運び可能なオブジェクトのインタラクト処理

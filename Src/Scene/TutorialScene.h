@@ -2,11 +2,6 @@
 #include <memory>
 #include "SceneBase.h"
 
-class StageManager;
-class Player;
-class OrderCustomerManager;
-class Timer;
-
 class TutorialScene : public SceneBase
 {
 public:
@@ -48,15 +43,6 @@ private:
 
 	UpdateFunc_t update_;
 	DrawFunc_t draw_;
-
-	//ステージ
-	std::unique_ptr<StageManager> stage_;
-
-	//プレイヤー
-	std::unique_ptr<Player> player_;
-
-	//客
-	std::unique_ptr<OrderCustomerManager> customer_;
 
 	void UpdateOperation(void);
 	

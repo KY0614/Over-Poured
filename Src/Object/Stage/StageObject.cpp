@@ -47,7 +47,7 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 
 	//テーブルとカウンターの当たり判定用の球体の高さを高めにしておく（テーブルから半分球体が出るくらい）
 	if (objId_ == TABLE || objId_ == COUNTER)sphere_->SetLocalPos({ 0.0f, TABLE_HEIGHT, 0.0f });
-	//ゴミ箱も同様
+	//ゴミ箱はより高めに
 	if (objId_ == DUST_BOX)sphere_->SetLocalPos({ 0.0f, DUST_BOX_HEIGHT, 0.0f });
 
 	//アイテムの初期状態は設置状態
