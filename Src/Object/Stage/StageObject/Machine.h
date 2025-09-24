@@ -28,16 +28,6 @@ public:
 	void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = { 1.0f,1.0f,1.0f }) override;
 
 	/// <summary>
-	/// 非稼働時の更新処理
-	/// </summary>
-	void UpdateInActive(void)override;
-
-	/// <summary>
-	/// 稼働時の更新処理
-	/// </summary>
-	void UpdateActive(void)override;
-
-	/// <summary>
 	/// 描画処理
 	/// </summary>
 	void Draw(void) override;
@@ -45,7 +35,7 @@ public:
 	/// <summary>
 	/// インタラクト処理
 	/// </summary>
-	/// <param name="objId"></param>
+	/// <param name="objId">インタラクトするオブジェクトid</param>
 	void Interact(const std::string& objId) override;
 
 private:
@@ -60,5 +50,16 @@ private:
 	std::unique_ptr<IconUI> iconUI_;	//コーヒーを入れるアイコン
 	std::unique_ptr<IconUI> hotIconUI_;	//ホットコーヒーのアイコン
 	std::unique_ptr<IconUI> iceIconUI_;	//アイスコーヒーのアイコン
+
+	/// <summary>
+	/// 非稼働時の更新処理
+	/// </summary>
+	void UpdateInActive(void)override;
+
+	/// <summary>
+	/// 稼働時の更新処理
+	/// </summary>
+	void UpdateActive(void)override;
+
 };
 

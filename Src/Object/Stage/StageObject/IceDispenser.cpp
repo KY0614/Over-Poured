@@ -10,6 +10,14 @@
 #include "../../UI/UIManager.h"
 #include "IceDispenser.h"
 
+namespace 
+{
+	//アイコンUIの座標
+	const VECTOR ICON_UI = { 0.0f,160.0f,0.0f };
+	//ゲージUIのYオフセット
+	const float GAUGE_UI_OFFSET_Y = 160.0f;	
+}
+
 IceDispenser::IceDispenser(const std::string objId,Player& player,
 	std::vector<std::unique_ptr<StageObject>>& object) :
 	StageObject(objId, player), objects_(object)
@@ -18,24 +26,28 @@ IceDispenser::IceDispenser(const std::string objId,Player& player,
 
 void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
 {
+	//ステージオブジェクトの初期化
 	StageObject::Init(pos, rotY,scale);
 
-	iconUI_ = std::make_unique<IconUI>(VGet(0.0f, 160.0f, 0.0f),
+	//アイコンUIの初期化
+	iconUI_ = std::make_unique<IconUI>(ICON_UI,
 		transform_.pos, ResourceManager::SRC::ICE_IN);
 	iconUI_->Init();
-	iconUI_->SetActive(false);
+	iconUI_->SetActive(false);	//最初は非表示にしておく
 	UIManager::GetInstance().AddIconUI(iconUI_.get());
 
+	//ゲージUIの初期化
 	gaugeUI_ = std::make_unique<GaugeUI>(false, ICE_PRODUCES_TIME);
 	gaugeUI_->Init();
 	VECTOR uiPos = transform_.pos;
-	uiPos.y += 160.0f;	//UIの位置を調整
-	gaugeUI_->SetPos(uiPos); // UIの位置を設定
+	uiPos.y += GAUGE_UI_OFFSET_Y;	//UIの位置を調整
+	gaugeUI_->SetPos(uiPos);		//UIの位置を設定
 	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
 
 void IceDispenser::Draw(void)
 {
+	//ステージオブジェクトの描画
 	StageObject::Draw();
 }
 
@@ -83,8 +95,9 @@ void IceDispenser::Interact(const std::string& objId)
 				//マシンの回転に合わせてカップの位置を調整
 				VECTOR rotPos = AsoUtility::RotXZPos(GetTransform().pos, cupPos,
 					Quaternion::ToEuler(GetTransform().quaRotLocal).y);
-
+				//設置する座標を設定
 				obj->ItemPlaced(rotPos);
+				//ゲージUIを表示して稼働状態にする
 				gaugeUI_->SetActive(true);
 				ChangeMachineState(MACHINE_STATE::ACTIVE);
 			}
@@ -94,14 +107,17 @@ void IceDispenser::Interact(const std::string& objId)
 
 void IceDispenser::UpdateInActive(void)
 {
+	//非稼働時はインタラクト時間をリセットしておく
 	SetInteractTime(ICE_PRODUCES_TIME);
-	iconUI_->SetActive(false);
+	iconUI_->SetActive(false);	//アイコンUIは非表示にしておく
+
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
+		//氷入りカップ以外は判定しない
 		if (obj->GetParam().id_ != CUP_WITH_ICE)continue;
-
+		//マシンの中にPLACED状態のカップがあったらtrueにする
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
@@ -110,7 +126,7 @@ void IceDispenser::UpdateInActive(void)
 			break;
 		}
 	}
-
+	//PLACED状態のカップがなければゲージUIをリセット
 	if (!hasPlacedCup)
 	{
 		gaugeUI_->Reset();
@@ -119,16 +135,19 @@ void IceDispenser::UpdateInActive(void)
 
 void IceDispenser::UpdateActive(void)
 {
+	//稼働中はインタラクト時間を減少させる
 	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
-	iconUI_->SetActive(false);
-	gaugeUI_->Update();
-
+	iconUI_->SetActive(false);	//アイコンUIは非表示にしておく
+	gaugeUI_->Update();	//ゲージUIの更新
+		
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
+		//アイスカップ以外は判定しない
 		if (obj->GetParam().id_ != ICE_CUP)continue;
 
+		//マシンの中にPLACED状態のカップがあったらtrueにする
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED &&
@@ -139,7 +158,7 @@ void IceDispenser::UpdateActive(void)
 		}
 	}
 
-	//PLACED状態のカップがなければ非アクティブにする
+	//PLACED状態のカップがなければ非稼働にする
 	if (!hasPlacedCup)
 	{
 		ChangeMachineState(MACHINE_STATE::INACTIVE);

@@ -106,6 +106,12 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 	UIManager::GetInstance().AddGaugeUI(gaugeUI_.get());
 }
 
+void Machine::Draw(void)
+{
+	//通常の描画処理
+	StageObject::Draw();
+}
+
 void Machine::UpdateInActive(void)
 {
 	//アイコンは非表示にしておく
@@ -134,16 +140,17 @@ void Machine::UpdateInActive(void)
 				hotIconUI_->SetActive(true);
 			}
 			else
-			
+			{
 				//アイスコーヒーアイコンを表示
 				iceIconUI_->SetActive(true);
 			}
-			hasPlacedCup = true;
-			break;
+		hasPlacedCup = true;
+		break;
 		}
 	}
+
 	//PLACED状態のカップがなければゲージをリセット
-	if(!hasPlacedCup)
+	if (!hasPlacedCup)
 	{
 		gaugeUI_->Reset();
 	}
@@ -162,8 +169,9 @@ void Machine::UpdateActive(void)
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
+		//カップ以外のオブジェクトは判定しない
 		if (obj->GetParam().id_ != HOT_CUP &&
-			obj->GetParam().id_ != CUP_WITH_ICE )continue;
+			obj->GetParam().id_ != CUP_WITH_ICE)continue;
 		//PLACED状態のカップが存在したらフラグを立ててループを抜ける
 		if (AsoUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
 			GetSpherePos(), GetSphereRad()) &&
@@ -180,10 +188,4 @@ void Machine::UpdateActive(void)
 		ChangeMachineState(MACHINE_STATE::INACTIVE);
 		return;
 	}
-}
-
-void Machine::Draw(void)
-{
-	//通常の描画処理
-	StageObject::Draw();
 }

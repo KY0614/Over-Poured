@@ -20,6 +20,7 @@ public:
 	//UVスケール
 	static constexpr float TILLING_SIZE = 35.0f;
 
+	//環境光
 	static constexpr float AMBIENT_COLOR = 0.2f;
 
 	//コンストラクタ
@@ -28,24 +29,39 @@ public:
 	//デストラクタ
 	~Furnitures(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void) override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	/// <param name=""></param>
 	void Draw(void) override;
 
+	/// <summary>
+	/// 床のモデル情報を取得
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>床のTransform情報</returns>
 	const Transform GetFloorTran(void)const { return floor_; }
 
 private:
-
+	//マテリアル
 	std::unique_ptr<ModelMaterial> material_;
+	//レンダラー
 	std::unique_ptr<ModelRenderer> renderer_;
 
-	Transform floor_;
-	Transform deskL_;
-	Transform deskR_;
-	Transform sidePlant_;
-	Transform frontPlant_;
-	Transform sideShelves_;
-	Transform frontLShelves_;
-	Transform frontRShelves_;
+	//モデル関連
+	Transform floor_;	//床
+	Transform deskL_;	//机左
+	Transform deskR_;	//机右
+	Transform sidePlant_;	//横観葉植物
+	Transform frontPlant_;	//前観葉植物
+	Transform sideShelves_;	//横本棚
+	Transform frontLShelves_;	//前本棚左
+	Transform frontRShelves_;	//前本棚右
 
 	/// <summary>
 	/// モデルセットアップ
