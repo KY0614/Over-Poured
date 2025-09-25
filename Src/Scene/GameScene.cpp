@@ -358,37 +358,37 @@ void GameScene::InitSound(void)
 	//bgm追加&再生
 	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::GAME,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_BGM).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::GAME, 256 / 3);
+	sound.AdjustVolume(SoundManager::SOUND::GAME, VOLUME_MAX / 3);
 	sound.Play(SoundManager::SOUND::GAME);
 
 	//カウントダウン時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::COUNT_DOWN,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::COUNT_DOWN).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::COUNT_DOWN, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::COUNT_DOWN, VOLUME_MAX / 2);
 
 	//スタート時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GAME_START,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_START).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::GAME_START, 256 / 3);
+	sound.AdjustVolume(SoundManager::SOUND::GAME_START, VOLUME_MAX / 3);
 
 	//タイマー残り３０秒時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::TIMER,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::TIMER, 256 / 3);
+	sound.AdjustVolume(SoundManager::SOUND::TIMER, VOLUME_MAX / 3);
 
 	//タイマー残り1０秒時SE
 	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::TIMER_FAST,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_FAST).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::TIMER_FAST, 256 / 3);
+	sound.AdjustVolume(SoundManager::SOUND::TIMER_FAST, VOLUME_MAX / 3);
 
 	//タイムアップ時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::GAME_FINISH,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::GAME_FINISH).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::GAME_FINISH, 256 / 3);
+	sound.AdjustVolume(SoundManager::SOUND::GAME_FINISH, VOLUME_MAX / 3);
 	
 	//メニュー時SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::MENU_OPEN,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::MENU_OPEN).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::MENU_OPEN, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::MENU_OPEN, VOLUME_MAX / 2);
 
 }

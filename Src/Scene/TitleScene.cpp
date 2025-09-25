@@ -28,10 +28,6 @@ namespace
 	const int LOGO_OFFSET_Y = 80;	//ƒƒS‚ÌYˆÊ’u
 	const int LOGO_HEIGHT = 1024;	//ƒƒS‚Ì‚‚³
 	const int PUSHIMG_OFFSET_Y = 100;	//‰Ÿ‰º‰æ‘œ‚ÌYˆÊ’u
-
-	//‰¹—ÊÅ‘å’l
-	const int VOLUME_MAX = 256;	
-
 }
 
 TitleScene::TitleScene(void)

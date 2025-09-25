@@ -5,6 +5,8 @@ class SceneBase
 {
 
 public:
+	//音量の最大値
+	static constexpr int VOLUME_MAX = 256; 
 
 	// コンストラクタ
 	SceneBase(void);

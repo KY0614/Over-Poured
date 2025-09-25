@@ -22,7 +22,7 @@ void ResultScene::Init(void)
 	auto& sound = SoundManager::GetInstance();
 	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::RESULT,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::RESULT_BGM).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::RESULT, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::RESULT, VOLUME_MAX / 2);
 	sound.Play(SoundManager::SOUND::RESULT);
 
 	//ÉXÉRÉA

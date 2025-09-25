@@ -114,28 +114,28 @@ void TutorialScene::InitSound(void)
 	auto& sound = SoundManager::GetInstance();
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::TUTORIAL,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::TUTORIAL_BGM).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::TUTORIAL, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::TUTORIAL, VOLUME_MAX / 2);
 	sound.Play(SoundManager::SOUND::TUTORIAL);
 
 	//ページを進ませるSE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::NEXT_PAGE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::NEXT_PAGE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::NEXT_PAGE, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::NEXT_PAGE, VOLUME_MAX / 2);
 
 	//ページを戻らせるSE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::RETURN_PAGE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::RETURN_PAGE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::RETURN_PAGE, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::RETURN_PAGE, VOLUME_MAX / 2);
 
 	//ページが進まないSE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::NOT_PAGE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::NOT_PAGE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::NOT_PAGE, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::NOT_PAGE, VOLUME_MAX / 2);
 
 	//開店カランコロン
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::OPEN_DOOR,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::OPEN_DOOR).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::OPEN_DOOR, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::OPEN_DOOR, VOLUME_MAX / 2);
 }
 
 void TutorialScene::CursorHightlight(void)

@@ -250,14 +250,14 @@ void PauseScene::InitSound(void)
 	//カーソルSE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::NEXT_PAGE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::NEXT_PAGE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::NEXT_PAGE, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::NEXT_PAGE, VOLUME_MAX / 2);
 	//決定SE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::RETURN_PAGE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::RETURN_PAGE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::RETURN_PAGE, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::RETURN_PAGE, VOLUME_MAX / 2);
 
 	//メニューをとじるSE
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::MENU_CLOSE,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::MENU_CLOSE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::MENU_CLOSE, 256 / 2);
+	sound.AdjustVolume(SoundManager::SOUND::MENU_CLOSE, VOLUME_MAX / 2);
 }
