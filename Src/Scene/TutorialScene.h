@@ -1,30 +1,9 @@
 #pragma once
-#include <memory>
 #include "SceneBase.h"
 
 class TutorialScene : public SceneBase
 {
 public:
-	//背景画像関連
-	static constexpr int BACK_IMG_MARGINE = 250;	//初期座標から少しだけ間隔をあける
-	static constexpr int BACK_IMG_SCALE = 500;		//背景画像の大きさ
-
-	static constexpr int CURSOR_IMG_MARGINE = 300;	//初期座標から少しだけ間隔をあける
-
-	static constexpr int TUTORIAL_IMG_MAX_NUM = 3;				//説明用画像の最大枚数
-	static constexpr int INDEX_MAX = TUTORIAL_IMG_MAX_NUM - 1;	//０からなので１引いておく
-
-	static constexpr float HIGH_LIGHT_INTERVAL = 1.2f;
-
-	static constexpr int LOGO_HEIGHT = 1024;
-
-	enum class STEP
-	{
-		OPERATION,	//操作説明
-		ORDER,		//注文説明
-		CUSTOMER,	//客の説明
-		FINISH,		//終了
-	};
 
 	//コンストラクタ
 	TutorialScene(void);
@@ -32,8 +11,19 @@ public:
 	//デストラクタ
 	~TutorialScene(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void) override;
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update(void) override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	void Draw(void) override;
 
 private:
@@ -61,18 +51,40 @@ private:
 
 	//説明用画像のインデックス
 	int imgIdx_;
+	
+	//点滅用
+	int blinkTime_;	//点滅時間
+	int blinkIdx_;	//カーソル画像の点滅用インデックス
 
-	int blinkTime_;
-	int blinkIdx_;
+	bool isBlinkR_;	//右カーソルの点滅フラグ
+	bool isBlinkL_;	//左カーソルの点滅フラグ
 
-	bool isBlinkR_;
-	bool isBlinkL_;
+	//ボタン押下用
+	bool isPushButton_;	//true:画像表示　 false:非表示
 
-	bool isView_;
-	float highlightTime_;
+	/// <summary>
+	/// 画像の読み込み
+	/// </summary>
+	void LoadImages(void);
 
-	void ImageInit(void);
-	void ImageUpdate(void);
+	/// <summary>
+	/// サウンドの初期化処理
+	/// </summary>
+	void InitSound(void);
+
+	/// <summary>
+	/// 点滅の切り替え
+	/// </summary>
+	void CursorHightlight(void);
+
+	/// <summary>
+	/// ページ切り替えの処理
+	/// </summary>
+	void ProcessPageChange(void);
+	
+	/// <summary>
+	/// 画像の描画
+	/// </summary>
 	void ImageDraw(void);
 };
 

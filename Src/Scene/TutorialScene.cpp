@@ -1,16 +1,32 @@
 #include <DxLib.h>
 #include "../Application.h"
-#include "../Utility/CommonUtility.h"
 #include "../Manager/GameSystem/SoundManager.h"
-#include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Manager/Generic/ResourceManager.h"
-#include "../Object/Common/Collider.h"
-#include "../Object/Stage/StageManager.h"
-#include "../Object/Player.h"
-#include "../Object/UI/UIManager.h"
 #include "TutorialScene.h"
+
+namespace
+{
+	//背景画像関連
+	const int BACK_IMG_MARGINE = 250;	//初期座標から少しだけ間隔をあける
+	const int BACK_IMG_SCALE = 500;		//背景画像の大きさ
+	const int CURSOR_IMG_MARGINE = 300;	//初期座標から少しだけ間隔をあける
+
+	//カーソル点滅関連
+	const float HIGH_LIGHT_INTERVAL = 1.2f;	//点滅の間隔
+	//点滅のフレーム数
+	const int BLINK_FRAME = 60;
+	//点滅切り替えのフレーム数
+	const int BLINK_TOGGLE_FRAME = 2;
+
+	//ロゴ画像の大きさ
+	static constexpr int LOGO_HEIGHT = 1024;
+
+	//説明用画像関連
+	const int TUTORIAL_IMG_MAX_NUM = 3;		//説明用画像の最大枚数
+	const int INDEX_MAX = TUTORIAL_IMG_MAX_NUM - 1;	//説明画像の最大インデックス数(０からなので１引いておく)
+}
 
 TutorialScene::TutorialScene(void) :
 	update_(&TutorialScene::UpdateOperation),
@@ -27,8 +43,7 @@ TutorialScene::TutorialScene(void) :
 
 	isBlinkR_ = false;
 	isBlinkL_ = false;
-	isView_ = false;
-	highlightTime_ = 0.0f;
+	isPushButton_ = false;
 }
 
 TutorialScene::~TutorialScene(void)
@@ -37,7 +52,13 @@ TutorialScene::~TutorialScene(void)
 
 void TutorialScene::Init(void)
 {
-	ImageInit();
+	//サウンド初期化
+	InitSound();
+	//画像読み込み
+	LoadImages();
+
+	//カーソル点滅初期化
+	isBlinkR_ = true;
 }
 
 void TutorialScene::Update(void)
@@ -52,15 +73,43 @@ void TutorialScene::Draw(void)
 
 void TutorialScene::UpdateOperation(void)
 {
-	ImageUpdate();
+	//カーソル点滅
+	CursorHightlight();
+	//ページ送り
+	ProcessPageChange();
 }
 
 void TutorialScene::DrawOperation(void)
 {
+	//画像描画
 	ImageDraw();
 }
 
-void TutorialScene::ImageInit(void)
+void TutorialScene::LoadImages(void)
+{
+	//説明用画像読み込み
+	tutorialImgs_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::TUTORIAL).handleIds_;
+
+	//説明背景画像読み込み
+	tutorialBackImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::TUTORIAL_BACK).handleId_;
+
+	//カーソル背景画像読み込み
+	cursorImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::CURSOR_R).handleIds_;
+
+	//装飾画像読み込み
+	decoImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::PINK_BANNER).handleId_;
+
+	//画像読み込み
+	pushImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::PUSH_SPACE).handleId_;
+
+}
+
+void TutorialScene::InitSound(void)
 {
 	auto& sound = SoundManager::GetInstance();
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::TUTORIAL,
@@ -87,62 +136,47 @@ void TutorialScene::ImageInit(void)
 	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::OPEN_DOOR,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::OPEN_DOOR).handleId_);
 	sound.AdjustVolume(SoundManager::SOUND::OPEN_DOOR, 256 / 2);
-
-	//説明用画像読み込み
-	tutorialImgs_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::TUTORIAL).handleIds_;
-
-	//説明背景画像読み込み
-	tutorialBackImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::TUTORIAL_BACK).handleId_;
-
-	//カーソル背景画像読み込み
-	cursorImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::CURSOR_R).handleIds_;
-
-	//装飾画像読み込み
-	decoImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::PINK_BANNER).handleId_;
-
-	//画像読み込み
-	pushImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::PUSH_SPACE).handleId_;
-
-	isBlinkR_ = true;
 }
 
-void TutorialScene::ImageUpdate(void)
+void TutorialScene::CursorHightlight(void)
 {
-	InputManager& ins = InputManager::GetInstance();
-	auto& sound = SoundManager::GetInstance();
+	//点滅時間更新
 	blinkTime_++;
-	blinkIdx_ = (blinkTime_ / 60) % 2;
-
-	//シーン遷移(チュートリアルのページが端までいったら）
-	if (isView_ &&
-		ins.IsInputTriggered("Interact"))
-	{
-		sound.Play(SoundManager::SOUND::OPEN_DOOR);
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
-		return;
-	}
+	//点滅インデックス更新
+	blinkIdx_ = (blinkTime_ / BLINK_FRAME) % BLINK_TOGGLE_FRAME;
 
 	//点滅表記
 	isBlinkL_ = false;
 	isBlinkR_ = false;
-	if (imgIdx_ == 0)
+	//ページの端によって点滅させるカーソルを変える
+	if (imgIdx_ == 0)	//最初のページ
 	{
 		isBlinkR_ = true;
 	}
-	else if (imgIdx_ > 0 &&
+	else if (imgIdx_ > 0 &&		//途中のページ
 		imgIdx_ < INDEX_MAX)
 	{
 		isBlinkL_ = true;
 		isBlinkR_ = true;
 	}
-	else {
+	else {				//最後のページ
 		isBlinkL_ = true;
-		isView_ = true;
+		isPushButton_ = true;
+	}
+}
+
+void TutorialScene::ProcessPageChange(void)
+{
+	InputManager& ins = InputManager::GetInstance();
+	SoundManager& sound = SoundManager::GetInstance();
+
+	//シーン遷移(チュートリアルのページが端までいったら）
+	if (isPushButton_ &&
+		ins.IsInputTriggered("Interact"))
+	{
+		sound.Play(SoundManager::SOUND::OPEN_DOOR);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+		return;
 	}
 
 	//ページを進ませる
@@ -178,20 +212,25 @@ void TutorialScene::ImageUpdate(void)
 void TutorialScene::ImageDraw(void)
 {
 	//画面の大きさに合わせて拡大率を変える
-	float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
+	float aspectRatio = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
+	//説明画像の大きさ
+	const float size = 0.8f;
+	//装飾の拡大率（Y軸のみ変える）
+	const float decoScaleY = 2.5f;
+	//説明画像のずらす位置
+	const int backImgMarginY = 20;
 
-	float size = 0.8f;
 	//説明画像背景用
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
-		(int)(540.0f) - 20,
-		scale, 0.0f,
+		Application::SCREEN_SIZE_Y/2 - backImgMarginY,
+		aspectRatio, 0.0f,
 		tutorialBackImg_,
 		true);
 	//装飾（左）
 	DrawRotaGraph3(BACK_IMG_MARGINE, BACK_IMG_MARGINE,
 		BACK_IMG_SCALE / 2, BACK_IMG_SCALE / 2,
-		scale, scale * 2.5f,
+		aspectRatio, aspectRatio * decoScaleY,
 		0.0f,
 		decoImg_,
 		true, false);
@@ -200,31 +239,33 @@ void TutorialScene::ImageDraw(void)
 		Application::SCREEN_SIZE_X - BACK_IMG_MARGINE,
 		BACK_IMG_MARGINE,
 		BACK_IMG_SCALE / 2, BACK_IMG_SCALE / 2,
-		scale, scale * 2.5f,
+		aspectRatio, aspectRatio * decoScaleY,
 		0.0f,
 		decoImg_,
 		true, false);
 	//説明画像
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
-		(int)(540.0f * size),
-		scale * size, 0.0f,
+		Application::SCREEN_SIZE_Y / 2 ,
+		aspectRatio * size, 0.0f,
 		tutorialImgs_[imgIdx_],
 		true);
 	//点滅表示
 	if (isBlinkR_)
 	{
-		DrawRotaGraph(Application::SCREEN_SIZE_X - CURSOR_IMG_MARGINE,
-			Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2,
-			scale, 0.0f,
+		//右用
+		DrawRotaGraph((Application::SCREEN_SIZE_X - CURSOR_IMG_MARGINE),
+			(Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2),
+			aspectRatio, 0.0f,
 			cursorImg_[blinkIdx_],
 			true
 		);
 	}
 	else
 	{
-		DrawRotaGraph(Application::SCREEN_SIZE_X - CURSOR_IMG_MARGINE,
-			Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2,
-			scale, 0.0f,
+		//反転用(右用）
+		DrawRotaGraph((Application::SCREEN_SIZE_X - CURSOR_IMG_MARGINE),
+			(Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2),
+			aspectRatio, 0.0f,
 			cursorImg_[1],
 			true
 		);
@@ -234,7 +275,7 @@ void TutorialScene::ImageDraw(void)
 		//反転用(左用）
 		DrawRotaGraph(CURSOR_IMG_MARGINE,
 			Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2,
-			scale, 0.0f,
+			aspectRatio, 0.0f,
 			cursorImg_[blinkIdx_],
 			true, true
 		);
@@ -244,19 +285,21 @@ void TutorialScene::ImageDraw(void)
 		//反転用(左用）
 		DrawRotaGraph(CURSOR_IMG_MARGINE,
 			Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2,
-			scale, 0.0f,
+			aspectRatio, 0.0f,
 			cursorImg_[1],
 			true, true
 		);
 	}
-
-	int logoScl = (int)((float)(LOGO_HEIGHT / 2) * scale);
-	if (isView_)
+	//pushspaceの位置（画像の大きさを考慮して）
+	const int logoPosY = static_cast<int>(static_cast<float>(LOGO_HEIGHT / 2) * aspectRatio);
+	//pushspaceの拡大率
+	const float logoScale = 2.0f;
+	if (isPushButton_)
 	{
 		//pushspaceの画像
 		DrawRotaGraph(
 			Application::SCREEN_SIZE_X / 2,
-			Application::SCREEN_SIZE_Y / 2 + logoScl,
-			2.0f, 0.0, pushImg_, true);
+			Application::SCREEN_SIZE_Y / 2 + logoPosY,
+			logoScale, 0.0, pushImg_, true);
 	}
 }

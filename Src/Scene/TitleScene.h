@@ -13,16 +13,6 @@ class TitleScene : public SceneBase
 {
 
 public:
-	static constexpr float HIGH_LIGHT_INTERVAL = 1.2f;
-
-	//UVスケール
-	static constexpr float TILLING_SIZE = 35.0f;
-
-	static constexpr float AMBIENT_COLOR = 0.2f;
-
-	static constexpr int LOGO_OFFSET_Y = 80;
-	static constexpr int LOGO_HEIGHT = 1024;
-	static constexpr int PUSHIMG_OFFSET_Y = 100;
 
 	//コンストラクタ
 	TitleScene(void);
@@ -30,8 +20,19 @@ public:
 	//デストラクタ
 	~TitleScene(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void) override;
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update(void) override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	void Draw(void) override;
 
 private:
@@ -44,20 +45,27 @@ private:
 	int pushImg_;	//押下画像
 	int titleImg_;	//ロゴ画像
 
-	bool isView_;
+	//ビュー切り替え
+	bool isView_;	//true:表示,false:非表示
+	//ハイライト経過時間
 	float highlightTime_;
 
-	//お店用
+	//お店用モデル情報
 	Transform cafeTran_;
 
-	//地面用
-	Transform graoundTran_;
+	//地面用モデル情報
+	Transform groundTran_;
 
-	//キャラクター
+	//キャラクターモデル情報
 	Transform character_;
 
 	//アニメーション
 	std::unique_ptr<AnimationController> animationController_;
+
+	/// <summary>
+	/// モデル初期化
+	/// </summary>
+	void Init3DModel(void);
 
 	/// <summary>
 	/// マテリアル情報初期化
@@ -65,5 +73,13 @@ private:
 	/// <param name="">マテリアルの定数バッファ設定</param>
 	void InitMaterial(void);
 
-	void UpdateDebugImGui(void);
+	/// <summary>
+	/// 画像読み込み
+	/// </summary>
+	void LoadImages(void);
+
+	/// <summary>
+	/// サウンド初期化
+	/// </summary>
+	void InitSound(void);
 };

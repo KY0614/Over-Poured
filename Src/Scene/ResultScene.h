@@ -32,6 +32,5 @@ public:
 private:
 	//ÉXÉRÉA
 	std::unique_ptr<Score> score_;
-
 };
 
