@@ -29,6 +29,12 @@ ScoreManager& ScoreManager::GetInstance(void)
 
 void ScoreManager::Init(void)
 {
+	scores_.clear();
+	currentScore_ = 0;
+	for(int i = 0; i < RANKING_NUM; ++i) 
+	{
+		scoreRank_[i] = 0;
+	}
 }
 
 void ScoreManager::Destroy(void)
@@ -58,23 +64,25 @@ void ScoreManager::LoadScore(void)
 	//明示的にファイルストリームを閉じる
 	ifs.close();
 
-	UpdateRanking(); //ランキングも更新
+	SortRankingScore(); //ランキングも更新
 }
 
-void ScoreManager::SaveScore(int score)
+void ScoreManager::SaveScore(const int score)
 {
+	//管理配列に追加
 	std::ifstream ifs(Application::PATH_SCORE + "score.json");
 	json scoreData;
+	//ファイルが存在する場合は読み込み
 	if (ifs)
 	{
 		scoreData = json::parse(ifs);
 		ifs.close();
 	}
-
+	//存在しない場合は新規作成
 	if (!scoreData.contains("Scores")) {
 		scoreData["Scores"] = json::array();
 	}
-
+	//管理配列に追加
 	scoreData["Scores"].push_back(score);
 
 	std::ofstream ofs(Application::PATH_SCORE + "score.json");
@@ -82,8 +90,9 @@ void ScoreManager::SaveScore(int score)
 	ofs.close();
 }
 
-int ScoreManager::GetAggregateScore(void) const
+const int& ScoreManager::GetAggregateScore(void) const
 {
+	//スコアの合計を返す
 	int total = 0;
 	for (int s : scores_) {
 		total += s;
@@ -91,7 +100,7 @@ int ScoreManager::GetAggregateScore(void) const
 	return total;
 }
 
-void ScoreManager::UpdateRanking(void)
+void ScoreManager::SortRankingScore(void)
 {
 	//スコアをソートする
 	std::vector<int> scoreList = scores_;

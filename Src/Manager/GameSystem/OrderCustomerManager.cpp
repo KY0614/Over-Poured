@@ -1,12 +1,6 @@
 #include <vector>
-#include <algorithm>
-#include "../../Utility/CommonUtility.h"
-#include "../../Common/DebugDrawFormat.h"
-#include "../../Manager/Generic/Camera.h"
 #include "../../Object/Customer/CustomerManager.h"
 #include "../../Object/Order/OrderManager.h"
-#include "../../Object/Stage/StageObject.h"
-#include "../Generic/SceneManager.h"
 #include "OrderCustomerManager.h"
 
 OrderCustomerManager::OrderCustomerManager(void):
@@ -112,7 +106,7 @@ void OrderCustomerManager::AddCustomerByOrder(void)
 	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderData());
 }
 
-int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
+const int& OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 {
 	Order::DRINK serveDrink = serve.drink_;
 	Order::SWEETS serveSweets = serve.sweets_;
@@ -120,9 +114,10 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 	const auto& order = orderMng_->GetFirstOrder();
 	int score = 0;
 
-	// ドリンク判定
+	//ドリンク判定
 	if (order.drink_ != Order::DRINK::NONE) 
 	{
+		//ドリンクが同じ場合はスコア加算
 		if (serve.drink_ == order.drink_) 
 		{
 			score += DRINK_SCORE;
@@ -133,9 +128,10 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 			score -= DRINK_SCORE;
 		}
 	}
-	// スイーツ判定
+	//スイーツ判定
 	if (order.sweets_ != Order::SWEETS::NONE) 
 	{
+		//スイーツが同じ場合はスコア加算
 		if (serve.sweets_ == order.sweets_) 
 		{
 			score += SWEETS_SCORE;
@@ -148,25 +144,27 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 	// 時間ボーナス
 	if (order.orderNum_ == 1) 
 	{
+		//早く提供できたらボーナス
 		if (order.time_ > TIME_EARLY_LIMIT) score += TIME_EARLY_BONUS;
 		else if (order.time_ > TIME_LIMIT) score += TIME_BONUS;
 	}
 	else if (order.orderNum_ == 2) 
 	{
+		//早く提供できたらボーナス
 		if (order.time_ > (TIME_EARLY_LIMIT * 2.0f)) score += TIME_EARLY_BONUS;
 		else if (order.time_ > (TIME_LIMIT * 2.0f)) score += TIME_BONUS;
 	}
-
+	//スコアに応じたリアクションを設定
 	customerMng_->SetCustomerReacton(score);
 	return score;
 }
 
-bool OrderCustomerManager::GetIsMoving(void)
+const bool& OrderCustomerManager::GetIsMoving(void)
 {
 	return customerMng_->GetIsMove();
 }
 
-Order::OrderData OrderCustomerManager::GetOrderData(void) const
+const Order::OrderData& OrderCustomerManager::GetOrderData(void) const
 {
 	return orderMng_->GetFirstOrder();
 }
@@ -183,6 +181,7 @@ void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 	// ドリンク判定
 	if (order.drink_ != Order::DRINK::NONE)
 	{
+		//提供と注文が同じならUIを表示
 		if (serve.drink_ == order.drink_)
 		{
 			customerMng_->IsCheckUI(drinkIdx,true);
@@ -195,17 +194,19 @@ void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 	// スイーツ判定
 	if (order.sweets_ != Order::SWEETS::NONE)
 	{
+		//提供と注文が同じならUIを表示
 		if (serve.sweets_ == order.sweets_)
 		{
 			customerMng_->IsCheckUI(sweetsIdx,true);
 		}
-		else {
+		else 
+		{
 			customerMng_->IsCheckUI(sweetsIdx, false);
 		}
 	}
 }
 
-bool OrderCustomerManager::IsTimeOutOrder(void) const
+const bool& OrderCustomerManager::IsTimeOutOrder(void) const
 {
 	//注文の制限時間が過ぎていたらtrueを返す
 	if (orderMng_->IsFirstOrderTimeOut())return true;

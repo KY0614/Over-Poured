@@ -4,7 +4,6 @@
 #include "../../Utility/CommonUtility.h"
 #include "../../Common/Fader.h"
 #include "../../Scene/TitleScene.h"
-#include "../../Scene/SelectScene.h"
 #include "../../Scene/PauseScene.h"
 #include "../../Scene/TutorialScene.h"
 #include "../../Scene/GameScene.h"
@@ -317,11 +316,7 @@ void SceneManager::MakeScene(SCENE_ID sceneId)
 		scene = std::make_unique<TitleScene>();
 		resM.InitTitle();
 		break;
-	
-	case SceneManager::SCENE_ID::SELECT:
-		scene = std::make_unique<SelectScene>();
-		break;
-	
+
 	case SceneManager::SCENE_ID::TUTORIAL:
 		scene = std::make_unique<TutorialScene>();
 		resM.InitTutorial();

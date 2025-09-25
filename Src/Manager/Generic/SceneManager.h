@@ -22,7 +22,6 @@ public:
 	{
 		NONE,
 		TITLE,
-		SELECT,
 		TUTORIAL,
 		GAME,
 		PAUSE,

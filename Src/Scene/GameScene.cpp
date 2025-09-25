@@ -290,7 +290,6 @@ void GameScene::DrawGame(void)
 	customer_->Draw();
 	//ステージ描画
 	stage_->Draw();
-
 	//プレイヤー描画
 	player_->Draw();
 	//UI描画

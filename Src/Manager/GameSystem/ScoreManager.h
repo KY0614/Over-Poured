@@ -5,7 +5,7 @@
 class ScoreManager
 {
 public:
-
+	//ランキングの数
 	static constexpr int RANKING_NUM = 5;
 
 	//インスタンスの生成
@@ -19,21 +19,44 @@ public:
 	//リソースの破棄
 	void Destroy(void);
 
-	//
+	/// <summary>
+	/// スコアの読み込み
+	/// </summary>
 	void LoadScore(void);
 
-	//ゲーム終了時のスコア保存用
-	void SaveScore(int score);
+	/// <summary>
+	/// ゲーム終了時のスコアをjsonに保存
+	/// </summary>
+	/// <param name="score">保存するスコア</param>
+	void SaveScore(const int score);
 
-	int GetCurrentScore(void)const { return currentScore_; }
+	/// <summary>
+	/// 今回のスコアを取得
+	/// </summary>
+	/// <returns>今回のスコア</returns>
+	const int& GetCurrentScore(void)const { return currentScore_; }
 
-	//全スコアを加算した結果を取得
-	int GetAggregateScore(void)const;
+	/// <summary>
+	/// 全スコアを加算した結果を取得
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>全スコアを加算した結果</returns>
+	const int& GetAggregateScore(void)const;
 
 	//ランキング順のスコアを取得
-	int GetRankingScore(int element)const { return scoreRank_[element]; }
 
-	void SetCurrentScore(int score) { currentScore_ = score; }
+	/// <summary>
+	/// 指定した要素のランキングのスコアを取得します。
+	/// </summary>
+	/// <param name="element">ランキングスコアを取得する要素のインデックス</param>
+	/// <returns>指定した要素のランキングスコアへの参照。</returns>
+	const int& GetRankingScore(int element)const { return scoreRank_[element]; }
+
+	/// <summary>
+	/// 現在のスコアを設定します。
+	/// </summary>
+	/// <param name="score">設定するスコアの値</param>
+	void SetCurrentScore(const int score) { currentScore_ = score; }
 
 private:
 
@@ -45,6 +68,9 @@ private:
 	int currentScore_;		//今回のスコア
 	int scoreRank_[6];	//ランキング形式のスコア
 
-	void UpdateRanking(void);
+	/// <summary>
+	/// スコアをソートする
+	/// </summary>
+	void SortRankingScore(void);
 };
 

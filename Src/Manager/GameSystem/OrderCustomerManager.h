@@ -15,11 +15,13 @@ public:
 	static constexpr int SWEETS_SCORE = 30;	//スイーツのスコア
 	static constexpr int LID_SCORE = 20;	//スイーツのスコア
 
+	//注文の時間ボーナス
 	static constexpr int TIME_EARLY_BONUS = 50;	//早い提供の時間ボーナス
 	static constexpr int TIME_BONUS = 10;		//普通の提供の時間ボーナス
 
+	//注文の時間制限
 	static constexpr float TIME_EARLY_LIMIT = 6.0f;	//早い提供の時間制限
-	static constexpr float TIME_LIMIT = 3.0f;	//普通提供の時間制限
+	static constexpr float TIME_LIMIT = 3.0f;		//普通提供の時間制限
 
 	//コンストラクタ
 	OrderCustomerManager(void);
@@ -27,9 +29,20 @@ public:
 	//デストラクタ
 	~OrderCustomerManager(void);
 
-	void Init(void);	//初期化処理
-	void Update(void);	//更新処理
-	void Draw(void);	//描画処理
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
+	void Init(void);	
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	void Update(void);	
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	void Draw(void);	
 
 	/// <summary>
 	/// 生成された注文の内容に合わせてお客を生成する
@@ -57,7 +70,7 @@ public:
 	/// </summary>
 	/// <param name="serve">提供されたもの</param>
 	/// <returns>スコア</returns>
-	int GetOrderScore(const Order::OrderData serve);
+	const int& GetOrderScore(const Order::OrderData serve);
 
 	/// <summary>
 	/// 
@@ -69,13 +82,26 @@ public:
 	/// 客が動いているかどうかを取得する
 	/// </summary>
 	/// <returns>動いている場合はtrue、そうでない場合はfalse</returns>
-	bool GetIsMoving(void);
+	const bool& GetIsMoving(void);
 
-	Order::OrderData GetOrderData(void) const;
+	/// <summary>
+	/// 注文の情報を取得する
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>注文のデータ</returns>
+	const Order::OrderData& GetOrderData(void) const;
 
+	/// <summary>
+	/// 提供されたデータと注文を比較し、合っていたらUIを表示
+	/// </summary>
+	/// <param name="serve">提供されたデータ</param>
 	void CheckServeAndOrder(const Order::OrderData serve);
 
-	bool IsTimeOutOrder(void)const;
+	/// <summary>
+	/// 注文の制限時間が過ぎているかを取得する
+	/// </summary>
+	/// <returns>true: 制限時間が過ぎている場合、false: そうでない場合</returns>
+	const bool& IsTimeOutOrder(void)const;
 
 private:
 
@@ -85,7 +111,7 @@ private:
 	//CustomerMangerのポインタ
 	std::shared_ptr<CustomerManager> customerMng_;
 
-	bool isServe_;
+	//提供されたかどうか
+	bool isServe_;	//true: 提供された、false: まだ提供されていない
 
-	void DebugDraw(void);
 };

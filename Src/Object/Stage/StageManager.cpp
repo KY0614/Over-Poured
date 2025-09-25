@@ -360,6 +360,29 @@ void StageManager::Init3DModel(void)
 	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
 }
 
+void StageManager::InitSound(void)
+{
+	auto& sound = SoundManager::GetInstance();
+
+	//se追加
+	//オブジェクトを持つSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PICK_UP,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PICK_UP).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PICK_UP, SOUND_VOLUME);
+	//オブジェクトを置くSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PUT_ON,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PUT_ON).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PUT_ON, SOUND_VOLUME);
+	//在庫を補充するSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::ADD_STOCK,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::ADD_STOCK).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, SOUND_VOLUME);
+	//提供時のSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PAYING,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::PAYING).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::PAYING, SOUND_VOLUME);
+}
+
 void StageManager::InitAnimation(void)
 {
 	std::string path = Application::PATH_MODEL + "Stage/Animation/";

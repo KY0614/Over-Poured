@@ -84,7 +84,7 @@ private:
 	//ランキングスコアを滑らかに表示させるよう
 	float slideX_[ScoreManager::RANKING_NUM];		//移動させる座標
 	float slideXTime_[ScoreManager::RANKING_NUM];	//経過時間
-	bool isMove_[ScoreManager::RANKING_NUM];		//移動中かどうか（ディレイをかけて表示する用）
+	bool isRankScrMove_[ScoreManager::RANKING_NUM];	//移動中かどうか（ディレイをかけて表示する用）
 	
 	//ハイライト点滅表示用インデックス
 	int highLightIdx_;	
@@ -99,9 +99,6 @@ private:
 
 	//現在ゲージを進ませているランクのインデックス
 	int currentRankIdx_;
-
-	float slideY_;
-	float slideYTime_;
 
 	//ランキングのラベル画像（１位：～５位：）
 	int* rankLabelImgs_;
@@ -142,23 +139,56 @@ private:
 	/// <param name="hightLight">ハイライト</param>
 	void DrawRankingScore(int score,int posX,int posY,int hightLight);
 
-	void DrawScore(int score, int posX, int posY);
-
+	/// <summary>
+	/// 状態を変更
+	/// </summary>
+	/// <param name="state">変更する状態</param>
 	void ChangeState(STATE state);
+
+	/// <summary>
+	/// PLAYSCORE状態に変更
+	/// </summary>
+	/// <param name=""></param>
 	void ChangePlayScore(void);
 
+	/// <summary>
+	/// PLAYSCORE状態の更新
+	/// </summary>
+	/// <param name=""></param>
 	void UpdatePlayScore(void);
 
+	/// <summary>
+	/// PLAYSCORE状態の描画
+	/// </summary>
+	/// <param name=""></param>
 	void DrawPlayScore(void);
 
+	/// <summary>
+	/// ランクごとのパーセントを計算
+	/// </summary>
+	/// <param name="">ゲージのパーセンテージをイージングを使って加算していく</param>
 	void CalcPercentFromRank(void);
 
-	RANK GetRankFromScore(int score);
+	/// <summary>
+	/// スコアからランクを取得
+	/// </summary>
+	/// <param name="score">スコア</param>
+	/// <returns>スコアによるランク</returns>
+	RANK GetRankFromScore(const int score);
 
+	/// <summary>
+	/// ランク情報の初期化
+	/// </summary>
 	void InitRankInfo(void);
 
+	/// <summary>
+	/// 画像の読み込み
+	/// </summary>
 	void LoadImages(void);
 
+	/// <summary>
+	/// 音の読み込み
+	/// </summary>
 	void InitSound(void);
 };
 
