@@ -111,7 +111,7 @@ void Player::Draw(void)
 	DrawShadow();
 }
 
-void Player::AddCollider(std::weak_ptr<Collider> collider)
+void Player::AddCollider(const std::weak_ptr<Collider> collider)
 {
 	colliders_.emplace_back(collider);
 }
@@ -126,15 +126,9 @@ const Capsule& Player::GetCapsule(void) const
 	return *capsule_;
 }
 
-bool Player::IsPlay(void)
+const bool& Player::IsPlay(void)const
 {
 	return state_ == STATE::PLAY;
-}
-
-void Player::SurveItem(void)
-{
-	isHolding_ = false;
-	holdItemId_ = "";
 }
 
 void Player::InitAnimation(void)
@@ -371,7 +365,7 @@ void Player::ProcessMove(void)
 
 }
 
-void Player::SetGoalRotate(double rotRad)
+void Player::SetGoalRotate(const double rotRad)
 {
 	VECTOR cameraRot = mainCamera->GetAngles();
 	Quaternion axis =
@@ -409,13 +403,6 @@ void Player::Collision(void)
 	//ˆÚ“®
 	moveDiff_ = VSub(movedPos_, transform_.pos);
 	transform_.pos = movedPos_;
-}
-
-bool Player::IsEndLanding(void)
-{
-	bool ret = true;
-
-	return true;
 }
 
 void Player::CollisionCapsule(void)

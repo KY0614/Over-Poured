@@ -67,7 +67,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true:提供した　flase:未提供</returns>
-	bool IsServed(void) const { return isServed_; }
+	const bool& IsServed(void) const { return isServed_; }
 
 	/// <summary>
 	/// 提供データをリセットする
@@ -82,12 +82,36 @@ public:
 	/// <returns>生成しているテーブルの数</returns>
 	int GetTableNum(void) const { return static_cast<int>(tables_.size()); }
 
-	Transform GetCounterTran(void) const;
-	Transform GetTableTran(int index) const;
-	Transform GetShowCase(void) const;
-	Transform GetDustBox(void) const;
-	Transform GetFloorTran(void) const;
+	/// <summary>
+	/// カウンターのモデル情報を取得する
+	/// </summary>
+	/// <returns>カウンターのモデル情報</returns>
+	const Transform& GetCounterTran(void) const;
 
+	/// <summary>
+	/// テーブルのモデル情報を取得する
+	/// </summary>
+	/// <returnsテーブルのモデル情報</returns>
+	const Transform& GetTableTran(int index) const;
+
+	/// <summary>
+	/// ショーケースのモデル情報を取得する
+	/// </summary>
+	/// <returns>ショーケースのモデル情報</returns>
+	const Transform& GetShowCase(void) const;
+
+	/// <summary>
+	/// ゴミ箱のモデル情報を取得する
+	/// </summary>
+	/// <returns>ゴミ箱のモデル情報</returns>
+	const Transform& GetDustBox(void) const;
+
+	/// <summary>
+	/// 床のモデル情報を取得する
+	/// </summary>
+	/// <returns>床のモデル情報</returns>
+	const Transform& GetFloorTran(void) const;
+			 
 private:
 
 	//アニメーション

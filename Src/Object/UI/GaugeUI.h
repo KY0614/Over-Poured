@@ -31,8 +31,8 @@ public:
 	/// <summary>
 	/// 表示時間を設定
 	/// </summary>
-	/// <param name="time">表示する時間</param>
-	void SetActiveTime(const float time) { activeTime_ = time; }
+	/// <param name="activeTime">表示する時間</param>
+	void SetActiveTime(const float activeTime) { activeTime_ = activeTime; }
 
 	/// <summary>
 	/// UIのサイズを設定
@@ -73,12 +73,17 @@ private:
 	/// 円ゲージを描画
 	/// </summary>
 	/// <param name="progress">ゲージの進行度</param>
-	void DrawCircleGauge(float progress);
+	void DrawCircleGauge(const float progress);
 
 	/// <summary>
-	/// 
+	/// 長方形ゲージを描画
 	/// </summary>
 	/// <param name="progress">ゲージの進行度</param>
-	void DrawRectGauge(float progress);
+	void DrawRectGauge(const float progress);
+
+	/// <summary>
+	/// 画像の読み込み処理
+	/// </summary>
+	void LoadImages(void);
 };
 

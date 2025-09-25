@@ -19,8 +19,8 @@ class Player : public ActorBase
 public:
 
 	//スピード
-	static constexpr float SPEED_MOVE = 5.0f;
-	static constexpr float SPEED_RUN = 7.0f;
+	static constexpr float SPEED_MOVE = 5.0f;	//歩きスピード
+	static constexpr float SPEED_RUN = 7.0f;	//走りスピード
 
 	//回転完了までの時間
 	static constexpr float TIME_ROT = 0.5f;
@@ -53,32 +53,80 @@ public:
 	//デストラクタ
 	~Player(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void) override;
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update(void) override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	void Draw(void) override;
 
-	//衝突判定に用いられるコライダ制御
-	void AddCollider(std::weak_ptr<Collider> collider);
+	/// <summary>
+	/// 衝突判定に用いられるコライダの追加
+	/// </summary>
+	/// <param name="collider">衝突判定するコライダ</param>
+	void AddCollider(const std::weak_ptr<Collider> collider);
 
+	/// <summary>
+	/// 追加したコライダを全部削除する関数
+	/// </summary>
 	void ClearCollider(void);
 
-	//衝突用カプセルの取得
+	/// <summary>
+	/// 衝突用カプセルの取得
+	/// </summary>
+	/// <returns>プレイヤーに追従しているカプセル</returns>
 	const Capsule& GetCapsule(void) const;
 
+	/// <summary>
+	/// オブジェクト判定用の球体の取得
+	/// </summary>
+	/// <returns>衝突判定用の球体</returns>
 	const Sphere& GetSphere(void) const { return *sphere_; }
 
-	bool IsPlay(void);
+	/// <summary>
+	/// プレイヤーがPLAY状態かどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:PLAY中　false:PLAY以外</returns>
+	const bool& IsPlay(void)const;
 
-	void SetIsHoldiong(bool hold) { isHolding_ = hold; }
+	/// <summary>
+	/// プレイヤーがオブジェクトを持っているかどうか設定する
+	/// </summary>
+	/// <param name="hold">true:所持中　false:未所持</param>
+	void SetIsHolding(const bool hold) { isHolding_ = hold; }
 
-	void SurveItem(void);
+	/// <summary>
+	/// プレイヤーの所持状態を取得する
+	/// </summary>
+	/// <returns>true:所持中　false:未所持</returns>
+	const bool& GetIsHolding(void)const { return isHolding_; }
 
-	bool GetIsHolding(void)const { return isHolding_; }
-	std::string GetHoldItem(void) { return holdItemId_; }
+	/// <summary>
+	/// プレイヤーの所持しているアイテムのIDを取得する
+	/// </summary>
+	/// <returns>持っているアイテムのID</returns>
+	const std::string& GetHoldItem(void)const { return holdItemId_; }
 
-	void SetHoldItem(std::string item) { holdItemId_ = item; }
+	/// <summary>
+	/// プレイヤーの所持しているアイテムのIDを設定する
+	/// </summary>
+	/// <param name="item">持たせるアイテムのID</param>
+	void SetHoldItem(const std::string item) { holdItemId_ = item; }
 
-	void ChangeState(STATE state);
+	/// <summary>
+	/// 指定されたSTATEに状態を変更する
+	/// </summary>
+	/// <param name="state">新しく設定するSTATE型の状態</param>
+	void ChangeState(const STATE state);
 
 private:
 
@@ -115,20 +163,21 @@ private:
 	std::vector<std::weak_ptr<Collider>> colliders_;
 	
 	//衝突チェック
-	VECTOR gravHitPosDown_;
-	VECTOR gravHitPosUp_;
+	VECTOR gravHitPosDown_;	//下方向(カプセルの下の球体)
+	VECTOR gravHitPosUp_;	//上方向(カプセルの上の球体)
 	
 	//丸影
 	int imgShadow_;
 
 	//カプセル
 	std::unique_ptr<Capsule> capsule_;
+	//球体
 	std::unique_ptr<Sphere> sphere_;
 
 	//足煙エフェクト
-	int effectSmokeResId_;
-	int effectSmokePlayId_;
-	float stepFootSmoke_;	
+	int effectSmokeResId_;	//エフェクトリソースID
+	int effectSmokePlayId_;	//エフェクト再生ID
+	float stepFootSmoke_;	//エフェクト発生までの時間計測用
 
 	//フレームごとの移動値
 	VECTOR moveDiff_;
@@ -142,36 +191,76 @@ private:
 	int chestFrmNo_;
 	VECTOR chestPos_;
 
+	/// <summary>
+	/// アニメーション初期化処理
+	/// </summary>
 	void InitAnimation(void);
 
 	//状態遷移
+
+	/// <summary>
+	/// NONE状態に遷移する処理
+	/// </summary>
 	void ChangeStateNone(void);
+	/// <summary>	
+	/// PLAY状態に遷移する処理
+	/// </summary>
 	void ChangeStatePlay(void);
+	/// <summary>
+	/// STOP状態に遷移する処理
+	/// </summary>
 	void ChangeStateStop(void);
 
 	//更新ステップ
+
+	/// <summary>
+	/// NONE状態の更新処理
+	/// </summary>
 	void UpdateNone(void);
+	/// <summary>
+	/// PLAY状態の更新処理
+	/// </summary>
 	void UpdatePlay(void);
+	/// <summary>
+	/// STOP状態の更新処理
+	/// </summary>
 	void UpdateStop(void);
 
-	//描画系
+	/// <summary>
+	/// 影を描画する処理(影は画像で対応)
+	/// </summary>
 	void DrawShadow(void);
 
 	//操作 
+
+	/// <summary>
+	/// 移動処理
+	/// </summary>
 	void ProcessMove(void);
 
-	//回転
-	void SetGoalRotate(double rotRad);
+	/// <summary>
+	/// 回転処理(目標角度を設定)
+	/// </summary>
+	/// <param name="rotRad">目標角度</param>
+	void SetGoalRotate(const double rotRad);
+
+	/// <summary>
+	/// 回転する処理(徐々に回転)
+	/// </summary>
 	void Rotate(void);
 
-	//衝突判定
+	/// <summary>
+	/// 衝突判定処理
+	/// </summary>
 	void Collision(void);
 	
-	//着地モーション終了
-	bool IsEndLanding(void);
-
+	/// <summary>
+	/// カプセルの衝突判定処理
+	/// </summary>
 	void CollisionCapsule(void);
 
-	//足煙エフェクト
+	/// <summary>
+	/// 足煙エフェクト発生処理
+	/// </summary>
 	void EffectFootSmoke(void);
 };

@@ -172,28 +172,29 @@ void StageManager::ResetServeData(void)
 	isServedItems_.resize(0);
 }
 
-Transform StageManager::GetCounterTran(void) const
+const Transform& StageManager::GetCounterTran(void) const
 {
 	return counter_->GetTransform(); 
 }
 
-Transform StageManager::GetTableTran(int index) const
+const Transform& StageManager::GetTableTran(int index) const
 {
-	if (index > tables_.size())return Transform(); // 範囲外のインデックスは無視
+	//範囲外のインデックスは無視
+	if (index > static_cast<int>(tables_.size()))return Transform(); 
 	return tables_[index]->GetTalbeColTran();
 }
 
-Transform StageManager::GetShowCase(void) const
+const Transform& StageManager::GetShowCase(void) const
 {
 	return caseTran_;
 }
 
-Transform StageManager::GetDustBox(void) const
+const Transform& StageManager::GetDustBox(void) const
 {
 	return dustBoxTran_;
 }
 
-Transform StageManager::GetFloorTran(void) const
+const Transform& StageManager::GetFloorTran(void) const
 {
 	return furnitures_->GetFloorTran();
 }
@@ -357,29 +358,6 @@ void StageManager::Init3DModel(void)
 	objects_.emplace_back(std::make_unique<DustBox>(StageObject::DUST_BOX,player_, objects_));
 	objects_.back()->Init(DUSTBOX_POS, rot_B, dustBoxScale);
 	dustBoxTran_ = objects_.back()->GetTransform(); // ゴミ箱のTransformを保存
-}
-
-void StageManager::InitSound(void)
-{
-	auto& sound = SoundManager::GetInstance();
-
-	//se追加
-	//アイテムを取り出す時のSE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PICK_UP,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::PICK_UP).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::PICK_UP, SOUND_VOLUME);
-	//アイテムを置く時のSE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PUT_ON,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::PUT_ON).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::PUT_ON, SOUND_VOLUME);
-	//ストック追加時SE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::ADD_STOCK,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::ADD_STOCK).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::ADD_STOCK, SOUND_VOLUME);
-	//提供完了時SE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::PAYING,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::PAYING).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::PAYING, SOUND_VOLUME);
 }
 
 void StageManager::InitAnimation(void)

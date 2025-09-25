@@ -124,13 +124,13 @@ void StageObject::SetScale(VECTOR scale)
 	transform_.scl = scale;
 }
 
-VECTOR StageObject::GetSpherePos(void) const
+const VECTOR& StageObject::GetSpherePos(void) const
 {
 	//当たり判定用の球の中心座標を返す
 	return sphere_->GetPos();
 }
 
-float StageObject::GetSphereRad(void) const
+const float& StageObject::GetSphereRad(void) const
 {	
 	//当たり判定用の球の半径を返す
 	return sphere_->GetRadius();

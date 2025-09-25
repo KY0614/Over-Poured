@@ -31,7 +31,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>•X“ü‚è‚©‚Ç‚¤‚©</returns>
-	bool IsIce(void)const { return isIced_; }
+	const bool& IsIce(void)const { return isIced_; }
 
 	/// <summary>
 	/// •`‰æˆ—

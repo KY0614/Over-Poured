@@ -50,6 +50,11 @@ public:
 	/// </summary>
 	void Destroy(void);
 
+	/// <summary>
+	/// UIの追加
+	/// </summary>
+	/// <typeparam name="T">UIBaseを継承しているサブクラス</typeparam>
+	/// <param name="ui">追加するUI</param>
 	template <typename T>
 	void AddUI(std::shared_ptr<T> ui)
 	{
@@ -62,7 +67,7 @@ public:
 	/// </summary>
 	/// <param name="score">スコア</param>
 	/// <param name="pos">表示する座標</param>
-	void AddPopUpUI(int score, const VECTOR& pos);
+	void AddPopUpUI(const int score, const VECTOR& pos);
 
 private:
 	//シングルトン用インスタンス

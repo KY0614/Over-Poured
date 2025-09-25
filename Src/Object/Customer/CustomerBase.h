@@ -113,20 +113,20 @@ public:
 	/// カウンター前の球体との当たり判定
 	/// </summary>
 	/// <returns>true:当たっている , false:当たっていない</returns>
-	bool CollisionCounter(void);
+	const bool& CollisionCounter(void);
 
 	/// <summary>
 	/// お客がカウンターの前にいるかどうかを確認する
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true：カウンターの位置を越えている false：越えていない</returns>
-	bool CheckCounterToCustomer(void);
+	const bool& CheckCounterToCustomer(void);
 
 	/// <summary>
 	/// お客の座標を取得する
 	/// </summary>
 	/// <returns>お客の座標</returns>
-	VECTOR GetPos(void)const { return transform_.pos; }
+	const VECTOR& GetPos(void)const { return transform_.pos; }
 
 protected:
 

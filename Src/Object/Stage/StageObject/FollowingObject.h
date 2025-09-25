@@ -28,7 +28,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>追従元のオブジェクト</returns>
-	StageObject& GetFollowedObj(void) const { return followObj_; }
+	const StageObject& GetFollowedObj(void) const { return followObj_; }
 
 private:
 	//追従元のオブジェクト

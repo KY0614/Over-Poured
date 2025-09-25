@@ -45,7 +45,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>°‚ÌTransformî•ñ</returns>
-	const Transform GetFloorTran(void)const { return floor_; }
+	const Transform& GetFloorTran(void)const { return floor_; }
 
 private:
 	//ƒ}ƒeƒŠƒAƒ‹

@@ -47,14 +47,14 @@ public:
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns>相対座標のワールド座標</returns>
-	VECTOR GetPos(void) const { return GetRotPos(localPos_); }
+	const VECTOR& GetPos(void) const { return GetRotPos(localPos_); }
 
 	/// <summary>
 	/// 相対座標を回転させてワールド座標で取得する
 	/// </summary>
 	/// <param name="localPos">相対座標</param>
 	/// <returns>相対座標のワールド座標</returns>
-	VECTOR GetRotPos(const VECTOR& localPos) const;
+	const VECTOR& GetRotPos(const VECTOR& localPos) const;
 
 	/// <summary>
 	/// 球体の半径を取得

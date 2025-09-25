@@ -151,61 +151,61 @@ public:
 	/// </summary>
 	/// <param name="">transformの座標を返す</param>
 	/// <returns>オブジェクトの座標</returns>
-	VECTOR GetPos(void)const { return transform_.pos; };
+	const VECTOR& GetPos(void)const { return transform_.pos; };
 
 	/// <summary>
 	/// 当たり判定用球体の座標を取得する
 	/// </summary>
 	/// <returns>球体の座標</returns>
-	VECTOR GetSpherePos(void)const;
+	const VECTOR& GetSpherePos(void)const;
 
 	/// <summary>
 	/// オブジェクトのパラメータを取得する
 	/// </summary>
 	/// <returns>オブジェクトのパラメータ</returns>
-	StageObjectLibrary::ObjectParams GetParam(void)const { return param_; }
+	const StageObjectLibrary::ObjectParams& GetParam(void)const { return param_; }
 
 	/// <summary>
 	/// アイテムオブジェクトの状態を取得
 	/// </summary>
 	/// <param name="">itemState_を返す</param>
 	/// <returns>アイテムオブジェクトの状態</returns>
-	ITEM_STATE GetItemState(void)const { return itemState_; }
+	const ITEM_STATE& GetItemState(void)const { return itemState_; }
 
 	/// <summary>
 	/// マシンオブジェクトの状態を取得
 	/// </summary>
 	/// <param name="">machineState_を返す</param>
 	/// <returns>マシンオブジェクトの状態</returns>
-	MACHINE_STATE GetMachineState(void)const { return machineState_; }
+	const MACHINE_STATE& GetMachineState(void)const { return machineState_; }
 
 	/// <summary>
 	/// 当たり判定用球体の半径を取得する
 	/// </summary>
 	/// <param name="">SphereのGetRadius関数を返す</param>
 	/// <returns>球体の半径</returns>
-	float GetSphereRad(void)const;
+	const float& GetSphereRad(void)const;
 
 	/// <summary>
 	/// オブジェクトがプレイヤーからアクションを行われているかどうかを取得
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>アクションさているかどうか</returns>
-	bool IsActioned(void) const{ return isActioned_; }
+	const bool& IsActioned(void) const{ return isActioned_; }
 
 	/// <summary>
 	/// 蓋が乗っているかどうか
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true:乗っている、false:乗っていない</returns>
-	bool IsLidOn(void) const { return isLid_; }
+	const bool& IsLidOn(void) const { return isLid_; }
 
 	/// <summary>
 	/// ラックに在庫があるかどうか
 	/// </summary>
 	/// <param name="">在庫がないときはfalseを返す</param>
 	/// <returns>ture:ある　false:ない</returns>
-	bool GetHasStock(void) const { return hasStock_; }
+	const bool& GetHasStock(void) const { return hasStock_; }
 
 	/// <summary>
 	/// テーブルコライダー用の情報を取得

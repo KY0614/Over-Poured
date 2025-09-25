@@ -50,28 +50,28 @@ public:
 	/// 最初の注文の制限時間が過ぎたかどうかを返す
 	/// </summary>
 	/// <returns>true:過ぎた　false:過ぎてない </returns>
-	bool IsFirstOrderTimeOut(void);
+	const bool& IsFirstOrderTimeOut(void);
 
 	/// <summary>
 	/// 先頭の注文内容を取得する
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns></returns>
-	Order::OrderData GetFirstOrder(void) { return orders_.front()->GetOrder(); }
+	const Order::OrderData& GetFirstOrder(void) { return orders_.front()->GetOrder(); }
 
 	/// <summary>
 	/// すべての注文データを取得する
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>注文内容データ</returns>
-	std::vector<Order::OrderData> GetAllOrder(void) const;
+	const std::vector<Order::OrderData>& GetAllOrder(void) const;
 
 	/// <summary>
 	/// 最後尾の注文データを取得する
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>最後尾の注文データ</returns>
-	Order::OrderData GetLastOrderData(void) const;
+	const Order::OrderData& GetLastOrderData(void) const;
 
 	//----------------------------------------------------------------
 

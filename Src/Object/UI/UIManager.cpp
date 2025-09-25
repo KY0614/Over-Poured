@@ -89,7 +89,7 @@ void UIManager::Destroy(void)
 	delete instance_;
 }
 
-void UIManager::AddPopUpUI(int score, const VECTOR& pos)
+void UIManager::AddPopUpUI(const int score, const VECTOR& pos)
 {
 	// ポップアップUIを追加(スコア用）
 	popUpUIs_.emplace_back(std::make_unique<PopUpUI>(score, pos));

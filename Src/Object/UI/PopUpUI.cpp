@@ -41,7 +41,7 @@ void PopUpUI::Update(void)
     // イージング関数を使用して位置と透過度を計算
     float t = animTime_ / ANIM_DURATION;
     pos_.y = pos_.y - t * MOVE_DISTANCE; //上に移動
-    alpha_ = ALPHA_MAX * (1.0f - t); //フェードアウト
+    alpha_ = ALPHA_MAX * (MOVE_DISTANCE - t); //フェードアウト
 
 	//透過度を設定
     SetAlpha(alpha_);
@@ -58,9 +58,9 @@ void PopUpUI::Draw(void)
 void PopUpUI::DrawScore(int score, const VECTOR& pos, float alpha)
 {
     std::string str = std::to_string(score);
-    const int digitWidth = 35;
+	const int digitWidth = 35;  //数字画像の幅(1つの数字の幅）
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(alpha));
-	const float scale = 0.4f; //拡大率
+	const float scale = 0.4f; //数字画像の拡大率
 
     for (int i = 0; i < str.size(); ++i)
     {

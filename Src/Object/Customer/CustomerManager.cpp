@@ -159,7 +159,7 @@ void CustomerManager::ClearFirstCustomers(void)
 	}
 }
 
-void CustomerManager::SetCustomerReacton(int score)
+void CustomerManager::SetCustomerReacton(const int score)
 {
 	//スコアに応じてリアクションを変える
 	if (score >= SCORE_GOOD)
@@ -176,7 +176,12 @@ void CustomerManager::SetCustomerReacton(int score)
 	}
 }
 
-VECTOR CustomerManager::GetLastCustomerPos(void) const
+void CustomerManager::IsCheckUI(const int index, const bool isActive)
+{
+	orderUI_[firstCustomerIdx_]->SetCheckUI(index, isActive);
+}
+
+const VECTOR& CustomerManager::GetLastCustomerPos(void) const
 {
 	//返す用の座標
 	VECTOR retPos;
@@ -190,7 +195,7 @@ VECTOR CustomerManager::GetLastCustomerPos(void) const
 	return retPos;
 }
 
-bool CustomerManager::CheckFirstCustomerCol(void)
+const bool& CustomerManager::CheckFirstCustomerCol(void)const
 {
 	bool ret = false;
 	//先頭のお客がカウンター前にいるかどうか
@@ -202,7 +207,7 @@ bool CustomerManager::CheckFirstCustomerCol(void)
 	return ret;
 }
 
-bool CustomerManager::CheckSecondCustomerCol(void)
+const bool& CustomerManager::CheckSecondCustomerCol(void)const
 {
 	bool ret = false;
 	//2番目のお客がカウンター前にいるかどうか
@@ -212,11 +217,6 @@ bool CustomerManager::CheckSecondCustomerCol(void)
 		ret = true;
 	}
 	return ret;
-}
-
-void CustomerManager::IsCheckUI(const int index, const bool isActive)
-{
-	orderUI_[firstCustomerIdx_]->SetCheckUI(index, isActive);
 }
 
 void CustomerManager::InitCustomersPos(void)

@@ -89,5 +89,5 @@ void DustBox::Interact(const std::string& objId)
 
 	//プレイヤーの持ち物状態をリセット
 	player_.SetHoldItem("");
-	player_.SetIsHoldiong(false);
+	player_.SetIsHolding(false);
 }

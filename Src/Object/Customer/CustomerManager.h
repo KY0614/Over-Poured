@@ -44,6 +44,8 @@ public:
 	/// </summary>
 	void ClearFirstCustomers(void);
 
+	//設定用関数--------------------------------------------------------------
+
 	/// <summary>
 	/// 客を動かす
 	/// </summary>
@@ -56,45 +58,47 @@ public:
 	void StopMove(void) { isCustomersMove_ = false; }
 
 	/// <summary>
-	/// 客が動いているか取得する
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>true:動いている　false:止まってる</returns>
-	bool GetIsMove(void)const { return isCustomersMove_; }
-
-	/// <summary>
 	/// スコアによるお客の反応の設定
 	/// </summary>
 	/// <param name="score">スコア</param>
-	void SetCustomerReacton(int score);
-
-	/// <summary>
-	/// 最後尾（６人目）の座標を取得
-	/// </summary>
-	/// <param name="">５人目から間隔をあけて左にずらした座標を返す</param>
-	/// <returns>最後尾の座標</returns>
-	VECTOR GetLastCustomerPos(void) const;
-
-	/// <summary>
-	/// 先頭のお客がカウンター前にいるかどうか
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>true:いる　false:いない</returns>
-	bool CheckFirstCustomerCol(void);
-
-	/// <summary>
-	/// 2人目のお客がカウンター前にいるかどうか
-	/// </summary>
-	/// <param name="">先頭のお客の注文提供後に確認する用</param>
-	/// <returns>true:いる　false:いない</returns>
-	bool CheckSecondCustomerCol(void);
+	void SetCustomerReacton(const int score);
 
 	/// <summary>
 	/// 注文の確認UIを表示する
 	/// </summary>
 	/// <param name="index">指定する配列</param>
 	/// <param name="isActive">表示させるかどうか</param>
-	void IsCheckUI(const int index,const bool isActive);
+	void IsCheckUI(const int index, const bool isActive);
+
+	//取得用関数--------------------------------------------------------------
+
+	/// <summary>
+	/// 客が動いているか取得する
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:動いている　false:止まってる</returns>
+	const bool& GetIsMove(void)const { return isCustomersMove_; }
+
+	/// <summary>
+	/// 最後尾（６人目）の座標を取得
+	/// </summary>
+	/// <param name="">５人目から間隔をあけて左にずらした座標を返す</param>
+	/// <returns>最後尾の座標</returns>
+	const VECTOR& GetLastCustomerPos(void) const;
+
+	/// <summary>
+	/// 先頭のお客がカウンター前にいるかどうか
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>true:いる　false:いない</returns>
+	const bool& CheckFirstCustomerCol(void)const;
+
+	/// <summary>
+	/// 2人目のお客がカウンター前にいるかどうか
+	/// </summary>
+	/// <param name="">先頭のお客の注文提供後に確認する用</param>
+	/// <returns>true:いる　false:いない</returns>
+	const bool& CheckSecondCustomerCol(void)const;
 
 private:
 	//静的インスタンス

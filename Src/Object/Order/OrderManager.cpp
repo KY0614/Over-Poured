@@ -54,7 +54,7 @@ void OrderManager::ClearFirstOrder(void)
 	orders_.erase(orders_.begin());
 }
 
-bool OrderManager::IsFirstOrderTimeOut(void)
+const bool& OrderManager::IsFirstOrderTimeOut(void)
 {
 	//制限時間が切れたらtrueを返す
 	if (orders_.front()->GetOrderTime() < 0.1f)	//0.0f以下だと誤差でマイナスになる可能性があるため0.1f以下にしている
@@ -64,7 +64,7 @@ bool OrderManager::IsFirstOrderTimeOut(void)
 	return false;
 }
 
-std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
+const std::vector<Order::OrderData>& OrderManager::GetAllOrder(void) const
 {
 	//現在の全ての注文データを返す
 	std::vector<Order::OrderData> retData;
@@ -75,7 +75,7 @@ std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
 	return retData;
 }
 
-Order::OrderData OrderManager::GetLastOrderData(void) const
+const Order::OrderData& OrderManager::GetLastOrderData(void) const
 {
 	//最後の注文データを返す
 	return orders_.back()->GetOrder();

@@ -54,14 +54,14 @@ public:
 	/// </summary>
 	/// <param name="">’•¶“à—e‚ğ•Ô‚·(OrderData‚ğ•Ô‚·)</param>
 	/// <returns>’•¶“à—e</returns>
-	OrderData GetOrder(void) const { return orderData_; }
+	const OrderData& GetOrder(void) const { return orderData_; }
 
 	/// <summary>
 	/// ’•¶‚Ì§ŒÀŠÔ‚ğæ“¾
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns></returns>
-	float GetOrderTime(void) const { return orderData_.time_; }	
+	const float& GetOrderTime(void) const { return orderData_.time_; }	
 
 private:
 	//’•¶“à—e

@@ -105,7 +105,7 @@ void OrderUI::Draw(void)
 		}
 	}
 	//オフセット座標を加算してからワールド座標からスクリーン座標に変換
-	VECTOR offsetPos = VGet(120.0f, -50.0f, 0.0f);
+	const VECTOR offsetPos = VGet(120.0f, -50.0f, 0.0f);
 	VECTOR pos = VAdd(pos_, offsetPos);
 	VECTOR screenPos = ConvWorldPosToScreenPos(pos);
 	//タイマーの背景を描画

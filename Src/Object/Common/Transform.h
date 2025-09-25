@@ -33,17 +33,18 @@ public:
 	VECTOR pos;
 	VECTOR localPos;
 
-	MATRIX matScl;
-	MATRIX matRot;
-	MATRIX matPos;
+	//変換行列
+	MATRIX matScl;	//スケール
+	MATRIX matRot;	//回転
+	MATRIX matPos;	//平行移動
 
-	// 回転
+	//回転
 	Quaternion quaRot;
 
-	// ローカル回転
+	//ローカル回転
 	Quaternion quaRotLocal;
 
-	// コライダ
+	//コライダ
 	std::shared_ptr<Collider> collider;
 
 	/// <summary>
@@ -54,25 +55,24 @@ public:
 
 	void SetModel(int modelHId);
 	void MakeCollider(Collider::TYPE type);
-	// 前方方向を取得
+	//前方方向を取得
 	VECTOR GetForward(void) const;
 
-	// 後方方向を取得
+	//後方方向を取得
 	VECTOR GetBack(void) const;
 
-	// 右方向を取得
+	//右方向を取得
 	VECTOR GetRight(void) const;
 
-	// 左方向を取得
+	//左方向を取得
 	VECTOR GetLeft(void) const;
 
-	// 上方向を取得
+	//上方向を取得
 	VECTOR GetUp(void) const;
 
-	// 下方向を取得
+	//下方向を取得
 	VECTOR GetDown(void) const;
 
-	// 対象方向を取得
+	//対象方向を取得
 	VECTOR GetDir(const VECTOR& vec) const;
-
 };

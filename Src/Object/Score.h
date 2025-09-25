@@ -5,44 +5,8 @@
 class Score
 {
 public:
-	//スコア加算スピード
-	static constexpr int ADD_SCORE_SPEED = 8;		//基本加算スピード
-	static constexpr int ADD_CURRENT_SPEED = 5;		//現在スコアの加算スピード
-	static constexpr int ADD_TOTALSCORE_SPEED = 123;//総スコア加算スピード
-
-	//イージング関連
-	static constexpr float START_SLIDE_X = -500.0f;	//X開始位置
-	static constexpr float END_SLIDE_X = (float)(Application::SCREEN_SIZE_X / 6);	//X終了位置
-	static constexpr float START_SLIDE_Y = 690.0f;	//Y開始位置
-	static constexpr float END_SLIDE_Y = 420.0f;	//Y終了位置
-	static constexpr float NEXT_SLIDE_START_X = -125.0f;	//次のイージングを開始する目標位置
-	static constexpr float SLIDE_MAX_TIME = 1.0f;	//目標時間
-	static constexpr float BLINK_SPEED = 0.5f;		//ハイライト点滅の間隔
-
-	//ゲージ関連
-	static constexpr float MAX_GAUGE_TIME = 1.0f;		//ゲージのイージング目標時間
-	static constexpr float FIRST_GAUGE_SPEED = 0.5f;	//最初に表示するゲージのスピード
-	static constexpr float CURRENT_GAUGE_SPEED = 0.5f;	//最後に表示するゲージのスピード
-	static constexpr int GAUGE_POS_X = Application::SCREEN_SIZE_X / 2 + 450;
-	static constexpr int GAUGE_POS_Y = Application::SCREEN_SIZE_Y / 2 - 150;
-	
-	//ランク関連
-	static constexpr int RANK_NUM = 4;		//ランクの数
-	static constexpr int RANK_C_MAX = 500;	//Cランクの最大値
-	static constexpr int RANK_B_MAX = 1000;	//Bランクの最大値
-	static constexpr int RANK_A_MAX = 1500;	//Aランクの最大値
-	static constexpr int RANK_S_MAX = 1999;	//Sランクの最大値
-
-	static constexpr int RANK_C_MIN = 0;	//Cランクの最小値
-	static constexpr int RANK_B_MIN = 501;	//Bランクの最小値
-	static constexpr int RANK_A_MIN = 1001;	//Aランクの最小値
-	static constexpr int RANK_S_MIN = 1501;	//Sランクの最小値
-
-	static constexpr float RANK_SCORE_MARIGINE_X = 150.0f;	//ランキングスコアをラベルの大きさ分ずらす用
-	static constexpr float RANK_SCORE_MARIGINE_Y = 120.0f;	//ランキング毎の縦間隔（描画する際にずらすため）
-	static constexpr int RANK_SCORE_POS_Y = 100;				//ランキングY座標
-
-	static constexpr int LOGO_HEIGHT = 1024;
+	//ランクの数
+	static constexpr int RANK_NUM = 4;		
 
 	struct RankInfo 
 	{
@@ -53,6 +17,7 @@ public:
 		bool isFull_ = false;
 	};
 
+	//ランクの種類
 	enum class RANK 
 	{
 		C,
@@ -62,19 +27,11 @@ public:
 		MAX
 	};
 
-	enum class TOTALSCR_PHASE 
-	{
-		COUNT_UP,       // カウントアップ中
-		SHOW_CURRENT,   // 今回のスコアを別表示
-		MOVE_TO_TOTAL,  // 移動中
-		MERGE,          // 合体演出
-		FINISH          // 終了
-	};
-
+	//スコア画面の状態
 	enum class STATE
 	{
-		PLAY_SCORE,
-		TOTAL_SCORE
+		PLAY_SCORE,		//今回のスコアとランキング表示
+		TOTAL_SCORE		//総スコア表示
 	};
 
 	// コンストラクタ
@@ -83,31 +40,46 @@ public:
 	// デストラクタ
 	~Score(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void);
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update(void);
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	void Draw(void);
 
 private:
+	//スコア画面の状態
 	STATE state_;
 
+	//今回のゲームのランク
 	RANK rank_;
-	TOTALSCR_PHASE phase_;
-
+	
+	//状態管理(状態遷移時初期処理)
 	std::map<STATE, std::function<void(void)>> stateChange_;
-
+	//状態管理(状態更新処理)
 	std::function<void(void)> stateUpdate_;
+	//状態管理(状態描画処理)
 	std::function<void(void)> stateDraw_;
 
-	bool isCurrentScrDraw_;
-	bool isRankingScrDraw_;
-	bool isGaugeDraw_;
-	bool playSE_;
+	//現在スコアを描画済みかどうか
+	bool isCurrentScrDraw_;	//true:描画済み false:未描画
+
+	//ランキングスコアを描画済みかどうか
+	bool isRankingScrDraw_;	//true:描画済み false:未描画
+
+	//ゲージを描画済みかどうか
+	bool isGaugeDraw_;		//true:描画済み false:未描画
 
 	//今回のゲームのスコア
 	int currentScr_;
-
-	//全プレイヤーの総スコア
-	int totalScr_;
 
 	//ランキングスコアを滑らかに表示させるよう
 	float slideX_[ScoreManager::RANKING_NUM];		//移動させる座標
@@ -142,26 +114,42 @@ private:
 	int currentScrImg_;
 	//ランクごとの文字画像（C,B,A,S)
 	int* ranksImgs_;
+	//ゲージ画像
 	int circleShadowImg_;
+	//背景の装飾画像
 	int decoImg_;
-
-	int pushImg_;	//押下画像
+	//push space or Button画像
+	int pushImg_;	
 	
-	float scale_;
+	//画面比率
+	float aspectRatio_;
 
+	/// <summary>
+	/// 現在スコアを０から足しながら描画
+	/// </summary>
+	/// <param name="score">現在スコア</param>
+	/// <param name="posX">X座標</param>
+	/// <param name="posY">Y座標</param>
+	/// <param name="scale">1文字あたりの大きさ</param>
 	void DrawVariableScore(int score,int posX,int posY, float scale);
+
+	/// <summary>
+	/// ランキングスコアを描画
+	/// </summary>
+	/// <param name="score">現在スコア</param>
+	/// <param name="posX">X</param>
+	/// <param name="posY">Y座標</param>
+	/// <param name="hightLight">ハイライト</param>
 	void DrawRankingScore(int score,int posX,int posY,int hightLight);
+
 	void DrawScore(int score, int posX, int posY);
 
 	void ChangeState(STATE state);
 	void ChangePlayScore(void);
-	void ChangeTotalScore(void);
 
 	void UpdatePlayScore(void);
-	void UpdateTotalScore(void);
 
 	void DrawPlayScore(void);
-	void DrawTotalScore(void);
 
 	void CalcPercentFromRank(void);
 
@@ -170,5 +158,7 @@ private:
 	void InitRankInfo(void);
 
 	void LoadImages(void);
+
+	void InitSound(void);
 };
 
