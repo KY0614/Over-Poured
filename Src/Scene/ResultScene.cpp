@@ -18,13 +18,14 @@ ResultScene::~ResultScene(void)
 
 void ResultScene::Init(void)
 {
+	//BGMÇÃçƒê∂
 	auto& sound = SoundManager::GetInstance();
-
 	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::RESULT,
 		ResourceManager::GetInstance().Load(ResourceManager::SRC::RESULT_BGM).handleId_);
 	sound.AdjustVolume(SoundManager::SOUND::RESULT, 256 / 2);
 	sound.Play(SoundManager::SOUND::RESULT);
 
+	//ÉXÉRÉA
 	score_ = std::make_unique<Score>();
 	score_->Init();
 }

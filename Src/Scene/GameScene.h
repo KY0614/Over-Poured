@@ -4,38 +4,32 @@
 
 class StageManager;
 class Player;
-class OrderManager;
 class OrderCustomerManager;
 class Timer;
 
 class GameScene : public SceneBase
 {
 public:
-	//ゲーム全体の制限時間
-	static constexpr int  MAX_MINUTE_TIME = 2;			//分
-	static constexpr int  MAX_SECOND_TIME = 0;			//秒
 
-	//残り秒数が少なったときにSEを鳴らす用の目安秒数
-	static constexpr int  SECOND_SOUND_TIME = 30;		//残り30秒でSEを鳴らす(遅い方のSE)
-	static constexpr int  SECOND_SOUND_TIME_FAST = 10;	//残り10秒でSEを鳴らす(速い方のSE)
-
-	//カウントダウン画像の枚数
-	static constexpr int  MAX_COUNT_DOWN = 4;			//start, 1, 2, 3の4枚
-
-	//カウントダウン画像を拡大する時間
-	static constexpr float  CNTDOWN_SCL_MAX_TIME = 1.0f;//拡大にかかる最大時間
-
-	//カウントダウン画像の拡大率
-	static constexpr float  CNTDOWN_IMG_MAX_SCL = 2.0f;	//最大拡大率
-	
 	//コンストラクタ
 	GameScene(void);
 
 	//デストラクタ
 	~GameScene(void);
 
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	void Init(void) override;
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update(void) override;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	void Draw(void) override;
 
 private:
@@ -123,4 +117,14 @@ private:
 	/// </summary>
 	/// <param name="score">スコア</param>
 	void DrawScore(int score);
+
+	/// <summary>
+	/// 画像の読み込み処理
+	/// </summary>
+	void LoadImages(void);
+
+	/// <summary>
+	/// サウンドの初期化処理
+	/// </summary>
+	void InitSound(void);
 };

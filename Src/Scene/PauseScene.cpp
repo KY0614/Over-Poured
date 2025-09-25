@@ -9,12 +9,23 @@
 #include "../Scene/PauseScene/KeyConfigScene.h"
 #include "PauseScene.h"
 
-namespace {
+namespace 
+{
+	//背景画像の大きさ（縦横）
 	const int BACK_IMG_SCALE = 1080;
+	//出現・消滅アニメーションのフレーム数
 	const int APPEAR_INTERVAL = 15;
+	//枠の余白
 	const int MARGINE_SIZE = 30;
-	const int MENU_SCALE = 216;
+	//メニューリストの高さ
+	const int MNEU_LIST_HEIGHT = 216;
+	//メニューリストのX座標
+	const int MENU_LIST_POS_X = 280;
+	//メニューリストの開始Y座標
 	const int MENU_START_Y = 200;
+	//メニューリストの拡大率
+	const float MENU_LIST_SCALE = 0.8f;
+	//選択中メニューのマージン(横にずらす量)
 	const int SELECT_MENU_MARGINE = 25;
 }
 
@@ -82,29 +93,10 @@ PauseScene::~PauseScene(void)
 
 void PauseScene::Init(void)
 {
-	auto& sound = SoundManager::GetInstance();
-	//カーソルSE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::NEXT_PAGE,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::NEXT_PAGE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::NEXT_PAGE, 256 / 2);
-
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::RETURN_PAGE,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::RETURN_PAGE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::RETURN_PAGE, 256 / 2);
-
-	//メニュー時SE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::MENU_CLOSE,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::MENU_CLOSE).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::MENU_CLOSE, 256 / 2);
-
-	backImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::TUTORIAL_BACK).handleId_;
-
-	menuListImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::MENU_LIST).handleIds_;
-
-	menuCursorImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::MENU_CURSOR).handleId_;
+	//サウンドの初期化
+	InitSound();
+	//画像の読み込み
+	LoadImages();
 }
 
 void PauseScene::Update(void)
@@ -144,9 +136,8 @@ void PauseScene::DrawProcess(void)
 	//出現・消滅時の高さ変化率(0.0～1.0)
 	float rate = static_cast<float>(frame_) /
 		static_cast<float>(APPEAR_INTERVAL);
-
 	frameHalfHeight *= rate;
-
+	//背景画像の描画
 	DrawExtendGraph(MARGINE_SIZE,
 		centerY - frameHalfHeight,
 		Application::SCREEN_SIZE_X - MARGINE_SIZE,
@@ -158,6 +149,7 @@ void PauseScene::UpdateNormal(void)
 {	
 	auto& sound = SoundManager::GetInstance();
 	InputManager& ins = InputManager::GetInstance();
+	//ポーズメニューを閉じる
 	if (ins.IsInputTriggered("pause"))
 	{
 		sound.Play(SoundManager::SOUND::MENU_CLOSE);
@@ -165,6 +157,7 @@ void PauseScene::UpdateNormal(void)
 		draw_ = &PauseScene::DrawProcess;
 		return;
 	}
+	//メニュー操作
 	if (ins.IsInputTriggered("Down"))
 	{
 		sound.Play(SoundManager::SOUND::NEXT_PAGE);
@@ -175,7 +168,7 @@ void PauseScene::UpdateNormal(void)
 		sound.Play(SoundManager::SOUND::NEXT_PAGE);
 		cursorIdx_ = (cursorIdx_ + menuList_.size() - 1) % menuList_.size();
 	}
-
+	//決定
 	if (ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::RETURN_PAGE);
@@ -187,12 +180,14 @@ void PauseScene::UpdateNormal(void)
 
 void PauseScene::DrawNormal(void)
 {
+	//背景画像の描画
 	DrawExtendGraph(MARGINE_SIZE,
 		MARGINE_SIZE,
 		Application::SCREEN_SIZE_X - MARGINE_SIZE,
 		Application::SCREEN_SIZE_Y - MARGINE_SIZE,
 		backImg_, true);
 
+	//メニューリストの描画
 	DrawMenuList();
 }
 
@@ -201,9 +196,8 @@ void PauseScene::DrawMenuList(void)
 	//画面の大きさに合わせて拡大率を変える
 	float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
-	float size = 0.8f;
 
-	const int line_start_X = (MARGINE_SIZE + 250) * scale;
+	const int line_start_X = MENU_LIST_POS_X * scale;
 
 	int lineY = MENU_START_Y * scale;
 
@@ -223,16 +217,47 @@ void PauseScene::DrawMenuList(void)
 		{
 			DrawRotaGraph(cursor_X ,
 				lineY,
-				scale * 1.0f, 0.0f, menuCursorImg_, true
+				scale, 0.0f, menuCursorImg_, true
 			);
 			lineX += SELECT_MENU_MARGINE * scale;
 		}
 
 		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * scale,
-			(MENU_START_Y * scale) + (MENU_SCALE * size * scale * i),
-			scale * size, 0.0f, menuListImg_[i], true
+			(MENU_START_Y * scale) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale * i),
+			scale * MENU_LIST_SCALE, 0.0f, menuListImg_[i], true
 		);
 
-		lineY += MENU_SCALE * size * scale;
+		lineY += MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale;
 	}
+}
+
+void PauseScene::LoadImages(void)
+{
+	//背景画像
+	backImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::TUTORIAL_BACK).handleId_;
+	//メニューリスト画像
+	menuListImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::MENU_LIST).handleIds_;
+	//メニューカーソル画像
+	menuCursorImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::MENU_CURSOR).handleId_;
+}
+
+void PauseScene::InitSound(void)
+{
+	auto& sound = SoundManager::GetInstance();
+	//カーソルSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::NEXT_PAGE,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::NEXT_PAGE).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::NEXT_PAGE, 256 / 2);
+	//決定SE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::RETURN_PAGE,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::RETURN_PAGE).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::RETURN_PAGE, 256 / 2);
+
+	//メニューをとじるSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::MENU_CLOSE,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::MENU_CLOSE).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::MENU_CLOSE, 256 / 2);
 }
