@@ -6,8 +6,11 @@
 #include "../Manager/GameSystem/SoundManager.h"
 #include "ExplainScene.h"
 
-namespace {
+namespace 
+{
+	//マージンサイズ
 	const int MARGINE_SIZE = 30;
+	//説明画像のサイズ調整用
 	const int EXPLAIN_SIZE = 60;
 }
 
@@ -27,20 +30,11 @@ ExplainScene::~ExplainScene(void)
 
 void ExplainScene::Init(void)
 {
-	auto& sound = SoundManager::GetInstance();
-	//カーソルSE
-	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::MENU_BACK,
-		ResourceManager::GetInstance().Load(ResourceManager::SRC::MENU_BACK).handleId_);
-	sound.AdjustVolume(SoundManager::SOUND::MENU_BACK, 256 / 2);
+	//サウンドの初期化
+	InitSound();
 
-	backImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::TUTORIAL_BACK).handleId_;
-
-	explainImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::TUTORIAL).handleId_;
-
-	menuBackImg_ = ResourceManager::GetInstance().Load(
-		ResourceManager::SRC::MENU_BACK_LOGO).handleId_;
+	//画像の読み込み
+	LoadImages();
 }
 
 void ExplainScene::Update(void)
@@ -60,8 +54,10 @@ void ExplainScene::Draw(void)
 	//画面の大きさに合わせて拡大率を変える
 		float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
-		float size = 2.0f;
-		float backSize = 0.8f;
+		//説明画像の拡大率
+		float explainSize = 2.0f;
+		//メニューへ戻る画像の拡大率
+		float menuBackSize = 0.8f;
 
 	DrawExtendGraph(MARGINE_SIZE,
 		MARGINE_SIZE,
@@ -72,14 +68,37 @@ void ExplainScene::Draw(void)
 	//説明画像
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
 		Application::SCREEN_SIZE_Y / 2 - (EXPLAIN_SIZE * scale),
-		scale * size, 0.0f,
+		scale * explainSize, 0.0f,
 		explainImg_,
 		true);
 
 	//メニューへ戻る画像
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
 		Application::SCREEN_SIZE_Y - MARGINE_SIZE - (EXPLAIN_SIZE * scale),
-		scale * backSize, 0.0f,
+		scale * menuBackSize, 0.0f,
 		menuBackImg_,
 		true);
+}
+
+void ExplainScene::LoadImages(void)
+{
+	//画像の読み込み
+	backImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::TUTORIAL_BACK).handleId_;
+	//説明画像
+	explainImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::TUTORIAL).handleId_;
+	//メニューへ戻る画像
+	menuBackImg_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::MENU_BACK_LOGO).handleId_;
+}
+
+void ExplainScene::InitSound(void)
+{
+	//サウンドの初期化
+	auto& sound = SoundManager::GetInstance();
+	//カーソルSE
+	sound.Add(SoundManager::TYPE::SE, SoundManager::SOUND::MENU_BACK,
+		ResourceManager::GetInstance().Load(ResourceManager::SRC::MENU_BACK).handleId_);
+	sound.AdjustVolume(SoundManager::SOUND::MENU_BACK, 256 / 2);
 }

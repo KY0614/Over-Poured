@@ -57,15 +57,17 @@ void SceneManager::Init(void)
 	Init3D();
 
 	//初期シーンの設定
-	DoChangeScene(SCENE_ID::TUTORIAL);
+	DoChangeScene(SCENE_ID::TITLE);
 
 }
 
 void SceneManager::Init3D(void)
 {
-	//SetBackgroundColor(0, 139, 139);
+	const int backColR = 64;	//背景色赤
+	const int backColG = 64;	//背景色緑
+	const int backColB = 128;	//背景色青
 	//背景色設定
-	SetBackgroundColor(64, 64, 128);
+	SetBackgroundColor(backColR, backColG, backColB);
 
 	//Zバッファを有効にする
 	SetUseZBuffer3D(true);
