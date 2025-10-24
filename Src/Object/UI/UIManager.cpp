@@ -64,10 +64,10 @@ void UIManager::Draw(void)
 	if (uis_.empty() && popUpUIs_.empty())return;
 
 	// ‘S‚Ä‚ÌUI‚ð‚Ü‚Æ‚ß‚Ä•`‰æ
-	for (auto& ui : uis_)
-	{
-		ui.lock()->Draw();
-	}
+	//for (auto& ui : uis_)
+	//{
+	//	ui.lock()->Draw();
+	//}
 	for (auto& ui : popUpUIs_)
 	{
 		ui->Draw();

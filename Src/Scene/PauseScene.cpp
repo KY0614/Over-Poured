@@ -172,7 +172,7 @@ void PauseScene::UpdateNormal(void)
 	if (ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::RETURN_PAGE);
-		auto selectedName = menuList_[cursorIdx_];
+		std::wstring& selectedName = menuList_[cursorIdx_];
 		menuFuncTable_[selectedName]();
 		return;
 	}
@@ -194,14 +194,14 @@ void PauseScene::DrawNormal(void)
 void PauseScene::DrawMenuList(void)
 {
 	//âÊñ ÇÃëÂÇ´Ç≥Ç…çáÇÌÇπÇƒägëÂó¶ÇïœÇ¶ÇÈ
-	int scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
+	float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
 
-	const int line_start_X = MENU_LIST_POS_X * static_cast<int>(scale);
+	const int line_start_X = MENU_LIST_POS_X * scale;
 
-	int lineY = MENU_START_Y * static_cast<int>(scale);
+	int lineY = MENU_START_Y * scale;
 
-	auto currentStr = menuList_[cursorIdx_];
+	std::wstring& currentStr = menuList_[cursorIdx_];
 
 	for (int i = 0; i < menuList_.size();++i) 
 	{
@@ -219,15 +219,15 @@ void PauseScene::DrawMenuList(void)
 				lineY,
 				scale, 0.0f, menuCursorImg_, true
 			);
-			lineX += SELECT_MENU_MARGINE * static_cast<int>(scale);
+			lineX += SELECT_MENU_MARGINE * scale;
 		}
 
 		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * static_cast<int>(scale),
-			(MENU_START_Y * scale) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * static_cast<int>(scale) * i),
+			(MENU_START_Y * static_cast<int>(scale)) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * static_cast<int>(scale) * i),
 			scale * MENU_LIST_SCALE, 0.0f, menuListImg_[i], true
 		);
 
-		lineY += MNEU_LIST_HEIGHT * static_cast<int>(MENU_LIST_SCALE * scale);
+		lineY += static_cast<int>(MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale);
 	}
 }
 

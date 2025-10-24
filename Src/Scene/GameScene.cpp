@@ -293,7 +293,7 @@ void GameScene::DrawGame(void)
 	player_->Draw();
 	
 	//UI•`‰æ
-	UIManager::GetInstance().Draw();
+	//UIManager::GetInstance().Draw();
 	
 	//ƒ^ƒCƒ}[•`‰æ
 	timer_->Draw();

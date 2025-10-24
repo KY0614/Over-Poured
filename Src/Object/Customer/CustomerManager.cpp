@@ -112,7 +112,8 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 	//’•¶—pUI‚ğ¶¬
 	orderUI_.emplace_back(std::make_shared<OrderUI>(
 		data.drink_, data.sweets_,data.time_));
-
+	//•Ô‚·—p‚ÌÀ•W
+	VECTOR pos = GetLastCustomerPos();
 	//’•¶‚É‰‚¶‚½‚¨‹q‚ğ¶¬
 	switch (data.drink_)
 	{
@@ -122,13 +123,17 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 	case Order::DRINK::HOT:
 		//HOT‚Ì‚¨‹q‚ğ¶¬
 		customers_.emplace_back(std::make_unique<HotCustomer>());
-		customers_.back()->Init(GetLastCustomerPos());
+		//ÅŒã‚Ì‚¨‹q‚ÌˆÊ’u‚©‚çŠÔŠu‚ğ‚ ‚¯‚Ä¶‚É‚¸‚ç‚·
+		pos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+		customers_.back()->Init(pos);
 		break;
 
 	case Order::DRINK::ICE:
 		//ICE‚Ì‚¨‹q‚ğ¶¬
 		customers_.emplace_back(std::move(std::make_unique<IceCustomer>()));
-		customers_.back()->Init(GetLastCustomerPos());
+		//ÅŒã‚Ì‚¨‹q‚ÌˆÊ’u‚©‚çŠÔŠu‚ğ‚ ‚¯‚Ä¶‚É‚¸‚ç‚·
+		pos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+		customers_.back()->Init(pos);
 		break;
 
 	default:
@@ -190,16 +195,19 @@ void CustomerManager::IsCheckUI(const int index, const bool isActive)
 
 const VECTOR& CustomerManager::GetLastCustomerPos(void) const
 {
-	//•Ô‚·—p‚ÌÀ•W
-	VECTOR retPos;
+	////•Ô‚·—p‚ÌÀ•W
+	//VECTOR retPos;
 
-	//ÅŒã‚Ì‚¨‹q‚ÌˆÊ’u‚ğæ“¾
-	retPos = customers_[firstCustomerIdx_]->GetPos();
+	////ÅŒã‚Ì‚¨‹q‚ÌˆÊ’u‚ğæ“¾
+	//retPos = customers_[firstCustomerIdx_]->GetPos();
 
-	//ÅŒã‚Ì‚¨‹q‚ÌˆÊ’u‚©‚çŠÔŠu‚ğ‚ ‚¯‚Ä¶‚É‚¸‚ç‚·
-	retPos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
-
-	return retPos;
+	////ÅŒã‚Ì‚¨‹q‚ÌˆÊ’u‚©‚çŠÔŠu‚ğ‚ ‚¯‚Ä¶‚É‚¸‚ç‚·
+	//retPos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+	if(customers_.empty())
+	{
+		return CustomerBase::CUSTOMER_POS;
+	}
+	return customers_[firstCustomerIdx_]->GetPos();
 }
 
 const bool CustomerManager::CheckFirstCustomerCol(void)const
