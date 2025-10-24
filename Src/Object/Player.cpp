@@ -34,6 +34,20 @@ Player::Player(void)
 	isHolding_ = false;
 	holdItemId_ = "";
 	chestFrmNo_ = 0;
+
+	chestPos_ = CommonUtility::VECTOR_ZERO;
+
+	effectSmokePlayId_ = -1;
+	effectSmokeResId_ = -1;
+	stepFootSmoke_ = 0.0f;
+	stepRotTime_ = 0.0f;
+	imgShadow_ = -1;
+	moveDiff_ = CommonUtility::VECTOR_ZERO;
+	moveDir_ = CommonUtility::VECTOR_ZERO;
+	movedPos_ = CommonUtility::VECTOR_ZERO;
+	movePow_ = CommonUtility::VECTOR_ZERO;
+	speed_ = 0.0f;
+
 }
 
 Player::~Player(void)
@@ -96,7 +110,6 @@ void Player::Update(void)
 	stateUpdate_();
 
 	transform_.Update();
-	sphereTran_.Update();
 
 	//アニメーション再生
 	animationController_->Update();

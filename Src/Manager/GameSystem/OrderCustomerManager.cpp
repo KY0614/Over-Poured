@@ -106,7 +106,7 @@ void OrderCustomerManager::AddCustomerByOrder(void)
 	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderData());
 }
 
-const int& OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
+int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 {
 	Order::DRINK serveDrink = serve.drink_;
 	Order::SWEETS serveSweets = serve.sweets_;

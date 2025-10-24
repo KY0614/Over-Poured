@@ -37,15 +37,6 @@ void Timer::Update()
 
 void Timer::Draw()
 {
-	////”wŒi•`‰æ
-	//DrawRotaGraph(
-	//	Application::SCREEN_SIZE_X / 2,
-	//	TIMER_BACK_SIZE_Y / 2,
-	//	TIMER_BACK_RATE,
-	//	0.0f,
-	//	imgTimerBack_,
-	//	true);
-
 	int num[NUM_CNT] = {
 		minute_ / 10,       // •ª‚Ì\‚ÌˆÊ
 		minute_ % 10,       // •ª‚Ìˆê‚ÌˆÊ

@@ -70,7 +70,7 @@ public:
 	/// </summary>
 	/// <param name="serve">’ñ‹Ÿ‚³‚ê‚½‚à‚Ì</param>
 	/// <returns>ƒXƒRƒA</returns>
-	const int& GetOrderScore(const Order::OrderData serve);
+	int GetOrderScore(const Order::OrderData serve);
 
 	/// <summary>
 	/// 

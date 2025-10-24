@@ -91,14 +91,14 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true:いる　false:いない</returns>
-	const bool& CheckFirstCustomerCol(void)const;
+	const bool CheckFirstCustomerCol(void)const;
 
 	/// <summary>
 	/// 2人目のお客がカウンター前にいるかどうか
 	/// </summary>
 	/// <param name="">先頭のお客の注文提供後に確認する用</param>
 	/// <returns>true:いる　false:いない</returns>
-	const bool& CheckSecondCustomerCol(void)const;
+	const bool CheckSecondCustomerCol(void)const;
 
 private:
 	//静的インスタンス

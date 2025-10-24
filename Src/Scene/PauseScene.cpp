@@ -136,7 +136,7 @@ void PauseScene::DrawProcess(void)
 	//èoåªÅEè¡ñ≈éûÇÃçÇÇ≥ïœâªó¶(0.0Å`1.0)
 	float rate = static_cast<float>(frame_) /
 		static_cast<float>(APPEAR_INTERVAL);
-	frameHalfHeight *= rate;
+	frameHalfHeight *= static_cast<int>(rate);
 	//îwåiâÊëúÇÃï`âÊ
 	DrawExtendGraph(MARGINE_SIZE,
 		centerY - frameHalfHeight,
@@ -166,13 +166,13 @@ void PauseScene::UpdateNormal(void)
 	else if (ins.IsInputTriggered("Up"))
 	{
 		sound.Play(SoundManager::SOUND::NEXT_PAGE);
-		cursorIdx_ = (cursorIdx_ + menuList_.size() - 1) % menuList_.size();
+		cursorIdx_ = (cursorIdx_ + menuList_.size() - 1) % static_cast<int>(menuList_.size());
 	}
 	//åàíË
 	if (ins.IsInputTriggered("Interact"))
 	{
 		sound.Play(SoundManager::SOUND::RETURN_PAGE);
-		auto selectedName = menuList_[cursorIdx_];
+		std::wstring& selectedName = menuList_[cursorIdx_];
 		menuFuncTable_[selectedName]();
 		return;
 	}
@@ -201,14 +201,14 @@ void PauseScene::DrawMenuList(void)
 
 	int lineY = MENU_START_Y * scale;
 
-	auto currentStr = menuList_[cursorIdx_];
+	std::wstring& currentStr = menuList_[cursorIdx_];
 
 	for (int i = 0; i < menuList_.size();++i) 
 	{
 		int lineX = 0;
 
 		//ï∂éöóÒÇÃïùÇéÊìæ
-		int stringWidth = GetDrawStringWidth(menuList_[i].c_str(), menuList_[i].size());
+		int stringWidth = GetDrawStringWidth(menuList_[i].c_str(), static_cast<int>(menuList_[i].size()));
 
 		//ÉJÅ[É\ÉãÇÃXç¿ïWÇìÆìIÇ…åvéZ
 		int cursor_X = ((Application::SCREEN_SIZE_X / 2 - line_start_X) - (stringWidth));
@@ -222,12 +222,12 @@ void PauseScene::DrawMenuList(void)
 			lineX += SELECT_MENU_MARGINE * scale;
 		}
 
-		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * scale,
-			(MENU_START_Y * scale) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale * i),
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * static_cast<int>(scale),
+			(MENU_START_Y * static_cast<int>(scale)) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * static_cast<int>(scale) * i),
 			scale * MENU_LIST_SCALE, 0.0f, menuListImg_[i], true
 		);
 
-		lineY += MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale;
+		lineY += static_cast<int>(MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale);
 	}
 }
 

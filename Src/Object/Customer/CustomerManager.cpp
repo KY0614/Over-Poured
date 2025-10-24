@@ -78,16 +78,17 @@ void CustomerManager::Update(float orderTime)
 		orderUI_[i]->SetPos(pos);	//UIの位置を設定
 		orderUI_[i]->SetOrderTimer(orderTime);	//注文時間を更新
 	}
-
+	//先頭のお客のインデックスを参照するための参照変数
+	int& firstCustomerIdx = firstCustomerIdx_;
 	//カウンター前の球体判定に来たら、回転させてカウンターの方を見るようにする
 	if (customers_[firstCustomerIdx_]->CollisionCounter())
 	{	
-		if (customers_[firstCustomerIdx_]->CheckCounterToCustomer())
+		if (customers_[firstCustomerIdx]->CheckCounterToCustomer())
 		{
 			//回転させ、移動を止める
-			customers_[firstCustomerIdx_]->SetGoalRotate(CommonUtility::Deg2RadF(CUSTOMER_ROTATE_ANGLE));
+			customers_[firstCustomerIdx]->SetGoalRotate(CommonUtility::Deg2RadF(CUSTOMER_ROTATE_ANGLE));
 			isCustomersMove_ = false;
-			orderUI_[firstCustomerIdx_]->SetActive(true);	//UIをアクティブにする
+			orderUI_[firstCustomerIdx]->SetActive(true);	//UIをアクティブにする
 			for (auto& c : customers_)
 			{
 				//歩行アニメーションを止め、IDLEアニメーションにする
@@ -111,7 +112,8 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 	//注文用UIを生成
 	orderUI_.emplace_back(std::make_shared<OrderUI>(
 		data.drink_, data.sweets_,data.time_));
-
+	//返す用の座標
+	VECTOR pos = GetLastCustomerPos();
 	//注文に応じたお客を生成
 	switch (data.drink_)
 	{
@@ -121,13 +123,17 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 	case Order::DRINK::HOT:
 		//HOTのお客を生成
 		customers_.emplace_back(std::make_unique<HotCustomer>());
-		customers_.back()->Init(GetLastCustomerPos());
+		//最後のお客の位置から間隔をあけて左にずらす
+		pos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+		customers_.back()->Init(pos);
 		break;
 
 	case Order::DRINK::ICE:
 		//ICEのお客を生成
 		customers_.emplace_back(std::move(std::make_unique<IceCustomer>()));
-		customers_.back()->Init(GetLastCustomerPos());
+		//最後のお客の位置から間隔をあけて左にずらす
+		pos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+		customers_.back()->Init(pos);
 		break;
 
 	default:
@@ -151,53 +157,63 @@ void CustomerManager::ClearFirstCustomers(void)
 {
 	if (!customers_.empty())
 	{
+		//先頭のお客のインデックスを参照するための参照変数
+		int& firstCustomerIdx = firstCustomerIdx_;
 		//先頭のお客を非表示にする
-		customers_[firstCustomerIdx_]->IsNotVisible();
-		orderUI_[firstCustomerIdx_]->SetActive(false);
+		customers_[firstCustomerIdx]->IsNotVisible();
+		orderUI_[firstCustomerIdx]->SetActive(false);
 		//先頭のお客のインデックスを進める
-		firstCustomerIdx_++;
+		firstCustomerIdx++;
 	}
 }
 
 void CustomerManager::SetCustomerReacton(const int score)
 {
+	//先頭のお客のインデックスを参照するための参照変数
+	int& firstCustomerIdx = firstCustomerIdx_;
 	//スコアに応じてリアクションを変える
 	if (score >= SCORE_GOOD)
 	{
-		customers_[firstCustomerIdx_]->SetReaction(CustomerBase::REACTION::GOOD);
+		customers_[firstCustomerIdx]->SetReaction(CustomerBase::REACTION::GOOD);
 	}
 	else if (score > SCORE_SOSO)
 	{
-		customers_[firstCustomerIdx_]->SetReaction(CustomerBase::REACTION::SOSO);
+		customers_[firstCustomerIdx]->SetReaction(CustomerBase::REACTION::SOSO);
 	}
 	else
 	{
-		customers_[firstCustomerIdx_]->SetReaction(CustomerBase::REACTION::BAD);
+		customers_[firstCustomerIdx]->SetReaction(CustomerBase::REACTION::BAD);
 	}
 }
 
 void CustomerManager::IsCheckUI(const int index, const bool isActive)
 {
-	orderUI_[firstCustomerIdx_]->SetCheckUI(index, isActive);
+	//先頭のお客のインデックスを参照するための参照変数
+	int& firstCustomerIdx = firstCustomerIdx_;
+	orderUI_[firstCustomerIdx]->SetCheckUI(index, isActive);
 }
 
 const VECTOR& CustomerManager::GetLastCustomerPos(void) const
 {
-	//返す用の座標
-	VECTOR retPos;
+	////返す用の座標
+	//VECTOR retPos;
 
-	//最後のお客の位置を取得
-	retPos = customers_[firstCustomerIdx_]->GetPos();
+	////最後のお客の位置を取得
+	//retPos = customers_[firstCustomerIdx_]->GetPos();
 
-	//最後のお客の位置から間隔をあけて左にずらす
-	retPos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
-
-	return retPos;
+	////最後のお客の位置から間隔をあけて左にずらす
+	//retPos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
+	if(customers_.empty())
+	{
+		return CustomerBase::CUSTOMER_POS;
+	}
+	return customers_[firstCustomerIdx_]->GetPos();
 }
 
-const bool& CustomerManager::CheckFirstCustomerCol(void)const
+const bool CustomerManager::CheckFirstCustomerCol(void)const
 {
 	bool ret = false;
+
 	//先頭のお客がカウンター前にいるかどうか
 	if (customers_[firstCustomerIdx_]->CollisionCounter())
 	{
@@ -207,7 +223,7 @@ const bool& CustomerManager::CheckFirstCustomerCol(void)const
 	return ret;
 }
 
-const bool& CustomerManager::CheckSecondCustomerCol(void)const
+const bool CustomerManager::CheckSecondCustomerCol(void)const
 {
 	bool ret = false;
 	//2番目のお客がカウンター前にいるかどうか

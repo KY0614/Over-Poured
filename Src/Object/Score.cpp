@@ -208,6 +208,7 @@ void Score::UpdatePlayScore(void)
 		currentScr_ += ADD_SCORE_SPEED;
 	}
 
+	//ゲージをイージングで増やす
 	CalcPercentFromRank();
 
 	//イージングをかけて移動させる
