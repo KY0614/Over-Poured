@@ -64,7 +64,7 @@ const bool& OrderManager::IsFirstOrderTimeOut(void)
 	return false;
 }
 
-const std::vector<Order::OrderData>& OrderManager::GetAllOrder(void) const
+const std::vector<Order::OrderData> OrderManager::GetAllOrder(void) const
 {
 	//現在の全ての注文データを返す
 	std::vector<Order::OrderData> retData;

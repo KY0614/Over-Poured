@@ -11,8 +11,6 @@ public:
 
 	//タイマー背景サイズ
 	static constexpr float TIMER_BACK_RATE = 0.8f;
-	static constexpr int TIMER_BACK_SIZE_X = 298 * TIMER_BACK_RATE;
-	static constexpr int TIMER_BACK_SIZE_Y = 168 * TIMER_BACK_RATE;
 
 	//数字の間隔
 	static constexpr int MARGIN_SIZE = 50;

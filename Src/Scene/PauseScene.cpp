@@ -136,7 +136,7 @@ void PauseScene::DrawProcess(void)
 	//出現・消滅時の高さ変化率(0.0～1.0)
 	float rate = static_cast<float>(frame_) /
 		static_cast<float>(APPEAR_INTERVAL);
-	frameHalfHeight *= rate;
+	frameHalfHeight *= static_cast<int>(rate);
 	//背景画像の描画
 	DrawExtendGraph(MARGINE_SIZE,
 		centerY - frameHalfHeight,
@@ -166,7 +166,7 @@ void PauseScene::UpdateNormal(void)
 	else if (ins.IsInputTriggered("Up"))
 	{
 		sound.Play(SoundManager::SOUND::NEXT_PAGE);
-		cursorIdx_ = (cursorIdx_ + menuList_.size() - 1) % menuList_.size();
+		cursorIdx_ = (cursorIdx_ + menuList_.size() - 1) % static_cast<int>(menuList_.size());
 	}
 	//決定
 	if (ins.IsInputTriggered("Interact"))
@@ -194,12 +194,12 @@ void PauseScene::DrawNormal(void)
 void PauseScene::DrawMenuList(void)
 {
 	//画面の大きさに合わせて拡大率を変える
-	float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
+	int scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
 
-	const int line_start_X = MENU_LIST_POS_X * scale;
+	const int line_start_X = MENU_LIST_POS_X * static_cast<int>(scale);
 
-	int lineY = MENU_START_Y * scale;
+	int lineY = MENU_START_Y * static_cast<int>(scale);
 
 	auto currentStr = menuList_[cursorIdx_];
 
@@ -208,7 +208,7 @@ void PauseScene::DrawMenuList(void)
 		int lineX = 0;
 
 		//文字列の幅を取得
-		int stringWidth = GetDrawStringWidth(menuList_[i].c_str(), menuList_[i].size());
+		int stringWidth = GetDrawStringWidth(menuList_[i].c_str(), static_cast<int>(menuList_[i].size()));
 
 		//カーソルのX座標を動的に計算
 		int cursor_X = ((Application::SCREEN_SIZE_X / 2 - line_start_X) - (stringWidth));
@@ -219,15 +219,15 @@ void PauseScene::DrawMenuList(void)
 				lineY,
 				scale, 0.0f, menuCursorImg_, true
 			);
-			lineX += SELECT_MENU_MARGINE * scale;
+			lineX += SELECT_MENU_MARGINE * static_cast<int>(scale);
 		}
 
-		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * scale,
-			(MENU_START_Y * scale) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale * i),
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * static_cast<int>(scale),
+			(MENU_START_Y * scale) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * static_cast<int>(scale) * i),
 			scale * MENU_LIST_SCALE, 0.0f, menuListImg_[i], true
 		);
 
-		lineY += MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale;
+		lineY += MNEU_LIST_HEIGHT * static_cast<int>(MENU_LIST_SCALE * scale);
 	}
 }
 

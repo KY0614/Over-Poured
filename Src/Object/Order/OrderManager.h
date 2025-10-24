@@ -64,7 +64,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>注文内容データ</returns>
-	const std::vector<Order::OrderData>& GetAllOrder(void) const;
+	const std::vector<Order::OrderData> GetAllOrder(void) const;
 
 	/// <summary>
 	/// 最後尾の注文データを取得する

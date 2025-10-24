@@ -15,7 +15,6 @@ class Sphere;
 
 class Player : public ActorBase
 {
-
 public:
 
 	//スピード
@@ -120,7 +119,7 @@ public:
 	/// プレイヤーの所持しているアイテムのIDを設定する
 	/// </summary>
 	/// <param name="item">持たせるアイテムのID</param>
-	void SetHoldItem(const std::string item) { holdItemId_ = item; }
+	void SetHoldItem(const std::string& item) { holdItemId_ = item; }
 
 	/// <summary>
 	/// 指定されたSTATEに状態を変更する
