@@ -159,6 +159,8 @@ public:
 	/// <returns>球体の座標</returns>
 	const VECTOR& GetSpherePos(void)const;
 
+	const Sphere& GetSphere(void)const { return *sphere_; }
+
 	/// <summary>
 	/// オブジェクトのパラメータを取得する
 	/// </summary>
@@ -184,7 +186,7 @@ public:
 	/// </summary>
 	/// <param name="">SphereのGetRadius関数を返す</param>
 	/// <returns>球体の半径</returns>
-	const float& GetSphereRad(void)const;
+	float GetSphereRad(void)const;
 
 	/// <summary>
 	/// オブジェクトがプレイヤーからアクションを行われているかどうかを取得

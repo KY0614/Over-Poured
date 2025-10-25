@@ -81,6 +81,9 @@ private:
 	//今回のゲームのスコア
 	int currentScr_;
 
+	//効果音が再生されたかどうか
+	bool isSEPlayed_;
+
 	//ランキングスコアを滑らかに表示させるよう
 	float slideX_[ScoreManager::RANKING_NUM];		//移動させる座標
 	float slideXTime_[ScoreManager::RANKING_NUM];	//経過時間

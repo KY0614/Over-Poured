@@ -49,7 +49,8 @@ namespace
 	const int SOUND_VOLUME = 256; // 効果音の音量(0~256)
 }
 
-StageManager::StageManager(Player& player):player_(player)
+StageManager::StageManager(Player& player) : 
+	player_(player)
 {
 	servedItems_ = {};
 	currentOrder_ = {};
@@ -147,6 +148,7 @@ void StageManager::Draw(void)
 	{
 		obj->Draw();
 	}
+
 }
 
 void StageManager::SetCurrentOrder(const Order::OrderData& order)
@@ -395,6 +397,11 @@ void StageManager::InitAnimation(void)
 
 void StageManager::SurveItem(StageObject& obj)
 {
+	if(obj.GetParam().carryable_ == false)
+	{
+		//持ち運び不可のオブジェクトは無視
+		return; 
+	}
 	//objのIDや状態からOrderDataをセット
 	if (obj.GetParam().id_ == StageObject::HOT_COFFEE)
 	{
@@ -469,7 +476,10 @@ void StageManager::DeleteSurvedItem(void)
 void StageManager::CupRackInteract(void)
 {
 	auto& pSphere = player_.GetSphere();
-
+	bool playrHolding = player_.GetIsHolding();
+	//プレイヤーの当たり判定用球体情報
+	VECTOR pPos = pSphere.GetPos();
+	float pRad = pSphere.GetRadius();
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)
 	{
@@ -478,11 +488,15 @@ void StageManager::CupRackInteract(void)
 			obj->GetParam().id_ != StageObject::ICE_CUP_RACK &&
 			obj->GetParam().id_ != StageObject::BERRY_SWEETS_RACK &&
 			obj->GetParam().id_ != StageObject::CHOCO_SWEETS_RACK) continue;
+
+		auto& objSphere = obj->GetSphere();
+		VECTOR oPos = objSphere.GetPos();
+		float oRad = objSphere.GetRadius();
+
 		//ラックに在庫がないときの処理
 		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
 			!obj->GetHasStock() &&
-			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
+			CommonUtility::IsHitSpheres(pPos, pRad, oPos, oRad))
 		{
 			//在庫を補充する処理
 			obj->AddStock();
@@ -490,9 +504,8 @@ void StageManager::CupRackInteract(void)
 		}
 
 		//プレイヤーが何も持っていないときの処理
-		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
-			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
+		if (!playrHolding && obj->GetParam().interactable_ &&
+			CommonUtility::IsHitSpheres(pPos, pRad,oPos, oRad))
 		{
 			//在庫があるときはカップを取り出す処理
 			obj->PickUp(obj->GetParam().id_, objects_);
@@ -505,6 +518,9 @@ void StageManager::CupRackInteract(void)
 void StageManager::CarryableObjInteract(void)
 {
 	auto& pSphere = player_.GetSphere();
+	//プレイヤーの当たり判定用球体情報
+	VECTOR pPos = pSphere.GetPos();
+	float pRad = pSphere.GetRadius();
 	for (const auto& obj : objects_)
 	{
 		//カウンターで商品を提供する処理
@@ -519,11 +535,13 @@ void StageManager::CarryableObjInteract(void)
 				break;
 			}
 		}
+		auto& objSphere = obj->GetSphere();
+		VECTOR oPos = objSphere.GetPos();
+		float oRad = objSphere.GetRadius();
 
 		//プレイヤーが何も持っていないときの処理
 		if (!player_.GetIsHolding() && obj->GetParam().carryable_ &&
-			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
+			CommonUtility::IsHitSpheres(pPos, pRad, oPos, oRad))
 		{
 			obj->ItemCarry();
 			break;
@@ -537,7 +555,7 @@ void StageManager::CarryableObjInteract(void)
 				counter_->GetSpherePos(), counter_->GetSphereRad()
 			))
 			{
-				auto items = counter_->GetParam().acceptedItems_;
+				std::vector<std::string> items = counter_->GetParam().acceptedItems_;
 				//objIdがインタラクト対象物に存在するかどうか
 				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
 				if (!isAccepted)continue;	//存在しなかったら処理しない
@@ -549,7 +567,7 @@ void StageManager::CarryableObjInteract(void)
 			{
 				//設置可能なテーブルの上にアイテムを設置する処理
 				if (table->GetParam().placeable_ &&
-					CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+					CommonUtility::IsHitSpheres(pPos, pRad,
 						table->GetSpherePos(), table->GetSphereRad()
 					))
 				{

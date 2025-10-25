@@ -220,10 +220,11 @@ void GameScene::UpdateGame(void)
 		update_ = &GameScene::UpdateFinish;
 		draw_ = &GameScene::DrawFinish;
 	}
-	//ステージ更新
-	stage_->Update();
+
 	//プレイヤー更新
 	player_->Update();
+	//ステージ更新
+	stage_->Update();
 	//お客と注文更新
 	customer_->Update();
 	//タイマー更新
@@ -293,7 +294,7 @@ void GameScene::DrawGame(void)
 	player_->Draw();
 	
 	//UI描画
-	//UIManager::GetInstance().Draw();
+	UIManager::GetInstance().Draw();
 	
 	//タイマー描画
 	timer_->Draw();

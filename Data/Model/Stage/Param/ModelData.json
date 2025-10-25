@@ -160,7 +160,7 @@
     "id": "Dust_Box",
     "interactable": true,
     "placeable": false,
-    "carryable": true,
+    "carryable": false,
     "acceptedItems":["Hot_Cup","Ice_Cup","Cup_With_Ice","Hot_Coffee","Ice_Coffee","Sweets_Strawberry","Sweets_Choco","Hot_Cup_Lid","Ice_Cup_Lid","Ice"],
     "collisionRadius":30.0
     }

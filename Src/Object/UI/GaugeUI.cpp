@@ -17,7 +17,9 @@ namespace
 }
 
 GaugeUI::GaugeUI(bool isCircle, float activeTime):
-	activeTime_(activeTime), isCircle_(isCircle), currentTime_(0.0f)
+	activeTime_(activeTime), 
+    isCircle_(isCircle), 
+    currentTime_(0.0f)
 {
 	shadowImg_ = -1;
 	circleImg_ = -1;

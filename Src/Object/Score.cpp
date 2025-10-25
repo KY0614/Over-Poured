@@ -117,7 +117,7 @@ Score::Score(void)
 	rankLabelImgs_ = nullptr;
     decoImg_ = 0;  
     aspectRatio_ = 0.0f;  
-
+	isSEPlayed_ = false;
     stateChange_.emplace(STATE::PLAY_SCORE, std::bind(&Score::ChangePlayScore, this));  
 }
 
@@ -130,6 +130,9 @@ void Score::Init(void)
 	//スコア読み込み
 	auto& scr = ScoreManager::GetInstance();
 	scr.LoadScore();
+
+	//効果音初期化
+	InitSound();
 
 	//ランクごとの情報初期化
 	InitRankInfo();
@@ -245,8 +248,9 @@ void Score::UpdatePlayScore(void)
 		blinkTime_ += SceneManager::GetInstance().GetDeltaTime() * BLINK_SPEED;
 	}
 
-	if (isRankingScrDraw_ && isCurrentScrDraw_ && isGaugeDraw_ )
+	if (isRankingScrDraw_ && isCurrentScrDraw_ && isGaugeDraw_ && !isSEPlayed_)
 	{
+		isSEPlayed_ = true;
 		//ランクに応じた拍手の音を鳴らす
 		if (rank_ == RANK::C)sound.Play(SoundManager::SOUND::NORMAL);
 		if (rank_ == RANK::B)sound.Play(SoundManager::SOUND::GOOD);

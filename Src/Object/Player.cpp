@@ -82,7 +82,7 @@ void Player::Init(void)
 	
 	//オブジェクト用コライダ
 	sphere_ = std::make_unique<Sphere>(transform_);
-	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 40.0f });
+	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 30.0f });
 	sphere_->SetRadius(20.0f);
 
 	//足煙エフェクト
@@ -102,9 +102,11 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
-	chestPos_ = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
+	//chestPos_ = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
 	//sphere_->SetLocalPos({ 0.0f, chestPos_.y, 50.0f });
-	transform_.pos.y = 30.0f;
+	//高さを固定
+	const float posY = 30.0f;
+	transform_.pos.y = posY;
 
 	//更新ステップ
 	stateUpdate_();
@@ -146,14 +148,14 @@ const bool& Player::IsPlay(void)const
 
 void Player::InitAnimation(void)
 {
-
+	const float animSpeed = 30.0f;
 	std::string path = Application::PATH_MODEL + "Player/";
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
-	animationController_->Add((int)ANIM_TYPE::IDLE, path + "Idle.mv1", 30.0f);
-	animationController_->Add((int)ANIM_TYPE::WALK, path + "Walk.mv1", 30.0f);
-	animationController_->Add((int)ANIM_TYPE::RUN, path + "Walk.mv1", 30.0f);
-	animationController_->Add((int)ANIM_TYPE::IDLE_HOLD, path + "Idle_Hold.mv1", 30.0f);
-	animationController_->Add((int)ANIM_TYPE::WALK_HOLD, path + "Walk_Hold.mv1", 30.0f);
+	animationController_->Add((int)ANIM_TYPE::IDLE, path + "Idle.mv1", animSpeed);
+	animationController_->Add((int)ANIM_TYPE::WALK, path + "Walk.mv1", animSpeed);
+	animationController_->Add((int)ANIM_TYPE::RUN, path + "Walk.mv1", animSpeed);
+	animationController_->Add((int)ANIM_TYPE::IDLE_HOLD, path + "Idle_Hold.mv1", animSpeed);
+	animationController_->Add((int)ANIM_TYPE::WALK_HOLD, path + "Walk_Hold.mv1", animSpeed);
 
 	animationController_->Play((int)ANIM_TYPE::IDLE);
 }
@@ -190,8 +192,8 @@ void Player::UpdateNone(void)
 
 void Player::UpdatePlay(void)
 {
-	if (holdItemId_ == "")isHolding_ = false;
-	else isHolding_ = true;
+	if (holdItemId_ != "")isHolding_ = true;
+	else isHolding_ = false;
 
 	//移動処理
 	ProcessMove();
@@ -425,6 +427,7 @@ void Player::CollisionCapsule(void)
 	trans.pos = movedPos_;
 	trans.Update();
 	Capsule cap = Capsule(*capsule_, trans);
+	const float posY = 30.0f;
 	//カプセルとの衝突判定
 	for (const auto c : colliders_)
 	{
@@ -451,7 +454,7 @@ void Player::CollisionCapsule(void)
 				{
 					//法線の方向にちょっとだけ移動させる
 					movedPos_ = VAdd(movedPos_, VScale(hit.Normal, 1.0f));
-					movedPos_.y = 30.0f;
+					movedPos_.y = posY;
 					//カプセルも一緒に移動させる
 					trans.pos = movedPos_;
 					trans.Update();

@@ -1,7 +1,10 @@
 #include "IconUI.h"
 
 IconUI::IconUI(VECTOR localPos,VECTOR parentPos,ResourceManager::SRC src) :
-	localPos_(localPos), parentPos_(parentPos), imgSrc_(src), size_(0.0f)
+	localPos_(localPos), 
+	parentPos_(parentPos), 
+	imgSrc_(src), 
+	size_(0.0f)
 {
 }
 

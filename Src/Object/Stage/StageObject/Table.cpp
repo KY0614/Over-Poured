@@ -12,7 +12,7 @@ Table::Table(const std::string objId,Player& player,
 void Table::Update(void)
 {
 	StageObject::Update();
-	tableColliderTran_.Update();
+	//tableColliderTran_.Update();
 	//テーブルの上にオブジェクトが置かれていないかどうか
 	for (const auto& obj : objects_)
 	{

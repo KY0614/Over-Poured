@@ -6,7 +6,8 @@
 #include "StageObject.h"
 
 StageObject::StageObject(const std::string objId,Player& player):
-	objId_(objId),player_(player)
+	objId_(objId),
+	player_(player)
 {
 	isActioned_ = false;
 	itemState_ = ITEM_STATE::NONE;
@@ -130,7 +131,7 @@ const VECTOR& StageObject::GetSpherePos(void) const
 	return sphere_->GetPos();
 }
 
-const float& StageObject::GetSphereRad(void) const
+float StageObject::GetSphereRad(void) const
 {	
 	//“–‚½‚è”»’è—p‚Ì‹…‚Ì”¼Œa‚ğ•Ô‚·
 	return sphere_->GetRadius();

@@ -414,8 +414,6 @@ bool CommonUtility::IsHitSphereCube(VECTOR sphereCenter, float sphereRadius, VEC
 bool CommonUtility::IsHitSpheres(const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2)
 {
     //‹…‘Ì“¯m‚ÌÕ“Ë”»’è
-    bool ret = false;
-
     //‚¨Œİ‚¢‚Ì”¼Œa‚Ì‡Œv
     float radius = radius1 + radius2;
 
@@ -424,12 +422,9 @@ bool CommonUtility::IsHitSpheres(const VECTOR& pos1, float radius1, const VECTOR
 
     //O•½•û‚Ì’è—‚Å”äŠr(SqrMagnitude‚Æ“¯‚¶)
     float dis = (diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z);
-    if (dis < (radius * radius))
-    {
-        ret = true;
-    }
 
-    return ret;
+	//true:“–‚½‚Á‚Ä‚¢‚éAfalse:“–‚½‚Á‚Ä‚¢‚È‚¢
+    return dis < (radius * radius);
 }
 
 bool CommonUtility::IsHitSphereCapsule(

@@ -29,7 +29,7 @@ RackObject::RackObject(const std::string objId,Player& player) :
 void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
 {
 	if (!hasStock_)return;
-	//isInteract_ = true;
+
 	iconUI_->SetActive(true);
 	auto& ins = InputManager::GetInstance();
 	auto& sound = SoundManager::GetInstance();

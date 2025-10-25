@@ -18,14 +18,14 @@ public:
 		Order::DRINK drinkType_;        //ドリンクの種類
 		Order::SWEETS sweetsType_;  	//スイーツの種類
 
-		int drinkUIImg_;    //ドリンクのUI画像
-		int sweetsUIImg_;   //スイーツのUI画像
-		int backUIImg_;     //背景のUI画像
+		int drinkUIImg_ = -1;    //ドリンクのUI画像
+		int sweetsUIImg_ = -1;   //スイーツのUI画像
+		int backUIImg_ = -1;     //背景のUI画像
 
-		int timerBackImg_;  //タイマーの背景画像
-		int timerImg_;      //タイマーの画像
+		int timerBackImg_ = -1;  //タイマーの背景画像
+		int timerImg_ = -1;      //タイマーの画像
 
-		int checkImg_;     //チェックの画像
+		int checkImg_ = -1;     //チェックの画像
 
 		float currentRate_ = 0.0f;	    //現在のゲージの割合
 		float displayedRate_ = 0.0f;    //表示されているゲージの割合

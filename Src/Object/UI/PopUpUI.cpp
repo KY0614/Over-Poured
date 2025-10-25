@@ -13,7 +13,9 @@ namespace
 	const float FPS_RATE = 60.0f; 
 }
 
-PopUpUI::PopUpUI(int score, const VECTOR& startPos) : score_(score), animTime_(0.0f)
+PopUpUI::PopUpUI(int score, const VECTOR& startPos) : 
+    score_(score), 
+    animTime_(0.0f)
 {
     pos_ = startPos;
     alpha_ = ALPHA_MAX; //‰Šú“§‰ß“x‚ğÅ‘å‚Éİ’è
