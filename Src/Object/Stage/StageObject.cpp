@@ -52,7 +52,7 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 	if (objId_ == DUST_BOX)sphere_->SetLocalPos({ 0.0f, DUST_BOX_HEIGHT, 0.0f });
 
 	//アイテムの初期状態は設置状態
-	ChangeItemState(ITEM_STATE::PLACED);
+	ChangeItemState(ITEM_STATE::NONE);
 
 	//マシンの初期状態は非稼働状態
 	ChangeMachineState(MACHINE_STATE::INACTIVE);

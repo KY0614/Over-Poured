@@ -523,9 +523,11 @@ void StageManager::CarryableObjInteract(void)
 	float pRad = pSphere.GetRadius();
 	for (const auto& obj : objects_)
 	{
+		VECTOR oPos = obj->GetSphere().GetPos();
+		float oRad = obj->GetSphere().GetRadius();
 		//カウンターで商品を提供する処理
-		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			counter_->GetSpherePos(), counter_->GetSphereRad()
+		if (CommonUtility::IsHitSpheres(oPos, oRad,
+			counter_->GetSphere().GetPos(), counter_->GetSphere().GetRadius()
 		))
 		{
 			//設置されているアイテムを提供する処理
@@ -535,9 +537,6 @@ void StageManager::CarryableObjInteract(void)
 				break;
 			}
 		}
-		auto& objSphere = obj->GetSphere();
-		VECTOR oPos = objSphere.GetPos();
-		float oRad = objSphere.GetRadius();
 
 		//プレイヤーが何も持っていないときの処理
 		if (!player_.GetIsHolding() && obj->GetParam().carryable_ &&
@@ -550,25 +549,14 @@ void StageManager::CarryableObjInteract(void)
 		//プレイヤーがアイテムを持っているときの処理
 		if (player_.GetIsHolding())
 		{
-			//カウンターに設置
-			if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-				counter_->GetSpherePos(), counter_->GetSphereRad()
-			))
-			{
-				std::vector<std::string> items = counter_->GetParam().acceptedItems_;
-				//objIdがインタラクト対象物に存在するかどうか
-				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
-				if (!isAccepted)continue;	//存在しなかったら処理しない
-				//アイテムを設置する処理
-				obj->ItemPlaced(counter_->GetSpherePos());
-			}
-
 			for (const auto& table : tables_)
 			{
+				VECTOR tPos = table->GetSphere().GetPos();
+				float tRad = table->GetSphere().GetRadius();
 				//設置可能なテーブルの上にアイテムを設置する処理
 				if (table->GetParam().placeable_ &&
 					CommonUtility::IsHitSpheres(pPos, pRad,
-						table->GetSpherePos(), table->GetSphereRad()
+						tPos, tRad
 					))
 				{
 					//アイテムを設置する処理
@@ -579,6 +567,18 @@ void StageManager::CarryableObjInteract(void)
 				{
 					break;
 				}
+			}
+
+			//カウンターに設置
+			if (CommonUtility::IsHitSpheres(pPos, pRad,
+				counter_->GetSpherePos(), counter_->GetSphereRad()))
+			{
+				std::vector<std::string> items = counter_->GetParam().acceptedItems_;
+				//objIdがインタラクト対象物に存在するかどうか
+				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
+				if (!isAccepted)continue;	//存在しなかったら処理しない
+				//アイテムを設置する処理
+				obj->ItemPlaced(counter_->GetSpherePos());
 			}
 		}
 		//既にアクションを行っていたらループを抜ける
