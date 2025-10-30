@@ -23,7 +23,8 @@ void Machine::Interact(const std::string& objId)
 	//objIdがインタラクト対象物に存在するかどうか
 	bool isAccepted = std::find(items.begin(), items.end(), objId) != items.end();
 	if (!isAccepted)return;	//存在しなかったら処理しない
-
+	VECTOR machinePos = GetSphere().GetPos();
+	float machineRad = GetSphere().GetRadius();
 	//既にマシン内にカップまたはコーヒーがある場合は何もしない
 	for (const auto& obj : objects_)
 	{
@@ -32,8 +33,8 @@ void Machine::Interact(const std::string& objId)
 			obj->GetParam().id_ == HOT_COFFEE ||
 			obj->GetParam().id_ == CUP_WITH_ICE ||
 			obj->GetParam().id_ == ICE_COFFEE) &&
-			CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
-				obj->GetSpherePos(), obj->GetSphereRad()) &&
+			CommonUtility::IsHitSpheres(GetSphere().GetPos(), GetSphere().GetRadius(),
+				obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
 			// 既にセット済み
@@ -46,11 +47,14 @@ void Machine::Interact(const std::string& objId)
 	{
 		//カップ以外のオブジェクトは判定しない
 		if (obj->GetParam().id_ != HOT_CUP && obj->GetParam().id_ != CUP_WITH_ICE) continue;
-
-		if (CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
-			obj->GetSpherePos(), obj->GetSphereRad()))
+		VECTOR oPos = obj->GetSphere().GetPos();
+		float oRad = obj->GetSphere().GetRadius();
+		if (CommonUtility::IsHitSpheres(machinePos, machineRad,
+			oPos, oRad))
 		{
+			//インタラクト可能な場合はアイコンを表示
 			iconUI_->SetActive(true);
+
 			//スペースキー押下でマシンの場所にカップを置く
 			if ((player_.GetHoldItem() == items.front().c_str() ||
 				player_.GetHoldItem() == items.back().c_str()) &&
@@ -122,15 +126,18 @@ void Machine::UpdateInActive(void)
 	//インタラクトにかかる時間を設定
 	SetInteractTime(COFFEE_PRODUCES_TIME);
 
+	VECTOR machinePos = GetSphere().GetPos();
+	float machineRad = GetSphere().GetRadius();
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
 	{
 		if (obj->GetParam().id_ != HOT_COFFEE &&
 			obj->GetParam().id_ != ICE_COFFEE)continue;
-
-		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			GetSpherePos(), GetSphereRad()) &&
+		VECTOR oPos = obj->GetSphere().GetPos();
+		float oRad = obj->GetSphere().GetRadius();
+		if (CommonUtility::IsHitSpheres(oPos, oRad,
+			machinePos, machineRad) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
 			//PLACED状態のカップが存在したらアイコンを表示してループを抜ける
@@ -164,7 +171,8 @@ void Machine::UpdateActive(void)
 	param_.interactTime_ -= SceneManager::GetInstance().GetDeltaTime();
 
 	gaugeUI_->Update();
-
+	VECTOR machinePos = GetSphere().GetPos();
+	float machineRad = GetSphere().GetRadius();
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)
@@ -172,9 +180,11 @@ void Machine::UpdateActive(void)
 		//カップ以外のオブジェクトは判定しない
 		if (obj->GetParam().id_ != HOT_CUP &&
 			obj->GetParam().id_ != CUP_WITH_ICE)continue;
+		VECTOR oPos = obj->GetSphere().GetPos();
+		float oRad = obj->GetSphere().GetRadius();
 		//PLACED状態のカップが存在したらフラグを立ててループを抜ける
-		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			GetSpherePos(), GetSphereRad()) &&
+		if (CommonUtility::IsHitSpheres(oPos, oRad,
+			machinePos, machineRad) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
 			hasPlacedCup = true;

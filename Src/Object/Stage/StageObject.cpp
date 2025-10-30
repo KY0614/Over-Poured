@@ -53,6 +53,7 @@ void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
 
 	//アイテムの初期状態は設置状態
 	ChangeItemState(ITEM_STATE::NONE);
+	if (param_.carryable_)ChangeItemState(ITEM_STATE::PLACED);
 
 	//マシンの初期状態は非稼働状態
 	ChangeMachineState(MACHINE_STATE::INACTIVE);
@@ -123,18 +124,6 @@ void StageObject::SetPos(VECTOR pos)
 void StageObject::SetScale(VECTOR scale)
 {
 	transform_.scl = scale;
-}
-
-const VECTOR& StageObject::GetSpherePos(void) const
-{
-	//当たり判定用の球の中心座標を返す
-	return sphere_->GetPos();
-}
-
-float StageObject::GetSphereRad(void) const
-{	
-	//当たり判定用の球の半径を返す
-	return sphere_->GetRadius();
 }
 
 void StageObject::ItemCarry(void)

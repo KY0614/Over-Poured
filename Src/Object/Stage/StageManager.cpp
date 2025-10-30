@@ -305,52 +305,56 @@ void StageManager::Init3DModel(void)
 	counter_ = std::make_unique<Table>(StageObject::COUNTER, player_, objects_);
 	counter_->Init(COUNTER_POS);
 
-	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetSpherePos();
+	VECTOR pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM - 1]->GetSphere().GetPos();
 	//ホット用カップのラック
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::HOT_CUP_RACK, player_));
 	objects_.back()->Init(pos, rot_R);
 
 	//アイス用カップのラック
-	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetSpherePos();
+	pos = tables_[TABLE_ROW_BACK_NUM + TABLE_COLUMN_NUM + TABLE_COLUMN_NUM - 1]->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::ICE_CUP_RACK, player_));
 	objects_.back()->Init(pos, rot_L);
 
 	//チョコスイーツ用のラック
-	pos = tables_[tables_.size() - 2]->GetSpherePos();
+	pos = tables_[tables_.size() - 2]->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::CHOCO_SWEETS_RACK, player_));
 	objects_.back()->Init(pos);
 
 	//ベリースイーツ用のラック
-	pos = tables_.back()->GetSpherePos();
+	pos = tables_.back()->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<RackObject>(StageObject::BERRY_SWEETS_RACK, player_));
 	objects_.back()->Init(pos);
 
 	//カップ用の蓋
-	pos = tables_[2]->GetSpherePos();
+	pos = tables_[2]->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<CupLidRack>(StageObject::CUP_LID_RACK, player_, objects_));
 	objects_.back()->Init(pos);
 
 	//コーヒーマシン
-	int machineTableIdx = MAX_TABLE_NUM - 2;	//コーヒーマシンを置くテーブルのインデックス
-	pos = tables_[machineTableIdx]->GetSpherePos();
+	int tableIdxOffset = 2;
+	int machineTableIdx = MAX_TABLE_NUM - tableIdxOffset;	//コーヒーマシンを置くテーブルのインデックス
+	pos = tables_[machineTableIdx]->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE, player_, objects_));
 	objects_.back()->Init(pos, rot_L);
 
 	//コーヒーマシン２個目
-	machineTableIdx = MAX_TABLE_NUM - 4;	//コーヒーマシンを置くテーブルのインデックス
-	pos = tables_[machineTableIdx]->GetSpherePos();
+	tableIdxOffset = 4;
+	machineTableIdx = MAX_TABLE_NUM - tableIdxOffset;	//コーヒーマシンを置くテーブルのインデックス
+	pos = tables_[machineTableIdx]->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<Machine>(StageObject::COFFEE_MACHINE,player_, objects_));
 	objects_.back()->Init(pos, rot_L);
 
 	//アイスディスペンサー
-	machineTableIdx = MAX_TABLE_NUM - 1;	//コーヒーマシンを置くテーブルのインデックス
-	pos = tables_[machineTableIdx]->GetSpherePos();
+	tableIdxOffset = 1;
+	machineTableIdx = MAX_TABLE_NUM - tableIdxOffset;	//コーヒーマシンを置くテーブルのインデックス
+	pos = tables_[machineTableIdx]->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
 	objects_.back()->Init(pos, rot_R);
 
 	//アイスディスペンサー２個目
-	machineTableIdx = MAX_TABLE_NUM - 3;	//コーヒーマシンを置くテーブルのインデックス
-	pos = tables_[machineTableIdx]->GetSpherePos();
+	tableIdxOffset = 3;
+	machineTableIdx = MAX_TABLE_NUM - tableIdxOffset;	//コーヒーマシンを置くテーブルのインデックス
+	pos = tables_[machineTableIdx]->GetSphere().GetPos();
 	objects_.emplace_back(std::make_unique<IceDispenser>(StageObject::ICE_DISPENSER,player_, objects_));
 	objects_.back()->Init(pos, rot_R);
 
@@ -445,8 +449,8 @@ void StageManager::DeleteSurvedItem(void)
 	for (auto it = objects_.begin(); it != objects_.end(); )
 	{
 		if (CommonUtility::IsHitSpheres(
-			(*it)->GetSpherePos(), (*it)->GetSphereRad(),
-			counter_->GetSpherePos(), counter_->GetSphereRad()))
+			(*it)->GetSphere().GetPos(), (*it)->GetSphere().GetRadius(),
+			counter_->GetSphere().GetPos(), counter_->GetSphere().GetRadius()))
 		{
 			StageObject* target = it->get(); //今から削除する親オブジェクトを記録
 			if (target->IsLidOn())
@@ -560,7 +564,7 @@ void StageManager::CarryableObjInteract(void)
 					))
 				{
 					//アイテムを設置する処理
-					obj->ItemPlaced(table->GetSpherePos());
+					obj->ItemPlaced(table->GetSphere().GetPos());
 				}
 				//既にアクションを行っていたらループを抜ける
 				if (obj->IsActioned())
@@ -571,14 +575,14 @@ void StageManager::CarryableObjInteract(void)
 
 			//カウンターに設置
 			if (CommonUtility::IsHitSpheres(pPos, pRad,
-				counter_->GetSpherePos(), counter_->GetSphereRad()))
+				counter_->GetSphere().GetPos(), counter_->GetSphere().GetRadius()))
 			{
 				std::vector<std::string> items = counter_->GetParam().acceptedItems_;
 				//objIdがインタラクト対象物に存在するかどうか
 				bool isAccepted = std::find(items.begin(), items.end(), obj->GetParam().id_) != items.end();
 				if (!isAccepted)continue;	//存在しなかったら処理しない
 				//アイテムを設置する処理
-				obj->ItemPlaced(counter_->GetSpherePos());
+				obj->ItemPlaced(counter_->GetSphere().GetPos());
 			}
 		}
 		//既にアクションを行っていたらループを抜ける
@@ -598,10 +602,12 @@ void StageManager::MachineInteract(void)
 	{
 		//コーヒーマシンの判定だけさせたい
 		if (objects_[i]->GetParam().id_ != StageObject::COFFEE_MACHINE)continue;
+		VECTOR oPos = objects_[i]->GetSphere().GetPos();
+		float oRad = objects_[i]->GetSphere().GetRadius();
 		//持っているアイテムをマシンに設置する処理
 		if (player_.GetIsHolding() &&
 			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+				oPos, oRad))
 		{
 			objects_[i]->Interact(player_.GetHoldItem());
 		}
@@ -623,7 +629,7 @@ void StageManager::MachineInteract(void)
 		//持っているアイテムをマシンに設置する処理
 		if (player_.GetIsHolding() &&
 			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+				objects_[i]->GetSphere().GetPos(), objects_[i]->GetSphere().GetRadius()))
 		{
 			objects_[i]->Interact(player_.GetHoldItem());
 		}
@@ -650,7 +656,7 @@ void StageManager::LidRackInteract(void)
 		//プレイヤーが何か持っている状態で蓋のラックに近づいたら処理する
 		if (player_.GetIsHolding() &&
 			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
+				obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()))
 		{
 			//蓋のラックのインタラクト処理
 			obj->Interact(player_.GetHoldItem());
@@ -688,8 +694,8 @@ void StageManager::ProduceCoffee(int index)
 
 		//マシンの球体と設置されているカップだけ処理する
 		if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
-			CommonUtility::IsHitSpheres(machine->GetPos(), machine->GetSphereRad(),
-				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+			CommonUtility::IsHitSpheres(machine->GetSphere().GetPos(), machine->GetSphere().GetRadius(),
+				objects_[i]->GetSphere().GetPos(), objects_[i]->GetSphere().GetRadius()))
 		{
 			if (objects_[i]->GetParam().id_ == StageObject::HOT_CUP)
 			{
@@ -758,8 +764,8 @@ void StageManager::DispenseIce2Cup(int index)
 		//マシンの球体と設置されているカップだけ処理する
 		if (objects_[i]->GetItemState() == StageObject::ITEM_STATE::PLACED &&
 			CommonUtility::IsHitSpheres(
-				dispenser->GetPos(), dispenser->GetSphereRad(),
-				objects_[i]->GetSpherePos(), objects_[i]->GetSphereRad()))
+				dispenser->GetSphere().GetPos(), dispenser->GetSphere().GetRadius(),
+				objects_[i]->GetSphere().GetPos(), objects_[i]->GetSphere().GetRadius()))
 		{
 			//設置されているカップに氷を入れる
 			if (auto iceCup = dynamic_cast<ItemObject*>(objects_[i].get()))
@@ -819,11 +825,12 @@ void StageManager::DustBoxInteract(void)
 	for (const auto& obj : objects_)
 	{
 		if (obj->GetParam().id_ != StageObject::DUST_BOX) continue;
-
+		VECTOR oPos = obj->GetSphere().GetPos();
+		float oRad = obj->GetSphere().GetRadius();
 		// プレイヤーが持っているアイテムをゴミ箱に近づけている場合
 		if (player_.GetIsHolding() &&
 			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				obj->GetSpherePos(), obj->GetSphereRad()))
+				oPos, oRad))
 		{
 			if(ins.IsInputTriggered("Interact"))
 			{

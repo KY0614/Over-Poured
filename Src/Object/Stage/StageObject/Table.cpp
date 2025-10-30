@@ -12,12 +12,18 @@ Table::Table(const std::string objId,Player& player,
 void Table::Update(void)
 {
 	StageObject::Update();
-	//tableColliderTran_.Update();
+	//テーブル用当たり判定情報
+	VECTOR tPos = GetSphere().GetPos();
+	float tRad = GetSphere().GetRadius();
 	//テーブルの上にオブジェクトが置かれていないかどうか
 	for (const auto& obj : objects_)
 	{
-		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			GetSpherePos(), GetSphereRad()) && obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
+		//オブジェクトの当たり判定情報
+		VECTOR oPos = obj->GetSphere().GetPos();
+		float oRad = obj->GetSphere().GetRadius();
+		
+		if (CommonUtility::IsHitSpheres(oPos, oRad,
+			tPos, tRad) && obj->GetItemState() == StageObject::ITEM_STATE::PLACED)
 		{
 			//置かれている場合は、置けない状態にする
 			param_.placeable_ = false;

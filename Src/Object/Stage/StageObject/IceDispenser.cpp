@@ -65,8 +65,8 @@ void IceDispenser::Interact(const std::string& objId)
 	{
 		//アイスカップまたはアイスコーヒー
 		if ((obj->GetParam().id_ == ICE_CUP || obj->GetParam().id_ == CUP_WITH_ICE) &&
-			CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
-				obj->GetSpherePos(), obj->GetSphereRad()) &&
+			CommonUtility::IsHitSpheres(GetSphere().GetPos(), GetSphere().GetRadius(),
+				obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
 			// 既にセット済み
@@ -80,8 +80,8 @@ void IceDispenser::Interact(const std::string& objId)
 		//アイス用カップ以外のオブジェクトは判定しない
 		if (obj->GetParam().id_ != ICE_CUP) continue;
 
-		if (CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
-			obj->GetSpherePos(), obj->GetSphereRad()))
+		if (CommonUtility::IsHitSpheres(GetSphere().GetPos(), GetSphere().GetRadius(),
+			obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()))
 		{
 			iconUI_->SetActive(true);
 			//スペースキー押下でマシンの場所にカップを置く(とりあえず)
@@ -118,8 +118,8 @@ void IceDispenser::UpdateInActive(void)
 		//氷入りカップ以外は判定しない
 		if (obj->GetParam().id_ != CUP_WITH_ICE)continue;
 		//マシンの中にPLACED状態のカップがあったらtrueにする
-		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			GetSpherePos(), GetSphereRad()) &&
+		if (CommonUtility::IsHitSpheres(obj->GetSphere().GetPos(), obj->GetSphere().GetRadius(),
+			GetSphere().GetPos(), GetSphere().GetRadius()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED)
 		{
 			hasPlacedCup = true;
@@ -148,8 +148,8 @@ void IceDispenser::UpdateActive(void)
 		if (obj->GetParam().id_ != ICE_CUP)continue;
 
 		//マシンの中にPLACED状態のカップがあったらtrueにする
-		if (CommonUtility::IsHitSpheres(obj->GetSpherePos(), obj->GetSphereRad(),
-			GetSpherePos(), GetSphereRad()) &&
+		if (CommonUtility::IsHitSpheres(obj->GetSphere().GetPos(), obj->GetSphere().GetRadius(),
+			GetSphere().GetPos(), GetSphere().GetRadius()) &&
 			obj->GetItemState() == ITEM_STATE::PLACED &&
 			param_.interactTime_ >= 0.0f)
 		{

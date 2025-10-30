@@ -40,8 +40,8 @@ void CupLidRack::Interact(const std::string& objId)
 		//所持状態のコーヒーかどうかのフラグ
 		bool isHoldingCoffee = obj->GetItemState()==ITEM_STATE::HOLD;
 		//コーヒーと接触している状態で、スペースキーを押下していたらゲージをためる
-		if (CommonUtility::IsHitSpheres(GetSpherePos(), GetSphereRad(),
-			obj->GetSpherePos(), obj->GetSphereRad()))
+		if (CommonUtility::IsHitSpheres(GetSphere().GetPos(), GetSphere().GetRadius(),
+			obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()))
 		{
 			//スペースキーを押下し続けるとゲージがたまっていく
 			if (isHoldingCoffee && ins.IsInputPressed("Interact"))

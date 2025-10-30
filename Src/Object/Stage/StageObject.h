@@ -154,11 +154,9 @@ public:
 	const VECTOR& GetPos(void)const { return transform_.pos; };
 
 	/// <summary>
-	/// 当たり判定用球体の座標を取得する
+	/// 当たり判定用球体を取得する
 	/// </summary>
-	/// <returns>球体の座標</returns>
-	const VECTOR& GetSpherePos(void)const;
-
+	/// <returns>球体</returns>
 	const Sphere& GetSphere(void)const { return *sphere_; }
 
 	/// <summary>
@@ -180,13 +178,6 @@ public:
 	/// <param name="">machineState_を返す</param>
 	/// <returns>マシンオブジェクトの状態</returns>
 	const MACHINE_STATE& GetMachineState(void)const { return machineState_; }
-
-	/// <summary>
-	/// 当たり判定用球体の半径を取得する
-	/// </summary>
-	/// <param name="">SphereのGetRadius関数を返す</param>
-	/// <returns>球体の半径</returns>
-	float GetSphereRad(void)const;
 
 	/// <summary>
 	/// オブジェクトがプレイヤーからアクションを行われているかどうかを取得
