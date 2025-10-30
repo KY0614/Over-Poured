@@ -228,7 +228,8 @@ void TutorialScene::ImageDraw(void)
 		tutorialBackImg_,
 		true);
 	//装飾（左）
-	DrawRotaGraph3(BACK_IMG_MARGINE, BACK_IMG_MARGINE,
+	DrawRotaGraph3(BACK_IMG_MARGINE * aspectRatio,
+		BACK_IMG_MARGINE * aspectRatio,
 		BACK_IMG_SCALE / 2, BACK_IMG_SCALE / 2,
 		aspectRatio, aspectRatio * decoScaleY,
 		0.0f,
@@ -236,8 +237,8 @@ void TutorialScene::ImageDraw(void)
 		true, false);
 	//装飾（右）
 	DrawRotaGraph3(
-		Application::SCREEN_SIZE_X - BACK_IMG_MARGINE,
-		BACK_IMG_MARGINE,
+		Application::SCREEN_SIZE_X - (BACK_IMG_MARGINE * aspectRatio),
+		BACK_IMG_MARGINE * aspectRatio,
 		BACK_IMG_SCALE / 2, BACK_IMG_SCALE / 2,
 		aspectRatio, aspectRatio * decoScaleY,
 		0.0f,
@@ -249,12 +250,15 @@ void TutorialScene::ImageDraw(void)
 		aspectRatio * size, 0.0f,
 		tutorialImgs_[imgIdx_],
 		true);
+	//矢印画像用の座標（右）
+	const int cursorRightPosX = Application::SCREEN_SIZE_X - (CURSOR_IMG_MARGINE * aspectRatio);
+	const int cursorRightPosY = (Application::SCREEN_SIZE_Y - ((float)(CURSOR_IMG_MARGINE / 2) * aspectRatio));
 	//点滅表示
 	if (isBlinkR_)
 	{
 		//右用
-		DrawRotaGraph((Application::SCREEN_SIZE_X - CURSOR_IMG_MARGINE),
-			(Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2),
+		DrawRotaGraph(cursorRightPosX,
+			cursorRightPosY,
 			aspectRatio, 0.0f,
 			cursorImg_[blinkIdx_],
 			true
@@ -263,18 +267,21 @@ void TutorialScene::ImageDraw(void)
 	else
 	{
 		//反転用(右用）
-		DrawRotaGraph((Application::SCREEN_SIZE_X - CURSOR_IMG_MARGINE),
-			(Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2),
+		DrawRotaGraph(cursorRightPosX,
+			cursorRightPosY,
 			aspectRatio, 0.0f,
 			cursorImg_[1],
 			true
 		);
 	}
+	//矢印画像用の座標（左）
+	const int cursorLeftPosX = CURSOR_IMG_MARGINE * aspectRatio;
+	const int cursorLeftPosY = (Application::SCREEN_SIZE_Y - ((float)(CURSOR_IMG_MARGINE / 2) * aspectRatio));
 	if (isBlinkL_)
 	{
 		//反転用(左用）
-		DrawRotaGraph(CURSOR_IMG_MARGINE,
-			Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2,
+		DrawRotaGraph(cursorLeftPosX,
+			cursorLeftPosY,
 			aspectRatio, 0.0f,
 			cursorImg_[blinkIdx_],
 			true, true
@@ -283,8 +290,8 @@ void TutorialScene::ImageDraw(void)
 	else
 	{
 		//反転用(左用）
-		DrawRotaGraph(CURSOR_IMG_MARGINE,
-			Application::SCREEN_SIZE_Y - CURSOR_IMG_MARGINE / 2,
+		DrawRotaGraph(cursorLeftPosX,
+			cursorLeftPosY,
 			aspectRatio, 0.0f,
 			cursorImg_[1],
 			true, true

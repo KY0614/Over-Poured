@@ -47,7 +47,6 @@ Player::Player(void)
 	movedPos_ = CommonUtility::VECTOR_ZERO;
 	movePow_ = CommonUtility::VECTOR_ZERO;
 	speed_ = 0.0f;
-
 }
 
 Player::~Player(void)
@@ -60,7 +59,8 @@ void Player::Init(void)
 	//モデルの基本設定
 	transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::PLAYER));
-	transform_.scl = {0.7f,0.7f,0.7f};
+	const float scale = 0.7f;
+	transform_.scl = { scale,scale,scale };
 	transform_.pos = { -60.0f, 30.0f, 30.0f };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
@@ -74,16 +74,17 @@ void Player::Init(void)
 	chestFrmNo_ = MV1SearchFrame(transform_.modelId, L"mixamorig:Hips");
 	chestPos_ = MV1GetFramePosition(transform_.modelId, chestFrmNo_);
 
+	const float radius = 20.0f;
 	//カプセルコライダ
 	capsule_ = std::make_unique<Capsule>(transform_);
 	capsule_->SetLocalPosTop({ 0.0f, 90.0f, 0.0f });
 	capsule_->SetLocalPosDown({ 0.0f, -10.0f, 0.0f });
-	capsule_->SetRadius(20.0f);
+	capsule_->SetRadius(radius);
 	
 	//オブジェクト用コライダ
 	sphere_ = std::make_unique<Sphere>(transform_);
-	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 30.0f });
-	sphere_->SetRadius(20.0f);
+	sphere_->SetLocalPos({ 0.0f, chestPos_.y, 40.0f });
+	sphere_->SetRadius(radius);
 
 	//足煙エフェクト
 	effectSmokeResId_ = ResourceManager::GetInstance().Load(

@@ -69,7 +69,7 @@ PauseScene::PauseScene(void) :
 	},
 	{ L"ÉQÅ[ÉÄèIóπ",[this]()
 		{
-			Application::GetInstance().Destroy();
+			Application::GetInstance().EndGame();
 			return;
 		}
 	}
@@ -136,7 +136,8 @@ void PauseScene::DrawProcess(void)
 	//èoåªÅEè¡ñ≈éûÇÃçÇÇ≥ïœâªó¶(0.0Å`1.0)
 	float rate = static_cast<float>(frame_) /
 		static_cast<float>(APPEAR_INTERVAL);
-	frameHalfHeight *= static_cast<int>(rate);
+	frameHalfHeight *= rate;
+
 	//îwåiâÊëúÇÃï`âÊ
 	DrawExtendGraph(MARGINE_SIZE,
 		centerY - frameHalfHeight,
@@ -222,12 +223,12 @@ void PauseScene::DrawMenuList(void)
 			lineX += SELECT_MENU_MARGINE * scale;
 		}
 
-		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * static_cast<int>(scale),
-			(MENU_START_Y * static_cast<int>(scale)) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * static_cast<int>(scale) * i),
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * scale,
+			(MENU_START_Y * scale) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale * i),
 			scale * MENU_LIST_SCALE, 0.0f, menuListImg_[i], true
 		);
 
-		lineY += static_cast<int>(MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale);
+		lineY += MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale;
 	}
 }
 

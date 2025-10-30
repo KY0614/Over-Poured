@@ -29,7 +29,6 @@ namespace
 	const float MAX_GAUGE_TIME = 1.0f;		//ゲージのイージング目標時間
 	const float FIRST_GAUGE_SPEED = 0.5f;	//最初に表示するゲージのスピード
 	const float CURRENT_GAUGE_SPEED = 0.5f;	//最後に表示するゲージのスピード
-	const int GAUGE_POS_X = Application::SCREEN_SIZE_X / 2 + 450;
 	const int GAUGE_POS_Y = Application::SCREEN_SIZE_Y / 2 - 150;
 
 	//ランク関連
@@ -274,20 +273,20 @@ void Score::DrawPlayScore(void)
 
 	//バナー(装飾)のサイズ
 	const int BANNER_SIZE = 500;
-	const float scaleX = static_cast<float>(Application::SCREEN_SIZE_X) /
-		static_cast<float>(Application::SCREEN_MAX_SIZE_X);
 	//装飾（ランクの背景のピンクのほう)
-	DrawRotaGraph3(Application::SCREEN_SIZE_X - (BANNER_SIZE * scaleX),
-		BANNER_SIZE * aspectRatio_,
+	int pinkBannerX = Application::SCREEN_SIZE_X - (BANNER_SIZE * aspectRatio_);
+	int pinkBannerY = BANNER_SIZE * aspectRatio_;
+	DrawRotaGraph3(pinkBannerX,
+		pinkBannerY,
 		BANNER_SIZE / 2, BANNER_SIZE / 2,
-		scaleX * BANNER_SCALE, aspectRatio_ * BANNER_SCALE,
+		aspectRatio_ * BANNER_SCALE, aspectRatio_ * BANNER_SCALE,
 		0.0f,
 		decoImg_,
 		true, false);
 
 	//現在のスコア
 	DrawVariableScore(currentScr_, CURRENT_SCORE_POS_X,
-		Application::SCREEN_SIZE_Y - RANK_LAVEL_HEIGHT, aspectRatio_);
+		Application::SCREEN_SIZE_Y - RANK_LAVEL_HEIGHT);
 
 	//「現在のスコア」ラベル
 	DrawRotaGraph(RANK_LAVEL_POS_X,
@@ -296,9 +295,9 @@ void Score::DrawPlayScore(void)
 				currentScrImg_, true);
 
 	//ゲージの背景
-	DrawRotaGraph(GAUGE_POS_X,
+	DrawRotaGraph(pinkBannerX,
 		GAUGE_POS_Y,
-		aspectRatio_ * RANK_GAUGE_SCALE, 0.0f, circleShadowImg_,
+		RANK_GAUGE_SCALE * aspectRatio_, 0.0f, circleShadowImg_,
 		true, false);
 
 	//ゲージ本体
@@ -306,43 +305,43 @@ void Score::DrawPlayScore(void)
 	{
 		//DrawCircleGaugeを使った描画
 		DrawCircleGauge(
-			GAUGE_POS_X,
+			pinkBannerX,
 			GAUGE_POS_Y,
 			rankData_[i].displayedRate_ * RANK_PERCENT_MAX,
 			rankData_[i].gaugeImg_,
 			0.0f,
-			RANK_GAUGE_SCALE,
+			RANK_GAUGE_SCALE * aspectRatio_,
 			false,false
 		);
 	}
-
+	
 	if (rankData_[(int)rank_].isFull_)
 	{
 		switch (rank_)
 		{
 		case Score::RANK::C:
-			DrawRotaGraph(GAUGE_POS_X,
+			DrawRotaGraph(pinkBannerX,
 				GAUGE_POS_Y,
 				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[0],
 				true, false);
 			break;
 
 		case Score::RANK::B:
-				DrawRotaGraph(GAUGE_POS_X,
+				DrawRotaGraph(pinkBannerX,
 					GAUGE_POS_Y,
 					aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[1],
 					true, false);
 			break;
 
 		case Score::RANK::A:
-			DrawRotaGraph(GAUGE_POS_X,
+			DrawRotaGraph(pinkBannerX,
 				GAUGE_POS_Y,
 				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[2],
 				true, false);
 			break;
 
 		case Score::RANK::S:
-			DrawRotaGraph(GAUGE_POS_X,
+			DrawRotaGraph(pinkBannerX,
 				GAUGE_POS_Y,
 				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[3],
 				true, false);
@@ -462,42 +461,45 @@ Score::RANK Score::GetRankFromScore(int score)
 
 void Score::InitRankInfo(void)
 {
+	static int rankDataIdx = 0;
 	//ランクごとに初期化
-	rankData_[0].gaugeImg_ = ResourceManager::GetInstance().
+	rankData_[rankDataIdx].gaugeImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANK_C).handleId_;
-	rankData_[0].startVal_ = 0;
-	rankData_[0].endVal_ = RANK_C_MAX;
-	rankData_[0].currentRate_ = 0.0f;
-	rankData_[0].displayedRate_ = 0.0f;
+	rankData_[rankDataIdx].startVal_ = 0;
+	rankData_[rankDataIdx].endVal_ = RANK_C_MAX;
+	rankData_[rankDataIdx].currentRate_ = 0.0f;
+	rankData_[rankDataIdx].displayedRate_ = 0.0f;
 
-	rankData_[1].gaugeImg_ = ResourceManager::GetInstance().
+	rankData_[++rankDataIdx].gaugeImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANK_B).handleId_;
-	rankData_[1].startVal_ = RANK_C_MAX + 1;	//Cランクの次の値から開始
-	rankData_[1].endVal_ = RANK_B_MAX;
-	rankData_[1].currentRate_ = 0.0f;
-	rankData_[1].displayedRate_ = 0.0f;
+	rankData_[rankDataIdx].startVal_ = RANK_C_MAX + 1;	//Cランクの次の値から開始
+	rankData_[rankDataIdx].endVal_ = RANK_B_MAX;
+	rankData_[rankDataIdx].currentRate_ = 0.0f;
+	rankData_[rankDataIdx].displayedRate_ = 0.0f;
 
-	rankData_[2].gaugeImg_ = ResourceManager::GetInstance().
+	rankData_[++rankDataIdx].gaugeImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANK_A).handleId_;
-	rankData_[2].startVal_ = RANK_B_MAX + 1;	//Bランクの次の値から開始
-	rankData_[2].endVal_ = RANK_A_MAX;
-	rankData_[2].currentRate_ = 0.0f;
-	rankData_[2].displayedRate_ = 0.0f;
+	rankData_[rankDataIdx].startVal_ = RANK_B_MAX + 1;	//Bランクの次の値から開始
+	rankData_[rankDataIdx].endVal_ = RANK_A_MAX;
+	rankData_[rankDataIdx].currentRate_ = 0.0f;
+	rankData_[rankDataIdx].displayedRate_ = 0.0f;
 
-	rankData_[3].gaugeImg_ = ResourceManager::GetInstance().
+	rankData_[+rankDataIdx].gaugeImg_ = ResourceManager::GetInstance().
 		Load(ResourceManager::SRC::RANK_S).handleId_;
-	rankData_[3].startVal_ = RANK_A_MAX + 1;	//Aランクの次の値から開始
-	rankData_[3].endVal_ = RANK_S_MAX;
-	rankData_[3].currentRate_ = 0.0f;
-	rankData_[3].displayedRate_ = 0.0f;
+	rankData_[rankDataIdx].startVal_ = RANK_A_MAX + 1;	//Aランクの次の値から開始
+	rankData_[rankDataIdx].endVal_ = RANK_S_MAX;
+	rankData_[rankDataIdx].currentRate_ = 0.0f;
+	rankData_[rankDataIdx].displayedRate_ = 0.0f;
 }
 
 void Score::DrawVariableScore(int score, int posX, int posY,float scale)
 {
 	//スコアを文字列に変換
 	std::string str = std::to_string(score);
+	const int width = 130;
+	const float strScale = scale * aspectRatio_;
 	//1文字あたりの幅
-	const int digitWidth = RANK_LAVEL_HEIGHT * scale;
+	const int digitWidth = width * strScale;
 
 	for (int i = 0; i < str.size(); ++i)
 	{
@@ -508,8 +510,8 @@ void Score::DrawVariableScore(int score, int posX, int posY,float scale)
 			//描画
 			int digit = ch - '0';
 			DrawRotaGraph(
-				posX + static_cast<int>(i * digitWidth * scale), posY,
-				scale, 0.0f,
+				posX + (i * digitWidth), posY,
+				strScale, 0.0f,
 				numberImgs_[digit], true);
 		}
 	}
@@ -525,6 +527,7 @@ void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 	const float scale = RANK_LAVEL_SCALE;
 	//画面比率を考慮して拡大率を決定
 	const float drawScale = aspectRatio_ * scale;
+
 	for (int i = 0; i < str.size(); ++i)
 	{
 		char ch = str[i];
@@ -535,7 +538,7 @@ void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 			//ランクインしているスコアなら色を変える
 			SetDrawBright(BRIGHT_MAX, BRIGHT_MAX, hightLight);
 			DrawRotaGraph(
-				posX + static_cast<int>(i * digitWidth * aspectRatio_), posY,
+				posX + (i * digitWidth * aspectRatio_), posY,
 				drawScale, 0.0f,
 				numberImgs_[digit], true);
 			SetDrawBright(BRIGHT_MAX, BRIGHT_MAX, BRIGHT_MAX);

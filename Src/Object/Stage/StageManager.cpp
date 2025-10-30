@@ -107,14 +107,14 @@ void StageManager::Update(void)
 	//ラックからカップを取り出す処理
 	CupRackInteract();
 
-	//持ち運び可能なオブジェクトのインタラクト処理
-	CarryableObjInteract();
-
 	//マシンとのインタラクト処理
 	MachineInteract();
 
 	//蓋ラックとのインタラクト処理
 	LidRackInteract();
+
+	//持ち運び可能なオブジェクトのインタラクト処理
+	CarryableObjInteract();
 
 	//ゴミ箱とのインタラクト処理
 	DustBoxInteract();
@@ -401,9 +401,9 @@ void StageManager::InitAnimation(void)
 
 void StageManager::SurveItem(StageObject& obj)
 {
-	if(obj.GetParam().carryable_ == false)
+	//持ち運び不可のオブジェクトは無視もしくは空の場合は無視
+	if(obj.GetParam().carryable_ == false || isServedItems_.empty())
 	{
-		//持ち運び不可のオブジェクトは無視
 		return; 
 	}
 	//objのIDや状態からOrderDataをセット
@@ -479,11 +479,11 @@ void StageManager::DeleteSurvedItem(void)
 
 void StageManager::CupRackInteract(void)
 {
-	auto& pSphere = player_.GetSphere();
-	bool playrHolding = player_.GetIsHolding();
 	//プレイヤーの当たり判定用球体情報
-	VECTOR pPos = pSphere.GetPos();
-	float pRad = pSphere.GetRadius();
+	auto& pSphere = player_.GetSphere();
+	//プレイヤーが何か持っているかどうか
+	bool playrHolding = player_.GetIsHolding();
+
 	//ラックからカップを取り出す処理
 	for (const auto& obj : objects_)
 	{
@@ -493,14 +493,11 @@ void StageManager::CupRackInteract(void)
 			obj->GetParam().id_ != StageObject::BERRY_SWEETS_RACK &&
 			obj->GetParam().id_ != StageObject::CHOCO_SWEETS_RACK) continue;
 
-		auto& objSphere = obj->GetSphere();
-		VECTOR oPos = objSphere.GetPos();
-		float oRad = objSphere.GetRadius();
-
 		//ラックに在庫がないときの処理
 		if (!player_.GetIsHolding() && obj->GetParam().interactable_ &&
 			!obj->GetHasStock() &&
-			CommonUtility::IsHitSpheres(pPos, pRad, oPos, oRad))
+			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()))
 		{
 			//在庫を補充する処理
 			obj->AddStock();
@@ -509,7 +506,8 @@ void StageManager::CupRackInteract(void)
 
 		//プレイヤーが何も持っていないときの処理
 		if (!playrHolding && obj->GetParam().interactable_ &&
-			CommonUtility::IsHitSpheres(pPos, pRad,oPos, oRad))
+			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()))
 		{
 			//在庫があるときはカップを取り出す処理
 			obj->PickUp(obj->GetParam().id_, objects_);
@@ -521,16 +519,12 @@ void StageManager::CupRackInteract(void)
 
 void StageManager::CarryableObjInteract(void)
 {
-	auto& pSphere = player_.GetSphere();
 	//プレイヤーの当たり判定用球体情報
-	VECTOR pPos = pSphere.GetPos();
-	float pRad = pSphere.GetRadius();
+	auto& pSphere = player_.GetSphere();
 	for (const auto& obj : objects_)
 	{
-		VECTOR oPos = obj->GetSphere().GetPos();
-		float oRad = obj->GetSphere().GetRadius();
 		//カウンターで商品を提供する処理
-		if (CommonUtility::IsHitSpheres(oPos, oRad,
+		if (CommonUtility::IsHitSpheres(obj->GetSphere().GetPos(), obj->GetSphere().GetRadius(),
 			counter_->GetSphere().GetPos(), counter_->GetSphere().GetRadius()
 		))
 		{
@@ -544,7 +538,8 @@ void StageManager::CarryableObjInteract(void)
 
 		//プレイヤーが何も持っていないときの処理
 		if (!player_.GetIsHolding() && obj->GetParam().carryable_ &&
-			CommonUtility::IsHitSpheres(pPos, pRad, oPos, oRad))
+			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+				obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()))
 		{
 			obj->ItemCarry();
 			break;
@@ -555,13 +550,10 @@ void StageManager::CarryableObjInteract(void)
 		{
 			for (const auto& table : tables_)
 			{
-				VECTOR tPos = table->GetSphere().GetPos();
-				float tRad = table->GetSphere().GetRadius();
 				//設置可能なテーブルの上にアイテムを設置する処理
 				if (table->GetParam().placeable_ &&
-					CommonUtility::IsHitSpheres(pPos, pRad,
-						tPos, tRad
-					))
+					CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
+						table->GetSphere().GetPos(), table->GetSphere().GetRadius()))
 				{
 					//アイテムを設置する処理
 					obj->ItemPlaced(table->GetSphere().GetPos());
@@ -574,7 +566,7 @@ void StageManager::CarryableObjInteract(void)
 			}
 
 			//カウンターに設置
-			if (CommonUtility::IsHitSpheres(pPos, pRad,
+			if (CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
 				counter_->GetSphere().GetPos(), counter_->GetSphere().GetRadius()))
 			{
 				std::vector<std::string> items = counter_->GetParam().acceptedItems_;
@@ -595,24 +587,23 @@ void StageManager::CarryableObjInteract(void)
 
 void StageManager::MachineInteract(void)
 {
+	//プレイヤーの当たり判定用球体情報
 	auto& pSphere = player_.GetSphere();
-
 	//マシンとカップの処理
 	for (int i = 0; i < static_cast<int>(objects_.size()); ++i)
 	{
 		//コーヒーマシンの判定だけさせたい
 		if (objects_[i]->GetParam().id_ != StageObject::COFFEE_MACHINE)continue;
-		VECTOR oPos = objects_[i]->GetSphere().GetPos();
-		float oRad = objects_[i]->GetSphere().GetRadius();
+
 		//持っているアイテムをマシンに設置する処理
 		if (player_.GetIsHolding() &&
 			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				oPos, oRad))
+				objects_[i]->GetSphere().GetPos(), objects_[i]->GetSphere().GetRadius()))
 		{
 			objects_[i]->Interact(player_.GetHoldItem());
 		}
 
-		//設置して一定時間経ったら氷入りカップを出力する
+		//設置して一定時間経ったらコーヒーを出力する
 		if (objects_[i]->GetParam().interactTime_ <= 0.0f)
 		{
 			//コーヒーを生成する処理
@@ -626,6 +617,7 @@ void StageManager::MachineInteract(void)
 	{
 		//ディスペンサーの判定だけさせたい
 		if (objects_[i]->GetParam().id_ != StageObject::ICE_DISPENSER)continue;
+
 		//持っているアイテムをマシンに設置する処理
 		if (player_.GetIsHolding() &&
 			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
@@ -646,6 +638,7 @@ void StageManager::MachineInteract(void)
 
 void StageManager::LidRackInteract(void)
 {
+	//プレイヤーの当たり判定用球体情報
 	auto& pSphere = player_.GetSphere();
 	//コーヒーと蓋のラックとの処理
 	for (const auto& obj : objects_)
@@ -819,18 +812,19 @@ void StageManager::LidFollowCup(void)
 void StageManager::DustBoxInteract(void)
 {
 	auto& ins = InputManager::GetInstance();
-	auto& pSphere = player_.GetSphere();
 
+	//プレイヤーの当たり判定用球体情報
+	auto& pSphere = player_.GetSphere();
 	// ゴミ箱の処理
 	for (const auto& obj : objects_)
 	{
+		//ゴミ箱以外のオブジェクトは判定しない
 		if (obj->GetParam().id_ != StageObject::DUST_BOX) continue;
-		VECTOR oPos = obj->GetSphere().GetPos();
-		float oRad = obj->GetSphere().GetRadius();
+
 		// プレイヤーが持っているアイテムをゴミ箱に近づけている場合
 		if (player_.GetIsHolding() &&
 			CommonUtility::IsHitSpheres(pSphere.GetPos(), pSphere.GetRadius(),
-				oPos, oRad))
+				obj->GetSphere().GetPos(), obj->GetSphere().GetRadius()))
 		{
 			if(ins.IsInputTriggered("Interact"))
 			{

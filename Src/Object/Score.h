@@ -131,7 +131,7 @@ private:
 	/// <param name="posX">X座標</param>
 	/// <param name="posY">Y座標</param>
 	/// <param name="scale">1文字あたりの大きさ</param>
-	void DrawVariableScore(int score,int posX,int posY, float scale);
+	void DrawVariableScore(int score,int posX,int posY, float scale = 1.0f);
 
 	/// <summary>
 	/// ランキングスコアを描画
