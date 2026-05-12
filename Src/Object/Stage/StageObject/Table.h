@@ -4,12 +4,18 @@
 class Table : public StageObject
 {
 public:
-	//コンストラクタ
-	Table(const std::string objId, Player& player,
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objId">オブジェクトID</param>
+	/// <param name="player">プレイヤーの参照</param>
+	/// <param name="objects">ステージに配置されているオブジェクト</param>
+	Table(const std::string& objId,
+		Player& player,
 		std::vector<std::unique_ptr<StageObject>>& objects);
 
 	//デストラクタ
-	~Table(void) = default;
+	~Table(void) override = default;
 
 	/// <summary>
 	/// 更新処理

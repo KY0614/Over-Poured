@@ -50,7 +50,7 @@ public:
 	/// Å‰‚Ì’•¶‚Ì§ŒÀŠÔ‚ª‰ß‚¬‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
 	/// </summary>
 	/// <returns>true:‰ß‚¬‚½@false:‰ß‚¬‚Ä‚È‚¢ </returns>
-	const bool& IsFirstOrderTimeOut(void);
+	const bool IsFirstOrderTimeOut(void);
 
 	/// <summary>
 	/// æ“ª‚Ì’•¶“à—e‚ğæ“¾‚·‚é

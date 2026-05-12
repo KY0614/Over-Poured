@@ -1,4 +1,6 @@
 #pragma once
+#include <functional>
+#include <map>
 #include "../Manager/GameSystem/ScoreManager.h"
 #include "../Common/Vector2.h"
 

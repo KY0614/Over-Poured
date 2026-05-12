@@ -11,10 +11,15 @@ public:
 	static constexpr float SWEETS_UI_OFFSET_Y = 110.0f;	//スイーツ用
 	static constexpr float CUP_UI_OFFSET_Y = 30.0f;		//カップ用
 
-	//コンストラクタ
-	RackObject(const std::string objId,Player& player);
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objId">オブジェクトID</param>
+	/// <param name="player">プレイヤーの参照</param>
+	RackObject(const std::string& objId,Player& player);
 	//デストラクタ
-	~RackObject(void) = default;
+	~RackObject(void) override = default;
 
 	/// <summary>
 	/// ラックからオブジェクトを取る処理

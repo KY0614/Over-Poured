@@ -1,4 +1,4 @@
-#include "PopUpUI.h"
+#include "ScoreUI.h"
 #include "UIManager.h"
 
 UIManager* UIManager::instance_ = nullptr;
@@ -24,20 +24,18 @@ UIManager& UIManager::GetInstance(void)
 UIManager::UIManager(void)
 {
 	uis_.clear();
-	popUpUIs_.clear();
+	scoreUIs_.clear();
 }
 
 UIManager::~UIManager(void)
 {
-	uis_.clear();
-	popUpUIs_.clear();
 }
 
 void UIManager::Init(void)
 {
 	//初期化処理
 	uis_.clear();
-	popUpUIs_.clear();
+	scoreUIs_.clear();
 }
 
 void UIManager::Update(void)
@@ -49,10 +47,10 @@ void UIManager::Update(void)
 	}
 }
 
-void UIManager::PopUpUIUpdate(void)
+void UIManager::ScoreUIUpdate(void)
 {
 	//ポップアップUIをまとめて更新
-	for (auto& ui : popUpUIs_)
+	for (auto& ui : scoreUIs_)
 	{
 		ui->Update();
 	}
@@ -61,14 +59,14 @@ void UIManager::PopUpUIUpdate(void)
 void UIManager::Draw(void)
 {
 	//描画するUIが無ければ処理を抜ける
-	if (uis_.empty() && popUpUIs_.empty())return;
+	if (uis_.empty() && scoreUIs_.empty())return;
 
 	// 全てのUIをまとめて描画
 	for (auto& ui : uis_)
 	{
 		ui.lock()->Draw();
 	}
-	for (auto& ui : popUpUIs_)
+	for (auto& ui : scoreUIs_)
 	{
 		ui->Draw();
 	}
@@ -78,20 +76,20 @@ void UIManager::Release(void)
 {
 	//解放処理
 	uis_.clear();
-	popUpUIs_.clear();
+	scoreUIs_.clear();
 }
 
 void UIManager::Destroy(void)
 {
 	//シングルトンの解放
 	uis_.clear();
-	popUpUIs_.clear();
+	scoreUIs_.clear();
 	delete instance_;
 }
 
-void UIManager::AddPopUpUI(const int score, const VECTOR& pos)
+void UIManager::AddScoreUI(const int score, const VECTOR& pos)
 {
 	// ポップアップUIを追加(スコア用）
-	popUpUIs_.emplace_back(std::make_unique<PopUpUI>(score, pos));
-	popUpUIs_.back()->Init();	//初期化
+	scoreUIs_.emplace_back(std::make_unique<ScoreUI>(score, pos));
+	scoreUIs_.back()->Init();	//初期化
 }

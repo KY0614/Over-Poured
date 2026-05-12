@@ -9,9 +9,11 @@ namespace
 	const std::string ICE_COFFEE = "IceCoffee";	//アイスコーヒーのオブジェクトID
 }
 
-Table::Table(const std::string objId,Player& player,
+Table::Table(const std::string& objId,
+	Player& player,
 	std::vector<std::unique_ptr<StageObject>>& objects) :
-	StageObject(objId, player),objects_(objects)
+	StageObject(objId, player),
+	objects_(objects)
 {
 }
 

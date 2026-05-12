@@ -8,7 +8,7 @@ public:
 	// コンストラクタ
 	ExplainScene(void);
 	// デストラクタ
-	~ExplainScene(void);
+	~ExplainScene(void) override;
 
 	/// <summary>
 	/// 初期化処理

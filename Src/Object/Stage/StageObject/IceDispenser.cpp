@@ -4,7 +4,6 @@
 #include "../Manager/Generic/ResourceManager.h"
 #include "../Object/Common/Sphere.h"
 #include "../Object/Player.h"
-#include "../Object/Stage/StageManager.h"
 #include "../../UI/GaugeUI.h"
 #include "../../UI/IconUI.h"
 #include "../../UI/UIManager.h"
@@ -18,13 +17,17 @@ namespace
 	const float GAUGE_UI_OFFSET_Y = 160.0f;	
 }
 
-IceDispenser::IceDispenser(const std::string objId,Player& player,
-	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId, player), objects_(object)
+IceDispenser::IceDispenser(const std::string& objId,
+	Player& player,
+	std::vector<std::unique_ptr<StageObject>>& objects) :
+	StageObject(objId, player), 
+	objects_(objects)
 {
 }
 
-void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
+void IceDispenser::Init(const VECTOR pos,
+	const float rotY,
+	const VECTOR scale)
 {
 	//ステージオブジェクトの初期化
 	StageObject::Init(pos, rotY,scale);
@@ -43,12 +46,6 @@ void IceDispenser::Init(VECTOR pos, float rotY, VECTOR scale)
 	uiPos.y += GAUGE_UI_OFFSET_Y;	//UIの位置を調整
 	gaugeUI_->SetPos(uiPos);		//UIの位置を設定
 	UIManager::GetInstance().AddUI(gaugeUI_);
-}
-
-void IceDispenser::Draw(void)
-{
-	//ステージオブジェクトの描画
-	StageObject::Draw();
 }
 
 void IceDispenser::Interact(const std::string& objId)

@@ -41,11 +41,8 @@ void OrderManager::AddCreateOrder(void)
 	//最大注文生成数を超えそうだったら処理しない
 	if (orders_.size() >= MAX_CREATE_NUM) return;
 
-	//注文が最大数未満になったら１つ追加
-	if (orders_.size() < MAX_CREATE_NUM)
-	{
-		CreateSingleOrder();
-	}
+	//注文１つ追加
+	CreateSingleOrder();
 }
 
 void OrderManager::ClearFirstOrder(void)
@@ -54,7 +51,7 @@ void OrderManager::ClearFirstOrder(void)
 	orders_.erase(orders_.begin());
 }
 
-const bool& OrderManager::IsFirstOrderTimeOut(void)
+const bool OrderManager::IsFirstOrderTimeOut(void)
 {
 	//制限時間が切れたらtrueを返す
 	if (orders_.front()->GetOrderTime() < 0.1f)	//0.0f以下だと誤差でマイナスになる可能性があるため0.1f以下にしている

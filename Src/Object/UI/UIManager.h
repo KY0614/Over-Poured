@@ -4,7 +4,7 @@
 #include <memory>
 
 class UIBase;
-class PopUpUI;
+class ScoreUI;
 
 class UIManager
 {
@@ -31,9 +31,9 @@ public:
 	void Update(void);
 
 	/// <summary>
-	/// ポップアップUIの更新処理
+	/// スコアUIの更新処理
 	/// </summary>
-	void PopUpUIUpdate(void);
+	void ScoreUIUpdate(void);
 
 	/// <summary>
 	/// 描画処理
@@ -67,7 +67,7 @@ public:
 	/// </summary>
 	/// <param name="score">スコア</param>
 	/// <param name="pos">表示する座標</param>
-	void AddPopUpUI(const int score, const VECTOR& pos);
+	void AddScoreUI(const int score, const VECTOR& pos);
 
 private:
 	//シングルトン用インスタンス
@@ -77,5 +77,5 @@ private:
 	std::vector<std::weak_ptr<UIBase>> uis_;
 
 	//ポップアップUIのリスト
-	std::vector<std::unique_ptr<PopUpUI>> popUpUIs_;
+	std::vector<std::unique_ptr<ScoreUI>> scoreUIs_;
 };

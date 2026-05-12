@@ -9,9 +9,11 @@
 #include "../../UI/UIManager.h"
 #include "Machine.h"
 
-Machine::Machine(const std::string objId,Player& player,
-	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId,player),objects_(object)
+Machine::Machine(const std::string& objId,
+	Player& player,
+	std::vector<std::unique_ptr<StageObject>>& objects) :
+	StageObject(objId,player),
+	objects_(objects)
 {
 }
 
@@ -74,7 +76,9 @@ void Machine::Interact(const std::string& objId)
 	}
 }
 
-void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
+void Machine::Init(const VECTOR pos,
+	const float rotY,
+	const VECTOR scale)
 {
 	StageObject::Init(pos, rotY, scale);
 
@@ -108,12 +112,6 @@ void Machine::Init(VECTOR pos, float rotY, VECTOR scale)
 	UIManager::GetInstance().AddUI(gaugeUI_);
 }
 
-void Machine::Draw(void)
-{
-	//通常の描画処理
-	StageObject::Draw();
-}
-
 void Machine::UpdateInActive(void)
 {
 	//アイコンは非表示にしておく
@@ -124,8 +122,6 @@ void Machine::UpdateInActive(void)
 	//インタラクトにかかる時間を設定
 	SetInteractTime(COFFEE_PRODUCES_TIME);
 
-	VECTOR machinePos = GetSphere().GetPos();
-	float machineRad = GetSphere().GetRadius();
 	//マシンの当たり判定内にPLACED状態のカップが存在するかチェック
 	bool hasPlacedCup = false;
 	for (const auto& obj : objects_)

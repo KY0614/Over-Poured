@@ -120,7 +120,7 @@ void CustomerBase::SetGoalRotate(double rotRad)
 	goalQuaRot_ = axis;
 }
 
-const bool& CustomerBase::CollisionCounter(void)
+const bool CustomerBase::CollisionCounter(void)
 {
 	//表示中のお客がカウンターの球体当たり判定に当たっているか
 	if (CommonUtility::IsHitSpherePoint(COUNTER_POS, COUNTER_RADIUS,
@@ -132,7 +132,7 @@ const bool& CustomerBase::CollisionCounter(void)
 	return false;
 }
 
-const bool& CustomerBase::CheckCounterToCustomer(void)
+const bool CustomerBase::CheckCounterToCustomer(void)
 {
 	//お客がカウンターの位置を超えそうだったらtrueを返す
 	if (GetTransform().pos.x > COUNTER_POS.x)

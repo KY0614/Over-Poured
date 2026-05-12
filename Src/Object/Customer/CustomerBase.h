@@ -113,14 +113,14 @@ public:
 	/// カウンター前の球体との当たり判定
 	/// </summary>
 	/// <returns>true:当たっている , false:当たっていない</returns>
-	const bool& CollisionCounter(void);
+	const bool CollisionCounter(void);
 
 	/// <summary>
 	/// お客がカウンターの前にいるかどうかを確認する
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true：カウンターの位置を越えている false：越えていない</returns>
-	const bool& CheckCounterToCustomer(void);
+	const bool CheckCounterToCustomer(void);
 
 	/// <summary>
 	/// お客の座標を取得する

@@ -4,10 +4,15 @@
 class ItemObject : public StageObject
 {
 public:
-	//コンストラクタ
-	ItemObject(const std::string objId, Player& player);
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objId">オブジェクトID</param>
+	/// <param name="player">プレイヤーの参照</param>
+	ItemObject(const std::string& objId, Player& player);
 	//デストラクタ
-	~ItemObject(void) = default;
+	~ItemObject(void) override = default;
 
 	/// <summary>
 	/// アイテムを持ち運ぶ処理
@@ -32,12 +37,6 @@ public:
 	/// <param name=""></param>
 	/// <returns>氷入りかどうか</returns>
 	const bool& IsIce(void)const { return isIced_; }
-
-	/// <summary>
-	/// 描画処理
-	/// </summary>
-	void Draw(void) override;
-
 private:
 
 	//氷が入っているかどうか

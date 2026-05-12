@@ -1,7 +1,5 @@
 #include <string>
-#include <DxLib.h>
 #include "../Application.h"
-#include "../Libs/ImGui/imgui.h"
 #include "../Utility/CommonUtility.h"
 #include "../Manager/GameSystem/SoundManager.h"
 #include "../Manager/Generic/SceneManager.h"
@@ -28,13 +26,15 @@ namespace
 	const int LOGO_OFFSET_Y = 80;	//ロゴのY位置
 	const int LOGO_HEIGHT = 1024;	//ロゴの高さ
 	const int PUSHIMG_OFFSET_Y = 100;	//押下画像のY位置
+
+	//スペースキーの入力名
+	const std::string SPACE_KEY = "Interact";
 }
 
 TitleScene::TitleScene(void)
 {
 	pushImg_ = -1;
 	titleImg_ = -1;
-	animationController_ = nullptr;
 	isView_ = false;
 	highlightTime_ = 0.0f;
 }
@@ -57,7 +57,7 @@ void TitleScene::Init(void)
 
 	const float animSpeed = 20.0f;
 	//アニメーションの設定
-	std::string path = Application::PATH_MODEL + "Player/";
+	const std::string path = Application::PATH_MODEL + "Player/";
 	animationController_ = std::make_unique<AnimationController>(character_.modelId);
 	animationController_->Add(0, path + "Idle.mv1", animSpeed);
 	animationController_->Play(0);
@@ -70,11 +70,11 @@ void TitleScene::Init(void)
 void TitleScene::Update(void)
 {
 	//シーン遷移
-	InputManager& ins = InputManager::GetInstance();
+	const InputManager& ins = InputManager::GetInstance();
 	//点滅時間更新
 	highlightTime_ += SceneManager::GetInstance().GetDeltaTime();
 	//スペースキーでチュートリアルへ
-	if (ins.IsInputTriggered("Interact"))
+	if (ins.IsInputTriggered(SPACE_KEY))
 	{
 		//SE再生
 		SoundManager::GetInstance().Play(SoundManager::SOUND::PUSH_SPACE);

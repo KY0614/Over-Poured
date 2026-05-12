@@ -1,5 +1,4 @@
 #include <DxLib.h>
-#include<cassert>
 #include "StringUtility.h"
 
 std::wstring StringUtility::StringToWstring(const std::string& str)
@@ -12,8 +11,6 @@ std::wstring StringUtility::StringToWstring(const std::string& str)
         str.length(),
         nullptr,
         0);
-
-    assert(result >= 0);
 
     ret.resize(result);//確保する
     //二度目の呼び出しは変換
@@ -40,7 +37,6 @@ std::string StringUtility::WstringToString(const std::wstring& wstr)
         0,
         nullptr,
         nullptr);
-    assert(result >= 0);
     ret.resize(result);//確保する
     //二度目の呼び出しは変換
     result = WideCharToMultiByte(

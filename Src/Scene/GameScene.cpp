@@ -1,16 +1,15 @@
-#include <DxLib.h>
 #include "../Common/Easing.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/Camera.h"
 #include "../Manager/Generic/InputManager.h"
 #include "../Manager/Generic/ResourceManager.h"
-#include"../Manager/GameSystem/OrderCustomerManager.h"
-#include"../Manager/GameSystem/Timer.h"
-#include"../Manager/GameSystem/SoundManager.h"
+#include "../Manager/GameSystem/OrderCustomerManager.h"
+#include "../Manager/GameSystem/Timer.h"
+#include "../Manager/GameSystem/SoundManager.h"
+#include "../Manager/GameSystem//ScoreManager.h"
 #include "../Object/Common/Collider.h"
 #include "../Object/Stage/StageManager.h"
 #include "../Object/Player.h"
-#include "../Manager/GameSystem//ScoreManager.h"
 #include "../Object/UI/UIManager.h"
 #include "PauseScene.h"
 #include "GameScene.h"
@@ -18,8 +17,8 @@
 namespace
 {
 	//ゲーム全体の制限時間
-	const int  MAX_MINUTE_TIME = 2;			//分
-	const int  MAX_SECOND_TIME = 0;			//秒
+	const int  MAX_MINUTE_TIME = 0;			//分
+	const int  MAX_SECOND_TIME = 30;			//秒
 
 	//残り秒数が少なったときにSEを鳴らす用の目安秒数
 	const int  SECOND_SOUND_TIME = 30;		//残り30秒でSEを鳴らす(遅い方のSE)
@@ -49,10 +48,6 @@ GameScene::GameScene(void) :
 	update_(&GameScene::UpdateCountDown),
 	draw_(&GameScene::DrawCountDown)
 {
-	player_ = nullptr;
-	stage_ = nullptr;
-	customer_ = nullptr;
-	timer_ = nullptr;
 	score_ = 0;
 	numbersImgs_ = nullptr;
 	countImgs_ = nullptr;
@@ -174,7 +169,7 @@ void GameScene::UpdateGame(void)
 	}
 
 	//ポップアップUIの更新
-	UIManager::GetInstance().PopUpUIUpdate();
+	UIManager::GetInstance().ScoreUIUpdate();
 
 	//注文数分の商品が提供されたら
 	if (stage_->IsServed())
@@ -185,7 +180,7 @@ void GameScene::UpdateGame(void)
 		customer_->IsServe();		//注文を出す
 		//ワールド座標をスクリーン座標に変換してポップアップUIを表示
 		VECTOR screenPos = ConvWorldPosToScreenPos(SCORE_POP_UP_POS);
-		UIManager::GetInstance().AddPopUpUI(addScore, screenPos);
+		UIManager::GetInstance().AddScoreUI(addScore, screenPos);
 		stage_->ResetServeData();	//サーブしたアイテムをリセット
 	}
 	//注文がタイムアウトしたら

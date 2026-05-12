@@ -5,10 +5,17 @@
 class IconUI : public UIBase
 {
 public:
-    //コンストラクタ
-    IconUI(VECTOR localPos,VECTOR parentPos,ResourceManager::SRC src);
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="localPos">ローカル座標</param>
+    /// <param name="parentPos">追従先の座標</param>
+    /// <param name="src">使用するソース</param>
+    IconUI(const VECTOR localPos,
+        const VECTOR parentPos,
+        const ResourceManager::SRC src);
 	//デストラクタ
-    ~IconUI() = default;
+    ~IconUI() override = default;
 
     /// <summary>
     /// 初期化処理
@@ -28,7 +35,7 @@ public:
     /// <summary>
 	/// UIのサイズを設定
     /// </summary>
-    /// <param name="size"></param>
+    /// <param name="size">UIのサイズ</param>
     void SetUISize(const float size) { size_ = size; }
 
 protected:
@@ -38,7 +45,7 @@ protected:
     VECTOR parentPos_;
     //サイズ
     float size_;
-
+	//画像のソース
     ResourceManager::SRC imgSrc_;
 };
 

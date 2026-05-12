@@ -2,14 +2,18 @@
 #include <string>
 #include "UIBase.h"
 
-class PopUpUI : public UIBase
+class ScoreUI : public UIBase
 {
 public:
 
-    //コンストラクタ
-    PopUpUI(int score, const VECTOR& startPos);
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="score">スコアの数字</param>
+    /// <param name="startPos"></param>
+    ScoreUI(const int score, const VECTOR& startPos);
     //デストラクタ
-    virtual ~PopUpUI() = default;
+    virtual ~ScoreUI()override;
 
     /// <summary>
     /// 初期化処理
@@ -42,6 +46,6 @@ private:
     /// <param name="score">スコア</param>
     /// <param name="pos">描画座標</param>
     /// <param name="alpha">透明度</param>
-    void DrawScore(int score, const VECTOR& pos, float alpha);
+    void DrawScore(const int score, const VECTOR& pos, const float alpha);
 };
 

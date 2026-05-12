@@ -1,18 +1,17 @@
 #include "../Manager/Generic/ResourceManager.h"
-#include "../Common/Sphere.h"
 #include "../../Utility/CommonUtility.h"
-#include "../../Utility/StringUtility.h"
+#include "../Common/Sphere.h"
 #include "StageObjectLibrary.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const std::string objId,Player& player):
+StageObject::StageObject(const std::string& objId,Player& player):
 	objId_(objId),
-	player_(player)
+	player_(player),
+	param_(StageObjectLibrary::ObjectParams())
 {
 	isActioned_ = false;
 	itemState_ = ITEM_STATE::NONE;
 	machineState_ = MACHINE_STATE::NONE;
-	param_ = StageObjectLibrary::ObjectParams();
 	isLid_ = false;
 	hasStock_ = false;
 }
@@ -21,7 +20,7 @@ StageObject::~StageObject(void)
 {
 }
 
-void StageObject::Init(VECTOR pos,float rotY, VECTOR scale)
+void StageObject::Init(const VECTOR pos, const float rotY, const VECTOR scale)
 {
 	//作成するオブジェクトのパラメータをjsonファイルから読み込む
 	param_ = StageObjectLibrary::LoadData(objId_).second;

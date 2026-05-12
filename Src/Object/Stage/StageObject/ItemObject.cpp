@@ -4,7 +4,8 @@
 #include "../Object/Player.h"
 #include "ItemObject.h"
 
-ItemObject::ItemObject(const std::string objId,Player& player) :
+ItemObject::ItemObject(const std::string& objId,
+    Player& player) :
 	StageObject(objId, player)
 {
 	isIced_ = false;   
@@ -54,11 +55,6 @@ void ItemObject::PouredIce(void)
     objId_ = CUP_WITH_ICE;
 	//ÉfÅ[É^ÇÃçƒì«Ç›çûÇ›
     param_ = StageObjectLibrary::LoadData(objId_).second;
-}
-
-void ItemObject::Draw(void)
-{
-    StageObject::Draw();
 }
 
 void ItemObject::UpdatePlaced(void)

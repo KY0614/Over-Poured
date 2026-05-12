@@ -4,11 +4,9 @@
 #include "../../Manager/GameSystem/SoundManager.h"
 #include "../../Manager/Generic/ResourceManager.h"
 #include "../../Manager/Generic/InputManager.h"
-#include "../Player.h"
 #include "../Common/Sphere.h"
 #include "../Common/AnimationController.h"
 #include "StageObject/Furnitures.h"
-#include "StageObject.h"
 #include "StageObject/ItemObject.h"
 #include "StageObject/RackObject.h"
 #include "StageObject/FollowingObject.h"
@@ -17,6 +15,8 @@
 #include "StageObject/CupLidRack.h"
 #include "StageObject/DustBox.h"
 #include "StageObject/IceDispenser.h"
+#include "../Player.h"
+#include "StageObject.h"
 #include "StageManager.h"
 
 namespace
@@ -158,7 +158,7 @@ void StageManager::SetCurrentOrder(const Order::OrderData& order)
 	isServedItems_.resize(size);
 	for(bool isSuved : isServedItems_)
 	{
-		isSuved = false; // 初期化
+		isSuved = false; //未提供の状態に
 	}
 	currentOrder_ = order;
 }
@@ -179,10 +179,10 @@ const Transform& StageManager::GetCounterTran(void) const
 	return counter_->GetTransform(); 
 }
 
-const Transform& StageManager::GetTableTran(int index) const
+const Transform StageManager::GetTableTran(const int index) const
 {
 	//範囲外のインデックスは無視
-	if (index > static_cast<int>(tables_.size()))return Transform(); 
+	if (index >tables_.size())return Transform();
 	return tables_[index]->GetTalbeColTran();
 }
 
@@ -239,7 +239,6 @@ void StageManager::Init3DModel(void)
 	const float rot_B = 180.0f;	//Y軸180度回転
 
 	VECTOR objectPos = {};
-	float rotY = 0.0f;
 
 	//横のテーブル群(手前)
 	for (int x = 0; x < TABLE_ROW_BACK_NUM; x++)
@@ -452,13 +451,13 @@ void StageManager::DeleteSurvedItem(void)
 			(*it)->GetSphere().GetPos(), (*it)->GetSphere().GetRadius(),
 			counter_->GetSphere().GetPos(), counter_->GetSphere().GetRadius()))
 		{
-			StageObject* target = it->get(); //今から削除する親オブジェクトを記録
+			const StageObject* target = it->get(); //今から削除する親オブジェクトを記録
 			if (target->IsLidOn())
 			{
 				//追従している蓋をすべて削除
 				for (int i = 0; i < objects_.size(); )
 				{
-					FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
+					const FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
 					if (follower && &(follower->GetFollowedObj()) == target)
 					{
 						objects_.erase(objects_.begin() + i);
@@ -704,13 +703,15 @@ void StageManager::ProduceCoffee(int index)
 	}
 }
 
-void StageManager::MakeCoffee(int index, StageObject& obj, std::string objName)
+void StageManager::MakeCoffee(const int index,
+	const StageObject& obj,
+	const std::string& objName)
 {
 	//アイスコーヒーを作る処理
 	if (objName == StageObject::ICE_COFFEE)
 	{
 		//氷入りカップの場合は氷も削除
-		ItemObject* cupWithIce = dynamic_cast<ItemObject*>(objects_[index].get());
+		const ItemObject* cupWithIce = dynamic_cast<ItemObject*>(objects_[index].get());
 		if (cupWithIce->IsIce())
 		{
 			//蓋のインデックスを探す
@@ -718,7 +719,7 @@ void StageManager::MakeCoffee(int index, StageObject& obj, std::string objName)
 			{
 				//dynamic_castでFollowingObject型に変換し、親参照を比較
 				//蓋を削除する
-				FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
+				const FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
 				if (follower && &(follower->GetFollowedObj()) == objects_[index].get())
 				{
 					objects_.erase(objects_.begin() + i);
@@ -811,10 +812,10 @@ void StageManager::LidFollowCup(void)
 
 void StageManager::DustBoxInteract(void)
 {
-	auto& ins = InputManager::GetInstance();
+	const InputManager& ins = InputManager::GetInstance();
 
 	//プレイヤーの当たり判定用球体情報
-	auto& pSphere = player_.GetSphere();
+	const Sphere& pSphere = player_.GetSphere();
 	// ゴミ箱の処理
 	for (const auto& obj : objects_)
 	{
@@ -844,7 +845,6 @@ bool StageManager::IsOrderCompleted(void)
 		if (!isSurved)
 		{
 			return false; // 1つでも未提供のアイテムがあればfalse
-			break;
 		}
 	}
 	return true;

@@ -4,11 +4,17 @@
 class FollowingObject : public StageObject
 {
 public:
-	//コンストラクタ
-	FollowingObject(const std::string objId,Player& player,
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objId">オブジェクトID</param>
+	/// <param name="player">プレイヤーの参照</param>
+	/// <param name="followObject">追従先のオブジェクト</param>
+	FollowingObject(const std::string& objId,
+		Player& player,
 		StageObject& followObject);
 	//デストラクタ
-	~FollowingObject(void) = default;
+	~FollowingObject(void) override = default;
 
 	/// <summary>
 	/// 初期化処理
@@ -16,7 +22,9 @@ public:
 	/// <param name="pos">生成する座標</param>
 	/// <param name="rotY">回転角（Y軸）</param>
 	/// <param name="scale">大きさ</param>
-	void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = { 1.0f,1.0f,1.0f })override;
+	void Init(const VECTOR pos,
+		const float rotY = 0.0f,
+		const VECTOR scale = { 1.0f,1.0f,1.0f })override;
 
 	/// <summary>
 	/// 更新処理

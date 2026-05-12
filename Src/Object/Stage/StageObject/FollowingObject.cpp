@@ -7,13 +7,17 @@ namespace
 	const VECTOR SPHERE_LOCAL_POS = { 0.0f,30.0f,0.0f };
 }
 
-FollowingObject::FollowingObject(const std::string objId,Player& player,
+FollowingObject::FollowingObject(const std::string& objId,
+	Player& player,
 	StageObject& followObject) : 
-	StageObject(objId, player), followObj_(followObject)
+	StageObject(objId, player),
+	followObj_(followObject)
 {
 }
 
-void FollowingObject::Init(VECTOR pos, float rotY, VECTOR scale)
+void FollowingObject::Init(const VECTOR pos,
+	const float rotY,
+	const VECTOR scale)
 {
 	//èâä˙âª
 	StageObject::Init(pos, rotY, scale);

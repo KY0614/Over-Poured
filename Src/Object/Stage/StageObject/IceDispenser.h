@@ -11,11 +11,17 @@ public:
 	//氷を生成するまでの時間
 	static constexpr float ICE_PRODUCES_TIME = 3.0f;
 
-	//コンストラクタ
-	IceDispenser(const std::string objId,Player& player,
-		std::vector<std::unique_ptr<StageObject>>& object);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objId">オブジェクトID</param>
+	/// <param name="player">プレイヤーの参照</param>
+	/// <param name="objects">ステージに配置されているオブジェクト</param>
+	IceDispenser(const std::string& objId,
+		Player& player,
+		std::vector<std::unique_ptr<StageObject>>& objects);
 	//デストラクタ
-	~IceDispenser(void) = default;
+	~IceDispenser(void) override = default;
 
 	/// <summary>
 	/// 初期化処理
@@ -23,12 +29,9 @@ public:
 	/// <param name="pos">生成する座標</param>
 	/// <param name="rotY">回転角（Y軸）</param>
 	/// <param name="scale">大きさ</param>
-	void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = { 1.0f,1.0f,1.0f })override;
-
-	/// <summary>
-	/// 描画処理
-	/// </summary>
-	void Draw(void) override;
+	void Init(const VECTOR pos,
+		const float rotY = 0.0f,
+		const VECTOR scale = { 1.0f,1.0f,1.0f })override;
 
 	/// <summary>
 	/// インタラクト処理

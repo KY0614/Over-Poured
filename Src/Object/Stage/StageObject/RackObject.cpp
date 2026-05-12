@@ -3,11 +3,11 @@
 #include "../../../Manager/Generic/InputManager.h"
 #include "../../../Manager/Generic/ResourceManager.h"
 #include "../../../Utility/CommonUtility.h"
-#include "../../Common/Sphere.h"
-#include "../Object/Player.h"
 #include "../../UI/GaugeUI.h"
 #include "../../UI/IconUI.h"
 #include "../../UI/UIManager.h"
+#include "../../Common/Sphere.h"
+#include "../Object/Player.h"
 #include "ItemObject.h"
 #include "RackObject.h"
 
@@ -17,7 +17,8 @@ namespace
 	const float SWEETS_SCALE = 1.2f;				
 }
 
-RackObject::RackObject(const std::string objId,Player& player) :
+RackObject::RackObject(const std::string& objId,
+	Player& player) :
 	StageObject(objId, player)
 {
 	sweetsStockCnt_ = SWEETS_STOCK_MAX;
@@ -26,7 +27,8 @@ RackObject::RackObject(const std::string objId,Player& player) :
 	addInterval_ = 0.0f;
 }
 
-void RackObject::PickUp(std::string rackName,std::vector<std::unique_ptr<StageObject>>& object)
+void RackObject::PickUp(std::string rackName,
+	std::vector<std::unique_ptr<StageObject>>& object)
 {
 	if (!hasStock_)return;
 
@@ -214,9 +216,11 @@ void RackObject::Init(VECTOR pos, float rotY, VECTOR scale)
 				Quaternion::Euler({ CommonUtility::Deg2RadF(SWEETS_ROT_X),CommonUtility::Deg2RadF(rotY), 0.0f });
 			sweetsOfRack_[i].Update();
 		}
+		//モデルを設定済みなので、カップのモデルは設定せずに終了
+		return;
 	}
 
-	if (srcType != ResourceManager::SRC::NONE)return;
+	//カップモデルの設定
 
 	const float cupGaugeWidth = 70.0f;	//UIの幅
 	const float cupGaugeHeight = 10.0f;	//UIの高さ

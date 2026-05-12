@@ -12,27 +12,36 @@ public:
 	//背景UIのサイズ
 	static constexpr float BACK_IMG_SIZE = 300.0f;  //背景画像のサイズ
 	static constexpr float IMG_SIZE = 100.0f;       //ドリンクとスイーツの画像サイズ
+	static constexpr float UI_IMG_CENTER = 0.5f;    //UI画像の中心座標(1.0が画像の端、0.5が画像の中心、0.0が画像の反対の端)
 
+    //注文データ
     struct OrderUIData
     {
-		Order::DRINK drinkType_;        //ドリンクの種類
-		Order::SWEETS sweetsType_;  	//スイーツの種類
+		Order::DRINK drinkType_ = Order::DRINK::NONE;        //ドリンクの種類
+		Order::SWEETS sweetsType_ = Order::SWEETS::NONE;  	//スイーツの種類
 
-		int drinkUIImg_ = -1;    //ドリンクのUI画像
-		int sweetsUIImg_ = -1;   //スイーツのUI画像
-		int backUIImg_ = -1;     //背景のUI画像
+		int drinkUIImg_ = -1;           //ドリンクのUI画像
+		int sweetsUIImg_ = -1;          //スイーツのUI画像
+		int backUIImg_ = -1;            //背景のUI画像
 
-		int timerBackImg_ = -1;  //タイマーの背景画像
-		int timerImg_ = -1;      //タイマーの画像
+		int timerBackImg_ = -1;         //タイマーの背景画像
+		int timerImg_ = -1;             //タイマーの画像
 
-		int checkImg_ = -1;     //チェックの画像
+		int checkImg_ = -1;             //チェックの画像
 
 		float currentRate_ = 0.0f;	    //現在のゲージの割合
 		float displayedRate_ = 0.0f;    //表示されているゲージの割合
     };
 
-	//コンストラクタ
-    OrderUI(Order::DRINK drink,Order::SWEETS sweets,float maxTime);
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="drink">ドリンクの種類</param>
+    /// <param name="sweets">スイーツの種類</param>
+    /// <param name="maxTime">注文の制限時間</param>
+    OrderUI(const Order::DRINK drink,
+        const Order::SWEETS sweets,
+        const float maxTime);
 	//デストラクタ
     virtual ~OrderUI() = default;
 
@@ -87,5 +96,21 @@ private:
     /// 画像の読み込み処理
     /// </summary>
     void LoadImages(void);
+
+	/// <summary>
+	/// サイズの設定
+	/// </summary>
+	/// <param name="size">サイズ</param>
+	void SetSize(const float size) { size_ = size; }   
+
+	/// <summary>
+	/// 注文内容のUIを描画する処理
+	/// </summary>
+	void DrawOrderUI(void);
+
+    /// <summary>
+	/// タイマーUIを描画する処理
+    /// </summary>
+    void DrawTimerUI(void);
 };
 

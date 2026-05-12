@@ -14,9 +14,11 @@ namespace
 	const std::string ICE_COFFEE = "IceCoffee";	//アイスコーヒーのオブジェクトID
 }
 
-CupLidRack::CupLidRack(const std::string objId,Player& player,
-	std::vector<std::unique_ptr<StageObject>>& object) :
-	StageObject(objId, player), objects_(object)
+CupLidRack::CupLidRack(const std::string& objId,
+	Player& player,
+	std::vector<std::unique_ptr<StageObject>>& objects) :
+	StageObject(objId, player),
+	objects_(objects)
 {
 }
 
@@ -104,9 +106,3 @@ void CupLidRack::Update(void)
 	//モデルの更新
 	transform_.Update();
 }
-
-void CupLidRack::Draw(void)
-{
-	//モデルを描画
-	StageObject::Draw();
-	}

@@ -136,7 +136,7 @@ void PauseScene::DrawProcess(void)
 	//出現・消滅時の高さ変化率(0.0～1.0)
 	float rate = static_cast<float>(frame_) /
 		static_cast<float>(APPEAR_INTERVAL);
-	frameHalfHeight *= rate;
+	frameHalfHeight = static_cast<int>(static_cast<float>(frameHalfHeight) * rate);
 
 	//背景画像の描画
 	DrawExtendGraph(MARGINE_SIZE,
@@ -198,9 +198,9 @@ void PauseScene::DrawMenuList(void)
 	float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
 
-	const int line_start_X = MENU_LIST_POS_X * scale;
+	const int line_start_X = static_cast<int>(static_cast<float>(MENU_LIST_POS_X) * scale);
 
-	int lineY = MENU_START_Y * scale;
+	int lineY = static_cast<int>(static_cast<float>(MENU_START_Y) * scale);
 
 	std::wstring& currentStr = menuList_[cursorIdx_];
 
@@ -209,7 +209,8 @@ void PauseScene::DrawMenuList(void)
 		int lineX = 0;
 
 		//文字列の幅を取得
-		int stringWidth = GetDrawStringWidth(menuList_[i].c_str(), static_cast<int>(menuList_[i].size()));
+		const int stringWidth = GetDrawStringWidth(
+			menuList_[i].c_str(), static_cast<int>(menuList_[i].size()));
 
 		//カーソルのX座標を動的に計算
 		int cursor_X = ((Application::SCREEN_SIZE_X / 2 - line_start_X) - (stringWidth));
@@ -220,15 +221,17 @@ void PauseScene::DrawMenuList(void)
 				lineY,
 				scale, 0.0f, menuCursorImg_, true
 			);
-			lineX += SELECT_MENU_MARGINE * scale;
+			lineX += static_cast<int>(static_cast<float>(SELECT_MENU_MARGINE)*scale);
 		}
-
-		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + lineX * scale,
-			(MENU_START_Y * scale) + (MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale * i),
+		const int posX = Application::SCREEN_SIZE_X / 2 + lineX;
+		DrawRotaGraph(static_cast<int>(posX * scale),
+			static_cast<int>((MENU_START_Y * scale)) + 
+			static_cast<int>((MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale * i)),
 			scale * MENU_LIST_SCALE, 0.0f, menuListImg_[i], true
 		);
 
-		lineY += MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale;
+		lineY += static_cast<int>(
+			static_cast<float>(MNEU_LIST_HEIGHT) * MENU_LIST_SCALE * scale);
 	}
 }
 

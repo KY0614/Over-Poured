@@ -16,7 +16,7 @@ namespace
 	const int VERTEX_NUM = 6;               
 }
 
-GaugeUI::GaugeUI(bool isCircle, float activeTime):
+GaugeUI::GaugeUI(const bool isCircle, const float activeTime):
 	activeTime_(activeTime), 
     isCircle_(isCircle), 
     currentTime_(0.0f)
@@ -78,7 +78,7 @@ void GaugeUI::DrawCircleGauge(const float progress)
 	const float radius = 50.0f; //円の半径
     const int segmentCount = 80;//扇の分割数
 	const float uvCenter = 0.5f; //UVの中心点
-	const float angleMax = -DX_TWO_PI * progress;   //扇の最大角度（反時計回り）
+    const float angleMax = -static_cast<float>(DX_TWO_PI) * progress;   //扇の最大角度（反時計回り）
     float baseAngle = DX_PI_F / 2.0f; //+90度のオフセット（上からスタート）
     std::vector<VERTEX3D> verts = {};
 
@@ -107,7 +107,7 @@ void GaugeUI::DrawCircleGauge(const float progress)
         v.v = uvCenter - y / (2 * radius);  //円の中心基準でUVを計算
         verts.push_back(v);
     }
-	const float polygonNum = 2; //三角形ポリゴン数
+	const int polygonNum = 2; //三角形ポリゴン数
     //扇型を描画
     for (int i = 1; i < (int)verts.size() - 1; ++i) 
     {
@@ -120,79 +120,21 @@ void GaugeUI::DrawCircleGauge(const float progress)
 
 void GaugeUI::DrawRectGauge(const float progress)
 {
-	//ゲージの幅・高さ
-	const float width = width_;
-    const float height = height_;
 	//描画する幅
-    float drawWidth = width * progress;
+    float drawWidth = width_ * progress;
 
-	//四角形ポリゴンを作成して描画するラムダ式
-    auto MakeQuad = [&](float drawWidth, int texHandle) {
-        VERTEX3D verts[VERTEX_NUM] = {};//0埋め初期化
-
-        // ゲージの高さ方向の傾き量（Z方向に何ユニット近づけるか）
-        const float zTilt = -30.0f;
-		//頂点データの設定
-		VERTEX3D v0 = { //左上
-            VGet(-width / 2, height / 2, 0),
-            NORMAL_POSITIVE_Z,
-            DIF_COLOR,
-            SPEC_COLOR,
-            0.0f, 0.0f };
-
-		VERTEX3D v1 = { //右上
-            VGet(-width / 2 + drawWidth, height / 2, 0),
-            NORMAL_POSITIVE_Z,
-            DIF_COLOR,
-            SPEC_COLOR,
-            drawWidth / width, 0.0f };
-
-		VERTEX3D v2 = { //左下
-            VGet(-width / 2, -height / 2, zTilt),
-            NORMAL_POSITIVE_Z,
-            DIF_COLOR,
-            SPEC_COLOR,
-            0.0f, 1.0f };
-
-		VERTEX3D v3 = { //右下
-            VGet(-width / 2 + drawWidth, -height / 2, zTilt),
-            NORMAL_POSITIVE_Z,
-            DIF_COLOR,
-            SPEC_COLOR,
-            drawWidth / width, 1.0f };
-
-        verts[0] = v0;
-        verts[1] = v1;
-        verts[2] = v2;
-        verts[3] = v2;
-        verts[4] = v1;
-        verts[5] = v3;
-
-		//頂点数
-        const int vertexNum = 6;
-
-		//オフセットを加える
-        for (int i = 0; i < vertexNum; ++i)
-        {
-            verts[i].pos = VAdd(verts[i].pos, pos_);
-        }
-		//ポリゴン描画
-		SetLightDirection(NORMAL_NEGATIVE_Z); //ライトの向きをZ軸負方向に設定
-        DrawPolygon3D(verts, 2, texHandle, true);
-		SetLightDirection(SceneManager::LIGHT_DIR); //ライトの向きを元に戻す
-        };
 	//四角形ポリゴンの作成と描画
-	MakeQuad(width, shadowImg_);    //影
-	MakeQuad(drawWidth, uiImg_);    //ゲージ本体
+    MakeQuad(width_, shadowImg_);   //影
+    MakeQuad(drawWidth, uiImg_);    //ゲージ本体
 }
 
 void GaugeUI::LoadImages(void)
 {
 	//画像の読み込み
-	//長方形のバーゲージ用
+	//長方形のバーゲージ
     uiImg_ = ResourceManager::GetInstance().Load(
         ResourceManager::SRC::UI_BAR).handleId_;
-	//長方形のバーゲージの影用
+	//長方形のバーゲージの影
     shadowImg_ = ResourceManager::GetInstance().Load(
         ResourceManager::SRC::UI_BARSHADOW).handleId_;
 
@@ -208,4 +150,61 @@ void GaugeUI::LoadImages(void)
 	//円形ゲージの影用画像
     cShadowImg_ = ResourceManager::GetInstance().Load(
         ResourceManager::SRC::UI_CIRCLESHADOW).handleId_;
+}
+
+void GaugeUI::MakeQuad(const float drawWidth, const int texHandle)
+{
+    VERTEX3D verts[VERTEX_NUM] = {};//0埋め初期化
+
+    // ゲージの高さ方向の傾き量（Z方向に何ユニット近づけるか）
+    const float zTilt = -30.0f;
+    //頂点データの設定
+    VERTEX3D v0 = { //左上
+        VGet(-width_ / 2, height_ / 2, 0),
+        NORMAL_POSITIVE_Z,
+        DIF_COLOR,
+        SPEC_COLOR,
+        0.0f, 0.0f };
+
+    VERTEX3D v1 = { //右上
+        VGet(-width_ / 2 + drawWidth, height_ / 2, 0),
+        NORMAL_POSITIVE_Z,
+        DIF_COLOR,
+        SPEC_COLOR,
+        drawWidth / width_, 0.0f };
+
+    VERTEX3D v2 = { //左下
+        VGet(-width_ / 2, -height_ / 2, zTilt),
+        NORMAL_POSITIVE_Z,
+        DIF_COLOR,
+        SPEC_COLOR,
+        0.0f, 1.0f };
+
+    VERTEX3D v3 = { //右下
+        VGet(-width_ / 2 + drawWidth, -height_ / 2, zTilt),
+        NORMAL_POSITIVE_Z,
+        DIF_COLOR,
+        SPEC_COLOR,
+        drawWidth / width_, 1.0f };
+
+    verts[0] = v0;
+    verts[1] = v1;
+    verts[2] = v2;
+    verts[3] = v2;
+    verts[4] = v1;
+    verts[5] = v3;
+
+    //頂点数
+    const int vertexNum = 6;
+
+    //オフセットを加える
+    for (int i = 0; i < vertexNum; ++i)
+    {
+        verts[i].pos = VAdd(verts[i].pos, pos_);
+    }
+    //ポリゴン描画
+    SetLightDirection(NORMAL_NEGATIVE_Z); //ライトの向きをZ軸負方向に設定
+	const int polygonNum = 2; //三角形ポリゴン数
+    DrawPolygon3D(verts, polygonNum, texHandle, true);
+    SetLightDirection(SceneManager::LIGHT_DIR); //ライトの向きを元に戻す
 }

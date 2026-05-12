@@ -101,7 +101,7 @@ public:
 	/// ’•¶‚Ì§ŒÀŠÔ‚ª‰ß‚¬‚Ä‚¢‚é‚©‚ğæ“¾‚·‚é
 	/// </summary>
 	/// <returns>true: §ŒÀŠÔ‚ª‰ß‚¬‚Ä‚¢‚éê‡Afalse: ‚»‚¤‚Å‚È‚¢ê‡</returns>
-	const bool& IsTimeOutOrder(void)const;
+	const bool IsTimeOutOrder(void)const;
 
 private:
 

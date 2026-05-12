@@ -4,12 +4,18 @@
 class DustBox : public StageObject
 {
 public:
-	//コンストラクタ
-	DustBox(const std::string objId,Player& player,
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objId">オブジェクトID</param>
+	/// <param name="player">プレイヤーの参照</param>
+	/// <param name="objects">ステージに配置されているオブジェクト</param>
+	DustBox(const std::string& objId,
+		Player& player,
 		std::vector<std::unique_ptr<StageObject>>& objects);
 
 	//デストラクタ
-	~DustBox(void) = default;
+	~DustBox(void) override = default;
 
 	/// <summary>
 	/// インタラクト処理

@@ -8,10 +8,10 @@ class ResultScene : public SceneBase
 {
 public:
 
-	// コンストラクタ
+	//コンストラクタ
 	ResultScene(void);
 
-	// デストラクタ
+	//デストラクタ
 	~ResultScene(void);
 
 	/// <summary>

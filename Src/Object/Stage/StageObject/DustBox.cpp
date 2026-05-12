@@ -3,9 +3,11 @@
 #include "ItemObject.h"
 #include "DustBox.h"
 
-DustBox::DustBox(const std::string objId,Player& player,
+DustBox::DustBox(const std::string& objId,
+	Player& player,
 	std::vector<std::unique_ptr<StageObject>>& objects) :
-	StageObject(objId, player), objects_(objects)
+	StageObject(objId, player), 
+	objects_(objects)
 {
 }
 
@@ -37,7 +39,7 @@ void DustBox::Interact(const std::string& objId)
 	if (coffeeIndex != -1)
 	{
 		//氷入りカップの場合は氷も削除
-		ItemObject* cupWithIce = dynamic_cast<ItemObject*>(objects_[coffeeIndex].get());
+		const ItemObject* cupWithIce = dynamic_cast<ItemObject*>(objects_[coffeeIndex].get());
 		if (cupWithIce->IsIce())
 		{
 			//蓋のインデックスを探す
@@ -45,7 +47,7 @@ void DustBox::Interact(const std::string& objId)
 			{
 				//dynamic_castでFollowingObject型に変換し、親参照を比較
 				//蓋を削除する
-				FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
+				const FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
 				if (follower && &(follower->GetFollowedObj()) == objects_[coffeeIndex].get())
 				{
 					objects_.erase(objects_.begin() + i);
@@ -63,7 +65,7 @@ void DustBox::Interact(const std::string& objId)
 		{
 			//dynamic_castでFollowingObject型に変換し、親参照を比較
 			//蓋を削除する
-   			FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
+   			const FollowingObject* follower = dynamic_cast<FollowingObject*>(objects_[i].get());
 			if (follower && &(follower->GetFollowedObj()) == objects_[coffeeIndex].get())
 			{
 				objects_.erase(objects_.begin() + i);

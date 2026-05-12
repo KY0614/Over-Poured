@@ -61,15 +61,15 @@ void Order::CreateOrder(void)
 	SetDrink(static_cast<DRINK>(drinkType));
 
 	//注文数ごとの制限時間を設定
-	if (orderNum > 0)
-	{
-		//制限時間を設定（注文数が1の時）
-		SetOrderTime(ONE_ORDER_TIME);
-	}
-	else if(orderNum > ORDER_MIN_NUM)
+	if (orderNum >= ORDER_MAX_NUM)
 	{
 		//制限時間を設定（注文数が2の時）
 		SetOrderTime(TWO_ORDER_TIME);
+	}
+	else if(orderNum >= ORDER_MIN_NUM)
+	{
+		//制限時間を設定（注文数が1の時）
+		SetOrderTime(ONE_ORDER_TIME);
 	}
 
 	if (orderNum < ORDER_MAX_NUM)

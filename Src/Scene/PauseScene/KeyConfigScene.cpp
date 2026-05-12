@@ -74,7 +74,8 @@ void KeyConfigScene::Draw(void)
 	const int menuBackImgMargin = 90;
 	//ÉÅÉjÉÖÅ[Ç÷ñﬂÇÈâÊëú
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y - MARGINE_SIZE - (menuBackImgMargin * scale),
+		Application::SCREEN_SIZE_Y - MARGINE_SIZE - (
+			menuBackImgMargin * static_cast<int>(scale)),
 		scale * size, 0.0f,
 		menuBackImg_,
 		true);

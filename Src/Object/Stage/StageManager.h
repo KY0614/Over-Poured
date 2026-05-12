@@ -92,7 +92,7 @@ public:
 	/// テーブルのモデル情報を取得する
 	/// </summary>
 	/// <returnsテーブルのモデル情報</returns>
-	const Transform& GetTableTran(int index) const;
+	const Transform GetTableTran(const int index) const;
 
 	/// <summary>
 	/// ショーケースのモデル情報を取得する
@@ -216,7 +216,9 @@ private:
 	/// <param name="index">配列番号（カップをコーヒーに上書きするので）</param>
 	/// <param name="pos">生成する座標</param>
 	/// <param name="objName">作るコーヒーのパラメータ名（ホットかアイス)</param>
-	void MakeCoffee(int index,StageObject& obj,std::string objName);
+	void MakeCoffee(const int index,
+		const StageObject& obj,
+		const std::string& objName);
 
 	/// <summary>
 	/// カップにアイスディスペンサーで氷を入れる処理

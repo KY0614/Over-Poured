@@ -8,7 +8,7 @@ public:
 	//コンストラクタ
 	KeyConfigScene(void);
 	//デストラクタ
-	~KeyConfigScene(void);
+	~KeyConfigScene(void) override;
 
 	/// <summary>
 	/// 初期化処理

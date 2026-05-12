@@ -27,7 +27,7 @@ public:
 	Furnitures(void);
 
 	//デストラクタ
-	~Furnitures(void);
+	~Furnitures(void)override;
 
 	/// <summary>
 	/// 初期化処理
@@ -71,7 +71,8 @@ private:
 	/// <param name="pos">初期座標</param>
 	/// <param name="quaRotLocal">回転</param>
 	void SetupFurniture(Transform& transform,
-		ResourceManager::SRC modelSrc, const VECTOR& pos,
+		const ResourceManager::SRC modelSrc,
+		const VECTOR& pos,
 		const Quaternion& quaRotLocal = Quaternion());
 
 	/// <summary>

@@ -6,8 +6,6 @@
 
 Furnitures::Furnitures(void)
 {
-	material_ = nullptr;
-	renderer_ = nullptr;
 }
 
 Furnitures::~Furnitures(void)
@@ -50,7 +48,7 @@ void Furnitures::Draw(void)
 }
 
 void Furnitures::SetupFurniture(Transform& transform,
-	ResourceManager::SRC modelSrc, const VECTOR& pos, const Quaternion& quaRotLocal)
+	const ResourceManager::SRC modelSrc, const VECTOR& pos, const Quaternion& quaRotLocal)
 {
 	//ƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İ‚ÆŠî–{İ’è
 	transform.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(modelSrc));

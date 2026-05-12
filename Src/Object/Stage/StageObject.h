@@ -2,7 +2,6 @@
 #include <string>
 #include <functional>
 #include "../ActorBase.h"
-#include "../Manager/GameSystem/OrderCustomerManager.h"
 #include "StageObjectLibrary.h"
 
 class Sphere;
@@ -78,11 +77,15 @@ public:
 		ACTIVE,		//稼働中
 	};
 
-	//コンストラクタ
-	StageObject(const std::string objId,Player& player);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objId">オブジェクトID</param>
+	/// <param name="player">プレイヤーの参照</param>
+	StageObject(const std::string& objId,Player& player);
 
 	//デストラクタ
-	~StageObject(void);
+	~StageObject(void) override;
 
 	/// <summary>
 	/// 初期化処理
@@ -90,7 +93,9 @@ public:
 	/// <param name="pos">オブジェクトを生成する初期座標</param>
 	/// <param name="rotY">オブジェクトのY軸角度（入力がない場合は0）</param>
 	/// <param name="scale">オブジェクトの大きさ（入力がない場合は１）</param>
-	virtual void Init(VECTOR pos, float rotY = 0.0f, VECTOR scale = {1.0f,1.0f,1.0f});
+	virtual void Init(const VECTOR pos,
+		const float rotY = 0.0f,
+		const VECTOR scale = {1.0f,1.0f,1.0f});
 
 	/// <summary>
 	/// 更新処理

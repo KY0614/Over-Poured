@@ -9,9 +9,9 @@ public:
 	static constexpr float UI_DEFAULT_HEIGHT = 10.0f;	//高さ
 
 	//コンストラクタ
-    GaugeUI(bool isCircle, float activeTime);
+    GaugeUI(const bool isCircle, const float activeTime);
 	//デストラクタ
-	~GaugeUI(void) = default;
+	~GaugeUI(void)override = default;
 
 	/// <summary>
 	/// 初期化処理
@@ -27,12 +27,6 @@ public:
 	/// 描画処理
 	/// </summary>
     void Draw(void) override;
-
-	/// <summary>
-	/// 表示時間を設定
-	/// </summary>
-	/// <param name="activeTime">表示する時間</param>
-	void SetActiveTime(const float activeTime) { activeTime_ = activeTime; }
 
 	/// <summary>
 	/// UIのサイズを設定
@@ -85,5 +79,12 @@ private:
 	/// 画像の読み込み処理
 	/// </summary>
 	void LoadImages(void);
+
+	/// <summary>
+	/// 四角形ポリゴンを作成して描画する
+	/// </summary>
+	/// <param name="drawWidth">描画する幅</param>
+	/// <param name="texHandle">画像ハンドル</param>
+	void MakeQuad(const float drawWidth, const int texHandle);
 };
 

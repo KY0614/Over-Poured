@@ -1,5 +1,5 @@
 #include "../Manager/Generic/ResourceManager.h"
-#include "PopUpUI.h"
+#include "ScoreUI.h"
 
 namespace
 {
@@ -13,7 +13,7 @@ namespace
 	const float FPS_RATE = 60.0f; 
 }
 
-PopUpUI::PopUpUI(int score, const VECTOR& startPos) : 
+ScoreUI::ScoreUI(const int score, const VECTOR& startPos) :
     score_(score), 
     animTime_(0.0f)
 {
@@ -23,13 +23,18 @@ PopUpUI::PopUpUI(int score, const VECTOR& startPos) :
     numbersImgs_ = nullptr;
 }
 
-void PopUpUI::Init(void)
+ScoreUI::~ScoreUI()
 {
-	//スコアの数字画像ハンドルを取得
-    numbersImgs_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::SCORE_NUMBER).handleIds_;
 }
 
-void PopUpUI::Update(void)
+void ScoreUI::Init(void)
+{
+	//スコアの数字画像ハンドルを取得
+    numbersImgs_ = ResourceManager::GetInstance().Load(
+        ResourceManager::SRC::SCORE_NUMBER).handleIds_;
+}
+
+void ScoreUI::Update(void)
 {
     if (!isActive_) return;
 
@@ -49,7 +54,7 @@ void PopUpUI::Update(void)
     SetAlpha(alpha_);
 }
 
-void PopUpUI::Draw(void)
+void ScoreUI::Draw(void)
 {
 	//表示されていなければ描画しない
     if (!isActive_) return;
@@ -57,7 +62,7 @@ void PopUpUI::Draw(void)
     DrawScore(score_, pos_, alpha_);
 }
 
-void PopUpUI::DrawScore(int score, const VECTOR& pos, float alpha)
+void ScoreUI::DrawScore(const int score, const VECTOR& pos, const float alpha)
 {
     std::string str = std::to_string(score);
 	const int digitWidth = 35;  //数字画像の幅(1つの数字の幅）
@@ -68,12 +73,14 @@ void PopUpUI::DrawScore(int score, const VECTOR& pos, float alpha)
     {
         char ch = str[i];
 		//'0'から'9'の範囲内の文字か確認
-        if ('0' <= ch && ch <= '9')
+		const char minChar = '0';
+		const char maxChar = '9';
+        if (minChar <= ch && ch <= maxChar)
         {
-            int digit = ch - '0';
+            int digit = ch - minChar;
             DrawRotaGraph(
-                pos.x - (str.size() * digitWidth / 2) + i * digitWidth,
-                pos.y,
+                static_cast<int>(pos.x) - (str.size() * digitWidth / 2) + i * digitWidth,
+                static_cast<int>(pos.y),
                 scale, 0.0f,
                 numbersImgs_[digit], true
             );

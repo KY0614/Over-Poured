@@ -273,7 +273,7 @@
     <ClCompile Include="Src\Scene\PauseScene\KeyConfigScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\UI\PopUpUI.cpp">
+    <ClCompile Include="Src\Object\UI\ScoreUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -635,7 +635,7 @@
     <ClInclude Include="Src\Scene\PauseScene\KeyConfigScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\UI\PopUpUI.h">
+    <ClInclude Include="Src\Object\UI\ScoreUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
