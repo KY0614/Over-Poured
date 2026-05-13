@@ -46,9 +46,6 @@ public:
 	void ChangeScene(SCENE_ID nextId);
 	void ChangeScene(std::unique_ptr<SceneBase> _scene);
 
-	// シーンIDの取得
-	SCENE_ID GetSceneID(void);
-
 	// デルタタイムの取得
 	float GetDeltaTime(void) const;
 
@@ -66,12 +63,6 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	void PopScene(void);
-
-	/// <summary>
-	/// 強制的に特定のシーンに飛ぶ。つんでてもリセット
-	/// </summary>
-	/// <param name="scene">ジャンプ先シーン</param>
-	void JumpScene(std::unique_ptr<SceneBase> scene);
 
 private:
 

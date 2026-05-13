@@ -137,7 +137,6 @@ Application::Application(void)
 {
 	isInitFail_ = false;
 	isReleaseFail_ = false;
-	fps_ = nullptr;
 	isEnd_ = false;
 	windowSize_ = { 0,0 };
 }

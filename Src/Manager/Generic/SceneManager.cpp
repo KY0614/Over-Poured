@@ -185,11 +185,6 @@ void SceneManager::ChangeScene(std::unique_ptr<SceneBase> _scene)
 	}
 }
 
-SceneManager::SCENE_ID SceneManager::GetSceneID(void)
-{
-	return sceneId_;
-}
-
 float SceneManager::GetDeltaTime(void) const
 {
 	//return 1.0f / 60.0f;
@@ -217,21 +212,12 @@ void SceneManager::PopScene(void)
 	}
 }
 
-void SceneManager::JumpScene(std::unique_ptr<SceneBase> scene)
-{
-	scenes_.clear();
-	scenes_.push_back(std::move(scene));
-}
-
 SceneManager::SceneManager(void)
 {
-
 	sceneId_ = SCENE_ID::NONE;
 	waitSceneId_ = SCENE_ID::NONE;
 
-	scene_ = nullptr;
 	scenes_.clear();
-	fader_ = nullptr;
 
 	isSceneChanging_ = false;
 

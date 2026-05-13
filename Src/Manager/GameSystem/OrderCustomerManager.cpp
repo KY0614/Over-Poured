@@ -106,11 +106,8 @@ void OrderCustomerManager::AddCustomerByOrder(void)
 	customerMng_->CreateSingleCustomer(orderMng_->GetLastOrderData());
 }
 
-int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
+int OrderCustomerManager::GetOrderScore(const Order::OrderData& serve)
 {
-	Order::DRINK serveDrink = serve.drink_;
-	Order::SWEETS serveSweets = serve.sweets_;
-	bool serveDrinkLid = serve.lid_;
 	const auto& order = orderMng_->GetFirstOrder();
 	int score = 0;
 
@@ -141,7 +138,7 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 			score -= SWEETS_SCORE;
 		}
 	}
-	// 時間ボーナス
+	//時間ボーナス
 	if (order.orderNum_ == 1) 
 	{
 		//早く提供できたらボーナス
@@ -150,9 +147,13 @@ int OrderCustomerManager::GetOrderScore(const Order::OrderData serve)
 	}
 	else if (order.orderNum_ == 2) 
 	{
+		//時間制限を倍にして、早く提供できたらボーナス
+		//(注文数が2個なので）
+		const float timeEarlyLimit = TIME_EARLY_LIMIT * 2.0f;
+		const float timeLimit = TIME_LIMIT * 2.0f;
 		//早く提供できたらボーナス
-		if (order.time_ > (TIME_EARLY_LIMIT * 2.0f)) score += TIME_EARLY_BONUS;
-		else if (order.time_ > (TIME_LIMIT * 2.0f)) score += TIME_BONUS;
+		if (order.time_ > timeEarlyLimit) score += TIME_EARLY_BONUS;
+		else if (order.time_ > timeLimit) score += TIME_BONUS;
 	}
 	//スコアに応じたリアクションを設定
 	customerMng_->SetCustomerReacton(score);
@@ -169,16 +170,13 @@ const Order::OrderData& OrderCustomerManager::GetOrderData(void) const
 	return orderMng_->GetFirstOrder();
 }
 
-void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
+void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData& serve)
 {
-	Order::DRINK serveDrink = serve.drink_;
-	Order::SWEETS serveSweets = serve.sweets_;
-	bool serveDrinkLid = serve.lid_;
-	const auto& order = orderMng_->GetFirstOrder();
+	const Order::OrderData order = orderMng_->GetFirstOrder();
 
 	const int drinkIdx = 0;
 	const int sweetsIdx = 1;
-	// ドリンク判定
+	//ドリンク判定
 	if (order.drink_ != Order::DRINK::NONE)
 	{
 		//提供と注文が同じならUIを表示
@@ -191,7 +189,7 @@ void OrderCustomerManager::CheckServeAndOrder(const Order::OrderData serve)
 			customerMng_->IsCheckUI(drinkIdx, false);
 		}
 	}
-	// スイーツ判定
+	//スイーツ判定
 	if (order.sweets_ != Order::SWEETS::NONE)
 	{
 		//提供と注文が同じならUIを表示

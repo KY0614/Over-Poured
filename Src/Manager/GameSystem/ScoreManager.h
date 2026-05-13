@@ -36,13 +36,6 @@ public:
 	/// <returns>今回のスコア</returns>
 	const int& GetCurrentScore(void)const { return currentScore_; }
 
-	/// <summary>
-	/// 全スコアを加算した結果を取得
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>全スコアを加算した結果</returns>
-	const int& GetAggregateScore(void)const;
-
 	//ランキング順のスコアを取得
 
 	/// <summary>
@@ -72,5 +65,10 @@ private:
 	/// スコアをソートする
 	/// </summary>
 	void SortRankingScore(void);
+
+	//コンストラクタ
+	ScoreManager(void) = default;
+	//デストラクタ
+	~ScoreManager(void) = default;
 };
 

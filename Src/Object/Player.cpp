@@ -18,8 +18,6 @@
 
 Player::Player(void)
 {
-
-	animationController_ = nullptr;
 	state_ = STATE::NONE;
 
 	//èÛë‘ä«óù
@@ -132,17 +130,7 @@ void Player::AddCollider(const std::weak_ptr<Collider> collider)
 	colliders_.emplace_back(collider);
 }
 
-void Player::ClearCollider(void)
-{
-	colliders_.clear();
-}
-
-const Capsule& Player::GetCapsule(void) const
-{
-	return *capsule_;
-}
-
-const bool& Player::IsPlay(void)const
+const bool Player::IsPlay(void)const
 {
 	return state_ == STATE::PLAY;
 }
@@ -312,23 +300,17 @@ void Player::DrawShadow(void)
 
 void Player::ProcessMove(void)
 {
-	InputManager& ins = InputManager::GetInstance();
+	const InputManager& ins = InputManager::GetInstance();
 	Quaternion cameraRot = mainCamera->GetQuaRotOutX();
-
-	double rotRad = 0;
 
 	//WASDÇ≈à íuÇïœÇ¶ÇÈ
 	VECTOR dir = CommonUtility::VECTOR_ZERO;
 	movePow_ = CommonUtility::VECTOR_ZERO;
-	//if (ins.IsInputPressed("Up")) { dir = cameraRot.GetForward();  rotRad = CommonUtility::Deg2RadF(0.0f); }
-	//if (ins.IsInputPressed("Left")){ dir = cameraRot.GetLeft();  rotRad = CommonUtility::Deg2RadF(-90.0f); }
-	//if (ins.IsInputPressed("Down")){ dir = cameraRot.GetBack();  rotRad = CommonUtility::Deg2RadF(180.0f); }
-	//if (ins.IsInputPressed("Right")){dir = cameraRot.GetRight(); rotRad = CommonUtility::Deg2RadF(90.0f);	}
-
-	if (ins.IsInputPressed("Up"))	dir.z += 1.0f;
-	if (ins.IsInputPressed("Down")) dir.z -= 1.0f;
-	if (ins.IsInputPressed("Right"))dir.x += 1.0f;
-	if (ins.IsInputPressed("Left")) dir.x -= 1.0f;
+	const float movePow = 1.0f;
+	if (ins.IsInputPressed("Up"))	dir.z += movePow;
+	if (ins.IsInputPressed("Down")) dir.z -= movePow;
+	if (ins.IsInputPressed("Right"))dir.x += movePow;
+	if (ins.IsInputPressed("Left")) dir.x -= movePow;
 
 	if (!CommonUtility::EqualsVZero(dir))
 	{

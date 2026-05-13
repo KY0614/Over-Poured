@@ -78,17 +78,16 @@ void CustomerManager::Update(float orderTime)
 		orderUI_[i]->SetPos(pos);	//UIの位置を設定
 		orderUI_[i]->SetOrderTimer(orderTime);	//注文時間を更新
 	}
-	//先頭のお客のインデックスを参照するための参照変数
-	int& firstCustomerIdx = firstCustomerIdx_;
+
 	//カウンター前の球体判定に来たら、回転させてカウンターの方を見るようにする
 	if (customers_[firstCustomerIdx_]->CollisionCounter())
 	{	
-		if (customers_[firstCustomerIdx]->CheckCounterToCustomer())
+		if (customers_[firstCustomerIdx_]->CheckCounterToCustomer())
 		{
 			//回転させ、移動を止める
-			customers_[firstCustomerIdx]->SetGoalRotate(CommonUtility::Deg2RadF(CUSTOMER_ROTATE_ANGLE));
+			customers_[firstCustomerIdx_]->SetGoalRotate(CommonUtility::Deg2RadF(CUSTOMER_ROTATE_ANGLE));
 			isCustomersMove_ = false;
-			orderUI_[firstCustomerIdx]->SetActive(true);	//UIをアクティブにする
+			orderUI_[firstCustomerIdx_]->SetActive(true);	//UIをアクティブにする
 			for (auto& c : customers_)
 			{
 				//歩行アニメーションを止め、IDLEアニメーションにする
@@ -142,11 +141,11 @@ void CustomerManager::CreateSingleCustomer(Order::OrderData data)
 
 	if (!customers_.empty())
 	{
-		VECTOR pos = VAdd(
+		VECTOR uiPos = VAdd(
 			GetLastCustomerPos(),
 			VGet(ORDER_UI_OFFSET_X, ORDER_UI_OFFSET_Y, 0.0f));
 		orderUI_.back()->Init();
-		orderUI_.back()->SetPos(pos);
+		orderUI_.back()->SetPos(uiPos);
 	}
 
 	//UIをManagerに登録
@@ -157,52 +156,40 @@ void CustomerManager::ClearFirstCustomers(void)
 {
 	if (!customers_.empty())
 	{
-		//先頭のお客のインデックスを参照するための参照変数
-		int& firstCustomerIdx = firstCustomerIdx_;
 		//先頭のお客を非表示にする
-		customers_[firstCustomerIdx]->IsNotVisible();
-		orderUI_[firstCustomerIdx]->SetActive(false);
+		customers_[firstCustomerIdx_]->IsNotVisible();
+		orderUI_[firstCustomerIdx_]->SetActive(false);
 		//先頭のお客のインデックスを進める
-		firstCustomerIdx++;
+		firstCustomerIdx_++;
 	}
 }
 
 void CustomerManager::SetCustomerReacton(const int score)
 {
-	//先頭のお客のインデックスを参照するための参照変数
-	int& firstCustomerIdx = firstCustomerIdx_;
+	if (firstCustomerIdx_ >= customers_.size())return;
 	//スコアに応じてリアクションを変える
 	if (score >= SCORE_GOOD)
 	{
-		customers_[firstCustomerIdx]->SetReaction(CustomerBase::REACTION::GOOD);
+		customers_[firstCustomerIdx_]->SetReaction(CustomerBase::REACTION::GOOD);
 	}
 	else if (score > SCORE_SOSO)
 	{
-		customers_[firstCustomerIdx]->SetReaction(CustomerBase::REACTION::SOSO);
+		customers_[firstCustomerIdx_]->SetReaction(CustomerBase::REACTION::SOSO);
 	}
 	else
 	{
-		customers_[firstCustomerIdx]->SetReaction(CustomerBase::REACTION::BAD);
+		customers_[firstCustomerIdx_]->SetReaction(CustomerBase::REACTION::BAD);
 	}
 }
 
 void CustomerManager::IsCheckUI(const int index, const bool isActive)
 {
-	//先頭のお客のインデックスを参照するための参照変数
-	int& firstCustomerIdx = firstCustomerIdx_;
-	orderUI_[firstCustomerIdx]->SetCheckUI(index, isActive);
+	//先頭のお客のUIのチェックマークの状態を設定
+	orderUI_[firstCustomerIdx_]->SetCheckUI(index, isActive);
 }
 
 const VECTOR& CustomerManager::GetLastCustomerPos(void) const
 {
-	////返す用の座標
-	//VECTOR retPos;
-
-	////最後のお客の位置を取得
-	//retPos = customers_[firstCustomerIdx_]->GetPos();
-
-	////最後のお客の位置から間隔をあけて左にずらす
-	//retPos.x -= ((MAX_CREATE_SIZE - 1) * CUSTOMERS_SPACE);
 	if(customers_.empty())
 	{
 		return CustomerBase::CUSTOMER_POS;
@@ -243,9 +230,8 @@ void CustomerManager::InitCustomersPos(void)
 	//全員の位置をx軸で左にずらす
 	for (int i = 0; i < MAX_CREATE_SIZE; i++)
 	{
-		auto& customer = customers_[i];
-		//一人ずつずらす
+		//一人ずつずらして配置してく
 		pos.x -= CUSTOMERS_SPACE;
-		customer->Init(pos);
+		customers_[i]->Init(pos);
 	}
 }

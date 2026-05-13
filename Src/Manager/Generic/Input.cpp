@@ -2,14 +2,8 @@
 #include<cassert>
 #include "Input.h"
 
-namespace {
-	//ヘッダ部
-	struct Header {
-		char signature[4];
-		float version;
-		uint32_t dataSize;//4バイト
-	};
-
+namespace 
+{
 	//アナログスティックのしきい値
 	const int MAX_ANALOG_STICK = 10000;	//スティックの最大値
 	const int MAX_ANALOG_TRIGGER = 128;	//トリガーの最大値

@@ -65,5 +65,6 @@ void FpsControl::CalcFrameRate(void)
 
 void FpsControl::DrawFrameRate(void)
 {
+	//画面左上にフレームレートを表示
     DrawFormatString(0, 0, 0xFF0000, L"FPS[%.2f]", frmRate_);
 }

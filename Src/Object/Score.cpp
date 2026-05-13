@@ -259,7 +259,7 @@ void Score::UpdatePlayScore(void)
 
 void Score::DrawPlayScore(void)
 {
-	auto& scr = ScoreManager::GetInstance();
+	const ScoreManager& scr = ScoreManager::GetInstance();
 
 	//ランキングの背景（青いやつ）
 	DrawRotaGraph3(

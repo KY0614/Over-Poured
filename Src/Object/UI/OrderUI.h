@@ -43,7 +43,7 @@ public:
         const Order::SWEETS sweets,
         const float maxTime);
 	//デストラクタ
-    virtual ~OrderUI() = default;
+    ~OrderUI() override = default;
 
     /// <summary>
     /// 初期化処理

@@ -70,7 +70,7 @@ public:
 	/// </summary>
 	/// <param name="serve">提供されたもの</param>
 	/// <returns>スコア</returns>
-	int GetOrderScore(const Order::OrderData serve);
+	int GetOrderScore(const Order::OrderData& serve);
 
 	/// <summary>
 	/// 
@@ -95,7 +95,7 @@ public:
 	/// 提供されたデータと注文を比較し、合っていたらUIを表示
 	/// </summary>
 	/// <param name="serve">提供されたデータ</param>
-	void CheckServeAndOrder(const Order::OrderData serve);
+	void CheckServeAndOrder(const Order::OrderData& serve);
 
 	/// <summary>
 	/// 注文の制限時間が過ぎているかを取得する

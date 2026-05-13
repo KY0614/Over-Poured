@@ -198,10 +198,11 @@ void PauseScene::DrawMenuList(void)
 	float scale = static_cast<float>(Application::SCREEN_SIZE_Y) /
 		static_cast<float>(Application::SCREEN_MAX_SIZE_Y);
 
+	//メニューリストのX座標を画面比率に合わせて変える
 	const int line_start_X = static_cast<int>(static_cast<float>(MENU_LIST_POS_X) * scale);
-
+	//メニューリストの開始Y座標も画面比率に合わせて変える
 	int lineY = static_cast<int>(static_cast<float>(MENU_START_Y) * scale);
-
+	//現在選択している文字列
 	std::wstring& currentStr = menuList_[cursorIdx_];
 
 	for (int i = 0; i < menuList_.size();++i) 
@@ -221,15 +222,17 @@ void PauseScene::DrawMenuList(void)
 				lineY,
 				scale, 0.0f, menuCursorImg_, true
 			);
-			lineX += static_cast<int>(static_cast<float>(SELECT_MENU_MARGINE)*scale);
+			//選択中の文字列は少し右にずらす
+			lineX += static_cast<int>(static_cast<float>(SELECT_MENU_MARGINE) * scale);
 		}
-		const int posX = Application::SCREEN_SIZE_X / 2 + lineX;
-		DrawRotaGraph(static_cast<int>(posX * scale),
+		//メニューリストの描画
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 2 + static_cast<int>(
+			static_cast<float>(lineX) * scale),
 			static_cast<int>((MENU_START_Y * scale)) + 
 			static_cast<int>((MNEU_LIST_HEIGHT * MENU_LIST_SCALE * scale * i)),
 			scale * MENU_LIST_SCALE, 0.0f, menuListImg_[i], true
 		);
-
+		//次の行のY座標を計算
 		lineY += static_cast<int>(
 			static_cast<float>(MNEU_LIST_HEIGHT) * MENU_LIST_SCALE * scale);
 	}

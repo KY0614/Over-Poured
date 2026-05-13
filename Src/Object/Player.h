@@ -50,7 +50,7 @@ public:
 	Player(void);
 
 	//デストラクタ
-	~Player(void);
+	~Player(void) override;
 
 	/// <summary>
 	/// 初期化処理
@@ -74,17 +74,6 @@ public:
 	void AddCollider(const std::weak_ptr<Collider> collider);
 
 	/// <summary>
-	/// 追加したコライダを全部削除する関数
-	/// </summary>
-	void ClearCollider(void);
-
-	/// <summary>
-	/// 衝突用カプセルの取得
-	/// </summary>
-	/// <returns>プレイヤーに追従しているカプセル</returns>
-	const Capsule& GetCapsule(void) const;
-
-	/// <summary>
 	/// オブジェクト判定用の球体の取得
 	/// </summary>
 	/// <returns>衝突判定用の球体</returns>
@@ -95,7 +84,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns>true:PLAY中　false:PLAY以外</returns>
-	const bool& IsPlay(void)const;
+	const bool IsPlay(void)const;
 
 	/// <summary>
 	/// プレイヤーがオブジェクトを持っているかどうか設定する

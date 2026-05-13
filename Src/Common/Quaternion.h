@@ -71,7 +71,7 @@ public:
 	Quaternion Inverse(void) const;
 
 	// ‹…–Ê•âŠÔ
-	static Quaternion Slerp(Quaternion from, Quaternion to, double t);
+	static Quaternion Slerp(const Quaternion& from, const Quaternion& to, double t);
 
 	// ‚Q‚Â‚ÌƒxƒNƒgƒ‹ŠÔ‚Ì‰ñ“]—Ê‚ðŽæ“¾‚·‚é
 	static Quaternion FromToRotation(VECTOR fromDir, VECTOR toDir);

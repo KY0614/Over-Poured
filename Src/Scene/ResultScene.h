@@ -12,7 +12,7 @@ public:
 	ResultScene(void);
 
 	//デストラクタ
-	~ResultScene(void);
+	~ResultScene(void) override;
 
 	/// <summary>
 	/// 初期化処理

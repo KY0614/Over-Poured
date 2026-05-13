@@ -42,7 +42,7 @@ public:
 	CustomerBase(void);
 
 	//デストラクタ
-	~CustomerBase(void) = default;
+	~CustomerBase(void) override = default;
 
 	/// <summary>
 	/// 初期化処理
@@ -75,12 +75,6 @@ public:
 	/// </summary>
 	/// <param name="type">設定する種類</param>
 	void SetType(const TYPE type) { type_ = type; }
-
-	/// <summary>
-	/// X座標を設定
-	/// </summary>
-	/// <param name="posX">X座標</param>
-	void SetPosX(const float posX) { transform_.pos.x = posX; }
 
 	/// <summary>
 	/// お客の状態を設定する

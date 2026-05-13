@@ -3,8 +3,8 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include "../Common/Transform.h"
 #include "../Order/Order.h"
-#include "../ActorBase.h"
 
 class StageObject;
 class Furnitures;
@@ -14,7 +14,7 @@ class ModelMaterial;
 class ModelRenderer;
 class IconUI;
 
-class StageManager : public ActorBase
+class StageManager
 {
 
 public:
@@ -27,7 +27,10 @@ public:
 		PAYING,
 	};
 	
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="player">プレイヤーの参照</param>
 	StageManager(Player& player);
 
 	//デストラクタ
@@ -36,18 +39,18 @@ public:
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	void Init(void) override;
+	void Init(void);
 
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update(void) override;
+	void Update(void);
 
 	/// <summary>
 	/// 描画処理
 	/// </summary>
 	/// <param name=""></param>
-	void Draw(void) override;
+	void Draw(void);
 
 	/// <summary>
 	/// 現在の先頭のお客の注文を設定する
@@ -60,7 +63,7 @@ public:
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns></returns>
-	Order::OrderData GetServeItems(void)const { return servedItems_; }
+	const Order::OrderData GetServeItems(void)const { return servedItems_; }
 
 	/// <summary>
 	/// 提供したかどうかを取得する

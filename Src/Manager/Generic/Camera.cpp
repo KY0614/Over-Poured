@@ -47,10 +47,6 @@ void Camera::SetBeforeDraw(void)
 		SetBeforeDrawTopFixed();
 		break;
 
-	case Camera::MODE::FOLLOW:
-		SetBeforeDrawFollow();
-		break;
-
 	case Camera::MODE::FREE:
 		SetBeforeDrawFree();
 		break;
@@ -67,8 +63,6 @@ void Camera::SetBeforeDraw(void)
 
 	//DXライブラリのカメラとEffekseerのカメラを同期する。
 	Effekseer_Sync3DSetting();
-
-	//UpdateDebugImGui();
 }
 
 void Camera::Draw(void)
@@ -90,17 +84,12 @@ VECTOR Camera::GetAngles(void) const
 	return angles_;
 }
 
-VECTOR Camera::GetTargetPos(void) const
-{
-	return targetPos_;
-}
-
-Quaternion Camera::GetQuaRot(void) const
+const Quaternion Camera::GetQuaRot(void) const
 {
 	return rot_;
 }
 
-Quaternion Camera::GetQuaRotOutX(void) const
+const Quaternion Camera::GetQuaRotOutX(void) const
 {
 	return rotOutX_;
 }
@@ -130,8 +119,6 @@ void Camera::ChangeMode(MODE mode)
 		//注視点
 		targetPos_ = FIXEDTOP_CAMERA_RELATIVE_POS;
 		break;	
-	case Camera::MODE::FOLLOW:
-		break;
 	}
 }
 
@@ -185,7 +172,7 @@ void Camera::SyncFollow(void)
 
 void Camera::ProcessRot(void)
 {
-	InputManager& ins = InputManager::GetInstance();
+	const InputManager& ins = InputManager::GetInstance();
 
 	//回転軸と量を決める
 	float rotPow = 1.0f * DX_PI_F / 180.0f;
@@ -208,16 +195,17 @@ void Camera::ProcessRot(void)
 
 void Camera::ProcessMove(void)
 {
-	InputManager& ins = InputManager::GetInstance();
+	const InputManager& ins = InputManager::GetInstance();
 
 	VECTOR dir = CommonUtility::VECTOR_ZERO;
-	if (ins.IsInputPressed("CameraFront"))	pos_.z += 5.0f; targetPos_.z += 5.0f;
-	if (ins.IsInputPressed("CameraBack"))	pos_.z -= 5.0f; targetPos_.z -= 5.0f;
-	if (ins.IsInputPressed("CameraR"))		pos_.x += 5.0f;	targetPos_.x += 5.0f;
-	if (ins.IsInputPressed("CameraL"))		pos_.x -= 5.0f;	targetPos_.x -= 5.0f;
+	const float movePow = 5.0f;
+	if (ins.IsInputPressed("CameraFront"))	pos_.z += movePow; targetPos_.z +=movePow;
+	if (ins.IsInputPressed("CameraBack"))	pos_.z -= movePow; targetPos_.z -=movePow;
+	if (ins.IsInputPressed("CameraR"))		pos_.x += movePow; targetPos_.x += movePow;
+	if (ins.IsInputPressed("CameraL"))		pos_.x -= movePow; targetPos_.x -= movePow;
 
-	if (ins.IsInputPressed("CameraRise"))	pos_.y += 5.0f;	targetPos_.y += 5.0f;
-	if (ins.IsInputPressed("CameraDescent"))pos_.y -= 5.0f;	targetPos_.y -= 5.0f;
+	if (ins.IsInputPressed("CameraRise"))	pos_.y += movePow;	targetPos_.y += movePow;
+	if (ins.IsInputPressed("CameraDescent"))pos_.y -= movePow;	targetPos_.y -= movePow;
 }
 
 void Camera::SetBeforeDrawFixedPoint(void)
@@ -229,45 +217,10 @@ void Camera::SetBeforeDrawTopFixed(void)
 {
 }
 
-void Camera::SetBeforeDrawFollow(void)
-{
-	//カメラ操作
-	ProcessRot();
-
-	//追従対象との相対位置を同期
-	SyncFollow();
-
-}
-
 void Camera::SetBeforeDrawFree(void)
 {
 	//カメラ操作
 	ProcessRot();
 
 	ProcessMove();	
-}
-
-void Camera::UpdateDebugImGui(void)
-{
-	//ウィンドウタイトル&開始処理
-	ImGui::Begin("Camera");
-
-	//位置
-	ImGui::Text("position");
-	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("Pos", &pos_.x);
-	ImGui::SliderFloat("PosX", &pos_.x, -800.0f, 1000.0f);
-	ImGui::SliderFloat("PosY", &pos_.y, -800.0f, 1000.0f);
-	ImGui::SliderFloat("PosZ", &pos_.z, -800.0f, 1000.0f);
-
-	//位置
-	ImGui::Text("target");
-	//構造体の先頭ポインタを渡し、xyzと連続したメモリ配置へアクセス
-	ImGui::InputFloat3("target", &targetPos_.x);
-	ImGui::SliderFloat("targetX", &targetPos_.x, -800.0f, 1000.0f);
-	ImGui::SliderFloat("targetY", &targetPos_.y, -800.0f, 1000.0f);
-	ImGui::SliderFloat("targetZ", &targetPos_.z, -800.0f, 1000.0f);
-
-	//終了処理
-	ImGui::End();
 }

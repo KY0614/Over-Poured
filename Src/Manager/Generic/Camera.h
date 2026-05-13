@@ -29,20 +29,15 @@ public:
 
 	//カメラ座標関連の定数---------------------------------------------------------------------
 
-	static constexpr VECTOR DEFAULT_CAMERA_POS = { 0.0f, 500.0f, -800.0f };			//カメラの初期座標
-	//static constexpr VECTOR FIXEDTOP_CAMERA_POS = { 20.0f, 500.0f, -370.0f };		//固定カメラの初期座標
-	//static constexpr VECTOR FIXEDTOP_CAMERA_POS = { 20.0f, 570.0f, -325.0f };		//固定カメラの初期座標
-	//static constexpr VECTOR FIXEDTOP_CAMERA_POS = { 20.0f, 450.0f, -530.0f };		//固定カメラの初期座標
-	static constexpr VECTOR FIXEDTOP_CAMERA_POS = { 20.0f, 600.0f, -360.0f };		//固定カメラの初期座標
+	//カメラの初期座標
+	static constexpr VECTOR DEFAULT_CAMERA_POS = { 0.0f, 500.0f, -800.0f };			
+	//固定カメラの初期座標
+	static constexpr VECTOR FIXEDTOP_CAMERA_POS = { 20.0f, 600.0f, -360.0f };		
 
-	static constexpr VECTOR RELATIVE_C2T_POS = { 0.0f, 165.0f, 200.0f };			//カメラ位置から注視点までの相対座標
-	//static constexpr VECTOR FIXEDTOP_CAMERA_RELATIVE_POS = { 20.0f, 0.0f, 137.0f };	//固定カメラ位置から注視点までの相対座標
-	//static constexpr VECTOR FIXEDTOP_CAMERA_RELATIVE_POS = { 20.0f, 0.0f, 15.0f };	//固定カメラ位置から注視点までの相対座標
-	static constexpr VECTOR FIXEDTOP_CAMERA_RELATIVE_POS = { 20.0f, 0.0f, 65.0f };	//固定カメラ位置から注視点までの相対座標
-
-
-	static constexpr VECTOR RELATIVE_F2C_POS_FOLLOW = { 0.0f, 500.0f, -500.0f };	//追従対象からカメラ位置までの相対座標(完全追従)
-
+	//カメラ位置から注視点までの相対座標
+	static constexpr VECTOR RELATIVE_C2T_POS = { 0.0f, 165.0f, 200.0f };
+	//固定カメラ位置から注視点までの相対座標
+	static constexpr VECTOR FIXEDTOP_CAMERA_RELATIVE_POS = { 20.0f, 0.0f, 65.0f };
 
 	//カメラのX回転上限度角
 	static constexpr float LIMIT_X_UP_RAD = 90.0f * (DX_PI_F / 180.0f);
@@ -54,7 +49,6 @@ public:
 		NONE,
 		FIXED_POINT,
 		TOP_FIXED,
-		FOLLOW,
 		FREE
 	};
 
@@ -70,13 +64,11 @@ public:
 	VECTOR GetPos(void) const;
 	//カメラの操作角度
 	VECTOR GetAngles(void) const;
-	//カメラの注視点
-	VECTOR GetTargetPos(void) const;
 
 	//カメラ角度
-	Quaternion GetQuaRot(void) const;
+	const Quaternion GetQuaRot(void) const;
 	//X回転を抜いたカメラ角度
-	Quaternion GetQuaRotOutX(void) const;
+	const Quaternion GetQuaRotOutX(void) const;
 	//カメラの前方方向
 	VECTOR GetForward(void) const;
 
@@ -85,7 +77,6 @@ public:
 
 	//追従対象の設定
 	void SetFollow(const Transform* follow);
-
 
 private:
 
@@ -128,9 +119,6 @@ private:
 	//モード別更新ステップ
 	void SetBeforeDrawFixedPoint(void);
 	void SetBeforeDrawTopFixed(void);
-	void SetBeforeDrawFollow(void);
 	void SetBeforeDrawFree(void);
-
-	void UpdateDebugImGui(void);
 };
 

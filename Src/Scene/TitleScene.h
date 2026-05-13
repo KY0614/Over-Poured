@@ -18,7 +18,7 @@ public:
 	TitleScene(void);
 
 	//デストラクタ
-	~TitleScene(void);
+	~TitleScene(void) override;
 
 	/// <summary>
 	/// 初期化処理

@@ -516,7 +516,7 @@ Quaternion Quaternion::Inverse(void) const
 
 }
 
-Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, double t)
+Quaternion Quaternion::Slerp(const Quaternion& from, const Quaternion& to, double t)
 {
     if (t > 1) t = 1;
     if (t < 0) t = 0;
@@ -575,7 +575,7 @@ double Quaternion::Angle(const Quaternion& q1, const Quaternion& q2)
 Quaternion Quaternion::SlerpUnclamped(Quaternion a, Quaternion b, float t)
 {
 
-    // if either input is zero, return the other.
+    //if either input is zero, return the other.
     if (a.LengthSquared() == 0.0f)
     {
         if (b.LengthSquared() == 0.0f)

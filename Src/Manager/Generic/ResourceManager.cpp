@@ -46,7 +46,7 @@ void ResourceManager::Destroy(void)
 
 const Resource& ResourceManager::Load(SRC src)
 {
-	Resource& res = _Load(src);
+	const Resource& res = _Load(src);
 	if (res.type_ == Resource::TYPE::NONE)
 	{
 		return dummy_;
@@ -108,7 +108,6 @@ void ResourceManager::InitTitle(void)
 	using RES_T = RES::TYPE;
 	static std::string PATH_IMG = Application::PATH_IMAGE;
 	static std::string PATH_MDL = Application::PATH_MODEL;
-	static std::string PATH_EFF = Application::PATH_EFFECT;
 	static std::string PATH_SND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;
@@ -154,21 +153,11 @@ void ResourceManager::InitTitle(void)
 	//--------------------------------------------------------------------------
 }
 
-void ResourceManager::InitMovie(void)
-{
-}
-
-void ResourceManager::InitSelect(void)
-{
-}
-
 void ResourceManager::InitTutorial(void)
 {
 	using RES = Resource;
 	using RES_T = RES::TYPE;
 	static std::string PATH_IMG = Application::PATH_IMAGE;
-	static std::string PATH_MDL = Application::PATH_MODEL;
-	static std::string PATH_EFF = Application::PATH_EFFECT;
 	static std::string PATH_SND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;
@@ -509,8 +498,6 @@ void ResourceManager::InitPause(void)
 	using RES = Resource;
 	using RES_T = RES::TYPE;
 	static std::string PATH_IMG = Application::PATH_IMAGE;
-	static std::string PATH_MDL = Application::PATH_MODEL;
-	static std::string PATH_EFF = Application::PATH_EFFECT;
 	static std::string PATH_SND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;
@@ -562,8 +549,6 @@ void ResourceManager::InitResult(void)
 	using RES = Resource;
 	using RES_T = RES::TYPE;
 	static std::string PATH_IMG = Application::PATH_IMAGE;
-	static std::string PATH_MDL = Application::PATH_MODEL;
-	static std::string PATH_EFF = Application::PATH_EFFECT;
 	static std::string PATH_SND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;

@@ -15,7 +15,7 @@ public:
 	GameScene(void);
 
 	//デストラクタ
-	~GameScene(void);
+	~GameScene(void) override;
 
 	/// <summary>
 	/// 初期化処理

@@ -26,7 +26,6 @@ namespace//Ç±ÇÃcppì‡Ç≈ÇµÇ©égÇÌÇ»Ç¢íËêî
 
 CustomerBase::CustomerBase(void)
 {
-	animationController_ = nullptr;
 	type_ = TYPE::NONE;
 	state_ = STATE::IDLE;
 	reaction_ = REACTION::NONE;

@@ -70,7 +70,8 @@ void ScoreManager::LoadScore(void)
 void ScoreManager::SaveScore(const int score)
 {
 	//管理配列に追加
-	std::ifstream ifs(Application::PATH_SCORE + "score.json");
+	const std::string scoreFileName = "score.json";
+	std::ifstream ifs(Application::PATH_SCORE + scoreFileName);
 	json scoreData;
 	//ファイルが存在する場合は読み込み
 	if (ifs)
@@ -78,26 +79,18 @@ void ScoreManager::SaveScore(const int score)
 		scoreData = json::parse(ifs);
 		ifs.close();
 	}
+	const std::string scoreKey = "Scores";
 	//存在しない場合は新規作成
-	if (!scoreData.contains("Scores")) {
-		scoreData["Scores"] = json::array();
+	if (!scoreData.contains(scoreKey))
+	{
+		scoreData[scoreKey] = json::array();
 	}
 	//管理配列に追加
-	scoreData["Scores"].push_back(score);
+	scoreData[scoreKey].push_back(score);
 
-	std::ofstream ofs(Application::PATH_SCORE + "score.json");
+	std::ofstream ofs(Application::PATH_SCORE + scoreFileName);
 	ofs << scoreData.dump(4);
 	ofs.close();
-}
-
-const int& ScoreManager::GetAggregateScore(void) const
-{
-	//スコアの合計を返す
-	int total = 0;
-	for (int s : scores_) {
-		total += s;
-	}
-	return total;
 }
 
 void ScoreManager::SortRankingScore(void)
@@ -107,10 +100,12 @@ void ScoreManager::SortRankingScore(void)
 	std::sort(scoreList.begin(), scoreList.end(), std::greater<int>());
 
 	//５位までのスコアを降順で入れる(スコアが５つ以上ない場合は０を入れる)
-	for (int i = 0; i < RANKING_NUM && i < scoreList.size(); ++i) {
+	for (int i = 0; i < RANKING_NUM && i < scoreList.size(); ++i) 
+	{
 		scoreRank_[i] = scoreList[i];
 	}
-	for (int i = scoreList.size(); i < RANKING_NUM; ++i) {
+	for (int i = scoreList.size(); i < RANKING_NUM; ++i) 
+	{
 		scoreRank_[i] = 0;
 	}
 }

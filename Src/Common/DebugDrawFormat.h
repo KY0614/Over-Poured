@@ -7,18 +7,17 @@
 class DebugDrawFormat
 {
 public:
+	static constexpr int DEFAULT_LINE_HEIGHT = 20; //デフォルトの行の高さ
+	static constexpr int DEFAULT_COLOR = 0xFFFFFF; //デフォルトの色（白）
+
     //コンストラクタ
     DebugDrawFormat(void);
 
-    // コンストラクタ
-    DebugDrawFormat(int startX = 0, int startY = 0, int textColor = GetColor(255, 255, 255), int lineHeight = 20, int startLine = 0)
-        : x(startX), y(startY), color(textColor),lineHeight(lineHeight) {}
-
-    // デバッグ用に文字列を出力するメソッド
+    //デバッグ用に文字列を出力するメソッド
     void String(const std::string& str) 
     {
-        DrawString(x, y, StringUtility::StringToWstring(str).c_str(), 0xFFFFFF);
-        y += lineHeight; // 次の行に移動
+        DrawString(x, y, StringUtility::StringToWstring(str).c_str(), DEFAULT_COLOR);
+        y += lineHeight; //次の行に移動
     }
 
 
@@ -31,9 +30,9 @@ public:
     /// <param name="line">行数</param>
     /// <param name="lineH">行の高さ</param>
     template <typename Value>
-    static void FormatString(const TCHAR* format, const Value val, int& line, const int lineH = 20)
+    static void FormatString(const TCHAR* format, const Value val, int& line, const int lineH = DEFAULT_LINE_HEIGHT)
     {
-        DrawFormatString(0, line * lineH, 0xFFFFFF, format, val);
+        DrawFormatString(0, line * lineH, DEFAULT_COLOR, format, val);
         line++;
     }
 
@@ -46,12 +45,12 @@ public:
     /// <param name="line">行数</param>
     /// <param name="lineH">行の高さ</param>
     template <typename Value>
-    static void FormatStringRight(const TCHAR* format, const Value val, int& line, const int lineH = 20)
+    static void FormatStringRight(const TCHAR* format, const Value val, int& line, const int lineH = DEFAULT_LINE_HEIGHT)
     {
         int strWidth = GetDrawFormatStringWidth(format, val);   //文字列の幅を取得
         int screenWidth = Application::SCREEN_SIZE_X;           //画面の幅
         int rightX = screenWidth - strWidth;                    //X座標を計算
-        DrawFormatString(rightX, line * lineH, 0xFFFFFF, format, val);
+        DrawFormatString(rightX, line * lineH, DEFAULT_COLOR, format, val);
         line++;
     }
 
@@ -80,9 +79,9 @@ public:
     /// <param name="line">行数</param>
     /// <param name="lineH">行の高さ</param>
     template <typename ValA, typename ValB>
-    static void FormatString(const TCHAR* format, const ValA valA, const ValB valB , int& line, const int lineH = 20)
+    static void FormatString(const TCHAR* format, const ValA valA, const ValB valB , int& line, const int lineH = DEFAULT_LINE_HEIGHT)
     {
-        DrawFormatString(0, line * lineH, 0xFFFFFF, format, valA, valB);
+        DrawFormatString(0, line * lineH, DEFAULT_COLOR, format, valA, valB);
         line++;
     }
 
@@ -97,12 +96,12 @@ public:
     /// <param name="line">行数</param>
     /// <param name="lineH">行の高さ</param>
     template <typename ValA, typename ValB>
-    static void FormatStringRight(const TCHAR* format, const ValA valA, const ValB valB, int& line, const int lineH = 20)
+    static void FormatStringRight(const TCHAR* format, const ValA valA, const ValB valB, int& line, const int lineH = DEFAULT_LINE_HEIGHT)
     {
         int strWidth = GetDrawFormatStringWidth(format, valA, valB); // 文字列の幅を取得
         int screenWidth = Application::SCREEN_SIZE_X; // 画面の幅 (適宜変更してください)
         int rightX = screenWidth - strWidth; // X座標を計算
-        DrawFormatString(rightX, line * lineH, 0xFFFFFF, format, valA, valB);
+        DrawFormatString(rightX, line * lineH, DEFAULT_COLOR, format, valA, valB);
         line++;
     }
 

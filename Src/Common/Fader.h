@@ -16,6 +16,11 @@ public:
 		FADE_IN		//徐々に明転
 	};
 
+	//コンストラクタ
+	Fader(void);
+	//デストラクタ
+	~Fader(void);
+
 	//状態の取得
 	STATE GetState(void) const;
 

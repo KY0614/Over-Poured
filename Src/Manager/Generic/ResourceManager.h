@@ -179,8 +179,6 @@ public:
 
 	//シーンごとにデータを読み込むことにする
 	void InitTitle(void);
-	void InitMovie(void);
-	void InitSelect(void);
 	void InitTutorial(void);
 	void InitGame(void);
 	void InitPause(void);

@@ -9,7 +9,7 @@ public:
 	TutorialScene(void);
 
 	//デストラクタ
-	~TutorialScene(void);
+	~TutorialScene(void) override;
 
 	/// <summary>
 	/// 初期化処理

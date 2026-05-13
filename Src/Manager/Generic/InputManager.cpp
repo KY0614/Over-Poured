@@ -23,27 +23,6 @@ InputManager& InputManager::GetInstance(void)
 
 void InputManager::Init(void)
 {
-	// ゲームで使用したいキーを、
-	// 事前にここで登録しておいてください
-	//InputManager::GetInstance().Add(KEY_INPUT_SPACE);
-	//InputManager::GetInstance().Add(KEY_INPUT_RETURN);
-	//InputManager::GetInstance().Add(KEY_INPUT_N);
-	//InputManager::GetInstance().Add(KEY_INPUT_Z);
-
-	//InputManager::GetInstance().Add(KEY_INPUT_LEFT);
-	//InputManager::GetInstance().Add(KEY_INPUT_RIGHT);
-	//InputManager::GetInstance().Add(KEY_INPUT_UP);
-	//InputManager::GetInstance().Add(KEY_INPUT_DOWN);
-
-	//InputManager::GetInstance().Add(KEY_INPUT_W);
-	//InputManager::GetInstance().Add(KEY_INPUT_A);
-	//InputManager::GetInstance().Add(KEY_INPUT_S);
-	//InputManager::GetInstance().Add(KEY_INPUT_D);
-	//InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);
-
-	InputManager::GetInstance().Add(KEY_INPUT_Q);
-	InputManager::GetInstance().Add(KEY_INPUT_E);
-
 	InputManager::MouseInfo info;
 
 	// 左クリック
@@ -169,9 +148,19 @@ bool InputManager::IsTrgMouseRight(void) const
 	return FindMouse(MOUSE_INPUT_RIGHT).keyTrgDown;
 }
 
-InputManager::InputManager(void)
+InputManager::InputManager(void) : 
+	mousePos_{ 0, 0 }         //座標を0でリセット
+	, padInfos_{}			  //配列をゼロ初期化
+	, mouseInput_(0)          //入力なし状態
+	, infoEmpty_{}            //構造体をゼロ初期化
+	, mouseInfoEmpty_{}       //構造体をゼロ初期化
+	, joyDInState_{}          //DxLibの構造体も初期化
+	, joyXInState_{}
 {
-	mouseInput_ = -1;
+	// 配列などの複雑な初期化は中（{}）で書く
+	for (auto& pad : padInfos_) {
+		pad = JOYPAD_IN_STATE{};
+	}
 }
 
 const InputManager::Info& InputManager::Find(int key) const
@@ -375,4 +364,3 @@ bool InputManager::IsInputPressed(const std::string& eventcode) const
 {
 	return input_.IsPressed(eventcode);
 }
-

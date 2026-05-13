@@ -10,7 +10,7 @@ public:
 	//コンストラクタ
 	PauseScene(void);
 	//デストラクタ
-	~PauseScene(void);
+	~PauseScene(void) override;
 
 	/// <summary>
 	/// 初期化処理
