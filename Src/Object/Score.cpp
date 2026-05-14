@@ -12,18 +12,18 @@
 namespace
 {
 	//スコア加算スピード
-	const int ADD_SCORE_SPEED = 8;		//基本加算スピード
-	const int ADD_CURRENT_SPEED = 5;	//現在スコアの加算スピード
-	const int ADD_TOTALSCORE_SPEED = 123;//総スコア加算スピード
+	const int ADD_SCORE_SPEED = 8;			//基本加算スピード
+	const int ADD_CURRENT_SPEED = 5;		//現在スコアの加算スピード
+	const int ADD_TOTALSCORE_SPEED = 123;	//総スコア加算スピード
 
 	//イージング関連
 	const float START_SLIDE_X = -500.0f;	//X開始位置
 	const float END_SLIDE_X = (float)(Application::SCREEN_SIZE_X / 6);	//X終了位置
-	const float START_SLIDE_Y = 690.0f;	//Y開始位置
-	const float END_SLIDE_Y = 420.0f;	//Y終了位置
-	const float NEXT_SLIDE_START_X = -125.0f;	//次のイージングを開始する目標位置
-	const float SLIDE_MAX_TIME = 1.0f;	//目標時間
-	const float BLINK_SPEED = 0.5f;		//ハイライト点滅の間隔
+	const float START_SLIDE_Y = 690.0f;		//Y開始位置
+	const float END_SLIDE_Y = 420.0f;		//Y終了位置
+	const float NEXT_SLIDE_START_X = -125.0f;	//次のイージングを開始させる目標位置
+	const float SLIDE_MAX_TIME = 1.0f;		//目標時間
+	const float BLINK_SPEED = 0.5f;			//ハイライト点滅の間隔
 
 	//ゲージ関連
 	const float MAX_GAUGE_TIME = 1.0f;		//ゲージのイージング目標時間
@@ -51,8 +51,8 @@ namespace
 	const float RANK_LOGO_SCALE = 0.5f;			//ランクロゴの拡大率
 	const float RANK_LAVEL_SCALE = 0.8f;		//ランキングラベルの拡大率
 
-	const int RANK_LAVEL_POS_X = 306;		//ランキングラベルのX座標
-	const int RANK_LAVEL_HEIGHT = 128;		//ランキングラベルの高さ
+	const int RANK_LAVEL_POS_X = 306;			//ランキングラベルのX座標
+	const int RANK_LAVEL_HEIGHT = 128;			//ランキングラベルの高さ
 
 	//キー押下を促す画像の高さ
 	const int PUSHLOGO_HEIGHT = 1024;
@@ -69,14 +69,15 @@ namespace
 	//現在のスコアを描画するX座標
 	const int CURRENT_SCORE_POS_X = 612;	
 
-	//バナーの拡大率(ピンクのやつ)
-	const float BANNER_SCALE = 2.0f;	
+	//ピンクのバナー
+	const float BANNER_SCALE = 2.0f;	//バナーの拡大率	
+	const int PINKBANNER_SIZE = 500;	//サイズ
 	//バナーの座標(青いやつ)
 	const int BLUE_BANNER_POS_X = Application::SCREEN_SIZE_X / 4;	//X座標
 	const int BLUE_BANNER_POS_Y = Application::SCREEN_SIZE_Y / 4 - 150;	//Y座標
 	//バナーのサイズ(青いやつ)
-	const int BLUE_BANNER_WIDTH = 322;	//幅
-	const int BLUE_BANNER_HEIGHT = 555;	//高さ
+	const int BLUE_BANNER_WIDTH = 322;		//幅
+	const int BLUE_BANNER_HEIGHT = 555;		//高さ
 	const float BLUE_BANNER_SCALE = 2.2f;	//拡大率
 }
 
@@ -152,7 +153,7 @@ void Score::Init(void)
 
 	//１位のランクからイージング開始（移動中フラグを立てる）
 	isRankScrMove_[0] = true;
-	//現在のスコア表示フラグをリセット
+	//スコアによるランクのインデックス初期化
 	currentRankIdx_ = 0;
 	//今回のスコアからランクを取得
 	rank_ = GetRankFromScore(scr.GetCurrentScore());
@@ -189,64 +190,27 @@ void Score::ChangePlayScore(void)
 
 void Score::UpdatePlayScore(void)
 {
-	auto& sound = SoundManager::GetInstance();
+	SoundManager& sound = SoundManager::GetInstance();
 	//ステート遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsInputTriggered("Interact"))
 	{
-		//ChangeState(STATE::TOTAL_SCORE);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
-	auto& scr = ScoreManager::GetInstance();
-	//今回のスコアまで０から加算する
-	if (currentScr_ >= scr.GetCurrentScore())
-	{
-		currentScr_ = scr.GetCurrentScore();
-		isCurrentScrDraw_ = true;
-	}
-	else
-	{
-		currentScr_ += ADD_SCORE_SPEED;
-	}
+	//今回のスコアをイージングで増やす
+	CurrentScoreAdd();
 
 	//ゲージをイージングで増やす
 	CalcPercentFromRank();
 
-	//イージングをかけて移動させる
-	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
-	{
-		if (!isRankScrMove_[i])break;
-		//移動中
-		slideXTime_[i] += SceneManager::GetInstance().GetDeltaTime() * 0.5f;
-		slideX_[i] = Easing::CubicOut(
-			slideXTime_[i], SLIDE_MAX_TIME, START_SLIDE_X, END_SLIDE_X);
+	//ランキングスコアをイージングで移動させる
+	MoveRankingScore();
 
-		//移動座標が終了座標を超えそうになったら移動終了
-		if (slideX_[i] > END_SLIDE_X)
-		{
-			slideX_[i] = END_SLIDE_X;
-			slideXTime_[i] = SLIDE_MAX_TIME;
-			if (i >= RANK_NUM - 1)isRankingScrDraw_ = true;
-		}
-	}
-	//ディレイを付けるため、
-	//終了座標より手前ぐらいのところで次を移動させる
-	for (int i = 0; i < (ScoreManager::RANKING_NUM - 1); ++i)
-	{
-		if (!isRankScrMove_[i + 1] && slideX_[i] > NEXT_SLIDE_START_X)
-		{
-			isRankScrMove_[i + 1] = true;
-			break;
-		}
-	}
+	//ランクインしていたらスコアを点滅させる
+	HighLightRankingScore();
 
-	//今回のスコアがランクインしていたら点滅させる
-	if (highLightIdx_ != -1)
-	{
-		blinkTime_ += SceneManager::GetInstance().GetDeltaTime() * BLINK_SPEED;
-	}
-
+	//ゲージとスコアとランキングが全て描画されたら、ランクに応じた拍手の音を鳴らす
 	if (isRankingScrDraw_ && isCurrentScrDraw_ && isGaugeDraw_ && !isSEPlayed_)
 	{
 		isSEPlayed_ = true;
@@ -261,103 +225,20 @@ void Score::DrawPlayScore(void)
 {
 	const ScoreManager& scr = ScoreManager::GetInstance();
 
-	//ランキングの背景（青いやつ）
-	DrawRotaGraph3(
-		BLUE_BANNER_POS_X,
-		BLUE_BANNER_POS_Y,
-		BLUE_BANNER_WIDTH / 2,
-		BLUE_BANNER_HEIGHT / 2,
-		aspectRatio_ * RANK_GAUGE_SCALE, aspectRatio_ * BLUE_BANNER_SCALE,
-		0.0f, rankingBackImg_,
-		true);
+	//ピンクのバナーの座標
+	int pinkBannerX = Application::SCREEN_SIZE_X - static_cast<int>(
+		static_cast<float>(PINKBANNER_SIZE) * aspectRatio_);
+	int pinkBannerY = static_cast<int>(
+		static_cast<float>(PINKBANNER_SIZE) * aspectRatio_);
+	//背景の装飾
+	DrawDecos(pinkBannerX, pinkBannerY);
 
-	//バナー(装飾)のサイズ
-	const int BANNER_SIZE = 500;
-	//装飾（ランクの背景のピンクのほう)
-	int pinkBannerX = Application::SCREEN_SIZE_X - (BANNER_SIZE * aspectRatio_);
-	int pinkBannerY = BANNER_SIZE * aspectRatio_;
-	DrawRotaGraph3(pinkBannerX,
-		pinkBannerY,
-		BANNER_SIZE / 2, BANNER_SIZE / 2,
-		aspectRatio_ * BANNER_SCALE, aspectRatio_ * BANNER_SCALE,
-		0.0f,
-		decoImg_,
-		true, false);
+	//現在のスコア描画
+	DrawCurrentScore();
 
-	//現在のスコア
-	DrawVariableScore(currentScr_, CURRENT_SCORE_POS_X,
-		Application::SCREEN_SIZE_Y - RANK_LAVEL_HEIGHT);
+	//ゲージとランクの描画
+	DrawGaugeRank(pinkBannerX);
 
-	//「現在のスコア」ラベル
-	DrawRotaGraph(RANK_LAVEL_POS_X,
-				Application::SCREEN_SIZE_Y - RANK_LAVEL_HEIGHT,
-				aspectRatio_, 0.0f,
-				currentScrImg_, true);
-
-	//ゲージの背景
-	DrawRotaGraph(pinkBannerX,
-		GAUGE_POS_Y,
-		RANK_GAUGE_SCALE * aspectRatio_, 0.0f, circleShadowImg_,
-		true, false);
-
-	//ゲージ本体
-	for (int i = 0; i < static_cast<int>(rank_) + 1; ++i)
-	{
-		//DrawCircleGaugeを使った描画
-		DrawCircleGauge(
-			pinkBannerX,
-			GAUGE_POS_Y,
-			rankData_[i].displayedRate_ * RANK_PERCENT_MAX,
-			rankData_[i].gaugeImg_,
-			0.0f,
-			RANK_GAUGE_SCALE * aspectRatio_,
-			false,false
-		);
-	}
-	
-	if (rankData_[(int)rank_].isFull_)
-	{
-		switch (rank_)
-		{
-		case Score::RANK::C:
-			DrawRotaGraph(pinkBannerX,
-				GAUGE_POS_Y,
-				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[0],
-				true, false);
-			break;
-
-		case Score::RANK::B:
-				DrawRotaGraph(pinkBannerX,
-					GAUGE_POS_Y,
-					aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[1],
-					true, false);
-			break;
-
-		case Score::RANK::A:
-			DrawRotaGraph(pinkBannerX,
-				GAUGE_POS_Y,
-				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[2],
-				true, false);
-			break;
-
-		case Score::RANK::S:
-			DrawRotaGraph(pinkBannerX,
-				GAUGE_POS_Y,
-				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[3],
-				true, false);
-			break;
-
-		default:
-			break;
-		}
-
-		int logoScl = (int)((float)(PUSHLOGO_HEIGHT / 2) * aspectRatio_);
-		//pushspaceの画像
-		DrawRotaGraph(
-			Application::SCREEN_SIZE_X / 2,
-			Application::SCREEN_SIZE_Y / 2 + logoScl,
-			PUSHLOGO_SCALE, 0.0, pushImg_, true);
-	}
 	const float stepBlink = 1.0f;	//点滅のステップ
 	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
 	{
@@ -367,12 +248,31 @@ void Score::DrawPlayScore(void)
 		int col = isBlink ? BRIGHT_HIGHLIGHT : BRIGHT_MAX;
 		//ランキングスコア
 		DrawRankingScore(scr.GetRankingScore(i),
-			(slideX_[i] + (RANK_SCORE_MARGIN_X * aspectRatio_)),
-			RANK_SCORE_POS_Y + (RANK_SCORE_MARGIN_Y * i * aspectRatio_), col);
+			static_cast<int>(slideX_[i] + (RANK_SCORE_MARGIN_X * aspectRatio_)),
+			RANK_SCORE_POS_Y + static_cast<int>(RANK_SCORE_MARGIN_Y * i * aspectRatio_),
+			col);
 		//ランキングラベル(１位：とかのやつ)
-		DrawRotaGraph(slideX_[i], RANK_SCORE_POS_Y + (RANK_SCORE_MARGIN_Y * i * aspectRatio_),
-			aspectRatio_ * RANK_LAVEL_SCALE, 0.0f, rankLabelImgs_[i],
+		DrawRotaGraph(static_cast<int>(slideX_[i]),
+			RANK_SCORE_POS_Y + static_cast<int>(
+			RANK_SCORE_MARGIN_Y * i * aspectRatio_),
+			aspectRatio_ * RANK_LAVEL_SCALE, 0.0f,
+			rankLabelImgs_[i],
 			true, false);
+	}
+}
+
+void Score::CurrentScoreAdd(void)
+{
+	const ScoreManager& scr = ScoreManager::GetInstance();
+	//今回のスコアまで０から加算する
+	if (currentScr_ >= scr.GetCurrentScore())
+	{
+		currentScr_ = scr.GetCurrentScore();
+		isCurrentScrDraw_ = true;
+	}
+	else
+	{
+		currentScr_ += ADD_SCORE_SPEED;
 	}
 }
 
@@ -387,11 +287,13 @@ void Score::CalcPercentFromRank(void)
 	for (int i = 0; i <= currentRankIdx_; ++i)
 	{
 		RankInfo& data = rankData_[i];
+		//前のインデックス数を保持
 		int prevIdx = 0;
 		if (i > 0)prevIdx = i - 1;
-		//現在のランクより低いランクの処理
+		//現在のランクゲージより低いランクゲージの処理
 		if (i < rankIdx)
 		{
+			//ゲージが満タンの場合次のインデックスの処理へ
 			if (data.isFull_)continue;
 			//達成済みなのでゲージは満タン
 			data.currentRate_ = 1.0f;
@@ -415,7 +317,8 @@ void Score::CalcPercentFromRank(void)
 					gaugeTime_, MAX_GAUGE_TIME,
 					0.0f, data.currentRate_);
 			}
-			// イージング終了判定
+			//イージング終了判定
+			//イージングで増やし終わったら値が超えないように制御
 			if (rankData_[i].displayedRate_ > rankData_[i].currentRate_)
 			{
 				data.displayedRate_ = data.currentRate_;
@@ -426,6 +329,7 @@ void Score::CalcPercentFromRank(void)
 		}//現在のランクの処理
 		else if (i == currentRankIdx_)
 		{
+			//すでに満たしている場合は処理しない
 			if (data.isFull_)break;
 			//スコアを現在のランクの範囲を比例計算する（後で100をかけてパーセントにする）
 			rankData_[i].currentRate_ = (
@@ -439,14 +343,160 @@ void Score::CalcPercentFromRank(void)
 				0.0f, data.currentRate_);
 
 			//イージング終了判定
+			//イージングで増やし終わったら値が超えないように制御
 			if (rankData_[i].displayedRate_ >= rankData_[i].currentRate_)
 			{
 				data.displayedRate_ = data.currentRate_;
 				gaugeTime_ = 0.0f;      //リセット
-				data.isFull_ = true;
+				data.isFull_ = true;	//ちょうど100%だったのでゲージは満たす
 				isGaugeDraw_ = true;
 			}
 		}
+	}
+}
+
+void Score::MoveRankingScore(void)
+{
+	//イージングをかけて移動させる
+	for (int i = 0; i < ScoreManager::RANKING_NUM; ++i)
+	{
+		if (!isRankScrMove_[i])break;
+		//移動中
+		slideXTime_[i] += SceneManager::GetInstance().GetDeltaTime() * 0.5f;
+		slideX_[i] = Easing::CubicOut(
+			slideXTime_[i], SLIDE_MAX_TIME, START_SLIDE_X, END_SLIDE_X);
+
+		//移動座標が終了座標を超えそうになったら移動終了
+		if (slideX_[i] > END_SLIDE_X)
+		{
+			slideX_[i] = END_SLIDE_X;
+			slideXTime_[i] = SLIDE_MAX_TIME;
+			if (i >= RANK_NUM - 1)isRankingScrDraw_ = true;
+		}
+	}
+
+	//ディレイを付けるため、
+	//終了座標より手前ぐらいのところで次を移動させるフラグを立てる
+	for (int i = 0; i < (ScoreManager::RANKING_NUM - 1); ++i)
+	{
+		if (!isRankScrMove_[i + 1] &&
+			slideX_[i] > NEXT_SLIDE_START_X)
+		{
+			isRankScrMove_[i + 1] = true;
+			break;
+		}
+	}
+}
+
+void Score::HighLightRankingScore(void)
+{
+	//今回のスコアがランクインしていたら点滅させる
+	if (highLightIdx_ != -1)
+	{
+		blinkTime_ += SceneManager::GetInstance().GetDeltaTime() * BLINK_SPEED;
+	}
+}
+
+void Score::DrawDecos(const int pinkX, const int pinkY)
+{
+	//ランキングの背景（青いやつ）
+	DrawRotaGraph3(
+		BLUE_BANNER_POS_X,
+		BLUE_BANNER_POS_Y,
+		BLUE_BANNER_WIDTH / 2,
+		BLUE_BANNER_HEIGHT / 2,
+		aspectRatio_ * RANK_GAUGE_SCALE, aspectRatio_ * BLUE_BANNER_SCALE,
+		0.0f, rankingBackImg_,
+		true);
+
+	//装飾（ランクの背景のピンクのほう)
+	DrawRotaGraph3(pinkX,
+		pinkY,
+		PINKBANNER_SIZE / 2, PINKBANNER_SIZE / 2,
+		aspectRatio_ * BANNER_SCALE, aspectRatio_ * BANNER_SCALE,
+		0.0f,
+		decoImg_,
+		true, false);
+}
+
+void Score::DrawCurrentScore(void)
+{
+	//現在のスコア
+	DrawVariableScore(currentScr_, CURRENT_SCORE_POS_X,
+		Application::SCREEN_SIZE_Y - RANK_LAVEL_HEIGHT);
+
+	//「現在のスコア」ラベル
+	DrawRotaGraph(RANK_LAVEL_POS_X,
+		Application::SCREEN_SIZE_Y - RANK_LAVEL_HEIGHT,
+		aspectRatio_, 0.0f,
+		currentScrImg_, true);
+}
+
+void Score::DrawGaugeRank(const int posX)
+{
+	//ゲージの背景
+	DrawRotaGraph(posX,
+		GAUGE_POS_Y,
+		RANK_GAUGE_SCALE * aspectRatio_, 0.0f, circleShadowImg_,
+		true, false);
+
+	//ゲージ本体
+	for (int i = 0; i < static_cast<int>(rank_) + 1; ++i)
+	{
+		//DrawCircleGaugeを使った描画
+		DrawCircleGauge(
+			posX,
+			GAUGE_POS_Y,
+			rankData_[i].displayedRate_ * RANK_PERCENT_MAX,
+			rankData_[i].gaugeImg_,
+			0.0f,
+			RANK_GAUGE_SCALE * aspectRatio_,
+			false, false
+		);
+	}
+	//ランクのロゴ描画
+	if (rankData_[static_cast<int>(rank_)].isFull_)
+	{
+		switch (rank_)
+		{
+		case Score::RANK::C:
+			DrawRotaGraph(posX,
+				GAUGE_POS_Y,
+				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[0],
+				true, false);
+			break;
+
+		case Score::RANK::B:
+			DrawRotaGraph(posX,
+				GAUGE_POS_Y,
+				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[1],
+				true, false);
+			break;
+
+		case Score::RANK::A:
+			DrawRotaGraph(posX,
+				GAUGE_POS_Y,
+				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[2],
+				true, false);
+			break;
+
+		case Score::RANK::S:
+			DrawRotaGraph(posX,
+				GAUGE_POS_Y,
+				aspectRatio_ * RANK_LOGO_SCALE, 0.0f, ranksImgs_[3],
+				true, false);
+			break;
+
+		default:
+			break;
+		}
+		//ランクのロゴの大きさを画面比率に合わせる
+		int logoScl = (int)((float)(PUSHLOGO_HEIGHT / 2) * aspectRatio_);
+		//pushspaceの画像
+		DrawRotaGraph(
+			Application::SCREEN_SIZE_X / 2,
+			Application::SCREEN_SIZE_Y / 2 + logoScl,
+			PUSHLOGO_SCALE, 0.0, pushImg_, true);
 	}
 }
 
@@ -499,7 +549,7 @@ void Score::DrawVariableScore(int score, int posX, int posY,float scale)
 	const int width = 130;
 	const float strScale = scale * aspectRatio_;
 	//1文字あたりの幅
-	const int digitWidth = width * strScale;
+	const int digitWidth = static_cast<int>(width * strScale);
 
 	for (int i = 0; i < str.size(); ++i)
 	{
@@ -538,7 +588,8 @@ void Score::DrawRankingScore(int score, int posX, int posY, int hightLight)
 			//ランクインしているスコアなら色を変える
 			SetDrawBright(BRIGHT_MAX, BRIGHT_MAX, hightLight);
 			DrawRotaGraph(
-				posX + (i * digitWidth * aspectRatio_), posY,
+				posX + static_cast<int>(i * digitWidth * aspectRatio_),
+				posY,
 				drawScale, 0.0f,
 				numberImgs_[digit], true);
 			SetDrawBright(BRIGHT_MAX, BRIGHT_MAX, BRIGHT_MAX);

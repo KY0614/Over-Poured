@@ -1,7 +1,6 @@
 #include <math.h>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
-#include "../../Libs/ImGui/imgui.h"
 #include "../../Utility/CommonUtility.h"
 #include "../Generic/InputManager.h"
 #include "../../Object/Common/Transform.h"
@@ -101,7 +100,6 @@ VECTOR Camera::GetForward(void) const
 
 void Camera::ChangeMode(MODE mode)
 {
-
 	//ƒJƒƒ‰‚Ì‰Šúİ’è
 	SetDefault();
 
@@ -139,7 +137,6 @@ void Camera::SetDefault(void)
 	angles_.z = 0.0f;
 
 	rot_ = Quaternion();
-
 }
 
 void Camera::SyncFollow(void)

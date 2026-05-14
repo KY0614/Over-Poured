@@ -6,7 +6,8 @@ SoundManager* SoundManager::instance_ = nullptr;
 
 void SoundManager::CreateInstance(void)
 {
-	if (instance_ == nullptr) {
+	if (instance_ == nullptr) 
+	{
 		instance_ = new SoundManager();
 	}
 }

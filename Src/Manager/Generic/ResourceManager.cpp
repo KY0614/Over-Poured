@@ -77,18 +77,18 @@ ResourceManager::SRC ResourceManager::StringToSRC(const std::string& name)
 		{ "Sweets_Choco",		SRC::SWEETS_CHOCO },
 		{ "Sweets_Strawberry_Rack",   SRC::BERRY_RACK },
 		{ "Sweets_Strawberry",  SRC::SWEETS_BERRY },
-		{ "Coffee_Machine",   SRC::COFFEE_MACHINE },
+		{ "Coffee_Machine",		SRC::COFFEE_MACHINE },
 		{ "Hot_Cup",		SRC::HOTCUP },
 		{ "Cup_Hot_Rack",   SRC::HOTCUP_RACK },
 		{ "Hot_Coffee",		SRC::HOTCOFFEE },
-		{ "Ice_Dispenser",			SRC::ICEDISPENSER },
+		{ "Ice_Dispenser",	SRC::ICEDISPENSER },
 		{ "Ice",			SRC::ICE },
 		{ "Ice_Cup",		SRC::ICECUP },
 		{ "Cup_Ice_Rack",	SRC::ICECUP_RACK },
 		{ "Ice_Coffee",		SRC::ICECOFFEE },
 		{ "Cup_Lid_Rack",	SRC::CUPLID_RACK },
-		{ "Hot_Cup_Lid",		SRC::HOTCUP_LID },
-		{ "Ice_Cup_Lid",		SRC::ICECUP_LID },
+		{ "Hot_Cup_Lid",	SRC::HOTCUP_LID },
+		{ "Ice_Cup_Lid",	SRC::ICECUP_LID },
 		{ "Dust_Box",		SRC::DUSTBOX },
 		// 新しい要素はここに追加
 	};
@@ -225,6 +225,13 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Shadow.png");
 	resourcesMap_.emplace(SRC::PLAYER_SHADOW, std::move(res));
 
+	//ホット客
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/hotcup_customer.mv1");
+	resourcesMap_.emplace(SRC::HOT_CUSTOMER, std::move(res));
+	//アイス客
+	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/icecup_customer.mv1");
+	resourcesMap_.emplace(SRC::ICE_CUSTOMER, std::move(res));
+
 	//足煙
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Smoke/Smoke.efkefc");
 	resourcesMap_.emplace(SRC::FOOT_SMOKE, std::move(res));
@@ -349,15 +356,15 @@ void ResourceManager::InitGame(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "ice.png");
 	resourcesMap_.emplace(SRC::ICE_IN, std::move(res));
 		
-	//
+	//ホットコーヒーアイコン
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Hot_Icon.png");
 	resourcesMap_.emplace(SRC::HOT_ICON, std::move(res));
 			
-	//
+	//アイスコーヒーアイコン
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Ice_Icon.png");
 	resourcesMap_.emplace(SRC::ICE_ICON, std::move(res));
 				
-	//
+	//ストック切れアイコン
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "stock.png");
 	resourcesMap_.emplace(SRC::STOCK_ICON, std::move(res));
 
@@ -474,21 +481,14 @@ void ResourceManager::InitGame(void)
 
 	//--------------------------------------------------------------------------
 	
-	//仮客
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/hotcup_customer.mv1");
-	resourcesMap_.emplace(SRC::HOT_CUSTOMER, std::move(res));
-	//仮客
-	res = std::make_unique<RES>(RES_T::MODEL, PATH_MDL + "Customer/icecup_customer.mv1");
-	resourcesMap_.emplace(SRC::ICE_CUSTOMER, std::move(res));
-
-
-	//
+	//エフェクト----------------------------------------------------------------
+	//星エフェクト
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Star/star.efkefc");
 	resourcesMap_.emplace(SRC::HAPPY_STAR, std::move(res));
-	//
+	//ぐるぐるエフェクト
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Guru/guru.efkefc");
 	resourcesMap_.emplace(SRC::GURU, std::move(res));	
-	//
+	//オーブエフェクト
 	res = std::make_unique<RES>(RES_T::EFFEKSEER, PATH_EFF + "Orb/orb.efkefc");
 	resourcesMap_.emplace(SRC::ORB, std::move(res));
 }

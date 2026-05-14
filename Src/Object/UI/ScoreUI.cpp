@@ -79,7 +79,8 @@ void ScoreUI::DrawScore(const int score, const VECTOR& pos, const float alpha)
         {
             int digit = ch - minChar;
             DrawRotaGraph(
-                static_cast<int>(pos.x) - (str.size() * digitWidth / 2) + i * digitWidth,
+                static_cast<int>(pos.x) - (
+                    static_cast<int>(str.size()) * digitWidth / 2) + (i * digitWidth),
                 static_cast<int>(pos.y),
                 scale, 0.0f,
                 numbersImgs_[digit], true

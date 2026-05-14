@@ -58,8 +58,8 @@ private:
 
 	//スコア	
 	std::vector<int> scores_;
-	int currentScore_;		//今回のスコア
-	int scoreRank_[6];	//ランキング形式のスコア
+	int currentScore_;	//今回のスコア
+	int scoreRank_[RANKING_NUM];	//ランキング形式のスコア
 
 	/// <summary>
 	/// スコアをソートする
@@ -67,7 +67,7 @@ private:
 	void SortRankingScore(void);
 
 	//コンストラクタ
-	ScoreManager(void) = default;
+	ScoreManager(void);
 	//デストラクタ
 	~ScoreManager(void) = default;
 };

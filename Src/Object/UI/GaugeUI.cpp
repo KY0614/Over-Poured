@@ -89,6 +89,8 @@ void GaugeUI::DrawCircleGauge(const float progress)
     center.norm = NORMAL_NEGATIVE_Z;
     center.u = uvCenter;
     center.v = uvCenter;
+    center.sv = 0.0f;
+	center.su = 0.0f;
     verts.push_back(center);
 	//円弧を構成する頂点を計算して追加
     for (int i = 0; i <= segmentCount * progress; ++i) 
@@ -105,6 +107,8 @@ void GaugeUI::DrawCircleGauge(const float progress)
 		v.spc = SPEC_COLOR;     	        //スペキュラカラー
 		v.u = uvCenter + x / (2 * radius);  //円の中心基準でUVを計算
         v.v = uvCenter - y / (2 * radius);  //円の中心基準でUVを計算
+		v.sv = 0.0f;                        //補助テクスチャ座標は0に固定
+		v.su = 0.0f;                        //補助テクスチャ座標は0に固定
         verts.push_back(v);
     }
 	const int polygonNum = 2; //三角形ポリゴン数

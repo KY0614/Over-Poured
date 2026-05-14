@@ -17,8 +17,8 @@
 namespace
 {
 	//ゲーム全体の制限時間
-	const int  MAX_MINUTE_TIME = 0;			//分
-	const int  MAX_SECOND_TIME = 30;			//秒
+	const int  MAX_MINUTE_TIME = 2;		//分
+	const int  MAX_SECOND_TIME = 0;		//秒
 
 	//残り秒数が少なったときにSEを鳴らす用の目安秒数
 	const int  SECOND_SOUND_TIME = 30;		//残り30秒でSEを鳴らす(遅い方のSE)

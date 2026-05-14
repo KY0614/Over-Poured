@@ -111,20 +111,9 @@ void ImGuiWrapper::UpdateInputMouse(void)
 	ImGuiIO& io = ImGui::GetIO();
 	auto& input = InputManager::GetInstance();
 	auto mousePos = input.GetMousePos();
-	io.AddMousePosEvent(mousePos.x, mousePos.y);
+	io.AddMousePosEvent(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
 	io.AddMouseButtonEvent(ImGuiMouseButton_Left, input.IsClickMouseLeft());
 	io.AddMouseButtonEvent(ImGuiMouseButton_Right, input.IsClickMouseRight());
-
-	// マウス情報をImGuiに渡す(InputManager未使用、DxLib使用)
-	//ImGuiIO& io = ImGui::GetIO();
-	//auto mouseInput = DxLib::GetMouseInput();
-	//int mousePosX = 0;
-	//int mousePosY = 0;
-	//DxLib::GetMousePoint(&mousePosX, &mousePosY);
-	//io.AddMousePosEvent(mousePosX, mousePosY);
-	//io.AddMouseButtonEvent(ImGuiMouseButton_Left, mouseInput & MOUSE_INPUT_LEFT);
-	//io.AddMouseButtonEvent(ImGuiMouseButton_Right, mouseInput & MOUSE_INPUT_RIGHT);
-
 }
 
 void ImGuiWrapper::UpdateNewFrame(void)

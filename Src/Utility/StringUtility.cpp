@@ -8,7 +8,7 @@ std::wstring StringUtility::StringToWstring(const std::string& str)
     auto result = MultiByteToWideChar(CP_ACP,
         MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
         str.c_str(),
-        str.length(),
+        static_cast<int>(str.length()),
         nullptr,
         0);
 
@@ -17,9 +17,9 @@ std::wstring StringUtility::StringToWstring(const std::string& str)
     result = MultiByteToWideChar(CP_ACP,
         MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
         str.c_str(),//“ü—Í•¶Žš—ñ
-        str.length(),
+        static_cast<int>(str.length()),
         ret.data(),
-        ret.size());
+        static_cast<int>(ret.size()));
 
     return ret;
 }
@@ -32,7 +32,7 @@ std::string StringUtility::WstringToString(const std::wstring& wstr)
         CP_ACP,
         0,
         wstr.c_str(),//“ü—Í•¶Žš—ñ
-        wstr.length(),
+        static_cast<int>(wstr.length()),
         nullptr,
         0,
         nullptr,
@@ -43,9 +43,9 @@ std::string StringUtility::WstringToString(const std::wstring& wstr)
         CP_ACP,
         0,
         wstr.c_str(),//“ü—Í•¶Žš—ñ
-        wstr.length(),
+        static_cast<int>(wstr.length()),
         ret.data(),
-        ret.size(),
+        static_cast<int>(ret.size()),
         nullptr,
         nullptr);
     return ret;

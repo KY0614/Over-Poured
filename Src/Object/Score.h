@@ -13,10 +13,10 @@ public:
 	struct RankInfo 
 	{
 		int startVal_ = 0, endVal_ = 0;	//ランクごとの上限下限値
-		float currentRate_ = 0.0f;		//
-		float displayedRate_ = 0.0f;	//
-		int gaugeImg_ = -1;		//ゲージ画像	
-		bool isFull_ = false;
+		float currentRate_ = 0.0f;		//計算済みランクゲージの達成率(0.0～1.0)
+		float displayedRate_ = 0.0f;	//画面上描画する達成率(0.0～1.0)
+		int gaugeImg_ = -1;				//ゲージ画像	
+		bool isFull_ = false;			//ランクゲージが全部満たしているかいないか
 	};
 
 	//ランクの種類
@@ -169,10 +169,40 @@ private:
 	void DrawPlayScore(void);
 
 	/// <summary>
+	/// ０から現在スコアまで足す
+	/// </summary>
+	void CurrentScoreAdd(void);
+
+	/// <summary>
 	/// ランクごとのパーセントを計算
 	/// </summary>
 	/// <param name="">ゲージのパーセンテージをイージングを使って加算していく</param>
 	void CalcPercentFromRank(void);
+
+	/// <summary>
+	/// ランキングのスコアを移動させる
+	/// </summary>
+	void MoveRankingScore(void);
+
+	/// <summary>
+	/// ランクインしているスコアを点滅させる
+	/// </summary>
+	void HighLightRankingScore(void);
+
+	/// <summary>
+	/// 装飾画像らを描画
+	/// </summary>
+	void DrawDecos(const int pinkX,const int pinkY);
+
+	/// <summary>
+	/// 現在スコアを描画
+	/// </summary>
+	void DrawCurrentScore(void);
+
+	/// <summary>
+	/// ゲージとランクを描画
+	/// </summary>
+	void DrawGaugeRank(const int posX);
 
 	/// <summary>
 	/// スコアからランクを取得

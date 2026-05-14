@@ -3,7 +3,6 @@
 #include<EffekseerForDXLib.h>
 #include "../Application.h"
 #include "../Utility/CommonUtility.h"
-#include "../Libs/ImGui/imgui.h"
 #include "../Common/DebugDrawFormat.h"
 #include "../Manager/Generic/SceneManager.h"
 #include "../Manager/Generic/ResourceManager.h"
@@ -210,7 +209,6 @@ void Player::UpdateStop(void)
 
 void Player::DrawShadow(void)
 {
-	int i, j;
 	MV1_COLL_RESULT_POLY_DIM HitResDim;
 	MV1_COLL_RESULT_POLY* HitRes;
 	VERTEX3D Vertex[3];
@@ -249,7 +247,7 @@ void Player::DrawShadow(void)
 
 		//球の直下に存在するポリゴンの数だけ繰り返し
 		HitRes = HitResDim.Dim;
-		for (i = 0; i < HitResDim.HitNum; i++, HitRes++)
+		for (int i = 0; i < HitResDim.HitNum; i++, HitRes++)
 		{
 			//ポリゴンの座標は地面ポリゴンの座標
 			Vertex[0].pos = HitRes->Position[0];
@@ -267,13 +265,16 @@ void Player::DrawShadow(void)
 			Vertex[1].dif.a = 0;
 			Vertex[2].dif.a = 0;
 			if (HitRes->Position[0].y > transform_.pos.y - PLAYER_SHADOW_HEIGHT)
-				Vertex[0].dif.a = 128 * (1.0f - fabs(HitRes->Position[0].y - transform_.pos.y) / PLAYER_SHADOW_HEIGHT);
+				Vertex[0].dif.a = static_cast<BYTE>(
+					128 * (1.0f - fabs(HitRes->Position[0].y - transform_.pos.y) / PLAYER_SHADOW_HEIGHT));
 
 			if (HitRes->Position[1].y > transform_.pos.y - PLAYER_SHADOW_HEIGHT)
-				Vertex[1].dif.a = 128 * (1.0f - fabs(HitRes->Position[1].y - transform_.pos.y) / PLAYER_SHADOW_HEIGHT);
+				Vertex[1].dif.a = static_cast<BYTE>(
+				128 * (1.0f - fabs(HitRes->Position[1].y - transform_.pos.y) / PLAYER_SHADOW_HEIGHT));
 
 			if (HitRes->Position[2].y > transform_.pos.y - PLAYER_SHADOW_HEIGHT)
-				Vertex[2].dif.a = 128 * (1.0f - fabs(HitRes->Position[2].y - transform_.pos.y) / PLAYER_SHADOW_HEIGHT);
+				Vertex[2].dif.a = static_cast<BYTE>(
+					128 * (1.0f - fabs(HitRes->Position[2].y - transform_.pos.y) / PLAYER_SHADOW_HEIGHT));
 
 			//ＵＶ値は地面ポリゴンとプレイヤーの相対座標から割り出す
 			Vertex[0].u = (HitRes->Position[0].x - transform_.pos.x) / (PLAYER_SHADOW_SIZE * 2.0f) + 0.5f;
@@ -317,7 +318,7 @@ void Player::ProcessMove(void)
 		dir = VNorm(dir); //方向を正規化
 
 		// カメラのY軸角度だけ取得（XZ平面の回転だけで十分）
-		float camYRad = mainCamera->GetQuaRot().y; // ←ここはカメラのY軸回転角（ラジアン）
+		float camYRad = static_cast<float>(mainCamera->GetQuaRot().y); // ←ここはカメラのY軸回転角（ラジアン）
 
 		// 回転行列を使って入力ベクトルを回す（XZ平面）
 		float sinY = sinf(camYRad);

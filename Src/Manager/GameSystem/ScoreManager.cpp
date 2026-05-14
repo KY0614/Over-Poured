@@ -87,9 +87,10 @@ void ScoreManager::SaveScore(const int score)
 	}
 	//管理配列に追加
 	scoreData[scoreKey].push_back(score);
-
+	
+	const int dumpIndent = 4; //インデントのスペース数
 	std::ofstream ofs(Application::PATH_SCORE + scoreFileName);
-	ofs << scoreData.dump(4);
+	ofs << scoreData.dump(dumpIndent);
 	ofs.close();
 }
 
@@ -104,7 +105,17 @@ void ScoreManager::SortRankingScore(void)
 	{
 		scoreRank_[i] = scoreList[i];
 	}
-	for (int i = scoreList.size(); i < RANKING_NUM; ++i) 
+	for (int i = static_cast<int>(scoreList.size()); i < RANKING_NUM; ++i)
+	{
+		scoreRank_[i] = 0;
+	}
+}
+
+ScoreManager::ScoreManager(void)
+{
+	scores_ = {};
+	currentScore_ = 0;	
+	for(int i = 0; i < RANKING_NUM;i++) 
 	{
 		scoreRank_[i] = 0;
 	}

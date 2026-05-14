@@ -67,14 +67,14 @@ void ExplainScene::Draw(void)
 
 	//ê‡ñæâÊëú
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y / 2 - (EXPLAIN_SIZE * scale),
+		Application::SCREEN_SIZE_Y / 2 - static_cast<int>(EXPLAIN_SIZE * scale),
 		scale * explainSize, 0.0f,
 		explainImg_,
 		true);
 
 	//ÉÅÉjÉÖÅ[Ç÷ñﬂÇÈâÊëú
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y - MARGINE_SIZE - (EXPLAIN_SIZE * scale),
+		Application::SCREEN_SIZE_Y - MARGINE_SIZE - static_cast<int>(EXPLAIN_SIZE * scale),
 		scale * menuBackSize, 0.0f,
 		menuBackImg_,
 		true);

@@ -228,8 +228,9 @@ void TutorialScene::ImageDraw(void)
 		tutorialBackImg_,
 		true);
 	//装飾（左）
-	DrawRotaGraph3(BACK_IMG_MARGINE * aspectRatio,
-		BACK_IMG_MARGINE * aspectRatio,
+	DrawRotaGraph3(
+		static_cast<int>(BACK_IMG_MARGINE * aspectRatio),
+		static_cast<int>(BACK_IMG_MARGINE * aspectRatio),
 		BACK_IMG_SCALE / 2, BACK_IMG_SCALE / 2,
 		aspectRatio, aspectRatio * decoScaleY,
 		0.0f,
@@ -237,8 +238,8 @@ void TutorialScene::ImageDraw(void)
 		true, false);
 	//装飾（右）
 	DrawRotaGraph3(
-		Application::SCREEN_SIZE_X - (BACK_IMG_MARGINE * aspectRatio),
-		BACK_IMG_MARGINE * aspectRatio,
+		Application::SCREEN_SIZE_X - static_cast<int>(BACK_IMG_MARGINE * aspectRatio),
+		static_cast<int>(BACK_IMG_MARGINE * aspectRatio),
 		BACK_IMG_SCALE / 2, BACK_IMG_SCALE / 2,
 		aspectRatio, aspectRatio * decoScaleY,
 		0.0f,
@@ -251,8 +252,8 @@ void TutorialScene::ImageDraw(void)
 		tutorialImgs_[imgIdx_],
 		true);
 	//矢印画像用の座標（右）
-	const int cursorRightPosX = Application::SCREEN_SIZE_X - (CURSOR_IMG_MARGINE * aspectRatio);
-	const int cursorRightPosY = (Application::SCREEN_SIZE_Y - ((float)(CURSOR_IMG_MARGINE / 2) * aspectRatio));
+	const int cursorRightPosX = Application::SCREEN_SIZE_X - static_cast<int>(CURSOR_IMG_MARGINE * aspectRatio);
+	const int cursorRightPosY = (Application::SCREEN_SIZE_Y - static_cast<int>(static_cast<float>(CURSOR_IMG_MARGINE / 2) * aspectRatio));
 	//点滅表示
 	if (isBlinkR_)
 	{
@@ -275,8 +276,9 @@ void TutorialScene::ImageDraw(void)
 		);
 	}
 	//矢印画像用の座標（左）
-	const int cursorLeftPosX = CURSOR_IMG_MARGINE * aspectRatio;
-	const int cursorLeftPosY = (Application::SCREEN_SIZE_Y - ((float)(CURSOR_IMG_MARGINE / 2) * aspectRatio));
+	const int cursorLeftPosX = static_cast<int>(CURSOR_IMG_MARGINE * aspectRatio);
+	const int cursorLeftPosY = static_cast<int>(Application::SCREEN_SIZE_Y - (
+		static_cast<float> (CURSOR_IMG_MARGINE / 2) * aspectRatio));
 	if (isBlinkL_)
 	{
 		//反転用(左用）
